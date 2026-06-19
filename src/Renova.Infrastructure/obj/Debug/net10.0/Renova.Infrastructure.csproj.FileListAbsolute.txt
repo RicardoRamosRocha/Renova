@@ -1,0 +1,17 @@
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\bin\Debug\net10.0\Renova.Infrastructure.deps.json
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\bin\Debug\net10.0\Renova.Infrastructure.dll
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\bin\Debug\net10.0\Renova.Infrastructure.pdb
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\bin\Debug\net10.0\Renova.Application.dll
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\bin\Debug\net10.0\Renova.Domain.dll
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\bin\Debug\net10.0\Renova.Domain.pdb
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\bin\Debug\net10.0\Renova.Application.pdb
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\obj\Debug\net10.0\Renova.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\obj\Debug\net10.0\Renova.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\obj\Debug\net10.0\Renova.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\obj\Debug\net10.0\Renova.Infrastructure.AssemblyInfo.cs
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\obj\Debug\net10.0\Renova.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\obj\Debug\net10.0\Renova.I.89D15E5B.Up2Date
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\obj\Debug\net10.0\Renova.Infrastructure.dll
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\obj\Debug\net10.0\refint\Renova.Infrastructure.dll
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\obj\Debug\net10.0\Renova.Infrastructure.pdb
+C:\Users\Ricardo\Renova\Renova\src\Renova.Infrastructure\obj\Debug\net10.0\ref\Renova.Infrastructure.dll

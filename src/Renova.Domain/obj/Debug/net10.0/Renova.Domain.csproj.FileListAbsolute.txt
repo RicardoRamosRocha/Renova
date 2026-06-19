@@ -1,0 +1,11 @@
+C:\Users\Ricardo\Renova\Renova\src\Renova.Domain\bin\Debug\net10.0\Renova.Domain.deps.json
+C:\Users\Ricardo\Renova\Renova\src\Renova.Domain\bin\Debug\net10.0\Renova.Domain.dll
+C:\Users\Ricardo\Renova\Renova\src\Renova.Domain\bin\Debug\net10.0\Renova.Domain.pdb
+C:\Users\Ricardo\Renova\Renova\src\Renova.Domain\obj\Debug\net10.0\Renova.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ricardo\Renova\Renova\src\Renova.Domain\obj\Debug\net10.0\Renova.Domain.AssemblyInfoInputs.cache
+C:\Users\Ricardo\Renova\Renova\src\Renova.Domain\obj\Debug\net10.0\Renova.Domain.AssemblyInfo.cs
+C:\Users\Ricardo\Renova\Renova\src\Renova.Domain\obj\Debug\net10.0\Renova.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Ricardo\Renova\Renova\src\Renova.Domain\obj\Debug\net10.0\Renova.Domain.dll
+C:\Users\Ricardo\Renova\Renova\src\Renova.Domain\obj\Debug\net10.0\refint\Renova.Domain.dll
+C:\Users\Ricardo\Renova\Renova\src\Renova.Domain\obj\Debug\net10.0\Renova.Domain.pdb
+C:\Users\Ricardo\Renova\Renova\src\Renova.Domain\obj\Debug\net10.0\ref\Renova.Domain.dll

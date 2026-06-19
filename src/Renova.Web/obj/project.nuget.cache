@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "5ORrzUzva5o=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Ricardo\\Renova\\Renova\\src\\Renova.Web\\Renova.Web.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Ricardo\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.9\\microsoft.aspnetcore.app.internal.assets.10.0.9.nupkg.sha512"
+  ],
+  "logs": []
+}
