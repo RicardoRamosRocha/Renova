@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Renova.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+765ff37754c41cf60e429e0a535d700ce9a4b7b6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9e7a99b1ce7f5ebd27aef5f8e92cc668c950f376")]
 [assembly: System.Reflection.AssemblyProductAttribute("Renova.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Renova.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
