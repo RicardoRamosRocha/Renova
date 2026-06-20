@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{41E1858B-BF3A-4F4D-A84B-EB545E94885D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Domain", "src\Renova.Domain\Renova.Domain.csproj", "{9DFD2AEF-1B75-48B8-97EA-4C52168F6E6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Application", "src\Renova.Application\Renova.Application.csproj", "{03264FED-0DD4-4F7C-ADD5-144F9E0A2EB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Infrastructure", "src\Renova.Infrastructure\Renova.Infrastructure.csproj", "{ECA4F7D7-FFC9-4B02-A059-B7A4C030EDD4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.Web", "src\Renova.Web\Renova.Web.csproj", "{18808614-83BC-4FFF-AFB2-413692C3F258}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renova.API", "src\Renova.API\Renova.API.csproj", "{7716C6D7-6191-47AA-BE99-D03CB322C063}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9DFD2AEF-1B75-48B8-97EA-4C52168F6E6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DFD2AEF-1B75-48B8-97EA-4C52168F6E6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DFD2AEF-1B75-48B8-97EA-4C52168F6E6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DFD2AEF-1B75-48B8-97EA-4C52168F6E6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03264FED-0DD4-4F7C-ADD5-144F9E0A2EB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03264FED-0DD4-4F7C-ADD5-144F9E0A2EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03264FED-0DD4-4F7C-ADD5-144F9E0A2EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03264FED-0DD4-4F7C-ADD5-144F9E0A2EB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECA4F7D7-FFC9-4B02-A059-B7A4C030EDD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECA4F7D7-FFC9-4B02-A059-B7A4C030EDD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECA4F7D7-FFC9-4B02-A059-B7A4C030EDD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECA4F7D7-FFC9-4B02-A059-B7A4C030EDD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18808614-83BC-4FFF-AFB2-413692C3F258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18808614-83BC-4FFF-AFB2-413692C3F258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18808614-83BC-4FFF-AFB2-413692C3F258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18808614-83BC-4FFF-AFB2-413692C3F258}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7716C6D7-6191-47AA-BE99-D03CB322C063}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7716C6D7-6191-47AA-BE99-D03CB322C063}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7716C6D7-6191-47AA-BE99-D03CB322C063}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7716C6D7-6191-47AA-BE99-D03CB322C063}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9DFD2AEF-1B75-48B8-97EA-4C52168F6E6B} = {41E1858B-BF3A-4F4D-A84B-EB545E94885D}
+		{03264FED-0DD4-4F7C-ADD5-144F9E0A2EB2} = {41E1858B-BF3A-4F4D-A84B-EB545E94885D}
+		{ECA4F7D7-FFC9-4B02-A059-B7A4C030EDD4} = {41E1858B-BF3A-4F4D-A84B-EB545E94885D}
+		{18808614-83BC-4FFF-AFB2-413692C3F258} = {41E1858B-BF3A-4F4D-A84B-EB545E94885D}
+		{7716C6D7-6191-47AA-BE99-D03CB322C063} = {41E1858B-BF3A-4F4D-A84B-EB545E94885D}
+	EndGlobalSection
+EndGlobal
