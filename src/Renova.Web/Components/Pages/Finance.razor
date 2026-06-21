@@ -1,0 +1,404 @@
+@page "/finance"
+@rendermode InteractiveServer
+@inject AppDbContext DbContext
+@inject UserSession Session
+
+<PageTitle>Financeiro</PageTitle>
+
+<section class="page-header compact">
+    <div>
+        <p class="eyebrow">Financeiro</p>
+        <h1>Pagamentos e assinaturas</h1>
+        <p>Controle mensalidades, pagamentos avulsos e proximos vencimentos.</p>
+    </div>
+</section>
+
+@if (!Session.IsAuthenticated)
+{
+    <div class="alert alert-warning">Faca login para acessar o financeiro.</div>
+    <a class="btn btn-primary" href="login">Entrar</a>
+}
+else
+{
+    @if (!string.IsNullOrWhiteSpace(Message))
+    {
+        <div class="alert @MessageClass">@Message</div>
+    }
+
+    <div class="metrics-grid finance-metrics">
+        <div class="metric-card">
+            <span>Recebido</span>
+            <strong>@PaidTotal.ToString("C")</strong>
+        </div>
+        <div class="metric-card">
+            <span>Pendente</span>
+            <strong>@PendingTotal.ToString("C")</strong>
+        </div>
+        <div class="metric-card">
+            <span>Assinaturas ativas</span>
+            <strong>@ActiveSubscriptions</strong>
+        </div>
+    </div>
+
+    <div class="split-grid">
+        <div class="form-panel">
+            <h2>Novo pagamento</h2>
+            @if (StudentList.Count == 0)
+            {
+                <p class="muted">Cadastre alunos antes de lancar pagamentos.</p>
+            }
+            else
+            {
+                <EditForm Model="PaymentForm" OnValidSubmit="SavePayment">
+                    <DataAnnotationsValidator />
+
+                    <label>Aluno</label>
+                    <InputSelect class="form-select" @bind-Value="PaymentForm.StudentId">
+                        <option value="">Selecione</option>
+                        @foreach (var student in StudentList)
+                        {
+                            <option value="@student.Id">@student.FullName</option>
+                        }
+                    </InputSelect>
+
+                    <label>Valor</label>
+                    <InputNumber class="form-control" @bind-Value="PaymentForm.Amount" />
+
+                    <label>Status</label>
+                    <InputNumber class="form-control" @bind-Value="PaymentForm.Status" />
+
+                    <label>Metodo de pagamento</label>
+                    <InputNumber class="form-control" @bind-Value="PaymentForm.PaymentMethod" />
+
+                    <label>ID externo</label>
+                    <InputText class="form-control" @bind-Value="PaymentForm.ExternalPaymentId" />
+
+                    <label class="checkbox-line">
+                        <InputCheckbox class="form-check-input" @bind-Value="PaymentForm.IsPaid" />
+                        Pago agora
+                    </label>
+
+                    <button class="btn btn-primary" type="submit">Salvar pagamento</button>
+                </EditForm>
+            }
+
+            <hr />
+
+            <h2>Nova assinatura</h2>
+            @if (StudentList.Count == 0)
+            {
+                <p class="muted">Cadastre alunos antes de criar assinaturas.</p>
+            }
+            else
+            {
+                <EditForm Model="SubscriptionForm" OnValidSubmit="SaveSubscription">
+                    <DataAnnotationsValidator />
+
+                    <label>Aluno</label>
+                    <InputSelect class="form-select" @bind-Value="SubscriptionForm.StudentId">
+                        <option value="">Selecione</option>
+                        @foreach (var student in StudentList)
+                        {
+                            <option value="@student.Id">@student.FullName</option>
+                        }
+                    </InputSelect>
+
+                    <label>Plano</label>
+                    <InputText class="form-control" @bind-Value="SubscriptionForm.PlanName" />
+
+                    <label>Valor</label>
+                    <InputNumber class="form-control" @bind-Value="SubscriptionForm.Amount" />
+
+                    <label>Status</label>
+                    <InputNumber class="form-control" @bind-Value="SubscriptionForm.Status" />
+
+                    <label>Proximo vencimento</label>
+                    <InputDate class="form-control" @bind-Value="SubscriptionForm.NextDueDate" />
+
+                    <button class="btn btn-primary" type="submit">Salvar assinatura</button>
+                </EditForm>
+            }
+        </div>
+
+        <div class="data-panel">
+            <div class="panel-title">
+                <h2>Pagamentos recentes</h2>
+                <button class="btn btn-sm btn-outline-secondary" @onclick="LoadData">Atualizar</button>
+            </div>
+
+            @if (PaymentList.Count == 0)
+            {
+                <p class="muted">Nenhum pagamento lancado.</p>
+            }
+            else
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Aluno</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                            <th>Pago em</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var payment in PaymentList)
+                        {
+                            <tr>
+                                <td>
+                                    <span>@payment.Student.FullName</span>
+                                    @if (!string.IsNullOrWhiteSpace(payment.ExternalPaymentId))
+                                    {
+                                        <small class="muted block">@payment.ExternalPaymentId</small>
+                                    }
+                                </td>
+                                <td>@payment.Amount.ToString("C")</td>
+                                <td>
+                                    <span class="status-pill @GetPaymentStatusClass(payment.Status)">
+                                        @GetPaymentStatusLabel(payment.Status)
+                                    </span>
+                                </td>
+                                <td>@(payment.PaidAt?.ToLocalTime().ToString("dd/MM/yyyy") ?? "-")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            <hr />
+
+            <div class="panel-title">
+                <h2>Assinaturas</h2>
+            </div>
+
+            @if (SubscriptionList.Count == 0)
+            {
+                <p class="muted">Nenhuma assinatura cadastrada.</p>
+            }
+            else
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Aluno</th>
+                            <th>Plano</th>
+                            <th>Valor</th>
+                            <th>Vencimento</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var subscription in SubscriptionList)
+                        {
+                            <tr>
+                                <td>@subscription.Student.FullName</td>
+                                <td>@subscription.PlanName</td>
+                                <td>@subscription.Amount.ToString("C")</td>
+                                <td>@subscription.NextDueDate.ToLocalTime().ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <span class="status-pill @GetSubscriptionStatusClass(subscription.Status)">
+                                        @GetSubscriptionStatusLabel(subscription.Status)
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private List<Student> StudentList { get; set; } = [];
+    private List<Payment> PaymentList { get; set; } = [];
+    private List<Subscription> SubscriptionList { get; set; } = [];
+    private PaymentFormModel PaymentForm { get; set; } = new();
+    private SubscriptionFormModel SubscriptionForm { get; set; } = new();
+    private string? Message;
+    private string MessageClass = "alert-success";
+    private decimal PaidTotal;
+    private decimal PendingTotal;
+    private int ActiveSubscriptions;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Session.IsAuthenticated)
+        {
+            await LoadData();
+        }
+    }
+
+    private async Task LoadData()
+    {
+        StudentList = await DbContext.Students
+            .OrderBy(student => student.FullName)
+            .ToListAsync();
+
+        PaymentList = await DbContext.Payments
+            .Include(payment => payment.Student)
+            .OrderByDescending(payment => payment.CreatedAt)
+            .Take(50)
+            .ToListAsync();
+
+        SubscriptionList = await DbContext.Subscriptions
+            .Include(subscription => subscription.Student)
+            .OrderBy(subscription => subscription.NextDueDate)
+            .Take(50)
+            .ToListAsync();
+
+        PaidTotal = await DbContext.Payments
+            .Where(payment => payment.PaidAt != null)
+            .SumAsync(payment => payment.Amount);
+
+        PendingTotal = await DbContext.Payments
+            .Where(payment => payment.PaidAt == null)
+            .SumAsync(payment => payment.Amount);
+
+        ActiveSubscriptions = await DbContext.Subscriptions
+            .CountAsync(subscription => subscription.Status == 1);
+    }
+
+    private async Task SavePayment()
+    {
+        if (!Guid.TryParse(PaymentForm.StudentId, out var studentId))
+        {
+            ShowError("Selecione um aluno para o pagamento.");
+            return;
+        }
+
+        DbContext.Payments.Add(new Payment
+        {
+            StudentId = studentId,
+            Amount = PaymentForm.Amount,
+            Status = PaymentForm.Status,
+            PaymentMethod = PaymentForm.PaymentMethod,
+            ExternalPaymentId = string.IsNullOrWhiteSpace(PaymentForm.ExternalPaymentId)
+                ? null
+                : PaymentForm.ExternalPaymentId.Trim(),
+            PaidAt = PaymentForm.IsPaid ? DateTime.UtcNow : null,
+            CreatedAt = DateTime.UtcNow
+        });
+
+        try
+        {
+            await DbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            DbContext.ChangeTracker.Clear();
+            ShowError("Ja existe um pagamento com este ID externo.");
+            return;
+        }
+
+        PaymentForm = new();
+        ShowSuccess("Pagamento salvo.");
+        await LoadData();
+    }
+
+    private async Task SaveSubscription()
+    {
+        if (!Guid.TryParse(SubscriptionForm.StudentId, out var studentId))
+        {
+            ShowError("Selecione um aluno para a assinatura.");
+            return;
+        }
+
+        DbContext.Subscriptions.Add(new Subscription
+        {
+            StudentId = studentId,
+            PlanName = SubscriptionForm.PlanName.Trim(),
+            Amount = SubscriptionForm.Amount,
+            Status = SubscriptionForm.Status,
+            NextDueDate = DateTime.SpecifyKind(SubscriptionForm.NextDueDate, DateTimeKind.Utc),
+            CreatedAt = DateTime.UtcNow
+        });
+
+        await DbContext.SaveChangesAsync();
+        SubscriptionForm = new();
+        ShowSuccess("Assinatura salva.");
+        await LoadData();
+    }
+
+    private static string GetPaymentStatusLabel(int status)
+    {
+        return status switch
+        {
+            1 => "Pendente",
+            2 => "Pago",
+            3 => "Cancelado",
+            _ => $"Status {status}"
+        };
+    }
+
+    private static string GetPaymentStatusClass(int status)
+    {
+        return status switch
+        {
+            2 => "active",
+            3 => "inactive",
+            _ => "warning"
+        };
+    }
+
+    private static string GetSubscriptionStatusLabel(int status)
+    {
+        return status switch
+        {
+            1 => "Ativa",
+            2 => "Pausada",
+            3 => "Cancelada",
+            _ => $"Status {status}"
+        };
+    }
+
+    private static string GetSubscriptionStatusClass(int status)
+    {
+        return status switch
+        {
+            1 => "active",
+            3 => "inactive",
+            _ => "warning"
+        };
+    }
+
+    private void ShowSuccess(string message)
+    {
+        MessageClass = "alert-success";
+        Message = message;
+    }
+
+    private void ShowError(string message)
+    {
+        MessageClass = "alert-danger";
+        Message = message;
+    }
+
+    private sealed class PaymentFormModel
+    {
+        public string StudentId { get; set; } = string.Empty;
+
+        public decimal Amount { get; set; } = 0;
+
+        public int Status { get; set; } = 1;
+
+        public int PaymentMethod { get; set; } = 1;
+
+        public string? ExternalPaymentId { get; set; }
+
+        public bool IsPaid { get; set; }
+    }
+
+    private sealed class SubscriptionFormModel
+    {
+        public string StudentId { get; set; } = string.Empty;
+
+        public string PlanName { get; set; } = "Mensal";
+
+        public decimal Amount { get; set; } = 0;
+
+        public int Status { get; set; } = 1;
+
+        public DateTime NextDueDate { get; set; } = DateTime.Today.AddMonths(1);
+    }
+}

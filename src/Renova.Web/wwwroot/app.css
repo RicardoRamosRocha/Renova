@@ -54,6 +54,10 @@ a, .btn-link {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
+.finance-metrics {
+    margin-bottom: 1rem;
+}
+
 .metric-card,
 .form-panel,
 .data-panel {
@@ -254,6 +258,11 @@ a, .btn-link {
 .status-pill.inactive {
     background: #eef1f4;
     color: #5f6975;
+}
+
+.status-pill.warning {
+    background: #fff4d6;
+    color: #7a5600;
 }
 
 @media (max-width: 900px) {
