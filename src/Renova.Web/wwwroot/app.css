@@ -67,6 +67,32 @@ a, .btn-link {
     padding: 1rem;
 }
 
+.access-panel {
+    max-width: 620px;
+}
+
+.session-card {
+    background: #f8fafc;
+    border: 1px solid #e1e6ec;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.session-card span,
+.session-card p {
+    color: #68737f;
+}
+
+.session-card strong {
+    display: block;
+    font-size: 1.15rem;
+}
+
+.session-card p {
+    margin: .25rem 0 0;
+}
+
 .metric-card span {
     color: #68737f;
     display: block;

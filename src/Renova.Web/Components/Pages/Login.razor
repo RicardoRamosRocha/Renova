@@ -2,7 +2,6 @@
 @rendermode InteractiveServer
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> SignInManager
 @inject RoleManager<IdentityRole> RoleManager
 @inject UserSession Session
 @inject NavigationManager Navigation
@@ -13,52 +12,66 @@
     <div>
         <p class="eyebrow">Acesso</p>
         <h1>Entrar no Renova</h1>
-        <p>Crie o primeiro administrador ou acesse com um usuário existente.</p>
+        <p>Crie o primeiro administrador ou entre com um usuario existente.</p>
     </div>
 </section>
 
-<div class="form-panel">
+<div class="form-panel access-panel">
     @if (!string.IsNullOrWhiteSpace(Message))
     {
         <div class="alert @MessageClass">@Message</div>
     }
 
-    @if (!HasUsers)
+    @if (Session.IsAuthenticated)
     {
-        <h2>Primeiro administrador</h2>
-        <EditForm Model="RegisterModel" OnValidSubmit="CreateAdministrator">
+        <div class="session-card">
+            <span>Sessao ativa</span>
+            <strong>@Session.User?.FullName</strong>
+            <p>@string.Join(", ", Session.Roles)</p>
+        </div>
+        <button class="btn btn-outline-secondary" type="button" @onclick="Logout">Sair</button>
+    }
+    else
+    {
+        @if (!HasUsers)
+        {
+            <h2>Primeiro administrador</h2>
+            <EditForm Model="RegisterModel" OnValidSubmit="CreateAdministrator">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <label>Nome completo</label>
+                <InputText class="form-control" @bind-Value="RegisterModel.FullName" />
+
+                <label>Email</label>
+                <InputText class="form-control" @bind-Value="RegisterModel.Email" />
+
+                <label>Telefone</label>
+                <InputText class="form-control" @bind-Value="RegisterModel.PhoneNumber" />
+
+                <label>Senha</label>
+                <InputText class="form-control" type="password" @bind-Value="RegisterModel.Password" />
+
+                <button class="btn btn-primary" type="submit">Criar administrador</button>
+            </EditForm>
+
+            <hr />
+        }
+
+        <h2>Login</h2>
+        <EditForm Model="LoginModel" OnValidSubmit="LoginUser">
             <DataAnnotationsValidator />
             <ValidationSummary />
 
-            <label>Nome completo</label>
-            <InputText class="form-control" @bind-Value="RegisterModel.FullName" />
-
             <label>Email</label>
-            <InputText class="form-control" @bind-Value="RegisterModel.Email" />
-
-            <label>Telefone</label>
-            <InputText class="form-control" @bind-Value="RegisterModel.PhoneNumber" />
+            <InputText class="form-control" @bind-Value="LoginModel.Email" />
 
             <label>Senha</label>
-            <InputText class="form-control" type="password" @bind-Value="RegisterModel.Password" />
+            <InputText class="form-control" type="password" @bind-Value="LoginModel.Password" />
 
-            <button class="btn btn-primary" type="submit">Criar administrador</button>
+            <button class="btn btn-primary" type="submit">Entrar</button>
         </EditForm>
     }
-
-    <h2>Login</h2>
-    <EditForm Model="LoginModel" OnValidSubmit="LoginUser">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <label>Email</label>
-        <InputText class="form-control" @bind-Value="LoginModel.Email" />
-
-        <label>Senha</label>
-        <InputText class="form-control" type="password" @bind-Value="LoginModel.Password" />
-
-        <button class="btn btn-primary" type="submit">Entrar</button>
-    </EditForm>
 </div>
 
 @code {
@@ -75,13 +88,7 @@
 
     private async Task CreateAdministrator()
     {
-        foreach (var role in ApplicationRoles.Seed)
-        {
-            if (!await RoleManager.RoleExistsAsync(role.Name!))
-            {
-                await RoleManager.CreateAsync(new IdentityRole(role.Name!));
-            }
-        }
+        await EnsureRoles();
 
         var user = new ApplicationUser
         {
@@ -104,7 +111,7 @@
 
         await UserManager.AddToRoleAsync(user, ApplicationRoles.Administrator);
         HasUsers = true;
-        ShowSuccess("Administrador criado. Você já pode entrar.");
+        ShowSuccess("Administrador criado. Entre com o email e senha cadastrados.");
     }
 
     private async Task LoginUser()
@@ -113,21 +120,36 @@
 
         if (user is null || !user.IsActive)
         {
-            ShowError("Usuário não encontrado ou inativo.");
+            ShowError("Usuario nao encontrado ou inativo.");
             return;
         }
 
-        var result = await SignInManager.CheckPasswordSignInAsync(user, LoginModel.Password, false);
-
-        if (!result.Succeeded)
+        if (!await UserManager.CheckPasswordAsync(user, LoginModel.Password))
         {
-            ShowError("Email ou senha inválidos.");
+            ShowError("Email ou senha invalidos.");
             return;
         }
 
         var roles = await UserManager.GetRolesAsync(user);
         Session.SignIn(user, roles.ToArray());
-        Navigation.NavigateTo("/students");
+        Navigation.NavigateTo("/");
+    }
+
+    private void Logout()
+    {
+        Session.SignOut();
+        Message = null;
+    }
+
+    private async Task EnsureRoles()
+    {
+        foreach (var roleName in ApplicationRoles.All)
+        {
+            if (!await RoleManager.RoleExistsAsync(roleName))
+            {
+                await RoleManager.CreateAsync(new IdentityRole(roleName));
+            }
+        }
     }
 
     private void ShowError(string message)

@@ -10,6 +10,16 @@ public class UserSession
 
     public bool IsAuthenticated => User is not null;
 
+    public bool IsInRole(string role)
+    {
+        return Roles.Contains(role, StringComparer.OrdinalIgnoreCase);
+    }
+
+    public bool IsInAnyRole(params string[] roles)
+    {
+        return roles.Any(IsInRole);
+    }
+
     public event Action? Changed;
 
     public void SignIn(ApplicationUser user, IReadOnlyCollection<string> roles)
