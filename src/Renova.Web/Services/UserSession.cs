@@ -10,6 +10,33 @@ public class UserSession
 
     public bool IsAuthenticated => User is not null;
 
+    public bool CanManageUsers => IsInRole(ApplicationRoles.Administrator);
+
+    public bool CanManageStudents => IsInAnyRole(
+        ApplicationRoles.Administrator,
+        ApplicationRoles.Coordinator,
+        ApplicationRoles.Attendant);
+
+    public bool CanViewStudentRecords => IsInAnyRole(
+        ApplicationRoles.Administrator,
+        ApplicationRoles.Coordinator,
+        ApplicationRoles.Professional,
+        ApplicationRoles.Attendant);
+
+    public bool CanManageProfessionals => IsInAnyRole(
+        ApplicationRoles.Administrator,
+        ApplicationRoles.Coordinator);
+
+    public bool CanManageEad => IsInAnyRole(
+        ApplicationRoles.Administrator,
+        ApplicationRoles.Coordinator,
+        ApplicationRoles.Teacher);
+
+    public bool CanManageFinance => IsInAnyRole(
+        ApplicationRoles.Administrator,
+        ApplicationRoles.Coordinator,
+        ApplicationRoles.Attendant);
+
     public bool IsInRole(string role)
     {
         return Roles.Contains(role, StringComparer.OrdinalIgnoreCase);

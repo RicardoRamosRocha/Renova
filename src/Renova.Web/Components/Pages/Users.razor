@@ -20,7 +20,7 @@
     <div class="alert alert-warning">Faca login para acessar usuarios.</div>
     <a class="btn btn-primary" href="login">Entrar</a>
 }
-else if (!Session.IsInRole(ApplicationRoles.Administrator))
+else if (!Session.CanManageUsers)
 {
     <div class="alert alert-warning">Somente administradores podem gerenciar usuarios.</div>
 }
@@ -117,7 +117,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if (Session.IsAuthenticated && Session.IsInRole(ApplicationRoles.Administrator))
+        if (Session.IsAuthenticated && Session.CanManageUsers)
         {
             await EnsureRoles();
             await LoadUsers();

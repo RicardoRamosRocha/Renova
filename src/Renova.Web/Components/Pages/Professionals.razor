@@ -18,6 +18,10 @@
     <div class="alert alert-warning">Faca login para acessar o cadastro de profissionais.</div>
     <a class="btn btn-primary" href="login">Entrar</a>
 }
+else if (!Session.CanManageProfessionals)
+{
+    <div class="alert alert-warning">Seu perfil nao pode gerenciar profissionais.</div>
+}
 else
 {
     <div class="split-grid">
@@ -114,7 +118,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if (Session.IsAuthenticated)
+        if (Session.IsAuthenticated && Session.CanManageProfessionals)
         {
             await LoadProfessionals();
         }

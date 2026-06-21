@@ -7,7 +7,7 @@
     <div>
         <p class="eyebrow">Renova</p>
         <h1>Painel operacional</h1>
-        <p>Use as telas iniciais para validar os fluxos principais do sistema.</p>
+        <p>Use as telas disponiveis para validar os fluxos do sistema por perfil.</p>
     </div>
 </section>
 
@@ -17,11 +17,49 @@
         <strong>@(Session.IsAuthenticated ? "Ativa" : "Sem login")</strong>
     </div>
     <div class="metric-card">
-        <span>Modulo</span>
-        <strong>CRM</strong>
+        <span>Usuario</span>
+        <strong>@(Session.User?.FullName ?? "-")</strong>
     </div>
     <div class="metric-card">
-        <span>Proxima tela</span>
-        <strong>Profissionais</strong>
+        <span>Perfis</span>
+        <strong>@(Session.Roles.Count == 0 ? "-" : string.Join(", ", Session.Roles))</strong>
     </div>
 </div>
+
+@if (Session.IsAuthenticated)
+{
+    <div class="data-panel access-summary">
+        <h2>Acessos liberados</h2>
+        <div class="access-chip-list">
+            @if (Session.CanManageUsers)
+            {
+                <a class="access-chip" href="users">Usuarios</a>
+            }
+            @if (Session.CanManageStudents)
+            {
+                <a class="access-chip" href="students">Alunos</a>
+            }
+            @if (Session.CanManageProfessionals)
+            {
+                <a class="access-chip" href="professionals">Profissionais</a>
+            }
+            @if (Session.CanManageEad)
+            {
+                <a class="access-chip" href="courses">Cursos</a>
+                <a class="access-chip" href="ead-progress">Progresso EAD</a>
+            }
+            @if (Session.CanManageFinance)
+            {
+                <a class="access-chip" href="finance">Financeiro</a>
+            }
+            @if (!Session.CanManageUsers &&
+                !Session.CanManageStudents &&
+                !Session.CanManageProfessionals &&
+                !Session.CanManageEad &&
+                !Session.CanManageFinance)
+            {
+                <span class="muted">Nenhuma area administrativa liberada para este perfil.</span>
+            }
+        </div>
+    </div>
+}

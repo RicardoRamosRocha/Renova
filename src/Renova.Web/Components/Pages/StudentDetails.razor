@@ -10,6 +10,10 @@
     <div class="alert alert-warning">Faca login para acessar a ficha do aluno.</div>
     <a class="btn btn-primary" href="login">Entrar</a>
 }
+else if (!Session.CanViewStudentRecords)
+{
+    <div class="alert alert-warning">Seu perfil nao pode acessar fichas de alunos.</div>
+}
 else if (Student is null)
 {
     <div class="alert alert-warning">Aluno nao encontrado.</div>
@@ -211,7 +215,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if (Session.IsAuthenticated)
+        if (Session.IsAuthenticated && Session.CanViewStudentRecords)
         {
             await LoadData();
         }

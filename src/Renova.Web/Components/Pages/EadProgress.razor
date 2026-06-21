@@ -18,6 +18,10 @@
     <div class="alert alert-warning">Faca login para acessar o progresso EAD.</div>
     <a class="btn btn-primary" href="login">Entrar</a>
 }
+else if (!Session.CanManageEad)
+{
+    <div class="alert alert-warning">Seu perfil nao pode gerenciar progresso EAD.</div>
+}
 else
 {
     @if (!string.IsNullOrWhiteSpace(Message))
@@ -191,7 +195,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if (Session.IsAuthenticated)
+        if (Session.IsAuthenticated && Session.CanManageEad)
         {
             await LoadData();
         }

@@ -22,7 +22,7 @@
             </NavLink>
         </div>
 
-        @if (Session.IsInRole(ApplicationRoles.Administrator))
+        @if (Session.CanManageUsers)
         {
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="users">
@@ -31,34 +31,46 @@
             </div>
         }
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="students">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Alunos
-            </NavLink>
-        </div>
+        @if (Session.CanManageStudents)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="students">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Alunos
+                </NavLink>
+            </div>
+        }
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="professionals">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Profissionais
-            </NavLink>
-        </div>
+        @if (Session.CanManageProfessionals)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="professionals">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Profissionais
+                </NavLink>
+            </div>
+        }
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="courses">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Cursos
-            </NavLink>
-        </div>
+        @if (Session.CanManageEad)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="courses">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Cursos
+                </NavLink>
+            </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ead-progress">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Progresso EAD
-            </NavLink>
-        </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="ead-progress">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Progresso EAD
+                </NavLink>
+            </div>
+        }
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="finance">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Financeiro
-            </NavLink>
-        </div>
+        @if (Session.CanManageFinance)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="finance">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Financeiro
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>

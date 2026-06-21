@@ -93,6 +93,36 @@ a, .btn-link {
     margin: .25rem 0 0;
 }
 
+.access-summary {
+    margin-top: 1rem;
+}
+
+.access-summary h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.access-chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .65rem;
+}
+
+.access-chip {
+    background: #eef5ff;
+    border: 1px solid #c8dcf4;
+    border-radius: 8px;
+    color: #174d85;
+    font-weight: 700;
+    padding: .45rem .7rem;
+    text-decoration: none;
+}
+
+.access-chip:hover {
+    background: #dfeeff;
+    color: #123f6d;
+}
+
 .metric-card span {
     color: #68737f;
     display: block;
