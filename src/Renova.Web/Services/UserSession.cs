@@ -29,13 +29,9 @@ public class UserSession
 
     public bool CanManageEad => IsInAnyRole(
         ApplicationRoles.Administrator,
-        ApplicationRoles.Coordinator,
         ApplicationRoles.Teacher);
 
-    public bool CanManageFinance => IsInAnyRole(
-        ApplicationRoles.Administrator,
-        ApplicationRoles.Coordinator,
-        ApplicationRoles.Attendant);
+    public bool CanManageFinance => IsInRole(ApplicationRoles.Administrator);
 
     public bool IsInRole(string role)
     {
