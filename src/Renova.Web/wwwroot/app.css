@@ -20,6 +20,102 @@ a, .btn-link {
     padding-top: 1.1rem;
 }
 
+.page-header {
+    margin-bottom: 1.5rem;
+}
+
+.page-header.compact {
+    margin-bottom: 1rem;
+}
+
+.eyebrow {
+    color: #4f6f52;
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    margin-bottom: .25rem;
+    text-transform: uppercase;
+}
+
+.page-header h1 {
+    color: #20252b;
+    font-size: 2rem;
+    margin: 0;
+}
+
+.page-header p {
+    color: #59636f;
+    margin-top: .5rem;
+}
+
+.metrics-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.metric-card,
+.form-panel,
+.data-panel {
+    background: #fff;
+    border: 1px solid #d9e0e7;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.metric-card span {
+    color: #68737f;
+    display: block;
+    font-size: .85rem;
+}
+
+.metric-card strong {
+    color: #20252b;
+    display: block;
+    font-size: 1.4rem;
+}
+
+.split-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(280px, 380px) minmax(0, 1fr);
+}
+
+.form-panel h2,
+.data-panel h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.form-panel label {
+    color: #36424f;
+    display: block;
+    font-size: .9rem;
+    font-weight: 600;
+    margin-top: .75rem;
+}
+
+.form-panel .btn {
+    margin-top: 1rem;
+}
+
+.panel-title {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.muted {
+    color: #68737f;
+}
+
+@media (max-width: 900px) {
+    .split-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 h1:focus {
     outline: none;
 }

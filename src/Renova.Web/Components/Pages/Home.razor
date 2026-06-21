@@ -1,7 +1,27 @@
-﻿@page "/"
+@page "/"
+@inject UserSession Session
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Renova</PageTitle>
 
-<h1>Hello, world!</h1>
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Renova</p>
+        <h1>Painel operacional</h1>
+        <p>Use as telas iniciais para validar os fluxos principais do sistema.</p>
+    </div>
+</section>
 
-Welcome to your new app.
+<div class="metrics-grid">
+    <div class="metric-card">
+        <span>Sessão</span>
+        <strong>@(Session.IsAuthenticated ? "Ativa" : "Sem login")</strong>
+    </div>
+    <div class="metric-card">
+        <span>Módulo</span>
+        <strong>CRM</strong>
+    </div>
+    <div class="metric-card">
+        <span>Próxima tela</span>
+        <strong>Alunos</strong>
+    </div>
+</div>
