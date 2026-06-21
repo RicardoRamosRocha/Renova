@@ -1,0 +1,336 @@
+@page "/ead-progress"
+@rendermode InteractiveServer
+@inject AppDbContext DbContext
+@inject UserSession Session
+
+<PageTitle>Progresso EAD</PageTitle>
+
+<section class="page-header compact">
+    <div>
+        <p class="eyebrow">EAD</p>
+        <h1>Progresso EAD</h1>
+        <p>Acompanhe aulas assistidas e certificados emitidos por aluno.</p>
+    </div>
+</section>
+
+@if (!Session.IsAuthenticated)
+{
+    <div class="alert alert-warning">Faca login para acessar o progresso EAD.</div>
+    <a class="btn btn-primary" href="login">Entrar</a>
+}
+else
+{
+    @if (!string.IsNullOrWhiteSpace(Message))
+    {
+        <div class="alert @MessageClass">@Message</div>
+    }
+
+    <div class="split-grid">
+        <div class="form-panel">
+            <h2>Registrar progresso</h2>
+            @if (StudentList.Count == 0 || LessonList.Count == 0)
+            {
+                <p class="muted">Cadastre alunos, cursos, modulos e aulas antes de registrar progresso.</p>
+            }
+            else
+            {
+                <EditForm Model="ProgressForm" OnValidSubmit="SaveProgress">
+                    <DataAnnotationsValidator />
+
+                    <label>Aluno</label>
+                    <InputSelect class="form-select" @bind-Value="ProgressForm.StudentId">
+                        <option value="">Selecione</option>
+                        @foreach (var student in StudentList)
+                        {
+                            <option value="@student.Id">@student.FullName</option>
+                        }
+                    </InputSelect>
+
+                    <label>Aula</label>
+                    <InputSelect class="form-select" @bind-Value="ProgressForm.LessonId">
+                        <option value="">Selecione</option>
+                        @foreach (var lesson in LessonList)
+                        {
+                            <option value="@lesson.Id">@lesson.CourseModule.Course.Title - @lesson.CourseModule.Title - @lesson.Title</option>
+                        }
+                    </InputSelect>
+
+                    <label>Percentual assistido</label>
+                    <InputNumber class="form-control" @bind-Value="ProgressForm.WatchedPercentage" />
+
+                    <button class="btn btn-primary" type="submit">Salvar progresso</button>
+                </EditForm>
+            }
+
+            <hr />
+
+            <h2>Emitir certificado</h2>
+            @if (StudentList.Count == 0 || CourseList.Count == 0)
+            {
+                <p class="muted">Cadastre alunos e cursos antes de emitir certificados.</p>
+            }
+            else
+            {
+                <EditForm Model="CertificateForm" OnValidSubmit="IssueCertificate">
+                    <DataAnnotationsValidator />
+
+                    <label>Aluno</label>
+                    <InputSelect class="form-select" @bind-Value="CertificateForm.StudentId">
+                        <option value="">Selecione</option>
+                        @foreach (var student in StudentList)
+                        {
+                            <option value="@student.Id">@student.FullName</option>
+                        }
+                    </InputSelect>
+
+                    <label>Curso</label>
+                    <InputSelect class="form-select" @bind-Value="CertificateForm.CourseId">
+                        <option value="">Selecione</option>
+                        @foreach (var course in CourseList)
+                        {
+                            <option value="@course.Id">@course.Title</option>
+                        }
+                    </InputSelect>
+
+                    <button class="btn btn-primary" type="submit">Emitir certificado</button>
+                </EditForm>
+            }
+        </div>
+
+        <div class="data-panel">
+            <div class="panel-title">
+                <h2>Progresso registrado</h2>
+                <button class="btn btn-sm btn-outline-secondary" @onclick="LoadData">Atualizar</button>
+            </div>
+
+            @if (ProgressList.Count == 0)
+            {
+                <p class="muted">Nenhum progresso registrado.</p>
+            }
+            else
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Aluno</th>
+                            <th>Aula</th>
+                            <th>Progresso</th>
+                            <th>Conclusao</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var progress in ProgressList)
+                        {
+                            <tr>
+                                <td>@progress.Student.FullName</td>
+                                <td>
+                                    <span>@progress.Lesson.Title</span>
+                                    <small class="muted block">@progress.Lesson.CourseModule.Course.Title</small>
+                                </td>
+                                <td>
+                                    <div class="progress-line">
+                                        <span style="width:@progress.WatchedPercentage%"></span>
+                                    </div>
+                                    <small>@progress.WatchedPercentage%</small>
+                                </td>
+                                <td>@(progress.CompletedAt?.ToLocalTime().ToString("dd/MM/yyyy") ?? "-")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            <hr />
+
+            <div class="panel-title">
+                <h2>Certificados</h2>
+            </div>
+
+            @if (CertificateList.Count == 0)
+            {
+                <p class="muted">Nenhum certificado emitido.</p>
+            }
+            else
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Aluno</th>
+                            <th>Curso</th>
+                            <th>Codigo</th>
+                            <th>Emissao</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var certificate in CertificateList)
+                        {
+                            <tr>
+                                <td>@certificate.Student.FullName</td>
+                                <td>@certificate.Course.Title</td>
+                                <td><code>@certificate.VerificationCode</code></td>
+                                <td>@certificate.IssuedAt.ToLocalTime().ToString("dd/MM/yyyy")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private List<Student> StudentList { get; set; } = [];
+    private List<Course> CourseList { get; set; } = [];
+    private List<Lesson> LessonList { get; set; } = [];
+    private List<StudentProgress> ProgressList { get; set; } = [];
+    private List<Certificate> CertificateList { get; set; } = [];
+    private ProgressFormModel ProgressForm { get; set; } = new();
+    private CertificateFormModel CertificateForm { get; set; } = new();
+    private string? Message;
+    private string MessageClass = "alert-success";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Session.IsAuthenticated)
+        {
+            await LoadData();
+        }
+    }
+
+    private async Task LoadData()
+    {
+        StudentList = await DbContext.Students
+            .OrderBy(student => student.FullName)
+            .ToListAsync();
+
+        CourseList = await DbContext.Courses
+            .Where(course => course.IsActive)
+            .OrderBy(course => course.Title)
+            .ToListAsync();
+
+        LessonList = await DbContext.Lessons
+            .Include(lesson => lesson.CourseModule)
+            .ThenInclude(module => module.Course)
+            .OrderBy(lesson => lesson.CourseModule.Course.Title)
+            .ThenBy(lesson => lesson.CourseModule.Order)
+            .ThenBy(lesson => lesson.Order)
+            .ToListAsync();
+
+        ProgressList = await DbContext.StudentProgress
+            .Include(progress => progress.Student)
+            .Include(progress => progress.Lesson)
+            .ThenInclude(lesson => lesson.CourseModule)
+            .ThenInclude(module => module.Course)
+            .OrderBy(progress => progress.Student.FullName)
+            .ThenBy(progress => progress.Lesson.CourseModule.Course.Title)
+            .ThenBy(progress => progress.Lesson.CourseModule.Order)
+            .ThenBy(progress => progress.Lesson.Order)
+            .ToListAsync();
+
+        CertificateList = await DbContext.Certificates
+            .Include(certificate => certificate.Student)
+            .Include(certificate => certificate.Course)
+            .OrderByDescending(certificate => certificate.IssuedAt)
+            .ToListAsync();
+    }
+
+    private async Task SaveProgress()
+    {
+        if (!Guid.TryParse(ProgressForm.StudentId, out var studentId) ||
+            !Guid.TryParse(ProgressForm.LessonId, out var lessonId))
+        {
+            ShowError("Selecione aluno e aula.");
+            return;
+        }
+
+        var watchedPercentage = Math.Clamp(ProgressForm.WatchedPercentage, 0, 100);
+        var progress = await DbContext.StudentProgress
+            .FirstOrDefaultAsync(item => item.StudentId == studentId && item.LessonId == lessonId);
+
+        if (progress is null)
+        {
+            progress = new StudentProgress
+            {
+                StudentId = studentId,
+                LessonId = lessonId,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            DbContext.StudentProgress.Add(progress);
+        }
+
+        progress.WatchedPercentage = watchedPercentage;
+        progress.CompletedAt = watchedPercentage >= 100 ? DateTime.UtcNow : null;
+        progress.UpdatedAt = DateTime.UtcNow;
+
+        await DbContext.SaveChangesAsync();
+        ProgressForm = new();
+        ShowSuccess("Progresso salvo.");
+        await LoadData();
+    }
+
+    private async Task IssueCertificate()
+    {
+        if (!Guid.TryParse(CertificateForm.StudentId, out var studentId) ||
+            !Guid.TryParse(CertificateForm.CourseId, out var courseId))
+        {
+            ShowError("Selecione aluno e curso.");
+            return;
+        }
+
+        var exists = await DbContext.Certificates
+            .AnyAsync(certificate => certificate.StudentId == studentId && certificate.CourseId == courseId);
+
+        if (exists)
+        {
+            ShowError("Este aluno ja possui certificado para este curso.");
+            return;
+        }
+
+        DbContext.Certificates.Add(new Certificate
+        {
+            StudentId = studentId,
+            CourseId = courseId,
+            VerificationCode = CreateVerificationCode(),
+            IssuedAt = DateTime.UtcNow
+        });
+
+        await DbContext.SaveChangesAsync();
+        CertificateForm = new();
+        ShowSuccess("Certificado emitido.");
+        await LoadData();
+    }
+
+    private static string CreateVerificationCode()
+    {
+        return $"RENOVA-{Guid.NewGuid():N}"[..20].ToUpperInvariant();
+    }
+
+    private void ShowSuccess(string message)
+    {
+        MessageClass = "alert-success";
+        Message = message;
+    }
+
+    private void ShowError(string message)
+    {
+        MessageClass = "alert-danger";
+        Message = message;
+    }
+
+    private sealed class ProgressFormModel
+    {
+        public string StudentId { get; set; } = string.Empty;
+
+        public string LessonId { get; set; } = string.Empty;
+
+        public int WatchedPercentage { get; set; } = 100;
+    }
+
+    private sealed class CertificateFormModel
+    {
+        public string StudentId { get; set; } = string.Empty;
+
+        public string CourseId { get; set; } = string.Empty;
+    }
+}
