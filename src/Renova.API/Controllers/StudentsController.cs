@@ -20,7 +20,14 @@ public class StudentsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateStudentRequest request)
     {
-        var errors = ValidateStudentRequest(request);
+        var errors = ValidateStudentRequest(
+            fullName: request.FullName,
+            cpf: request.CPF,
+            phone: request.Phone,
+            email: request.Email,
+            address: request.Address,
+            birthDate: request.BirthDate,
+            admissionDate: request.AdmissionDate);
         if (errors.Count > 0)
         {
             return BadRequest(new ValidationProblemDetails(errors));
@@ -69,7 +76,7 @@ public class StudentsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, CreateStudentRequest request)
+    public async Task<IActionResult> Update(Guid id, UpdateStudentRequest request)
     {
         var student = await _dbContext.Students.FindAsync(id);
 
@@ -78,7 +85,14 @@ public class StudentsController : ControllerBase
             return NotFound();
         }
 
-        var errors = ValidateStudentRequest(request);
+        var errors = ValidateStudentRequest(
+            fullName: request.FullName,
+            cpf: request.CPF,
+            phone: request.Phone,
+            email: request.Email,
+            address: request.Address,
+            birthDate: request.BirthDate,
+            admissionDate: request.AdmissionDate);
         if (errors.Count > 0)
         {
             return BadRequest(new ValidationProblemDetails(errors));
@@ -141,28 +155,35 @@ public class StudentsController : ControllerBase
         };
     }
 
-    private static Dictionary<string, string[]> ValidateStudentRequest(CreateStudentRequest request)
+    private static Dictionary<string, string[]> ValidateStudentRequest(
+        string fullName,
+        string cpf,
+        string phone,
+        string? email,
+        string? address,
+        DateTime birthDate,
+        DateTime admissionDate)
     {
         var errors = new Dictionary<string, string[]>();
 
-        AddRequiredError(errors, request.FullName, nameof(request.FullName));
-        AddRequiredError(errors, request.CPF, nameof(request.CPF));
-        AddRequiredError(errors, request.Phone, nameof(request.Phone));
+        AddRequiredError(errors, fullName, nameof(fullName));
+        AddRequiredError(errors, cpf, nameof(cpf));
+        AddRequiredError(errors, phone, nameof(phone));
 
-        AddMaxLengthError(errors, request.FullName, nameof(request.FullName), 200);
-        AddMaxLengthError(errors, request.CPF, nameof(request.CPF), 14);
-        AddMaxLengthError(errors, request.Phone, nameof(request.Phone), 20);
-        AddMaxLengthError(errors, request.Email, nameof(request.Email), 200);
-        AddMaxLengthError(errors, request.Address, nameof(request.Address), 500);
+        AddMaxLengthError(errors, fullName, nameof(fullName), 200);
+        AddMaxLengthError(errors, cpf, nameof(cpf), 14);
+        AddMaxLengthError(errors, phone, nameof(phone), 20);
+        AddMaxLengthError(errors, email, nameof(email), 200);
+        AddMaxLengthError(errors, address, nameof(address), 500);
 
-        if (request.BirthDate == default)
+        if (birthDate == default)
         {
-            errors[nameof(request.BirthDate)] = ["A data de nascimento e obrigatoria."];
+            errors[nameof(birthDate)] = ["A data de nascimento e obrigatoria."];
         }
 
-        if (request.AdmissionDate == default)
+        if (admissionDate == default)
         {
-            errors[nameof(request.AdmissionDate)] = ["A data de admissao e obrigatoria."];
+            errors[nameof(admissionDate)] = ["A data de admissao e obrigatoria."];
         }
 
         return errors;
