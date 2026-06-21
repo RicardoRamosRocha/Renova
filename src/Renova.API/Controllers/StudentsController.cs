@@ -20,19 +20,6 @@ public class StudentsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateStudentRequest request)
     {
-        var errors = ValidateStudentRequest(
-            fullName: request.FullName,
-            cpf: request.CPF,
-            phone: request.Phone,
-            email: request.Email,
-            address: request.Address,
-            birthDate: request.BirthDate,
-            admissionDate: request.AdmissionDate);
-        if (errors.Count > 0)
-        {
-            return BadRequest(new ValidationProblemDetails(errors));
-        }
-
         var student = new Student
         {
             FullName = request.FullName.Trim(),
@@ -83,19 +70,6 @@ public class StudentsController : ControllerBase
         if (student is null)
         {
             return NotFound();
-        }
-
-        var errors = ValidateStudentRequest(
-            fullName: request.FullName,
-            cpf: request.CPF,
-            phone: request.Phone,
-            email: request.Email,
-            address: request.Address,
-            birthDate: request.BirthDate,
-            admissionDate: request.AdmissionDate);
-        if (errors.Count > 0)
-        {
-            return BadRequest(new ValidationProblemDetails(errors));
         }
 
         student.FullName = request.FullName.Trim();
@@ -153,62 +127,5 @@ public class StudentsController : ControllerBase
             DateTimeKind.Local => value.ToUniversalTime(),
             _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
         };
-    }
-
-    private static Dictionary<string, string[]> ValidateStudentRequest(
-        string fullName,
-        string cpf,
-        string phone,
-        string? email,
-        string? address,
-        DateTime birthDate,
-        DateTime admissionDate)
-    {
-        var errors = new Dictionary<string, string[]>();
-
-        AddRequiredError(errors, fullName, nameof(fullName));
-        AddRequiredError(errors, cpf, nameof(cpf));
-        AddRequiredError(errors, phone, nameof(phone));
-
-        AddMaxLengthError(errors, fullName, nameof(fullName), 200);
-        AddMaxLengthError(errors, cpf, nameof(cpf), 14);
-        AddMaxLengthError(errors, phone, nameof(phone), 20);
-        AddMaxLengthError(errors, email, nameof(email), 200);
-        AddMaxLengthError(errors, address, nameof(address), 500);
-
-        if (birthDate == default)
-        {
-            errors[nameof(birthDate)] = ["A data de nascimento e obrigatoria."];
-        }
-
-        if (admissionDate == default)
-        {
-            errors[nameof(admissionDate)] = ["A data de admissao e obrigatoria."];
-        }
-
-        return errors;
-    }
-
-    private static void AddRequiredError(
-        Dictionary<string, string[]> errors,
-        string? value,
-        string fieldName)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            errors[fieldName] = ["Campo obrigatorio."];
-        }
-    }
-
-    private static void AddMaxLengthError(
-        Dictionary<string, string[]> errors,
-        string? value,
-        string fieldName,
-        int maxLength)
-    {
-        if (value?.Trim().Length > maxLength)
-        {
-            errors[fieldName] = [$"Deve ter no maximo {maxLength} caracteres."];
-        }
     }
 }
