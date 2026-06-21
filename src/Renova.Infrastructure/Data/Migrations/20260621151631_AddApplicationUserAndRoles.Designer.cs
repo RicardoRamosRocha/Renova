@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Renova.Infrastructure.Data;
@@ -11,9 +12,11 @@ using Renova.Infrastructure.Data;
 namespace Renova.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260621151631_AddApplicationUserAndRoles")]
+    partial class AddApplicationUserAndRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,103 +246,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.ToTable("Appointments", (string)null);
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Certificate", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CourseId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("IssuedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("VerificationCode")
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("character varying(40)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("VerificationCode")
-                        .IsUnique();
-
-                    b.HasIndex("StudentId", "CourseId")
-                        .IsUnique();
-
-                    b.ToTable("Certificates", (string)null);
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Course", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Courses", (string)null);
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.CourseModule", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CourseId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId", "Order")
-                        .IsUnique();
-
-                    b.ToTable("CourseModules", (string)null);
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.FamilyMember", b =>
                 {
                     b.Property<Guid>("Id")
@@ -382,54 +288,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("FamilyMembers", (string)null);
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Lesson", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CourseModuleId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("DurationInMinutes")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("VideoExternalId")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("VideoProvider")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseModuleId", "Order")
-                        .IsUnique();
-
-                    b.ToTable("Lessons", (string)null);
                 });
 
             modelBuilder.Entity("Renova.Domain.Entities.MedicalEvolution", b =>
@@ -495,48 +353,6 @@ namespace Renova.Infrastructure.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("MedicalRecords", (string)null);
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Payment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(12, 2)
-                        .HasColumnType("numeric(12,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ExternalPaymentId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<DateTime?>("PaidAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("PaymentMethod")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExternalPaymentId")
-                        .IsUnique();
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("Renova.Domain.Entities.Professional", b =>
@@ -636,77 +452,6 @@ namespace Renova.Infrastructure.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Students", (string)null);
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.StudentProgress", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("LessonId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("WatchedPercentage")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LessonId");
-
-                    b.HasIndex("StudentId", "LessonId")
-                        .IsUnique();
-
-                    b.ToTable("StudentProgress", (string)null);
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Subscription", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(12, 2)
-                        .HasColumnType("numeric(12,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("NextDueDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("PlanName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Subscriptions", (string)null);
                 });
 
             modelBuilder.Entity("Renova.Infrastructure.Identity.ApplicationUser", b =>
@@ -856,36 +601,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Certificate", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Course", "Course")
-                        .WithMany("Certificates")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Renova.Domain.Entities.Student", "Student")
-                        .WithMany("Certificates")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.CourseModule", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Course", "Course")
-                        .WithMany("Modules")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.FamilyMember", b =>
                 {
                     b.HasOne("Renova.Domain.Entities.Student", "Student")
@@ -895,17 +610,6 @@ namespace Renova.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Lesson", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.CourseModule", "CourseModule")
-                        .WithMany("Lessons")
-                        .HasForeignKey("CourseModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CourseModule");
                 });
 
             modelBuilder.Entity("Renova.Domain.Entities.MedicalEvolution", b =>
@@ -938,64 +642,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Payment", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Student", "Student")
-                        .WithMany("Payments")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.StudentProgress", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Lesson", "Lesson")
-                        .WithMany("ProgressEntries")
-                        .HasForeignKey("LessonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Renova.Domain.Entities.Student", "Student")
-                        .WithMany("ProgressEntries")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Lesson");
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Subscription", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Student", "Student")
-                        .WithMany("Subscriptions")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Course", b =>
-                {
-                    b.Navigation("Certificates");
-
-                    b.Navigation("Modules");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.CourseModule", b =>
-                {
-                    b.Navigation("Lessons");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Lesson", b =>
-                {
-                    b.Navigation("ProgressEntries");
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.Professional", b =>
                 {
                     b.Navigation("Appointments");
@@ -1007,19 +653,11 @@ namespace Renova.Infrastructure.Data.Migrations
                 {
                     b.Navigation("Appointments");
 
-                    b.Navigation("Certificates");
-
                     b.Navigation("FamilyMembers");
 
                     b.Navigation("MedicalEvolutions");
 
                     b.Navigation("MedicalRecord");
-
-                    b.Navigation("Payments");
-
-                    b.Navigation("ProgressEntries");
-
-                    b.Navigation("Subscriptions");
                 });
 #pragma warning restore 612, 618
         }

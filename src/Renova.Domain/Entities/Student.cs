@@ -31,4 +31,12 @@ public class Student
     public ICollection<MedicalEvolution> MedicalEvolutions { get; set; } = [];
 
     public ICollection<Appointment> Appointments { get; set; } = [];
+
+    public ICollection<StudentProgress> ProgressEntries { get; set; } = [];
+
+    public ICollection<Certificate> Certificates { get; set; } = [];
+
+    public ICollection<Payment> Payments { get; set; } = [];
+
+    public ICollection<Subscription> Subscriptions { get; set; } = [];
 }

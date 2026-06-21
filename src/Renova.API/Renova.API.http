@@ -3,13 +3,56 @@
 @StudentId = 00000000-0000-0000-0000-000000000000
 @FamilyMemberId = 00000000-0000-0000-0000-000000000000
 @ProfessionalId = 00000000-0000-0000-0000-000000000000
+@UserId = 00000000-0000-0000-0000-000000000000
+@CourseId = 00000000-0000-0000-0000-000000000000
+@ModuleId = 00000000-0000-0000-0000-000000000000
+@LessonId = 00000000-0000-0000-0000-000000000000
+@AccessToken = paste-token-here
+
+POST {{Renova.API_HostAddress}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@renova.local",
+  "password": "Renova123"
+}
+
+###
+
+GET {{Renova.API_HostAddress}}/users
+Authorization: Bearer {{AccessToken}}
+Accept: application/json
+
+###
+
+POST {{Renova.API_HostAddress}}/users
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+  "fullName": "Administrador Renova",
+  "email": "admin@renova.local",
+  "phoneNumber": "(11) 90000-0000",
+  "password": "Renova123",
+  "role": "Administrador"
+}
+
+###
+
+PATCH {{Renova.API_HostAddress}}/users/{{UserId}}/status?isActive=false
+Authorization: Bearer {{AccessToken}}
+Accept: application/json
+
+###
 
 GET {{Renova.API_HostAddress}}/students
+Authorization: Bearer {{AccessToken}}
 Accept: application/json
 
 ###
 
 POST {{Renova.API_HostAddress}}/students
+Authorization: Bearer {{AccessToken}}
 Content-Type: application/json
 
 {
@@ -158,4 +201,169 @@ Content-Type: application/json
   "scheduledAt": "2026-06-21T15:00:00Z",
   "status": 2,
   "notes": "Atendimento reagendado."
+}
+
+###
+
+GET {{Renova.API_HostAddress}}/courses
+Accept: application/json
+
+###
+
+POST {{Renova.API_HostAddress}}/courses
+Content-Type: application/json
+
+{
+  "title": "Fundamentos da Recuperacao",
+  "description": "Curso introdutorio para alunos em acompanhamento.",
+  "isActive": true
+}
+
+###
+
+PUT {{Renova.API_HostAddress}}/courses/{{CourseId}}
+Content-Type: application/json
+
+{
+  "title": "Fundamentos da Recuperacao",
+  "description": "Curso introdutorio atualizado.",
+  "isActive": true
+}
+
+###
+
+GET {{Renova.API_HostAddress}}/courses/{{CourseId}}/modules
+Accept: application/json
+
+###
+
+POST {{Renova.API_HostAddress}}/courses/{{CourseId}}/modules
+Content-Type: application/json
+
+{
+  "title": "Modulo 1",
+  "description": "Introducao ao processo de recuperacao.",
+  "order": 1
+}
+
+###
+
+PUT {{Renova.API_HostAddress}}/courses/{{CourseId}}/modules/{{ModuleId}}
+Content-Type: application/json
+
+{
+  "title": "Modulo 1",
+  "description": "Introducao atualizada.",
+  "order": 1
+}
+
+###
+
+GET {{Renova.API_HostAddress}}/courses/{{CourseId}}/modules/{{ModuleId}}/lessons
+Accept: application/json
+
+###
+
+POST {{Renova.API_HostAddress}}/courses/{{CourseId}}/modules/{{ModuleId}}/lessons
+Content-Type: application/json
+
+{
+  "title": "Acolhimento inicial",
+  "description": "Primeira aula do modulo.",
+  "videoProvider": "YouTube",
+  "videoExternalId": "video-externo-001",
+  "durationInMinutes": 12,
+  "order": 1
+}
+
+###
+
+PUT {{Renova.API_HostAddress}}/courses/{{CourseId}}/modules/{{ModuleId}}/lessons/{{LessonId}}
+Content-Type: application/json
+
+{
+  "title": "Acolhimento inicial",
+  "description": "Primeira aula atualizada.",
+  "videoProvider": "YouTube",
+  "videoExternalId": "video-externo-001",
+  "durationInMinutes": 15,
+  "order": 1
+}
+
+###
+
+GET {{Renova.API_HostAddress}}/students/{{StudentId}}/progress
+Accept: application/json
+
+###
+
+GET {{Renova.API_HostAddress}}/students/{{StudentId}}/progress/lessons/{{LessonId}}
+Accept: application/json
+
+###
+
+PUT {{Renova.API_HostAddress}}/students/{{StudentId}}/progress
+Content-Type: application/json
+
+{
+  "lessonId": "{{LessonId}}",
+  "watchedPercentage": 100
+}
+
+###
+
+GET {{Renova.API_HostAddress}}/students/{{StudentId}}/certificates
+Accept: application/json
+
+###
+
+POST {{Renova.API_HostAddress}}/students/{{StudentId}}/certificates
+Content-Type: application/json
+
+{
+  "courseId": "{{CourseId}}"
+}
+
+###
+
+GET {{Renova.API_HostAddress}}/certificates/verify/RENOVA-00000000000000000000000000000000
+Accept: application/json
+
+###
+
+GET {{Renova.API_HostAddress}}/students/{{StudentId}}/payments
+Authorization: Bearer {{AccessToken}}
+Accept: application/json
+
+###
+
+POST {{Renova.API_HostAddress}}/students/{{StudentId}}/payments
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+  "amount": 299.90,
+  "status": 1,
+  "paymentMethod": 1,
+  "externalPaymentId": "gateway-payment-001",
+  "paidAt": "2026-06-21T15:00:00Z"
+}
+
+###
+
+GET {{Renova.API_HostAddress}}/students/{{StudentId}}/subscriptions
+Authorization: Bearer {{AccessToken}}
+Accept: application/json
+
+###
+
+POST {{Renova.API_HostAddress}}/students/{{StudentId}}/subscriptions
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+  "planName": "Plano Mensal",
+  "amount": 299.90,
+  "status": 1,
+  "nextDueDate": "2026-07-21T00:00:00Z"
 }

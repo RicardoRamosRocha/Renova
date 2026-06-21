@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Renova.API.DTOs;
@@ -7,6 +8,7 @@ using Renova.Infrastructure.Data;
 namespace Renova.API.Controllers;
 
 [ApiController]
+[Authorize(Policy = "ClinicalAccess")]
 [Route("students")]
 public class StudentsController : ControllerBase
 {
