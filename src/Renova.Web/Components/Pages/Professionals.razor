@@ -1,0 +1,178 @@
+@page "/professionals"
+@rendermode InteractiveServer
+@inject AppDbContext DbContext
+@inject UserSession Session
+
+<PageTitle>Profissionais</PageTitle>
+
+<section class="page-header compact">
+    <div>
+        <p class="eyebrow">CRM</p>
+        <h1>Profissionais</h1>
+        <p>Cadastro da equipe usada em evolucoes clinicas e agendamentos.</p>
+    </div>
+</section>
+
+@if (!Session.IsAuthenticated)
+{
+    <div class="alert alert-warning">Faca login para acessar o cadastro de profissionais.</div>
+    <a class="btn btn-primary" href="login">Entrar</a>
+}
+else
+{
+    <div class="split-grid">
+        <div class="form-panel">
+            <h2>Novo profissional</h2>
+            @if (!string.IsNullOrWhiteSpace(Message))
+            {
+                <div class="alert @MessageClass">@Message</div>
+            }
+
+            <EditForm Model="Form" OnValidSubmit="SaveProfessional">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <label>Nome completo</label>
+                <InputText class="form-control" @bind-Value="Form.FullName" />
+
+                <label>Especialidade</label>
+                <InputText class="form-control" @bind-Value="Form.Specialty" />
+
+                <label>Registro profissional</label>
+                <InputText class="form-control" @bind-Value="Form.RegistrationNumber" />
+
+                <label>Email</label>
+                <InputText class="form-control" @bind-Value="Form.Email" />
+
+                <label>Telefone</label>
+                <InputText class="form-control" @bind-Value="Form.Phone" />
+
+                <label class="checkbox-line">
+                    <InputCheckbox class="form-check-input" @bind-Value="Form.IsActive" />
+                    Ativo para atendimento
+                </label>
+
+                <button class="btn btn-primary" type="submit">Salvar profissional</button>
+            </EditForm>
+        </div>
+
+        <div class="data-panel">
+            <div class="panel-title">
+                <h2>Equipe cadastrada</h2>
+                <button class="btn btn-sm btn-outline-secondary" @onclick="LoadProfessionals">Atualizar</button>
+            </div>
+
+            @if (ProfessionalList.Count == 0)
+            {
+                <p class="muted">Nenhum profissional cadastrado.</p>
+            }
+            else
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Especialidade</th>
+                            <th>Registro</th>
+                            <th>Contato</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var professional in ProfessionalList)
+                        {
+                            <tr>
+                                <td>@professional.FullName</td>
+                                <td>@professional.Specialty</td>
+                                <td>@professional.RegistrationNumber</td>
+                                <td>
+                                    <span>@professional.Phone</span>
+                                    @if (!string.IsNullOrWhiteSpace(professional.Email))
+                                    {
+                                        <small class="muted block">@professional.Email</small>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="status-pill @(professional.IsActive ? "active" : "inactive")">
+                                        @(professional.IsActive ? "Ativo" : "Inativo")
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private List<Professional> ProfessionalList { get; set; } = [];
+    private ProfessionalForm Form { get; set; } = new();
+    private string? Message;
+    private string MessageClass = "alert-success";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Session.IsAuthenticated)
+        {
+            await LoadProfessionals();
+        }
+    }
+
+    private async Task LoadProfessionals()
+    {
+        ProfessionalList = await DbContext.Professionals
+            .OrderByDescending(professional => professional.IsActive)
+            .ThenBy(professional => professional.FullName)
+            .ToListAsync();
+    }
+
+    private async Task SaveProfessional()
+    {
+        var professional = new Professional
+        {
+            FullName = Form.FullName.Trim(),
+            Specialty = Form.Specialty.Trim(),
+            RegistrationNumber = Form.RegistrationNumber.Trim(),
+            Email = string.IsNullOrWhiteSpace(Form.Email) ? null : Form.Email.Trim(),
+            Phone = Form.Phone.Trim(),
+            IsActive = Form.IsActive,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        DbContext.Professionals.Add(professional);
+
+        try
+        {
+            await DbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            DbContext.ChangeTracker.Clear();
+            MessageClass = "alert-danger";
+            Message = "Ja existe um profissional com este registro.";
+            return;
+        }
+
+        Form = new();
+        MessageClass = "alert-success";
+        Message = "Profissional cadastrado.";
+        await LoadProfessionals();
+    }
+
+    private sealed class ProfessionalForm
+    {
+        public string FullName { get; set; } = string.Empty;
+
+        public string Specialty { get; set; } = string.Empty;
+
+        public string RegistrationNumber { get; set; } = string.Empty;
+
+        public string? Email { get; set; }
+
+        public string Phone { get; set; } = string.Empty;
+
+        public bool IsActive { get; set; } = true;
+    }
+}

@@ -1,0 +1,382 @@
+@page "/students/{StudentId:guid}"
+@rendermode InteractiveServer
+@inject AppDbContext DbContext
+@inject UserSession Session
+
+<PageTitle>Ficha do aluno</PageTitle>
+
+@if (!Session.IsAuthenticated)
+{
+    <div class="alert alert-warning">Faca login para acessar a ficha do aluno.</div>
+    <a class="btn btn-primary" href="login">Entrar</a>
+}
+else if (Student is null)
+{
+    <div class="alert alert-warning">Aluno nao encontrado.</div>
+    <a class="btn btn-outline-secondary" href="students">Voltar para alunos</a>
+}
+else
+{
+    <section class="page-header compact">
+        <div>
+            <p class="eyebrow">Ficha do aluno</p>
+            <h1>@Student.FullName</h1>
+            <p>@Student.Phone | @Student.CPF</p>
+        </div>
+        <a class="btn btn-outline-secondary" href="students">Voltar</a>
+    </section>
+
+    @if (!string.IsNullOrWhiteSpace(Message))
+    {
+        <div class="alert alert-success">@Message</div>
+    }
+
+    <div class="detail-grid">
+        <div class="data-panel">
+            <div class="panel-title">
+                <h2>Familiares</h2>
+            </div>
+
+            <EditForm Model="FamilyForm" OnValidSubmit="SaveFamilyMember">
+                <DataAnnotationsValidator />
+                <div class="inline-form">
+                    <InputText class="form-control" placeholder="Nome" @bind-Value="FamilyForm.FullName" />
+                    <InputText class="form-control" placeholder="Parentesco" @bind-Value="FamilyForm.Relationship" />
+                    <InputText class="form-control" placeholder="Telefone" @bind-Value="FamilyForm.Phone" />
+                    <InputText class="form-control" placeholder="Email" @bind-Value="FamilyForm.Email" />
+                    <label class="checkbox-line compact-check">
+                        <InputCheckbox class="form-check-input" @bind-Value="FamilyForm.CanAccessPortal" />
+                        Portal
+                    </label>
+                    <button class="btn btn-primary" type="submit">Adicionar</button>
+                </div>
+            </EditForm>
+
+            @if (FamilyMembers.Count == 0)
+            {
+                <p class="muted">Nenhum familiar cadastrado.</p>
+            }
+            else
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Parentesco</th>
+                            <th>Contato</th>
+                            <th>Portal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var familyMember in FamilyMembers)
+                        {
+                            <tr>
+                                <td>@familyMember.FullName</td>
+                                <td>@familyMember.Relationship</td>
+                                <td>
+                                    <span>@familyMember.Phone</span>
+                                    @if (!string.IsNullOrWhiteSpace(familyMember.Email))
+                                    {
+                                        <small class="muted block">@familyMember.Email</small>
+                                    }
+                                </td>
+                                <td>@(familyMember.CanAccessPortal ? "Sim" : "Nao")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+
+        <div class="data-panel">
+            <div class="panel-title">
+                <h2>Prontuario</h2>
+            </div>
+
+            <EditForm Model="MedicalRecordForm" OnValidSubmit="SaveMedicalRecord">
+                <DataAnnotationsValidator />
+                <label>Anamnese</label>
+                <InputTextArea class="form-control text-area" @bind-Value="MedicalRecordForm.Anamnesis" />
+
+                <label>Notas clinicas</label>
+                <InputTextArea class="form-control text-area" @bind-Value="MedicalRecordForm.ClinicalNotes" />
+
+                <button class="btn btn-primary" type="submit">Salvar prontuario</button>
+            </EditForm>
+        </div>
+
+        <div class="data-panel">
+            <div class="panel-title">
+                <h2>Evolucoes</h2>
+            </div>
+
+            @if (ActiveProfessionals.Count == 0)
+            {
+                <p class="muted">Cadastre um profissional ativo antes de registrar evolucoes.</p>
+            }
+            else
+            {
+                <EditForm Model="EvolutionForm" OnValidSubmit="SaveEvolution">
+                    <DataAnnotationsValidator />
+                    <label>Profissional</label>
+                    <InputSelect class="form-select" @bind-Value="EvolutionForm.ProfessionalId">
+                        <option value="">Selecione</option>
+                        @foreach (var professional in ActiveProfessionals)
+                        {
+                            <option value="@professional.Id">@professional.FullName - @professional.Specialty</option>
+                        }
+                    </InputSelect>
+
+                    <label>Descricao</label>
+                    <InputTextArea class="form-control text-area" @bind-Value="EvolutionForm.Description" />
+
+                    <button class="btn btn-primary" type="submit">Registrar evolucao</button>
+                </EditForm>
+            }
+
+            <div class="timeline">
+                @foreach (var evolution in MedicalEvolutions)
+                {
+                    <article class="timeline-item">
+                        <strong>@evolution.Professional.FullName</strong>
+                        <span>@evolution.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</span>
+                        <p>@evolution.Description</p>
+                    </article>
+                }
+            </div>
+        </div>
+
+        <div class="data-panel">
+            <div class="panel-title">
+                <h2>Agendamentos</h2>
+            </div>
+
+            <EditForm Model="AppointmentForm" OnValidSubmit="SaveAppointment">
+                <DataAnnotationsValidator />
+                <label>Data e hora</label>
+                <InputDate class="form-control" @bind-Value="AppointmentForm.ScheduledAt" />
+
+                <label>Profissional</label>
+                <InputSelect class="form-select" @bind-Value="AppointmentForm.ProfessionalId">
+                    <option value="">Sem profissional definido</option>
+                    @foreach (var professional in ActiveProfessionals)
+                    {
+                        <option value="@professional.Id">@professional.FullName</option>
+                    }
+                </InputSelect>
+
+                <label>Status</label>
+                <InputNumber class="form-control" @bind-Value="AppointmentForm.Status" />
+
+                <label>Notas</label>
+                <InputTextArea class="form-control text-area" @bind-Value="AppointmentForm.Notes" />
+
+                <button class="btn btn-primary" type="submit">Agendar</button>
+            </EditForm>
+
+            <div class="timeline">
+                @foreach (var appointment in Appointments)
+                {
+                    <article class="timeline-item">
+                        <strong>@appointment.ScheduledAt.ToLocalTime().ToString("dd/MM/yyyy")</strong>
+                        <span>@appointment.ScheduledAt.ToLocalTime().ToString("HH:mm") | Status @appointment.Status</span>
+                        <p>@(appointment.Professional?.FullName ?? "Sem profissional definido")</p>
+                        @if (!string.IsNullOrWhiteSpace(appointment.Notes))
+                        {
+                            <p>@appointment.Notes</p>
+                        }
+                    </article>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Guid StudentId { get; set; }
+
+    private Student? Student { get; set; }
+    private List<FamilyMember> FamilyMembers { get; set; } = [];
+    private MedicalRecord? MedicalRecord { get; set; }
+    private List<MedicalEvolution> MedicalEvolutions { get; set; } = [];
+    private List<Appointment> Appointments { get; set; } = [];
+    private List<Professional> ActiveProfessionals { get; set; } = [];
+
+    private FamilyMemberForm FamilyForm { get; set; } = new();
+    private MedicalRecordFormModel MedicalRecordForm { get; set; } = new();
+    private EvolutionFormModel EvolutionForm { get; set; } = new();
+    private AppointmentFormModel AppointmentForm { get; set; } = new();
+    private string? Message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Session.IsAuthenticated)
+        {
+            await LoadData();
+        }
+    }
+
+    private async Task LoadData()
+    {
+        Student = await DbContext.Students.FirstOrDefaultAsync(student => student.Id == StudentId);
+
+        if (Student is null)
+        {
+            return;
+        }
+
+        FamilyMembers = await DbContext.FamilyMembers
+            .Where(familyMember => familyMember.StudentId == StudentId)
+            .OrderBy(familyMember => familyMember.FullName)
+            .ToListAsync();
+
+        MedicalRecord = await DbContext.MedicalRecords
+            .FirstOrDefaultAsync(record => record.StudentId == StudentId);
+
+        MedicalRecordForm = new MedicalRecordFormModel
+        {
+            Anamnesis = MedicalRecord?.Anamnesis ?? string.Empty,
+            ClinicalNotes = MedicalRecord?.ClinicalNotes ?? string.Empty
+        };
+
+        MedicalEvolutions = await DbContext.MedicalEvolutions
+            .Include(evolution => evolution.Professional)
+            .Where(evolution => evolution.StudentId == StudentId && !evolution.IsDeleted)
+            .OrderByDescending(evolution => evolution.CreatedAt)
+            .ToListAsync();
+
+        Appointments = await DbContext.Appointments
+            .Include(appointment => appointment.Professional)
+            .Where(appointment => appointment.StudentId == StudentId)
+            .OrderByDescending(appointment => appointment.ScheduledAt)
+            .ToListAsync();
+
+        ActiveProfessionals = await DbContext.Professionals
+            .Where(professional => professional.IsActive)
+            .OrderBy(professional => professional.FullName)
+            .ToListAsync();
+    }
+
+    private async Task SaveFamilyMember()
+    {
+        DbContext.FamilyMembers.Add(new FamilyMember
+        {
+            StudentId = StudentId,
+            FullName = FamilyForm.FullName.Trim(),
+            Relationship = FamilyForm.Relationship.Trim(),
+            Phone = FamilyForm.Phone.Trim(),
+            Email = string.IsNullOrWhiteSpace(FamilyForm.Email) ? null : FamilyForm.Email.Trim(),
+            CanAccessPortal = FamilyForm.CanAccessPortal,
+            CreatedAt = DateTime.UtcNow
+        });
+
+        await DbContext.SaveChangesAsync();
+        FamilyForm = new();
+        Message = "Familiar cadastrado.";
+        await LoadData();
+    }
+
+    private async Task SaveMedicalRecord()
+    {
+        if (MedicalRecord is null)
+        {
+            MedicalRecord = new MedicalRecord
+            {
+                StudentId = StudentId,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            DbContext.MedicalRecords.Add(MedicalRecord);
+        }
+
+        MedicalRecord.Anamnesis = MedicalRecordForm.Anamnesis.Trim();
+        MedicalRecord.ClinicalNotes = MedicalRecordForm.ClinicalNotes.Trim();
+        MedicalRecord.UpdatedAt = DateTime.UtcNow;
+
+        await DbContext.SaveChangesAsync();
+        Message = "Prontuario salvo.";
+        await LoadData();
+    }
+
+    private async Task SaveEvolution()
+    {
+        if (!Guid.TryParse(EvolutionForm.ProfessionalId, out var professionalId))
+        {
+            return;
+        }
+
+        DbContext.MedicalEvolutions.Add(new MedicalEvolution
+        {
+            StudentId = StudentId,
+            ProfessionalId = professionalId,
+            Description = EvolutionForm.Description.Trim(),
+            CreatedAt = DateTime.UtcNow
+        });
+
+        await DbContext.SaveChangesAsync();
+        EvolutionForm = new();
+        Message = "Evolucao registrada.";
+        await LoadData();
+    }
+
+    private async Task SaveAppointment()
+    {
+        Guid? professionalId = Guid.TryParse(AppointmentForm.ProfessionalId, out var selectedProfessionalId)
+            ? selectedProfessionalId
+            : null;
+
+        DbContext.Appointments.Add(new Appointment
+        {
+            StudentId = StudentId,
+            ProfessionalId = professionalId,
+            ScheduledAt = DateTime.SpecifyKind(AppointmentForm.ScheduledAt, DateTimeKind.Utc),
+            Status = AppointmentForm.Status,
+            Notes = string.IsNullOrWhiteSpace(AppointmentForm.Notes) ? null : AppointmentForm.Notes.Trim(),
+            CreatedAt = DateTime.UtcNow
+        });
+
+        await DbContext.SaveChangesAsync();
+        AppointmentForm = new();
+        Message = "Agendamento criado.";
+        await LoadData();
+    }
+
+    private sealed class FamilyMemberForm
+    {
+        public string FullName { get; set; } = string.Empty;
+
+        public string Relationship { get; set; } = string.Empty;
+
+        public string Phone { get; set; } = string.Empty;
+
+        public string? Email { get; set; }
+
+        public bool CanAccessPortal { get; set; }
+    }
+
+    private sealed class MedicalRecordFormModel
+    {
+        public string Anamnesis { get; set; } = string.Empty;
+
+        public string ClinicalNotes { get; set; } = string.Empty;
+    }
+
+    private sealed class EvolutionFormModel
+    {
+        public string ProfessionalId { get; set; } = string.Empty;
+
+        public string Description { get; set; } = string.Empty;
+    }
+
+    private sealed class AppointmentFormModel
+    {
+        public DateTime ScheduledAt { get; set; } = DateTime.Today.AddHours(9);
+
+        public string ProfessionalId { get; set; } = string.Empty;
+
+        public int Status { get; set; } = 1;
+
+        public string? Notes { get; set; }
+    }
+}

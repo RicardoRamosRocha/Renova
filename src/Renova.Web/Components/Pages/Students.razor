@@ -79,6 +79,7 @@ else
                             <th>CPF</th>
                             <th>Telefone</th>
                             <th>Status</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,6 +90,9 @@ else
                                 <td>@student.CPF</td>
                                 <td>@student.Phone</td>
                                 <td>@student.Status</td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-outline-primary" href="@($"students/{student.Id}")">Abrir</a>
+                                </td>
                             </tr>
                         }
                     </tbody>
