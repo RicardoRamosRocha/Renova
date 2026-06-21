@@ -1,4 +1,8 @@
 @inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@inject UserManager<ApplicationUser> UserManager
 @inject UserSession Session
 @implements IDisposable
 
@@ -12,7 +16,9 @@
             @if (Session.IsAuthenticated)
             {
                 <span>@Session.User?.FullName</span>
-                <button class="btn btn-sm btn-outline-secondary" @onclick="Logout">Sair</button>
+                <form action="/auth/web-logout" method="post">
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">Sair</button>
+                </form>
             }
             else
             {
@@ -33,14 +39,50 @@
 </div>
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
+
     protected override void OnInitialized()
     {
         Session.Changed += StateHasChanged;
     }
 
-    private void Logout()
+    protected override async Task OnParametersSetAsync()
     {
-        Session.SignOut();
+        await RestoreSessionFromCookie();
+    }
+
+    private async Task RestoreSessionFromCookie()
+    {
+        if (Session.IsAuthenticated || AuthenticationStateTask is null)
+        {
+            return;
+        }
+
+        var authenticationState = await AuthenticationStateTask;
+        var principal = authenticationState.User;
+
+        if (principal.Identity?.IsAuthenticated != true)
+        {
+            return;
+        }
+
+        var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            return;
+        }
+
+        var user = await UserManager.FindByIdAsync(userId);
+
+        if (user is null || !user.IsActive)
+        {
+            return;
+        }
+
+        var roles = await UserManager.GetRolesAsync(user);
+        Session.SignIn(user, roles.ToArray());
     }
 
     public void Dispose()

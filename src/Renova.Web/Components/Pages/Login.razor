@@ -29,7 +29,9 @@
             <strong>@Session.User?.FullName</strong>
             <p>@string.Join(", ", Session.Roles)</p>
         </div>
-        <button class="btn btn-outline-secondary" type="button" @onclick="Logout">Sair</button>
+        <form action="/auth/web-logout" method="post">
+            <button class="btn btn-outline-secondary" type="submit">Sair</button>
+        </form>
     }
     else
     {
@@ -59,31 +61,33 @@
         }
 
         <h2>Login</h2>
-        <EditForm Model="LoginModel" OnValidSubmit="LoginUser">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-
+        @if (HasLoginError)
+        {
+            <div class="alert alert-danger">Email ou senha invalidos.</div>
+        }
+        <form action="/auth/web-login" method="post">
             <label>Email</label>
-            <InputText class="form-control" @bind-Value="LoginModel.Email" />
+            <input class="form-control" name="email" type="email" />
 
             <label>Senha</label>
-            <InputText class="form-control" type="password" @bind-Value="LoginModel.Password" />
+            <input class="form-control" name="password" type="password" />
 
             <button class="btn btn-primary" type="submit">Entrar</button>
-        </EditForm>
+        </form>
     }
 </div>
 
 @code {
     private bool HasUsers;
+    private bool HasLoginError;
     private string? Message;
     private string MessageClass = "alert-info";
-    private LoginForm LoginModel { get; set; } = new();
     private RegisterForm RegisterModel { get; set; } = new();
 
     protected override void OnInitialized()
     {
         HasUsers = UserManager.Users.Any();
+        HasLoginError = Navigation.ToAbsoluteUri(Navigation.Uri).Query.Contains("error=1", StringComparison.OrdinalIgnoreCase);
     }
 
     private async Task CreateAdministrator()
@@ -114,33 +118,6 @@
         ShowSuccess("Administrador criado. Entre com o email e senha cadastrados.");
     }
 
-    private async Task LoginUser()
-    {
-        var user = await UserManager.FindByEmailAsync(LoginModel.Email.Trim());
-
-        if (user is null || !user.IsActive)
-        {
-            ShowError("Usuario nao encontrado ou inativo.");
-            return;
-        }
-
-        if (!await UserManager.CheckPasswordAsync(user, LoginModel.Password))
-        {
-            ShowError("Email ou senha invalidos.");
-            return;
-        }
-
-        var roles = await UserManager.GetRolesAsync(user);
-        Session.SignIn(user, roles.ToArray());
-        Navigation.NavigateTo("/");
-    }
-
-    private void Logout()
-    {
-        Session.SignOut();
-        Message = null;
-    }
-
     private async Task EnsureRoles()
     {
         foreach (var roleName in ApplicationRoles.All)
@@ -162,13 +139,6 @@
     {
         Message = message;
         MessageClass = "alert-success";
-    }
-
-    private sealed class LoginForm
-    {
-        public string Email { get; set; } = string.Empty;
-
-        public string Password { get; set; } = string.Empty;
     }
 
     private sealed class RegisterForm
