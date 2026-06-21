@@ -1,6 +1,4 @@
 @inherits LayoutComponentBase
-@using Microsoft.AspNetCore.Components.Authorization
-@inject UserSessionLoader SessionLoader
 @inject UserSession Session
 @implements IDisposable
 
@@ -37,17 +35,9 @@
 </div>
 
 @code {
-    [CascadingParameter]
-    private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
-
     protected override void OnInitialized()
     {
         Session.Changed += StateHasChanged;
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        await SessionLoader.LoadAsync(AuthenticationStateTask);
     }
 
     public void Dispose()

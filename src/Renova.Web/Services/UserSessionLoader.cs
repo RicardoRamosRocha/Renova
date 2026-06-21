@@ -7,6 +7,7 @@ namespace Renova.Web.Services;
 
 public class UserSessionLoader
 {
+    private readonly SemaphoreSlim _loadLock = new(1, 1);
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly UserSession _session;
 
@@ -20,45 +21,54 @@ public class UserSessionLoader
 
     public async Task LoadAsync(Task<AuthenticationState>? authenticationStateTask)
     {
-        if (authenticationStateTask is null)
-        {
-            return;
-        }
+        await _loadLock.WaitAsync();
 
-        var authenticationState = await authenticationStateTask;
-        var principal = authenticationState.User;
-
-        if (principal.Identity?.IsAuthenticated != true)
+        try
         {
-            if (_session.IsAuthenticated)
+            if (authenticationStateTask is null)
             {
-                _session.SignOut();
+                return;
             }
 
-            return;
+            var authenticationState = await authenticationStateTask;
+            var principal = authenticationState.User;
+
+            if (principal.Identity?.IsAuthenticated != true)
+            {
+                if (_session.IsAuthenticated)
+                {
+                    _session.SignOut();
+                }
+
+                return;
+            }
+
+            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return;
+            }
+
+            if (_session.User?.Id == userId)
+            {
+                return;
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user is null || !user.IsActive)
+            {
+                _session.SignOut();
+                return;
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            _session.SignIn(user, roles.ToArray());
         }
-
-        var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (string.IsNullOrWhiteSpace(userId))
+        finally
         {
-            return;
+            _loadLock.Release();
         }
-
-        if (_session.User?.Id == userId)
-        {
-            return;
-        }
-
-        var user = await _userManager.FindByIdAsync(userId);
-
-        if (user is null || !user.IsActive)
-        {
-            _session.SignOut();
-            return;
-        }
-
-        var roles = await _userManager.GetRolesAsync(user);
-        _session.SignIn(user, roles.ToArray());
     }
 }
