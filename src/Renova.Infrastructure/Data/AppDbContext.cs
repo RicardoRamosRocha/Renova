@@ -14,6 +14,16 @@ public class AppDbContext : IdentityDbContext
 
     public DbSet<Student> Students => Set<Student>();
 
+    public DbSet<FamilyMember> FamilyMembers => Set<FamilyMember>();
+
+    public DbSet<MedicalRecord> MedicalRecords => Set<MedicalRecord>();
+
+    public DbSet<Professional> Professionals => Set<Professional>();
+
+    public DbSet<MedicalEvolution> MedicalEvolutions => Set<MedicalEvolution>();
+
+    public DbSet<Appointment> Appointments => Set<Appointment>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

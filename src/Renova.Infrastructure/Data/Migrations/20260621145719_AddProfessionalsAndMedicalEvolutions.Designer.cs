@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Renova.Infrastructure.Data;
@@ -11,9 +12,11 @@ using Renova.Infrastructure.Data;
 namespace Renova.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260621145719_AddProfessionalsAndMedicalEvolutions")]
+    partial class AddProfessionalsAndMedicalEvolutions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -216,44 +219,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Appointment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("ProfessionalId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ScheduledAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfessionalId");
-
-                    b.HasIndex("ScheduledAt");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Appointments", (string)null);
                 });
 
             modelBuilder.Entity("Renova.Domain.Entities.FamilyMember", b =>
@@ -515,24 +480,6 @@ namespace Renova.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Appointment", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Professional", "Professional")
-                        .WithMany("Appointments")
-                        .HasForeignKey("ProfessionalId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Renova.Domain.Entities.Student", "Student")
-                        .WithMany("Appointments")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Professional");
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.FamilyMember", b =>
                 {
                     b.HasOne("Renova.Domain.Entities.Student", "Student")
@@ -576,15 +523,11 @@ namespace Renova.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Renova.Domain.Entities.Professional", b =>
                 {
-                    b.Navigation("Appointments");
-
                     b.Navigation("MedicalEvolutions");
                 });
 
             modelBuilder.Entity("Renova.Domain.Entities.Student", b =>
                 {
-                    b.Navigation("Appointments");
-
                     b.Navigation("FamilyMembers");
 
                     b.Navigation("MedicalEvolutions");

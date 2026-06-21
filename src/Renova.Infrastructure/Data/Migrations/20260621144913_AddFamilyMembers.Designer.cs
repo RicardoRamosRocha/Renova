@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Renova.Infrastructure.Data;
@@ -11,9 +12,11 @@ using Renova.Infrastructure.Data;
 namespace Renova.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260621144913_AddFamilyMembers")]
+    partial class AddFamilyMembers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -218,44 +221,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Appointment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("ProfessionalId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ScheduledAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfessionalId");
-
-                    b.HasIndex("ScheduledAt");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Appointments", (string)null);
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.FamilyMember", b =>
                 {
                     b.Property<Guid>("Id")
@@ -298,118 +263,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("FamilyMembers", (string)null);
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.MedicalEvolution", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("ProfessionalId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfessionalId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("MedicalEvolutions", (string)null);
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.MedicalRecord", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Anamnesis")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ClinicalNotes")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId")
-                        .IsUnique();
-
-                    b.ToTable("MedicalRecords", (string)null);
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Professional", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("RegistrationNumber")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Specialty")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RegistrationNumber")
-                        .IsUnique();
-
-                    b.ToTable("Professionals", (string)null);
                 });
 
             modelBuilder.Entity("Renova.Domain.Entities.Student", b =>
@@ -515,24 +368,6 @@ namespace Renova.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Appointment", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Professional", "Professional")
-                        .WithMany("Appointments")
-                        .HasForeignKey("ProfessionalId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Renova.Domain.Entities.Student", "Student")
-                        .WithMany("Appointments")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Professional");
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.FamilyMember", b =>
                 {
                     b.HasOne("Renova.Domain.Entities.Student", "Student")
@@ -544,52 +379,9 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.MedicalEvolution", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Professional", "Professional")
-                        .WithMany("MedicalEvolutions")
-                        .HasForeignKey("ProfessionalId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Renova.Domain.Entities.Student", "Student")
-                        .WithMany("MedicalEvolutions")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Professional");
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.MedicalRecord", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Student", "Student")
-                        .WithOne("MedicalRecord")
-                        .HasForeignKey("Renova.Domain.Entities.MedicalRecord", "StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Professional", b =>
-                {
-                    b.Navigation("Appointments");
-
-                    b.Navigation("MedicalEvolutions");
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.Student", b =>
                 {
-                    b.Navigation("Appointments");
-
                     b.Navigation("FamilyMembers");
-
-                    b.Navigation("MedicalEvolutions");
-
-                    b.Navigation("MedicalRecord");
                 });
 #pragma warning restore 612, 618
         }
