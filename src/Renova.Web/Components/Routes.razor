@@ -1,4 +1,3 @@
-@using Microsoft.AspNetCore.Components.Authorization
 @inject UserSessionLoader SessionLoader
 
 <Router AppAssembly="typeof(Program).Assembly">
@@ -9,11 +8,8 @@
 </Router>
 
 @code {
-    [CascadingParameter]
-    private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
-
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
-        await SessionLoader.LoadAsync(AuthenticationStateTask);
+        await SessionLoader.LoadAsync();
     }
 }

@@ -30,6 +30,7 @@ builder.Services
     });
 builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddHttpContextAccessor();
 builder.Services
     .AddIdentityCore<ApplicationUser>(options =>
     {
@@ -99,7 +100,7 @@ app.MapPost("/auth/web-login", async (
             ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
         });
 
-    return Results.Redirect("/");
+    return Results.Redirect("/students");
 }).DisableAntiforgery();
 
 app.MapPost("/auth/web-logout", async (HttpContext httpContext) =>

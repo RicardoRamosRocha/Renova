@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Renova.Infrastructure.Identity;
 
@@ -8,32 +7,29 @@ namespace Renova.Web.Services;
 public class UserSessionLoader
 {
     private readonly SemaphoreSlim _loadLock = new(1, 1);
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly UserSession _session;
 
     public UserSessionLoader(
+        IHttpContextAccessor httpContextAccessor,
         UserManager<ApplicationUser> userManager,
         UserSession session)
     {
+        _httpContextAccessor = httpContextAccessor;
         _userManager = userManager;
         _session = session;
     }
 
-    public async Task LoadAsync(Task<AuthenticationState>? authenticationStateTask)
+    public async Task LoadAsync()
     {
         await _loadLock.WaitAsync();
 
         try
         {
-            if (authenticationStateTask is null)
-            {
-                return;
-            }
+            var principal = _httpContextAccessor.HttpContext?.User;
 
-            var authenticationState = await authenticationStateTask;
-            var principal = authenticationState.User;
-
-            if (principal.Identity?.IsAuthenticated != true)
+            if (principal?.Identity?.IsAuthenticated != true)
             {
                 if (_session.IsAuthenticated)
                 {
