@@ -17,6 +17,46 @@ public class StudentsController : ControllerBase
         _dbContext = dbContext;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAll(int page = 1, int pageSize = 20)
+    {
+        if (page < 1)
+        {
+            page = 1;
+        }
+
+        if (pageSize < 1)
+        {
+            pageSize = 20;
+        }
+
+        if (pageSize > 100)
+        {
+            pageSize = 100;
+        }
+
+        var students = await _dbContext.Students
+            .OrderBy(student => student.FullName)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return Ok(students.Select(ToResponse));
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var student = await _dbContext.Students.FindAsync(id);
+
+        if (student is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(ToResponse(student));
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(CreateStudentRequest request)
     {
@@ -37,29 +77,6 @@ public class StudentsController : ControllerBase
         await _dbContext.SaveChangesAsync();
 
         return Created($"/students/{student.Id}", ToResponse(student));
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        var students = await _dbContext.Students
-            .OrderBy(student => student.FullName)
-            .ToListAsync();
-
-        return Ok(students.Select(ToResponse));
-    }
-
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id)
-    {
-        var student = await _dbContext.Students.FindAsync(id);
-
-        if (student is null)
-        {
-            return NotFound();
-        }
-
-        return Ok(ToResponse(student));
     }
 
     [HttpPut("{id:guid}")]
