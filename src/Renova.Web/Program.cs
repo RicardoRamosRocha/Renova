@@ -45,6 +45,7 @@ builder.Services
     .AddSignInManager();
 
 builder.Services.AddScoped<UserSession>();
+builder.Services.AddScoped<UserSessionLoader>();
 
 var app = builder.Build();
 

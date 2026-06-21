@@ -1,8 +1,6 @@
 @inherits LayoutComponentBase
 @using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.AspNetCore.Identity
-@using System.Security.Claims
-@inject UserManager<ApplicationUser> UserManager
+@inject UserSessionLoader SessionLoader
 @inject UserSession Session
 @implements IDisposable
 
@@ -49,40 +47,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        await RestoreSessionFromCookie();
-    }
-
-    private async Task RestoreSessionFromCookie()
-    {
-        if (Session.IsAuthenticated || AuthenticationStateTask is null)
-        {
-            return;
-        }
-
-        var authenticationState = await AuthenticationStateTask;
-        var principal = authenticationState.User;
-
-        if (principal.Identity?.IsAuthenticated != true)
-        {
-            return;
-        }
-
-        var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (string.IsNullOrWhiteSpace(userId))
-        {
-            return;
-        }
-
-        var user = await UserManager.FindByIdAsync(userId);
-
-        if (user is null || !user.IsActive)
-        {
-            return;
-        }
-
-        var roles = await UserManager.GetRolesAsync(user);
-        Session.SignIn(user, roles.ToArray());
+        await SessionLoader.LoadAsync(AuthenticationStateTask);
     }
 
     public void Dispose()
