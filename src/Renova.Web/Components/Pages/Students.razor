@@ -1,7 +1,12 @@
 @page "/students"
 @rendermode InteractiveServer
-@inject AppDbContext DbContext
-@inject UserSession Session
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using Renova.Domain.Entities
+@using Renova.Infrastructure.Data
+@attribute [Authorize(Roles = "Administrator,Administrador")]
+@inject IDbContextFactory<AppDbContext> DbFactory
+@using Microsoft.AspNetCore.Components.Authorization
 
 <PageTitle>Alunos</PageTitle>
 
@@ -9,122 +14,135 @@
     <div>
         <p class="eyebrow">CRM</p>
         <h1>Alunos</h1>
-        <p>Cadastro basico para validar o fluxo principal do sistema.</p>
+        <p>Cadastro básico para validar o fluxo principal do sistema.</p>
+
+        <hr />
+
+        <AuthorizeView>
+            <Authorized>
+                <div class="alert alert-success">
+                    Usuário autenticado
+                </div>
+            </Authorized>
+
+            <NotAuthorized>
+                <div class="alert alert-danger">
+                    Usuário NÃO autenticado
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+
     </div>
 </section>
 
-@if (!Session.IsAuthenticated)
-{
-    <div class="alert alert-warning">Faca login para acessar o cadastro de alunos.</div>
-    <a class="btn btn-primary" href="login">Entrar</a>
-}
-else if (!Session.CanManageStudents)
-{
-    <div class="alert alert-warning">Seu perfil nao pode gerenciar alunos.</div>
-}
-else
-{
-    <div class="split-grid">
-        <div class="form-panel">
-            <h2>Novo aluno</h2>
-            @if (!string.IsNullOrWhiteSpace(Message))
-            {
-                <div class="alert alert-success">@Message</div>
-            }
-
-            <EditForm Model="Form" OnValidSubmit="SaveStudent">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-
-                <label>Nome completo</label>
-                <InputText class="form-control" @bind-Value="Form.FullName" />
-
-                <label>Nascimento</label>
-                <InputDate class="form-control" @bind-Value="Form.BirthDate" />
-
-                <label>CPF</label>
-                <InputText class="form-control" @bind-Value="Form.CPF" />
-
-                <label>Telefone</label>
-                <InputText class="form-control" @bind-Value="Form.Phone" />
-
-                <label>Email</label>
-                <InputText class="form-control" @bind-Value="Form.Email" />
-
-                <label>Endereco</label>
-                <InputText class="form-control" @bind-Value="Form.Address" />
-
-                <label>Status</label>
-                <InputNumber class="form-control" @bind-Value="Form.Status" />
-
-                <label>Admissao</label>
-                <InputDate class="form-control" @bind-Value="Form.AdmissionDate" />
-
-                <button class="btn btn-primary" type="submit">Salvar aluno</button>
-            </EditForm>
-        </div>
-
-        <div class="data-panel">
-            <div class="panel-title">
-                <h2>Alunos cadastrados</h2>
-                <button class="btn btn-sm btn-outline-secondary" @onclick="LoadStudents">Atualizar</button>
-            </div>
-
-            @if (StudentList.Count == 0)
-            {
-                <p class="muted">Nenhum aluno cadastrado.</p>
-            }
-            else
-            {
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>CPF</th>
-                            <th>Telefone</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var student in StudentList)
-                        {
-                            <tr>
-                                <td>@student.FullName</td>
-                                <td>@student.CPF</td>
-                                <td>@student.Phone</td>
-                                <td>@student.Status</td>
-                                <td class="text-end">
-                                    <a class="btn btn-sm btn-outline-primary" href="@($"students/{student.Id}")">Abrir</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-        </div>
+<section class="page-header compact">
+    <div>
+        <p class="eyebrow">CRM</p>
+        <h1>Alunos</h1>
+        <p>Cadastro básico para validar o fluxo principal do sistema.</p>
     </div>
-}
+</section>
+
+<div class="split-grid">
+    <div class="form-panel">
+        <h2>Novo aluno</h2>
+
+        @if (!string.IsNullOrWhiteSpace(Message))
+        {
+            <div class="alert alert-success">@Message</div>
+        }
+
+        <EditForm Model="Form" OnValidSubmit="SaveStudent">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <label>Nome completo</label>
+            <InputText class="form-control" @bind-Value="Form.FullName" />
+
+            <label>Nascimento</label>
+            <InputDate class="form-control" @bind-Value="Form.BirthDate" />
+
+            <label>CPF</label>
+            <InputText class="form-control" @bind-Value="Form.CPF" />
+
+            <label>Telefone</label>
+            <InputText class="form-control" @bind-Value="Form.Phone" />
+
+            <label>Email</label>
+            <InputText class="form-control" @bind-Value="Form.Email" />
+
+            <label>Endereço</label>
+            <InputText class="form-control" @bind-Value="Form.Address" />
+
+            <label>Status</label>
+            <InputNumber class="form-control" @bind-Value="Form.Status" />
+
+            <label>Admissão</label>
+            <InputDate class="form-control" @bind-Value="Form.AdmissionDate" />
+
+            <button class="btn btn-primary" type="submit">Salvar aluno</button>
+        </EditForm>
+    </div>
+
+    <div class="data-panel">
+        <div class="panel-title">
+            <h2>Alunos cadastrados</h2>
+            <button class="btn btn-sm btn-outline-secondary" @onclick="LoadStudents">Atualizar</button>
+        </div>
+
+        @if (StudentList.Count == 0)
+        {
+            <p class="muted">Nenhum aluno cadastrado.</p>
+        }
+        else
+        {
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Telefone</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var student in StudentList)
+                    {
+                        <tr>
+                            <td>@student.FullName</td>
+                            <td>@student.CPF</td>
+                            <td>@student.Phone</td>
+                            <td>@student.Status</td>
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-outline-primary" href="@($"students/{student.Id}")">Abrir</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
 
 @code {
-    private List<Student> StudentList { get; set; } = [];
+    private List<Student> StudentList { get; set; } = new();
     private StudentForm Form { get; set; } = new();
     private string? Message;
 
     protected override async Task OnInitializedAsync()
     {
-        if (Session.IsAuthenticated && Session.CanManageStudents)
-        {
-            await LoadStudents();
-        }
+        await LoadStudents();
     }
 
-    private async Task LoadStudents()
-    {
-        StudentList = await DbContext.Students
-            .OrderBy(student => student.FullName)
-            .ToListAsync();
-    }
+   private async Task LoadStudents()
+{
+    await using var db = await DbFactory.CreateDbContextAsync();
+
+    StudentList = await db.Students
+        .OrderBy(student => student.FullName)
+        .ToListAsync();
+}
 
     private async Task SaveStudent()
     {
@@ -141,8 +159,10 @@ else
             CreatedAt = DateTime.UtcNow
         };
 
-        DbContext.Students.Add(student);
-        await DbContext.SaveChangesAsync();
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        db.Students.Add(student);
+        await db.SaveChangesAsync();
 
         Form = new();
         Message = "Aluno cadastrado.";
@@ -152,19 +172,12 @@ else
     private sealed class StudentForm
     {
         public string FullName { get; set; } = string.Empty;
-
         public DateTime BirthDate { get; set; } = DateTime.Today.AddYears(-18);
-
         public string CPF { get; set; } = string.Empty;
-
         public string Phone { get; set; } = string.Empty;
-
         public string? Email { get; set; }
-
         public string? Address { get; set; }
-
         public int Status { get; set; } = 1;
-
         public DateTime AdmissionDate { get; set; } = DateTime.Today;
     }
 }

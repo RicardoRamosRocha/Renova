@@ -1,8 +1,10 @@
 @page "/login"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
 @using Microsoft.AspNetCore.Identity
-@inject UserManager<ApplicationUser> UserManager
-@inject RoleManager<IdentityRole> RoleManager
+@using Microsoft.EntityFrameworkCore
+
+@inject IServiceScopeFactory ScopeFactory
 @inject UserSession Session
 @inject NavigationManager Navigation
 
@@ -84,15 +86,32 @@
     private string MessageClass = "alert-info";
     private RegisterForm RegisterModel { get; set; } = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        HasUsers = UserManager.Users.Any();
-        HasLoginError = Navigation.ToAbsoluteUri(Navigation.Uri).Query.Contains("error=1", StringComparison.OrdinalIgnoreCase);
+        using var scope = ScopeFactory.CreateScope();
+
+        var userManager = scope.ServiceProvider
+            .GetRequiredService<UserManager<ApplicationUser>>();
+
+        HasUsers = await userManager.Users.AnyAsync();
+
+        HasLoginError = Navigation
+            .ToAbsoluteUri(Navigation.Uri)
+            .Query
+            .Contains("error=1", StringComparison.OrdinalIgnoreCase);
     }
 
     private async Task CreateAdministrator()
     {
-        await EnsureRoles();
+        using var scope = ScopeFactory.CreateScope();
+
+        var userManager = scope.ServiceProvider
+            .GetRequiredService<UserManager<ApplicationUser>>();
+
+        var roleManager = scope.ServiceProvider
+            .GetRequiredService<RoleManager<IdentityRole>>();
+
+        await EnsureRoles(roleManager);
 
         var user = new ApplicationUser
         {
@@ -105,7 +124,7 @@
             CreatedAt = DateTime.UtcNow
         };
 
-        var result = await UserManager.CreateAsync(user, RegisterModel.Password);
+        var result = await userManager.CreateAsync(user, RegisterModel.Password);
 
         if (!result.Succeeded)
         {
@@ -113,18 +132,19 @@
             return;
         }
 
-        await UserManager.AddToRoleAsync(user, ApplicationRoles.Administrator);
+        await userManager.AddToRoleAsync(user, ApplicationRoles.Administrator);
+
         HasUsers = true;
         ShowSuccess("Administrador criado. Entre com o email e senha cadastrados.");
     }
 
-    private async Task EnsureRoles()
+    private static async Task EnsureRoles(RoleManager<IdentityRole> roleManager)
     {
         foreach (var roleName in ApplicationRoles.All)
         {
-            if (!await RoleManager.RoleExistsAsync(roleName))
+            if (!await roleManager.RoleExistsAsync(roleName))
             {
-                await RoleManager.CreateAsync(new IdentityRole(roleName));
+                await roleManager.CreateAsync(new IdentityRole(roleName));
             }
         }
     }
@@ -144,11 +164,8 @@
     private sealed class RegisterForm
     {
         public string FullName { get; set; } = string.Empty;
-
         public string Email { get; set; } = string.Empty;
-
         public string PhoneNumber { get; set; } = string.Empty;
-
         public string Password { get; set; } = string.Empty;
     }
 }

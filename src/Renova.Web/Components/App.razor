@@ -1,5 +1,7 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@inject UserSessionLoader UserSessionLoader
+
+<!DOCTYPE html>
+<html lang="pt-br">
 
 <head>
     <meta charset="utf-8" />
@@ -13,8 +15,16 @@
 </head>
 
 <body>
+    <SessionInitializer />
     <Routes />
     <script src="_framework/blazor.web.js"></script>
 </body>
 
 </html>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await UserSessionLoader.LoadAsync();
+    }
+}
