@@ -1,6 +1,8 @@
 @page "/professionals"
 @rendermode InteractiveServer
-@inject AppDbContext DbContext
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = ApplicationRoles.ProfessionalManagementRoles)]
+@inject IDbContextFactory<AppDbContext> DbFactory
 @inject UserSession Session
 
 <PageTitle>Profissionais</PageTitle>
@@ -126,7 +128,9 @@ else
 
     private async Task LoadProfessionals()
     {
-        ProfessionalList = await DbContext.Professionals
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        ProfessionalList = await db.Professionals
             .OrderByDescending(professional => professional.IsActive)
             .ThenBy(professional => professional.FullName)
             .ToListAsync();
@@ -145,15 +149,16 @@ else
             CreatedAt = DateTime.UtcNow
         };
 
-        DbContext.Professionals.Add(professional);
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        db.Professionals.Add(professional);
 
         try
         {
-            await DbContext.SaveChangesAsync();
+            await db.SaveChangesAsync();
         }
         catch (DbUpdateException)
         {
-            DbContext.ChangeTracker.Clear();
             MessageClass = "alert-danger";
             Message = "Ja existe um profissional com este registro.";
             return;

@@ -1,6 +1,8 @@
 @page "/users"
 @rendermode InteractiveServer
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@attribute [Authorize(Roles = ApplicationRoles.UserManagementRoles)]
 @inject UserManager<ApplicationUser> UserManager
 @inject RoleManager<IdentityRole> RoleManager
 @inject UserSession Session
@@ -84,21 +86,44 @@ else
                         <tr>
                             <th>Nome</th>
                             <th>Email</th>
-                            <th>Perfis</th>
+                            <th>Perfil</th>
                             <th>Status</th>
+                            <th>Nova senha</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var user in UserList)
                         {
                             <tr>
-                                <td>@user.FullName</td>
-                                <td>@user.Email</td>
-                                <td>@string.Join(", ", user.Roles)</td>
+                                <td>
+                                    <input class="form-control" @bind="user.FullName" />
+                                </td>
+                                <td>
+                                    <input class="form-control" type="email" @bind="user.Email" />
+                                    <input class="form-control" @bind="user.PhoneNumber" />
+                                </td>
+                                <td>
+                                    <select class="form-select" @bind="user.SelectedRole">
+                                        @foreach (var role in ApplicationRoles.All)
+                                        {
+                                            <option value="@role">@role</option>
+                                        }
+                                    </select>
+                                </td>
                                 <td>
                                     <span class="status-pill @(user.IsActive ? "active" : "inactive")">
                                         @(user.IsActive ? "Ativo" : "Inativo")
                                     </span>
+                                </td>
+                                <td>
+                                    <input class="form-control" type="password" @bind="user.NewPassword" />
+                                </td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-outline-primary" type="button" @onclick="() => SaveUser(user)">Salvar</button>
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" @onclick="() => ToggleUserStatus(user)">
+                                        @(user.IsActive ? "Desativar" : "Ativar")
+                                    </button>
                                 </td>
                             </tr>
                         }
@@ -135,7 +160,15 @@ else
         foreach (var user in users)
         {
             var roles = await UserManager.GetRolesAsync(user);
-            rows.Add(new UserRow(user.FullName, user.Email ?? string.Empty, roles.ToArray(), user.IsActive));
+            rows.Add(new UserRow
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email ?? string.Empty,
+                PhoneNumber = user.PhoneNumber ?? string.Empty,
+                IsActive = user.IsActive,
+                SelectedRole = roles.FirstOrDefault() ?? ApplicationRoles.Attendant
+            });
         }
 
         UserList = rows;
@@ -167,6 +200,155 @@ else
         await UserManager.AddToRoleAsync(user, Form.Role);
         Form = new();
         ShowSuccess("Usuario criado.");
+        await LoadUsers();
+    }
+
+    private async Task SaveUser(UserRow row)
+    {
+        var user = await UserManager.FindByIdAsync(row.Id);
+
+        if (user is null)
+        {
+            ShowError("Usuario nao encontrado.");
+            await LoadUsers();
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(row.FullName) ||
+            string.IsNullOrWhiteSpace(row.Email))
+        {
+            ShowError("Informe nome e email.");
+            return;
+        }
+
+        var email = row.Email.Trim();
+        var existingUser = await UserManager.FindByEmailAsync(email);
+
+        if (existingUser is not null && existingUser.Id != user.Id)
+        {
+            ShowError("Ja existe outro usuario com este email.");
+            await LoadUsers();
+            return;
+        }
+
+        if (!ApplicationRoles.All.Contains(row.SelectedRole, StringComparer.OrdinalIgnoreCase))
+        {
+            ShowError("Perfil invalido.");
+            return;
+        }
+
+        if (row.Id == Session.User?.Id &&
+            !ApplicationRoles.UserManagement.Contains(row.SelectedRole, StringComparer.OrdinalIgnoreCase))
+        {
+            ShowError("Voce nao pode remover seu proprio acesso administrativo.");
+            await LoadUsers();
+            return;
+        }
+
+        await EnsureRoles();
+
+        var currentRoles = await UserManager.GetRolesAsync(user);
+
+        if (!currentRoles.Contains(row.SelectedRole, StringComparer.OrdinalIgnoreCase))
+        {
+            var roleResult = await UserManager.AddToRoleAsync(user, row.SelectedRole);
+
+            if (!roleResult.Succeeded)
+            {
+                ShowError(string.Join(" ", roleResult.Errors.Select(error => error.Description)));
+                return;
+            }
+        }
+
+        var rolesToRemove = currentRoles
+            .Where(role => !role.Equals(row.SelectedRole, StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+
+        if (rolesToRemove.Length > 0)
+        {
+            var removeResult = await UserManager.RemoveFromRolesAsync(user, rolesToRemove);
+
+            if (!removeResult.Succeeded)
+            {
+                ShowError(string.Join(" ", removeResult.Errors.Select(error => error.Description)));
+                return;
+            }
+        }
+
+        user.FullName = row.FullName.Trim();
+        user.UserName = email;
+        user.Email = email;
+        user.PhoneNumber = row.PhoneNumber.Trim();
+        user.EmailConfirmed = true;
+
+        if (!string.IsNullOrWhiteSpace(row.NewPassword))
+        {
+            var passwordResult = await ReplacePassword(user, row.NewPassword);
+
+            if (!passwordResult.Succeeded)
+            {
+                ShowError(string.Join(" ", passwordResult.Errors.Select(error => error.Description)));
+                return;
+            }
+        }
+
+        user.UpdatedAt = DateTime.UtcNow;
+        var updateResult = await UserManager.UpdateAsync(user);
+
+        if (!updateResult.Succeeded)
+        {
+            ShowError(string.Join(" ", updateResult.Errors.Select(error => error.Description)));
+            return;
+        }
+
+        ShowSuccess("Usuario atualizado.");
+        await LoadUsers();
+    }
+
+    private async Task<IdentityResult> ReplacePassword(ApplicationUser user, string newPassword)
+    {
+        if (await UserManager.HasPasswordAsync(user))
+        {
+            var removeResult = await UserManager.RemovePasswordAsync(user);
+
+            if (!removeResult.Succeeded)
+            {
+                return removeResult;
+            }
+        }
+
+        return await UserManager.AddPasswordAsync(user, newPassword);
+    }
+
+    private async Task ToggleUserStatus(UserRow row)
+    {
+        var user = await UserManager.FindByIdAsync(row.Id);
+
+        if (user is null)
+        {
+            ShowError("Usuario nao encontrado.");
+            await LoadUsers();
+            return;
+        }
+
+        if (row.Id == Session.User?.Id && user.IsActive)
+        {
+            ShowError("Voce nao pode desativar seu proprio usuario.");
+            return;
+        }
+
+        user.IsActive = !user.IsActive;
+        user.UpdatedAt = DateTime.UtcNow;
+
+        var result = await UserManager.UpdateAsync(user);
+
+        if (!result.Succeeded)
+        {
+            ShowError(string.Join(" ", result.Errors.Select(error => error.Description)));
+            return;
+        }
+
+        ShowSuccess(user.IsActive ? "Usuario ativado." : "Usuario desativado.");
         await LoadUsers();
     }
 
@@ -208,5 +390,20 @@ else
         public bool IsActive { get; set; } = true;
     }
 
-    private sealed record UserRow(string FullName, string Email, IReadOnlyCollection<string> Roles, bool IsActive);
+    private sealed class UserRow
+    {
+        public string Id { get; set; } = string.Empty;
+
+        public string FullName { get; set; } = string.Empty;
+
+        public string Email { get; set; } = string.Empty;
+
+        public string PhoneNumber { get; set; } = string.Empty;
+
+        public string SelectedRole { get; set; } = ApplicationRoles.Attendant;
+
+        public bool IsActive { get; set; }
+
+        public string? NewPassword { get; set; }
+    }
 }

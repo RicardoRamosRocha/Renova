@@ -1,6 +1,8 @@
 @page "/ead-progress"
 @rendermode InteractiveServer
-@inject AppDbContext DbContext
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = ApplicationRoles.CourseManagementRoles)]
+@inject IDbContextFactory<AppDbContext> DbFactory
 @inject UserSession Session
 
 <PageTitle>Progresso EAD</PageTitle>
@@ -203,16 +205,18 @@ else
 
     private async Task LoadData()
     {
-        StudentList = await DbContext.Students
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        StudentList = await db.Students
             .OrderBy(student => student.FullName)
             .ToListAsync();
 
-        CourseList = await DbContext.Courses
+        CourseList = await db.Courses
             .Where(course => course.IsActive)
             .OrderBy(course => course.Title)
             .ToListAsync();
 
-        LessonList = await DbContext.Lessons
+        LessonList = await db.Lessons
             .Include(lesson => lesson.CourseModule)
             .ThenInclude(module => module.Course)
             .OrderBy(lesson => lesson.CourseModule.Course.Title)
@@ -220,7 +224,7 @@ else
             .ThenBy(lesson => lesson.Order)
             .ToListAsync();
 
-        ProgressList = await DbContext.StudentProgress
+        ProgressList = await db.StudentProgress
             .Include(progress => progress.Student)
             .Include(progress => progress.Lesson)
             .ThenInclude(lesson => lesson.CourseModule)
@@ -231,7 +235,7 @@ else
             .ThenBy(progress => progress.Lesson.Order)
             .ToListAsync();
 
-        CertificateList = await DbContext.Certificates
+        CertificateList = await db.Certificates
             .Include(certificate => certificate.Student)
             .Include(certificate => certificate.Course)
             .OrderByDescending(certificate => certificate.IssuedAt)
@@ -248,7 +252,9 @@ else
         }
 
         var watchedPercentage = Math.Clamp(ProgressForm.WatchedPercentage, 0, 100);
-        var progress = await DbContext.StudentProgress
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var progress = await db.StudentProgress
             .FirstOrDefaultAsync(item => item.StudentId == studentId && item.LessonId == lessonId);
 
         if (progress is null)
@@ -260,14 +266,14 @@ else
                 CreatedAt = DateTime.UtcNow
             };
 
-            DbContext.StudentProgress.Add(progress);
+            db.StudentProgress.Add(progress);
         }
 
         progress.WatchedPercentage = watchedPercentage;
         progress.CompletedAt = watchedPercentage >= 100 ? DateTime.UtcNow : null;
         progress.UpdatedAt = DateTime.UtcNow;
 
-        await DbContext.SaveChangesAsync();
+        await db.SaveChangesAsync();
         ProgressForm = new();
         ShowSuccess("Progresso salvo.");
         await LoadData();
@@ -282,7 +288,9 @@ else
             return;
         }
 
-        var exists = await DbContext.Certificates
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var exists = await db.Certificates
             .AnyAsync(certificate => certificate.StudentId == studentId && certificate.CourseId == courseId);
 
         if (exists)
@@ -291,7 +299,7 @@ else
             return;
         }
 
-        DbContext.Certificates.Add(new Certificate
+        db.Certificates.Add(new Certificate
         {
             StudentId = studentId,
             CourseId = courseId,
@@ -299,7 +307,7 @@ else
             IssuedAt = DateTime.UtcNow
         });
 
-        await DbContext.SaveChangesAsync();
+        await db.SaveChangesAsync();
         CertificateForm = new();
         ShowSuccess("Certificado emitido.");
         await LoadData();

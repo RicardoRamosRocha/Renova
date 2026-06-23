@@ -1,10 +1,25 @@
 @inject UserSession Session
+@inject UserSessionLoader SessionLoader
+@implements IDisposable
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Renova</a>
     </div>
 </div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        Session.Changed += StateHasChanged;
+        await SessionLoader.LoadAsync();
+    }
+
+    public void Dispose()
+    {
+        Session.Changed -= StateHasChanged;
+    }
+}
 
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 

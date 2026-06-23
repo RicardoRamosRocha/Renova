@@ -1,6 +1,8 @@
 @page "/students/{StudentId:guid}"
 @rendermode InteractiveServer
-@inject AppDbContext DbContext
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = ApplicationRoles.StudentRecordRoles)]
+@inject IDbContextFactory<AppDbContext> DbFactory
 @inject UserSession Session
 
 <PageTitle>Ficha do aluno</PageTitle>
@@ -223,19 +225,21 @@ else
 
     private async Task LoadData()
     {
-        Student = await DbContext.Students.FirstOrDefaultAsync(student => student.Id == StudentId);
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        Student = await db.Students.FirstOrDefaultAsync(student => student.Id == StudentId);
 
         if (Student is null)
         {
             return;
         }
 
-        FamilyMembers = await DbContext.FamilyMembers
+        FamilyMembers = await db.FamilyMembers
             .Where(familyMember => familyMember.StudentId == StudentId)
             .OrderBy(familyMember => familyMember.FullName)
             .ToListAsync();
 
-        MedicalRecord = await DbContext.MedicalRecords
+        MedicalRecord = await db.MedicalRecords
             .FirstOrDefaultAsync(record => record.StudentId == StudentId);
 
         MedicalRecordForm = new MedicalRecordFormModel
@@ -244,19 +248,19 @@ else
             ClinicalNotes = MedicalRecord?.ClinicalNotes ?? string.Empty
         };
 
-        MedicalEvolutions = await DbContext.MedicalEvolutions
+        MedicalEvolutions = await db.MedicalEvolutions
             .Include(evolution => evolution.Professional)
             .Where(evolution => evolution.StudentId == StudentId && !evolution.IsDeleted)
             .OrderByDescending(evolution => evolution.CreatedAt)
             .ToListAsync();
 
-        Appointments = await DbContext.Appointments
+        Appointments = await db.Appointments
             .Include(appointment => appointment.Professional)
             .Where(appointment => appointment.StudentId == StudentId)
             .OrderByDescending(appointment => appointment.ScheduledAt)
             .ToListAsync();
 
-        ActiveProfessionals = await DbContext.Professionals
+        ActiveProfessionals = await db.Professionals
             .Where(professional => professional.IsActive)
             .OrderBy(professional => professional.FullName)
             .ToListAsync();
@@ -264,7 +268,9 @@ else
 
     private async Task SaveFamilyMember()
     {
-        DbContext.FamilyMembers.Add(new FamilyMember
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        db.FamilyMembers.Add(new FamilyMember
         {
             StudentId = StudentId,
             FullName = FamilyForm.FullName.Trim(),
@@ -275,7 +281,7 @@ else
             CreatedAt = DateTime.UtcNow
         });
 
-        await DbContext.SaveChangesAsync();
+        await db.SaveChangesAsync();
         FamilyForm = new();
         Message = "Familiar cadastrado.";
         await LoadData();
@@ -283,22 +289,27 @@ else
 
     private async Task SaveMedicalRecord()
     {
-        if (MedicalRecord is null)
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var medicalRecord = await db.MedicalRecords
+            .FirstOrDefaultAsync(record => record.StudentId == StudentId);
+
+        if (medicalRecord is null)
         {
-            MedicalRecord = new MedicalRecord
+            medicalRecord = new MedicalRecord
             {
                 StudentId = StudentId,
                 CreatedAt = DateTime.UtcNow
             };
 
-            DbContext.MedicalRecords.Add(MedicalRecord);
+            db.MedicalRecords.Add(medicalRecord);
         }
 
-        MedicalRecord.Anamnesis = MedicalRecordForm.Anamnesis.Trim();
-        MedicalRecord.ClinicalNotes = MedicalRecordForm.ClinicalNotes.Trim();
-        MedicalRecord.UpdatedAt = DateTime.UtcNow;
+        medicalRecord.Anamnesis = MedicalRecordForm.Anamnesis.Trim();
+        medicalRecord.ClinicalNotes = MedicalRecordForm.ClinicalNotes.Trim();
+        medicalRecord.UpdatedAt = DateTime.UtcNow;
 
-        await DbContext.SaveChangesAsync();
+        await db.SaveChangesAsync();
         Message = "Prontuario salvo.";
         await LoadData();
     }
@@ -310,7 +321,9 @@ else
             return;
         }
 
-        DbContext.MedicalEvolutions.Add(new MedicalEvolution
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        db.MedicalEvolutions.Add(new MedicalEvolution
         {
             StudentId = StudentId,
             ProfessionalId = professionalId,
@@ -318,7 +331,7 @@ else
             CreatedAt = DateTime.UtcNow
         });
 
-        await DbContext.SaveChangesAsync();
+        await db.SaveChangesAsync();
         EvolutionForm = new();
         Message = "Evolucao registrada.";
         await LoadData();
@@ -330,7 +343,9 @@ else
             ? selectedProfessionalId
             : null;
 
-        DbContext.Appointments.Add(new Appointment
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        db.Appointments.Add(new Appointment
         {
             StudentId = StudentId,
             ProfessionalId = professionalId,
@@ -340,7 +355,7 @@ else
             CreatedAt = DateTime.UtcNow
         });
 
-        await DbContext.SaveChangesAsync();
+        await db.SaveChangesAsync();
         AppointmentForm = new();
         Message = "Agendamento criado.";
         await LoadData();

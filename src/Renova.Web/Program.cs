@@ -101,7 +101,7 @@ app.MapPost("/auth/web-login", async (
             ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
         });
 
-    return Results.Redirect("/students");
+    return Results.Redirect("/");
 }).DisableAntiforgery();
 
 app.MapPost("/auth/web-logout", async (HttpContext httpContext) =>

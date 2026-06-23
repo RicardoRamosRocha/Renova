@@ -46,11 +46,6 @@ public class UserSessionLoader
                 return;
             }
 
-            if (_session.User?.Id == userId)
-            {
-                return;
-            }
-
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user is null || !user.IsActive)

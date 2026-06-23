@@ -1,6 +1,8 @@
 @page "/courses"
 @rendermode InteractiveServer
-@inject AppDbContext DbContext
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = ApplicationRoles.CourseManagementRoles)]
+@inject IDbContextFactory<AppDbContext> DbFactory
 @inject UserSession Session
 
 <PageTitle>Cursos</PageTitle>
@@ -224,13 +226,15 @@ else
 
     private async Task LoadCourses()
     {
-        CourseList = await DbContext.Courses
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        CourseList = await db.Courses
             .Include(course => course.Modules)
             .ThenInclude(module => module.Lessons)
             .OrderBy(course => course.Title)
             .ToListAsync();
 
-        ModuleList = await DbContext.CourseModules
+        ModuleList = await db.CourseModules
             .Include(module => module.Course)
             .OrderBy(module => module.Course.Title)
             .ThenBy(module => module.Order)
@@ -239,7 +243,9 @@ else
 
     private async Task SaveCourse()
     {
-        DbContext.Courses.Add(new Course
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        db.Courses.Add(new Course
         {
             Title = CourseForm.Title.Trim(),
             Description = CourseForm.Description.Trim(),
@@ -247,7 +253,7 @@ else
             CreatedAt = DateTime.UtcNow
         });
 
-        await DbContext.SaveChangesAsync();
+        await db.SaveChangesAsync();
         CourseForm = new();
         ShowSuccess("Curso cadastrado.");
         await LoadCourses();
@@ -261,7 +267,9 @@ else
             return;
         }
 
-        DbContext.CourseModules.Add(new CourseModule
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        db.CourseModules.Add(new CourseModule
         {
             CourseId = courseId,
             Title = ModuleForm.Title.Trim(),
@@ -270,11 +278,17 @@ else
             CreatedAt = DateTime.UtcNow
         });
 
-        if (!await TrySave("Modulo cadastrado.", "Ja existe um modulo com esta ordem neste curso."))
+        try
         {
+            await db.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            ShowError("Ja existe um modulo com esta ordem neste curso.");
             return;
         }
 
+        ShowSuccess("Modulo cadastrado.");
         ModuleForm = new();
         await LoadCourses();
     }
@@ -287,7 +301,9 @@ else
             return;
         }
 
-        DbContext.Lessons.Add(new Lesson
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        db.Lessons.Add(new Lesson
         {
             CourseModuleId = moduleId,
             Title = LessonForm.Title.Trim(),
@@ -299,30 +315,19 @@ else
             CreatedAt = DateTime.UtcNow
         });
 
-        if (!await TrySave("Aula cadastrada.", "Ja existe uma aula com esta ordem neste modulo."))
-        {
-            return;
-        }
-
-        LessonForm = new();
-        await LoadCourses();
-    }
-
-    private async Task<bool> TrySave(string successMessage, string duplicateMessage)
-    {
         try
         {
-            await DbContext.SaveChangesAsync();
+            await db.SaveChangesAsync();
         }
         catch (DbUpdateException)
         {
-            DbContext.ChangeTracker.Clear();
-            ShowError(duplicateMessage);
-            return false;
+            ShowError("Ja existe uma aula com esta ordem neste modulo.");
+            return;
         }
 
-        ShowSuccess(successMessage);
-        return true;
+        ShowSuccess("Aula cadastrada.");
+        LessonForm = new();
+        await LoadCourses();
     }
 
     private void ShowSuccess(string message)

@@ -1,10 +1,8 @@
 @page "/"
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-@using System.Security.Claims
-@using Microsoft.AspNetCore.Components.Authorization
-
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserSession Session
+@inject UserSessionLoader SessionLoader
 
 <PageTitle>Renova</PageTitle>
 
@@ -19,57 +17,57 @@
 <div class="metrics-grid">
     <div class="metric-card">
         <span>Sessão</span>
-        <strong>@(IsAuthenticated ? "Ativa" : "Sem login")</strong>
+        <strong>@(Session.IsAuthenticated ? "Ativa" : "Sem login")</strong>
     </div>
 
     <div class="metric-card">
         <span>Usuário</span>
-        <strong>@UserName</strong>
+        <strong>@(Session.User?.FullName ?? "-")</strong>
     </div>
 
     <div class="metric-card">
         <span>Perfis</span>
-        <strong>@(Roles.Count == 0 ? "-" : string.Join(", ", Roles))</strong>
+        <strong>@(Session.Roles.Count == 0 ? "-" : string.Join(", ", Session.Roles))</strong>
     </div>
 </div>
 
-@if (IsAuthenticated)
+@if (Session.IsAuthenticated)
 {
     <div class="data-panel access-summary">
         <h2>Acessos liberados</h2>
 
         <div class="access-chip-list">
-            @if (CanManageUsers)
+            @if (Session.CanManageUsers)
             {
                 <a class="access-chip" href="users">Usuários</a>
             }
 
-            @if (CanManageStudents)
+            @if (Session.CanManageStudents)
             {
                 <a class="access-chip" href="students">Alunos</a>
             }
 
-            @if (CanManageProfessionals)
+            @if (Session.CanManageProfessionals)
             {
                 <a class="access-chip" href="professionals">Profissionais</a>
             }
 
-            @if (CanManageEad)
+            @if (Session.CanManageEad)
             {
                 <a class="access-chip" href="courses">Cursos</a>
                 <a class="access-chip" href="ead-progress">Progresso EAD</a>
             }
 
-            @if (CanManageFinance)
+            @if (Session.CanManageFinance)
             {
                 <a class="access-chip" href="finance">Financeiro</a>
             }
 
-            @if (!CanManageUsers &&
-                !CanManageStudents &&
-                !CanManageProfessionals &&
-                !CanManageEad &&
-                !CanManageFinance)
+            @if (!Session.CanManageUsers &&
+                !Session.CanManageStudents &&
+                !Session.CanManageProfessionals &&
+                !Session.CanManageEad &&
+                !Session.CanManageFinance)
             {
                 <span class="muted">Nenhuma área administrativa liberada para este perfil.</span>
             }
@@ -78,63 +76,8 @@
 }
 
 @code {
-    private bool IsAuthenticated;
-    private string UserName = "-";
-    private List<string> Roles = new();
-
-   private bool CanManageUsers =>
-    IsInAnyRole("Administrator", "Administrador");
-
-private bool CanManageStudents =>
-    IsInAnyRole("Administrator", "Administrador", "Coordinator", "Coordenador", "Attendant", "Atendente");
-
-private bool CanManageProfessionals =>
-    IsInAnyRole("Administrator", "Administrador", "Coordinator", "Coordenador");
-
-private bool CanManageEad =>
-    IsInAnyRole("Administrator", "Administrador", "Teacher", "Professor");
-
-private bool CanManageFinance =>
-    IsInAnyRole("Administrator", "Administrador");
-
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        IsAuthenticated = user.Identity?.IsAuthenticated == true;
-
-        if (!IsAuthenticated)
-        {
-            return;
-        }
-
-        UserName =
-            user.FindFirst(ClaimTypes.Name)?.Value
-            ?? user.Identity?.Name
-            ?? "-";
-
-        Roles = user.Claims
-     .Select(c => c.Value.Trim())
-     .Distinct(StringComparer.OrdinalIgnoreCase)
-     .ToList();
-
-     Console.WriteLine("ROLES:");
-         foreach (var role in Roles)
-    {
-        Console.WriteLine(role);
-    }
-    }
-
-    
-
-    private bool IsInRole(string role)
-    {
-        return Roles.Contains(role, StringComparer.OrdinalIgnoreCase);
-    }
-
-    private bool IsInAnyRole(params string[] roles)
-    {
-        return roles.Any(IsInRole);
+        await SessionLoader.LoadAsync();
     }
 }

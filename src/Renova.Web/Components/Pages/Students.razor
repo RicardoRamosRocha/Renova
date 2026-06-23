@@ -4,7 +4,7 @@
 @using Microsoft.EntityFrameworkCore
 @using Renova.Domain.Entities
 @using Renova.Infrastructure.Data
-@attribute [Authorize(Roles = "Administrator,Administrador")]
+@attribute [Authorize(Roles = ApplicationRoles.StudentManagementRoles)]
 @inject IDbContextFactory<AppDbContext> DbFactory
 @using Microsoft.AspNetCore.Components.Authorization
 

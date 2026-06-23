@@ -1,6 +1,8 @@
 @page "/finance"
 @rendermode InteractiveServer
-@inject AppDbContext DbContext
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = ApplicationRoles.FinancialManagementRoles)]
+@inject IDbContextFactory<AppDbContext> DbFactory
 @inject UserSession Session
 
 <PageTitle>Financeiro</PageTitle>
@@ -235,31 +237,33 @@ else
 
     private async Task LoadData()
     {
-        StudentList = await DbContext.Students
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        StudentList = await db.Students
             .OrderBy(student => student.FullName)
             .ToListAsync();
 
-        PaymentList = await DbContext.Payments
+        PaymentList = await db.Payments
             .Include(payment => payment.Student)
             .OrderByDescending(payment => payment.CreatedAt)
             .Take(50)
             .ToListAsync();
 
-        SubscriptionList = await DbContext.Subscriptions
+        SubscriptionList = await db.Subscriptions
             .Include(subscription => subscription.Student)
             .OrderBy(subscription => subscription.NextDueDate)
             .Take(50)
             .ToListAsync();
 
-        PaidTotal = await DbContext.Payments
+        PaidTotal = await db.Payments
             .Where(payment => payment.PaidAt != null)
             .SumAsync(payment => payment.Amount);
 
-        PendingTotal = await DbContext.Payments
+        PendingTotal = await db.Payments
             .Where(payment => payment.PaidAt == null)
             .SumAsync(payment => payment.Amount);
 
-        ActiveSubscriptions = await DbContext.Subscriptions
+        ActiveSubscriptions = await db.Subscriptions
             .CountAsync(subscription => subscription.Status == 1);
     }
 
@@ -271,7 +275,9 @@ else
             return;
         }
 
-        DbContext.Payments.Add(new Payment
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        db.Payments.Add(new Payment
         {
             StudentId = studentId,
             Amount = PaymentForm.Amount,
@@ -286,11 +292,10 @@ else
 
         try
         {
-            await DbContext.SaveChangesAsync();
+            await db.SaveChangesAsync();
         }
         catch (DbUpdateException)
         {
-            DbContext.ChangeTracker.Clear();
             ShowError("Ja existe um pagamento com este ID externo.");
             return;
         }
@@ -308,7 +313,9 @@ else
             return;
         }
 
-        DbContext.Subscriptions.Add(new Subscription
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        db.Subscriptions.Add(new Subscription
         {
             StudentId = studentId,
             PlanName = SubscriptionForm.PlanName.Trim(),
@@ -318,7 +325,7 @@ else
             CreatedAt = DateTime.UtcNow
         });
 
-        await DbContext.SaveChangesAsync();
+        await db.SaveChangesAsync();
         SubscriptionForm = new();
         ShowSuccess("Assinatura salva.");
         await LoadData();

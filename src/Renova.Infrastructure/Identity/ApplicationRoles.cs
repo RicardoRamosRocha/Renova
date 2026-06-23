@@ -4,6 +4,14 @@ namespace Renova.Infrastructure.Identity;
 
 public static class ApplicationRoles
 {
+    public const string AdministratorAlias = "Administrator";
+    public const string CoordinatorAlias = "Coordinator";
+    public const string ProfessionalAlias = "Professional";
+    public const string AttendantAlias = "Attendant";
+    public const string TeacherAlias = "Teacher";
+    public const string StudentAlias = "Student";
+    public const string FamilyMemberAlias = "FamilyMember";
+
     public const string Administrator = "Administrador";
     public const string Coordinator = "Coordenador";
     public const string Professional = "Profissional";
@@ -11,6 +19,99 @@ public static class ApplicationRoles
     public const string Teacher = "Professor";
     public const string Student = "Aluno";
     public const string FamilyMember = "Familiar";
+
+    public const string UserManagementRoles =
+        AdministratorAlias + "," + Administrator;
+
+    public const string StudentManagementRoles =
+        AdministratorAlias + "," + Administrator + "," +
+        CoordinatorAlias + "," + Coordinator + "," +
+        AttendantAlias + "," + Attendant;
+
+    public const string StudentRecordRoles =
+        AdministratorAlias + "," + Administrator + "," +
+        CoordinatorAlias + "," + Coordinator + "," +
+        ProfessionalAlias + "," + Professional + "," +
+        AttendantAlias + "," + Attendant;
+
+    public const string ProfessionalManagementRoles =
+        AdministratorAlias + "," + Administrator + "," +
+        CoordinatorAlias + "," + Coordinator;
+
+    public const string CourseManagementRoles =
+        AdministratorAlias + "," + Administrator + "," +
+        TeacherAlias + "," + Teacher;
+
+    public const string FinancialManagementRoles =
+        AdministratorAlias + "," + Administrator;
+
+    public const string CourseAccessRoles =
+        AdministratorAlias + "," + Administrator + "," +
+        TeacherAlias + "," + Teacher + "," +
+        StudentAlias + "," + Student + "," +
+        FamilyMemberAlias + "," + FamilyMember;
+
+    public static readonly string[] UserManagement =
+    [
+        AdministratorAlias,
+        Administrator
+    ];
+
+    public static readonly string[] StudentManagement =
+    [
+        AdministratorAlias,
+        Administrator,
+        CoordinatorAlias,
+        Coordinator,
+        AttendantAlias,
+        Attendant
+    ];
+
+    public static readonly string[] StudentRecords =
+    [
+        AdministratorAlias,
+        Administrator,
+        CoordinatorAlias,
+        Coordinator,
+        ProfessionalAlias,
+        Professional,
+        AttendantAlias,
+        Attendant
+    ];
+
+    public static readonly string[] ProfessionalManagement =
+    [
+        AdministratorAlias,
+        Administrator,
+        CoordinatorAlias,
+        Coordinator
+    ];
+
+    public static readonly string[] CourseManagement =
+    [
+        AdministratorAlias,
+        Administrator,
+        TeacherAlias,
+        Teacher
+    ];
+
+    public static readonly string[] FinancialManagement =
+    [
+        AdministratorAlias,
+        Administrator
+    ];
+
+    public static readonly string[] CourseAccess =
+    [
+        AdministratorAlias,
+        Administrator,
+        TeacherAlias,
+        Teacher,
+        StudentAlias,
+        Student,
+        FamilyMemberAlias,
+        FamilyMember
+    ];
 
     public static readonly string[] All =
     [

@@ -39,36 +39,22 @@ builder.Services
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("UserManagement", policy =>
-        policy.RequireRole(ApplicationRoles.Administrator));
+        policy.RequireRole(ApplicationRoles.UserManagement));
 
     options.AddPolicy("FinancialManagement", policy =>
-        policy.RequireRole(ApplicationRoles.Administrator));
+        policy.RequireRole(ApplicationRoles.FinancialManagement));
 
     options.AddPolicy("ClinicalAccess", policy =>
-        policy.RequireRole(
-            ApplicationRoles.Administrator,
-            ApplicationRoles.Coordinator,
-            ApplicationRoles.Professional,
-            ApplicationRoles.Attendant));
+        policy.RequireRole(ApplicationRoles.StudentRecords));
 
     options.AddPolicy("CourseManagement", policy =>
-        policy.RequireRole(
-            ApplicationRoles.Administrator,
-            ApplicationRoles.Teacher));
+        policy.RequireRole(ApplicationRoles.CourseManagement));
 
     options.AddPolicy("CourseAccess", policy =>
-        policy.RequireRole(
-            ApplicationRoles.Administrator,
-            ApplicationRoles.Teacher,
-            ApplicationRoles.Student,
-            ApplicationRoles.FamilyMember));
+        policy.RequireRole(ApplicationRoles.CourseAccess));
 
     options.AddPolicy("StudentLearning", policy =>
-        policy.RequireRole(
-            ApplicationRoles.Administrator,
-            ApplicationRoles.Teacher,
-            ApplicationRoles.Student,
-            ApplicationRoles.FamilyMember));
+        policy.RequireRole(ApplicationRoles.CourseAccess));
 });
 
 var app = builder.Build();
