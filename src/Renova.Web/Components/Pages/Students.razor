@@ -1,39 +1,17 @@
 @page "/students"
 @rendermode InteractiveServer
+
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @using Renova.Domain.Entities
 @using Renova.Infrastructure.Data
+@using Renova.Infrastructure.Identity
+
 @attribute [Authorize(Roles = ApplicationRoles.StudentManagementRoles)]
+
 @inject IDbContextFactory<AppDbContext> DbFactory
-@using Microsoft.AspNetCore.Components.Authorization
 
 <PageTitle>Alunos</PageTitle>
-
-<section class="page-header compact">
-    <div>
-        <p class="eyebrow">CRM</p>
-        <h1>Alunos</h1>
-        <p>Cadastro básico para validar o fluxo principal do sistema.</p>
-
-        <hr />
-
-        <AuthorizeView>
-            <Authorized>
-                <div class="alert alert-success">
-                    Usuário autenticado
-                </div>
-            </Authorized>
-
-            <NotAuthorized>
-                <div class="alert alert-danger">
-                    Usuário NÃO autenticado
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
-
-    </div>
-</section>
 
 <section class="page-header compact">
     <div>
@@ -90,6 +68,24 @@
             <button class="btn btn-sm btn-outline-secondary" @onclick="LoadStudents">Atualizar</button>
         </div>
 
+        <div class="mb-3">
+            <label>Buscar aluno</label>
+            <div class="input-group">
+                <input class="form-control"
+                       placeholder="Nome, CPF, telefone ou e-mail"
+                       @bind="SearchTerm"
+                       @bind:event="oninput" />
+
+                <button class="btn btn-outline-primary" @onclick="LoadStudents">
+                    Buscar
+                </button>
+            </div>
+        </div>
+
+        <p class="muted">
+            Total encontrado: @StudentList.Count
+        </p>
+
         @if (StudentList.Count == 0)
         {
             <p class="muted">Nenhum aluno cadastrado.</p>
@@ -113,9 +109,11 @@
                             <td>@student.FullName</td>
                             <td>@student.CPF</td>
                             <td>@student.Phone</td>
-                            <td>@student.Status</td>
+                            <td>@GetStatusLabel(student.Status)</td>
                             <td class="text-end">
-                                <a class="btn btn-sm btn-outline-primary" href="@($"students/{student.Id}")">Abrir</a>
+                                <a class="btn btn-sm btn-outline-primary" href="@($"students/{student.Id}")">
+                                    Abrir
+                                </a>
                             </td>
                         </tr>
                     }
@@ -128,6 +126,7 @@
 @code {
     private List<Student> StudentList { get; set; } = new();
     private StudentForm Form { get; set; } = new();
+    private string SearchTerm { get; set; } = string.Empty;
     private string? Message;
 
     protected override async Task OnInitializedAsync()
@@ -135,14 +134,27 @@
         await LoadStudents();
     }
 
-   private async Task LoadStudents()
-{
-    await using var db = await DbFactory.CreateDbContextAsync();
+    private async Task LoadStudents()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
 
-    StudentList = await db.Students
-        .OrderBy(student => student.FullName)
-        .ToListAsync();
-}
+        var query = db.Students.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(SearchTerm))
+        {
+            var term = SearchTerm.Trim().ToLower();
+
+            query = query.Where(student =>
+                student.FullName.ToLower().Contains(term) ||
+                student.CPF.ToLower().Contains(term) ||
+                student.Phone.ToLower().Contains(term) ||
+                (student.Email != null && student.Email.ToLower().Contains(term)));
+        }
+
+        StudentList = await query
+            .OrderBy(student => student.FullName)
+            .ToListAsync();
+    }
 
     private async Task SaveStudent()
     {
@@ -166,7 +178,20 @@
 
         Form = new();
         Message = "Aluno cadastrado.";
+
         await LoadStudents();
+    }
+
+    private static string GetStatusLabel(int status)
+    {
+        return status switch
+        {
+            1 => "Ativo",
+            2 => "Inativo",
+            3 => "Em acompanhamento",
+            4 => "Concluído",
+            _ => "Não informado"
+        };
     }
 
     private sealed class StudentForm

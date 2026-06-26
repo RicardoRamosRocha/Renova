@@ -1,35 +1,39 @@
-@page "/students/{StudentId:guid}"
+@page "/students/{Id:guid}"
 @rendermode InteractiveServer
+
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using Renova.Domain.Entities
+@using Renova.Infrastructure.Data
+@using Renova.Infrastructure.Identity
+
 @attribute [Authorize(Roles = ApplicationRoles.StudentRecordRoles)]
+
 @inject IDbContextFactory<AppDbContext> DbFactory
-@inject UserSession Session
+@inject NavigationManager Navigation
 
-<PageTitle>Ficha do aluno</PageTitle>
+<PageTitle>Detalhes do Aluno</PageTitle>
 
-@if (!Session.IsAuthenticated)
+@if (Student is null)
 {
-    <div class="alert alert-warning">Faca login para acessar a ficha do aluno.</div>
-    <a class="btn btn-primary" href="login">Entrar</a>
-}
-else if (!Session.CanViewStudentRecords)
-{
-    <div class="alert alert-warning">Seu perfil nao pode acessar fichas de alunos.</div>
-}
-else if (Student is null)
-{
-    <div class="alert alert-warning">Aluno nao encontrado.</div>
-    <a class="btn btn-outline-secondary" href="students">Voltar para alunos</a>
+    <div class="alert alert-warning">
+        Aluno não encontrado.
+    </div>
+
+    <a class="btn btn-secondary" href="/students">Voltar</a>
 }
 else
 {
     <section class="page-header compact">
         <div>
-            <p class="eyebrow">Ficha do aluno</p>
+            <p class="eyebrow">CRM / Alunos</p>
             <h1>@Student.FullName</h1>
-            <p>@Student.Phone | @Student.CPF</p>
+            <p>Detalhes cadastrais e visão inicial do acompanhamento.</p>
         </div>
-        <a class="btn btn-outline-secondary" href="students">Voltar</a>
+
+        <div>
+            <a class="btn btn-secondary" href="/students">Voltar</a>
+        </div>
     </section>
 
     @if (!string.IsNullOrWhiteSpace(Message))
@@ -37,365 +41,159 @@ else
         <div class="alert alert-success">@Message</div>
     }
 
-    <div class="detail-grid">
-        <div class="data-panel">
-            <div class="panel-title">
-                <h2>Familiares</h2>
-            </div>
+    <div class="split-grid">
+        <div class="form-panel">
+            <h2>Editar dados</h2>
 
-            <EditForm Model="FamilyForm" OnValidSubmit="SaveFamilyMember">
+            <EditForm Model="Form" OnValidSubmit="SaveChanges">
                 <DataAnnotationsValidator />
-                <div class="inline-form">
-                    <InputText class="form-control" placeholder="Nome" @bind-Value="FamilyForm.FullName" />
-                    <InputText class="form-control" placeholder="Parentesco" @bind-Value="FamilyForm.Relationship" />
-                    <InputText class="form-control" placeholder="Telefone" @bind-Value="FamilyForm.Phone" />
-                    <InputText class="form-control" placeholder="Email" @bind-Value="FamilyForm.Email" />
-                    <label class="checkbox-line compact-check">
-                        <InputCheckbox class="form-check-input" @bind-Value="FamilyForm.CanAccessPortal" />
-                        Portal
-                    </label>
-                    <button class="btn btn-primary" type="submit">Adicionar</button>
-                </div>
-            </EditForm>
+                <ValidationSummary />
 
-            @if (FamilyMembers.Count == 0)
-            {
-                <p class="muted">Nenhum familiar cadastrado.</p>
-            }
-            else
-            {
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Parentesco</th>
-                            <th>Contato</th>
-                            <th>Portal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var familyMember in FamilyMembers)
-                        {
-                            <tr>
-                                <td>@familyMember.FullName</td>
-                                <td>@familyMember.Relationship</td>
-                                <td>
-                                    <span>@familyMember.Phone</span>
-                                    @if (!string.IsNullOrWhiteSpace(familyMember.Email))
-                                    {
-                                        <small class="muted block">@familyMember.Email</small>
-                                    }
-                                </td>
-                                <td>@(familyMember.CanAccessPortal ? "Sim" : "Nao")</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-        </div>
+                <label>Nome completo</label>
+                <InputText class="form-control" @bind-Value="Form.FullName" />
 
-        <div class="data-panel">
-            <div class="panel-title">
-                <h2>Prontuario</h2>
-            </div>
+                <label>Nascimento</label>
+                <InputDate class="form-control" @bind-Value="Form.BirthDate" />
 
-            <EditForm Model="MedicalRecordForm" OnValidSubmit="SaveMedicalRecord">
-                <DataAnnotationsValidator />
-                <label>Anamnese</label>
-                <InputTextArea class="form-control text-area" @bind-Value="MedicalRecordForm.Anamnesis" />
+                <label>CPF</label>
+                <InputText class="form-control" @bind-Value="Form.CPF" />
 
-                <label>Notas clinicas</label>
-                <InputTextArea class="form-control text-area" @bind-Value="MedicalRecordForm.ClinicalNotes" />
+                <label>Telefone</label>
+                <InputText class="form-control" @bind-Value="Form.Phone" />
 
-                <button class="btn btn-primary" type="submit">Salvar prontuario</button>
-            </EditForm>
-        </div>
+                <label>Email</label>
+                <InputText class="form-control" @bind-Value="Form.Email" />
 
-        <div class="data-panel">
-            <div class="panel-title">
-                <h2>Evolucoes</h2>
-            </div>
-
-            @if (ActiveProfessionals.Count == 0)
-            {
-                <p class="muted">Cadastre um profissional ativo antes de registrar evolucoes.</p>
-            }
-            else
-            {
-                <EditForm Model="EvolutionForm" OnValidSubmit="SaveEvolution">
-                    <DataAnnotationsValidator />
-                    <label>Profissional</label>
-                    <InputSelect class="form-select" @bind-Value="EvolutionForm.ProfessionalId">
-                        <option value="">Selecione</option>
-                        @foreach (var professional in ActiveProfessionals)
-                        {
-                            <option value="@professional.Id">@professional.FullName - @professional.Specialty</option>
-                        }
-                    </InputSelect>
-
-                    <label>Descricao</label>
-                    <InputTextArea class="form-control text-area" @bind-Value="EvolutionForm.Description" />
-
-                    <button class="btn btn-primary" type="submit">Registrar evolucao</button>
-                </EditForm>
-            }
-
-            <div class="timeline">
-                @foreach (var evolution in MedicalEvolutions)
-                {
-                    <article class="timeline-item">
-                        <strong>@evolution.Professional.FullName</strong>
-                        <span>@evolution.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</span>
-                        <p>@evolution.Description</p>
-                    </article>
-                }
-            </div>
-        </div>
-
-        <div class="data-panel">
-            <div class="panel-title">
-                <h2>Agendamentos</h2>
-            </div>
-
-            <EditForm Model="AppointmentForm" OnValidSubmit="SaveAppointment">
-                <DataAnnotationsValidator />
-                <label>Data e hora</label>
-                <InputDate class="form-control" @bind-Value="AppointmentForm.ScheduledAt" />
-
-                <label>Profissional</label>
-                <InputSelect class="form-select" @bind-Value="AppointmentForm.ProfessionalId">
-                    <option value="">Sem profissional definido</option>
-                    @foreach (var professional in ActiveProfessionals)
-                    {
-                        <option value="@professional.Id">@professional.FullName</option>
-                    }
-                </InputSelect>
+                <label>Endereço</label>
+                <InputText class="form-control" @bind-Value="Form.Address" />
 
                 <label>Status</label>
-                <InputNumber class="form-control" @bind-Value="AppointmentForm.Status" />
+                <InputNumber class="form-control" @bind-Value="Form.Status" />
 
-                <label>Notas</label>
-                <InputTextArea class="form-control text-area" @bind-Value="AppointmentForm.Notes" />
+                <label>Admissão</label>
+                <InputDate class="form-control" @bind-Value="Form.AdmissionDate" />
 
-                <button class="btn btn-primary" type="submit">Agendar</button>
+                <button class="btn btn-primary" type="submit">Salvar alterações</button>
             </EditForm>
+        </div>
 
-            <div class="timeline">
-                @foreach (var appointment in Appointments)
-                {
-                    <article class="timeline-item">
-                        <strong>@appointment.ScheduledAt.ToLocalTime().ToString("dd/MM/yyyy")</strong>
-                        <span>@appointment.ScheduledAt.ToLocalTime().ToString("HH:mm") | Status @appointment.Status</span>
-                        <p>@(appointment.Professional?.FullName ?? "Sem profissional definido")</p>
-                        @if (!string.IsNullOrWhiteSpace(appointment.Notes))
-                        {
-                            <p>@appointment.Notes</p>
-                        }
-                    </article>
-                }
-            </div>
+        <div class="data-panel">
+            <h2>Resumo</h2>
+
+            <p><strong>Nome:</strong> @Student.FullName</p>
+            <p><strong>CPF:</strong> @Student.CPF</p>
+            <p><strong>Telefone:</strong> @Student.Phone</p>
+            <p><strong>Email:</strong> @(Student.Email ?? "-")</p>
+            <p><strong>Endereço:</strong> @(Student.Address ?? "-")</p>
+            <p><strong>Status:</strong> @GetStatusLabel(Student.Status)</p>
+            <p><strong>Admissão:</strong> @Student.AdmissionDate.ToString("dd/MM/yyyy")</p>
+            <p><strong>Criado em:</strong> @Student.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+        </div>
+    </div>
+
+    <div class="data-panel mt-4">
+        <h2>Próximas etapas</h2>
+
+        <div class="access-chip-list">
+            <span class="access-chip">Familiares</span>
+            <span class="access-chip">Prontuário</span>
+            <span class="access-chip">Evoluções</span>
+            <span class="access-chip">Atendimentos</span>
+            <span class="access-chip">EAD</span>
+            <span class="access-chip">Financeiro</span>
         </div>
     </div>
 }
 
 @code {
     [Parameter]
-    public Guid StudentId { get; set; }
+    public Guid Id { get; set; }
 
     private Student? Student { get; set; }
-    private List<FamilyMember> FamilyMembers { get; set; } = [];
-    private MedicalRecord? MedicalRecord { get; set; }
-    private List<MedicalEvolution> MedicalEvolutions { get; set; } = [];
-    private List<Appointment> Appointments { get; set; } = [];
-    private List<Professional> ActiveProfessionals { get; set; } = [];
-
-    private FamilyMemberForm FamilyForm { get; set; } = new();
-    private MedicalRecordFormModel MedicalRecordForm { get; set; } = new();
-    private EvolutionFormModel EvolutionForm { get; set; } = new();
-    private AppointmentFormModel AppointmentForm { get; set; } = new();
+    private StudentForm Form { get; set; } = new();
     private string? Message;
 
     protected override async Task OnInitializedAsync()
     {
-        if (Session.IsAuthenticated && Session.CanViewStudentRecords)
-        {
-            await LoadData();
-        }
+        await LoadStudent();
     }
 
-    private async Task LoadData()
+    private async Task LoadStudent()
     {
         await using var db = await DbFactory.CreateDbContextAsync();
 
-        Student = await db.Students.FirstOrDefaultAsync(student => student.Id == StudentId);
+        Student = await db.Students
+            .AsNoTracking()
+            .FirstOrDefaultAsync(student => student.Id == Id);
 
         if (Student is null)
         {
             return;
         }
 
-        FamilyMembers = await db.FamilyMembers
-            .Where(familyMember => familyMember.StudentId == StudentId)
-            .OrderBy(familyMember => familyMember.FullName)
-            .ToListAsync();
-
-        MedicalRecord = await db.MedicalRecords
-            .FirstOrDefaultAsync(record => record.StudentId == StudentId);
-
-        MedicalRecordForm = new MedicalRecordFormModel
+        Form = new StudentForm
         {
-            Anamnesis = MedicalRecord?.Anamnesis ?? string.Empty,
-            ClinicalNotes = MedicalRecord?.ClinicalNotes ?? string.Empty
+            FullName = Student.FullName,
+            BirthDate = Student.BirthDate,
+            CPF = Student.CPF,
+            Phone = Student.Phone,
+            Email = Student.Email,
+            Address = Student.Address,
+            Status = Student.Status,
+            AdmissionDate = Student.AdmissionDate
         };
-
-        MedicalEvolutions = await db.MedicalEvolutions
-            .Include(evolution => evolution.Professional)
-            .Where(evolution => evolution.StudentId == StudentId && !evolution.IsDeleted)
-            .OrderByDescending(evolution => evolution.CreatedAt)
-            .ToListAsync();
-
-        Appointments = await db.Appointments
-            .Include(appointment => appointment.Professional)
-            .Where(appointment => appointment.StudentId == StudentId)
-            .OrderByDescending(appointment => appointment.ScheduledAt)
-            .ToListAsync();
-
-        ActiveProfessionals = await db.Professionals
-            .Where(professional => professional.IsActive)
-            .OrderBy(professional => professional.FullName)
-            .ToListAsync();
     }
 
-    private async Task SaveFamilyMember()
+    private async Task SaveChanges()
     {
         await using var db = await DbFactory.CreateDbContextAsync();
 
-        db.FamilyMembers.Add(new FamilyMember
-        {
-            StudentId = StudentId,
-            FullName = FamilyForm.FullName.Trim(),
-            Relationship = FamilyForm.Relationship.Trim(),
-            Phone = FamilyForm.Phone.Trim(),
-            Email = string.IsNullOrWhiteSpace(FamilyForm.Email) ? null : FamilyForm.Email.Trim(),
-            CanAccessPortal = FamilyForm.CanAccessPortal,
-            CreatedAt = DateTime.UtcNow
-        });
+        var student = await db.Students
+            .FirstOrDefaultAsync(student => student.Id == Id);
 
-        await db.SaveChangesAsync();
-        FamilyForm = new();
-        Message = "Familiar cadastrado.";
-        await LoadData();
-    }
-
-    private async Task SaveMedicalRecord()
-    {
-        await using var db = await DbFactory.CreateDbContextAsync();
-
-        var medicalRecord = await db.MedicalRecords
-            .FirstOrDefaultAsync(record => record.StudentId == StudentId);
-
-        if (medicalRecord is null)
-        {
-            medicalRecord = new MedicalRecord
-            {
-                StudentId = StudentId,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            db.MedicalRecords.Add(medicalRecord);
-        }
-
-        medicalRecord.Anamnesis = MedicalRecordForm.Anamnesis.Trim();
-        medicalRecord.ClinicalNotes = MedicalRecordForm.ClinicalNotes.Trim();
-        medicalRecord.UpdatedAt = DateTime.UtcNow;
-
-        await db.SaveChangesAsync();
-        Message = "Prontuario salvo.";
-        await LoadData();
-    }
-
-    private async Task SaveEvolution()
-    {
-        if (!Guid.TryParse(EvolutionForm.ProfessionalId, out var professionalId))
+        if (student is null)
         {
             return;
         }
 
-        await using var db = await DbFactory.CreateDbContextAsync();
-
-        db.MedicalEvolutions.Add(new MedicalEvolution
-        {
-            StudentId = StudentId,
-            ProfessionalId = professionalId,
-            Description = EvolutionForm.Description.Trim(),
-            CreatedAt = DateTime.UtcNow
-        });
+        student.FullName = Form.FullName.Trim();
+        student.BirthDate = DateTime.SpecifyKind(Form.BirthDate, DateTimeKind.Utc);
+        student.CPF = Form.CPF.Trim();
+        student.Phone = Form.Phone.Trim();
+        student.Email = string.IsNullOrWhiteSpace(Form.Email) ? null : Form.Email.Trim();
+        student.Address = string.IsNullOrWhiteSpace(Form.Address) ? null : Form.Address.Trim();
+        student.Status = Form.Status;
+        student.AdmissionDate = DateTime.SpecifyKind(Form.AdmissionDate, DateTimeKind.Utc);
+        student.UpdatedAt = DateTime.UtcNow;
 
         await db.SaveChangesAsync();
-        EvolutionForm = new();
-        Message = "Evolucao registrada.";
-        await LoadData();
+
+        Message = "Dados do aluno atualizados.";
+
+        await LoadStudent();
     }
 
-    private async Task SaveAppointment()
+    private static string GetStatusLabel(int status)
     {
-        Guid? professionalId = Guid.TryParse(AppointmentForm.ProfessionalId, out var selectedProfessionalId)
-            ? selectedProfessionalId
-            : null;
-
-        await using var db = await DbFactory.CreateDbContextAsync();
-
-        db.Appointments.Add(new Appointment
+        return status switch
         {
-            StudentId = StudentId,
-            ProfessionalId = professionalId,
-            ScheduledAt = DateTime.SpecifyKind(AppointmentForm.ScheduledAt, DateTimeKind.Utc),
-            Status = AppointmentForm.Status,
-            Notes = string.IsNullOrWhiteSpace(AppointmentForm.Notes) ? null : AppointmentForm.Notes.Trim(),
-            CreatedAt = DateTime.UtcNow
-        });
-
-        await db.SaveChangesAsync();
-        AppointmentForm = new();
-        Message = "Agendamento criado.";
-        await LoadData();
+            1 => "Ativo",
+            2 => "Inativo",
+            3 => "Em acompanhamento",
+            4 => "Concluído",
+            _ => "Não informado"
+        };
     }
 
-    private sealed class FamilyMemberForm
+    private sealed class StudentForm
     {
         public string FullName { get; set; } = string.Empty;
-
-        public string Relationship { get; set; } = string.Empty;
-
+        public DateTime BirthDate { get; set; } = DateTime.Today.AddYears(-18);
+        public string CPF { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
-
         public string? Email { get; set; }
-
-        public bool CanAccessPortal { get; set; }
-    }
-
-    private sealed class MedicalRecordFormModel
-    {
-        public string Anamnesis { get; set; } = string.Empty;
-
-        public string ClinicalNotes { get; set; } = string.Empty;
-    }
-
-    private sealed class EvolutionFormModel
-    {
-        public string ProfessionalId { get; set; } = string.Empty;
-
-        public string Description { get; set; } = string.Empty;
-    }
-
-    private sealed class AppointmentFormModel
-    {
-        public DateTime ScheduledAt { get; set; } = DateTime.Today.AddHours(9);
-
-        public string ProfessionalId { get; set; } = string.Empty;
-
+        public string? Address { get; set; }
         public int Status { get; set; } = 1;
-
-        public string? Notes { get; set; }
+        public DateTime AdmissionDate { get; set; } = DateTime.Today;
     }
 }
