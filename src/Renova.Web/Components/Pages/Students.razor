@@ -53,7 +53,12 @@
             <InputText class="form-control" @bind-Value="Form.Address" />
 
             <label>Status</label>
-            <InputNumber class="form-control" @bind-Value="Form.Status" />
+            <InputSelect class="form-control" @bind-Value="Form.Status">
+                <option value="1">Ativo</option>
+                <option value="2">Inativo</option>
+                <option value="3">Em acompanhamento</option>
+                <option value="4">Concluído</option>
+            </InputSelect>
 
             <label>Admissão</label>
             <InputDate class="form-control" @bind-Value="Form.AdmissionDate" />
