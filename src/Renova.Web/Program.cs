@@ -72,7 +72,8 @@ app.MapPost("/auth/web-login", async (
     HttpContext httpContext,
     UserManager<ApplicationUser> userManager,
     [FromForm] string email,
-    [FromForm] string password) =>
+    [FromForm] string password,
+    [FromForm] string? returnUrl) =>
 {
     var user = await userManager.FindByEmailAsync(email.Trim());
 
@@ -103,7 +104,7 @@ app.MapPost("/auth/web-login", async (
             ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
         });
 
-    return Results.Redirect("/");
+    return Results.Redirect(GetSafeReturnUrl(returnUrl));
 }).DisableAntiforgery();
 
 app.MapPost("/auth/web-logout", async (HttpContext httpContext) =>
@@ -130,3 +131,17 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+static string GetSafeReturnUrl(string? returnUrl)
+{
+    if (string.IsNullOrWhiteSpace(returnUrl))
+    {
+        return "/Admin";
+    }
+
+    return returnUrl[0] == '/'
+        && (returnUrl.Length == 1 || returnUrl[1] is not '/' and not '\\')
+        && !returnUrl.Contains("://", StringComparison.Ordinal)
+            ? returnUrl
+            : "/Admin";
+}
