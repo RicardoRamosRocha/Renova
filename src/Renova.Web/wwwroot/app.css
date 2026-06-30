@@ -235,6 +235,54 @@ html {
     }
 }
 
+.faq-section {
+    background: #fff;
+}
+
+.faq-layout {
+    display: grid;
+    gap: 3rem;
+    grid-template-columns: minmax(0, .7fr) minmax(320px, 1fr);
+}
+
+.faq-layout h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin: 0;
+}
+
+.faq-layout p {
+    color: var(--renova-muted);
+    line-height: 1.7;
+}
+
+.faq-list {
+    display: grid;
+    gap: .85rem;
+}
+
+.faq-list details {
+    background: #f8fafc;
+    border: 1px solid var(--renova-line);
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+}
+
+.faq-list summary {
+    color: var(--renova-ink);
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.faq-list details p {
+    margin: .75rem 0 0;
+}
+
+@media (max-width: 900px) {
+    .faq-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
 .how-section {
     background: #f8fafc;
 }
