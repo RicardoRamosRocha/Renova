@@ -6,6 +6,12 @@ public sealed class HomeController : Controller
 {
     public IActionResult Index()
     {
-        return View();
+        return Redirect("/Admin");
+    }
+
+    [Route("landing")]
+    public IActionResult Landing()
+    {
+        return View("Index");
     }
 }

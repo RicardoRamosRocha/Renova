@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Renova.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+239aabf69115a1d3da0342b5775ebeaa45dccddf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e7f85a630759830515b08a24a060e59f00eb9f1d")]
 [assembly: System.Reflection.AssemblyProductAttribute("Renova.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Renova.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

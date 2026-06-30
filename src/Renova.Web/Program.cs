@@ -6,22 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Renova.Infrastructure.Data;
 using Renova.Infrastructure.Identity;
-using Renova.Web.Components;
-using Renova.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
-
 builder.Services.AddDbContextFactory<AppDbContext>(options =>
-    options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddSingleton(TimeProvider.System);
+
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -31,9 +25,9 @@ builder.Services
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
         options.SlidingExpiration = true;
     });
+
 builder.Services.AddAuthorization();
-builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddHttpContextAccessor();
+
 builder.Services
     .AddIdentityCore<ApplicationUser>(options =>
     {
@@ -48,25 +42,20 @@ builder.Services
     .AddEntityFrameworkStores<AppDbContext>()
     .AddSignInManager();
 
-builder.Services.AddScoped<UserSession>();
-builder.Services.AddScoped<UserSessionLoader>();
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-
 app.UseStaticFiles();
+
+app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseAntiforgery();
 
 app.MapPost("/auth/web-login", async (
     HttpContext httpContext,
@@ -83,6 +72,7 @@ app.MapPost("/auth/web-login", async (
     }
 
     var roles = await userManager.GetRolesAsync(user);
+
     var claims = new List<Claim>
     {
         new(ClaimTypes.NameIdentifier, user.Id),
@@ -113,10 +103,7 @@ app.MapPost("/auth/web-logout", async (HttpContext httpContext) =>
     return Results.Redirect("/login");
 }).DisableAntiforgery();
 
-app.MapControllerRoute(
-    name: "landing",
-    pattern: "",
-    defaults: new { controller = "Home", action = "Index" });
+app.MapGet("/", () => Results.Redirect("/Admin"));
 
 app.MapAreaControllerRoute(
     name: "admin",
@@ -126,9 +113,6 @@ app.MapAreaControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
 
 app.Run();
 
