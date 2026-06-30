@@ -2,7 +2,60 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<section>
-    <h1>Dashboard Administrativo</h1>
-    <p>Estrutura inicial da área administrativa do Renova.</p>
+<section class="admin-page">
+    <div class="admin-page-header">
+        <div>
+            <span>Visão geral</span>
+            <h1>Dashboard Administrativo</h1>
+            <p>Acompanhe os principais indicadores operacionais do Renova em um único painel.</p>
+        </div>
+        <a class="admin-primary-button" asp-area="Admin" asp-controller="Students" asp-action="Index">Novo acolhido</a>
+    </div>
+
+    <div class="admin-kpi-grid">
+        <article class="admin-kpi-card">
+            <span>Total de acolhidos</span>
+            <strong>128</strong>
+            <small>+12 neste mês</small>
+        </article>
+        <article class="admin-kpi-card">
+            <span>Profissionais ativos</span>
+            <strong>24</strong>
+            <small>Equipe multidisciplinar</small>
+        </article>
+        <article class="admin-kpi-card">
+            <span>Cursos publicados</span>
+            <strong>18</strong>
+            <small>Plataforma EAD</small>
+        </article>
+        <article class="admin-kpi-card">
+            <span>Atendimentos do dia</span>
+            <strong>36</strong>
+            <small>Agenda atualizada</small>
+        </article>
+    </div>
+
+    <div class="admin-dashboard-grid">
+        <section class="admin-panel" aria-labelledby="chart-title">
+            <div class="admin-panel-heading">
+                <h2 id="chart-title">Indicadores futuros</h2>
+                <span>Reservado para gráficos</span>
+            </div>
+            <div class="admin-chart-placeholder" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+        </section>
+
+        <section class="admin-panel" aria-labelledby="activity-title">
+            <div class="admin-panel-heading">
+                <h2 id="activity-title">Atividades recentes</h2>
+                <span>Placeholder</span>
+            </div>
+            <div class="admin-activity-list">
+                <article><strong>Prontuários</strong><span>Novas evoluções aparecerão aqui.</span></article>
+                <article><strong>Cursos</strong><span>Publicações EAD serão destacadas neste espaço.</span></article>
+                <article><strong>Financeiro</strong><span>Resumo de cobranças e assinaturas futuras.</span></article>
+            </div>
+        </section>
+    </div>
 </section>
