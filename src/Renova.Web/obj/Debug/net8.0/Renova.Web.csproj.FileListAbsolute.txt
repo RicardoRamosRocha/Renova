@@ -119,3 +119,5 @@ C:\Users\Ricardo\Renova\src\Renova.Web\bin\Debug\net8.0\Renova.Application.pdb
 C:\Users\Ricardo\Renova\src\Renova.Web\bin\Debug\net8.0\Renova.Infrastructure.pdb
 C:\Users\Ricardo\Renova\src\Renova.Web\bin\Debug\net8.0\Renova.Domain.pdb
 C:\Users\Ricardo\Renova\src\Renova.Web\obj\Debug\net8.0\Renova.Web.csproj.AssemblyReference.cache
+C:\Users\Ricardo\Renova\src\Renova.Web\obj\Debug\net8.0\Renova.Web.RazorAssemblyInfo.cache
+C:\Users\Ricardo\Renova\src\Renova.Web\obj\Debug\net8.0\Renova.Web.RazorAssemblyInfo.cs

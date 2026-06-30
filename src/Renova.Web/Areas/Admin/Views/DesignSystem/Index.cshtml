@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "Design System";
+    ViewData["PageEyebrow"] = "Fundação visual";
+    ViewData["PageDescription"] = "Biblioteca base de componentes reutilizáveis do BackOffice Renova.";
+}
+
+<section class="admin-page ds-page">
+    @await Html.PartialAsync("Components/_PageHeader")
+
+    <div class="ds-section">
+        <h2>Tokens oficiais</h2>
+        <div class="ds-token-grid">
+            <article><span class="ds-token ds-token-blue"></span><strong>Azul</strong><small>#2563EB</small></article>
+            <article><span class="ds-token ds-token-green"></span><strong>Verde</strong><small>#10B981</small></article>
+            <article><span class="ds-token ds-token-white"></span><strong>Branco</strong><small>#FFFFFF</small></article>
+            <article><span class="ds-token ds-token-soft"></span><strong>Cinza claro</strong><small>#F3F4F6</small></article>
+            <article><span class="ds-token ds-token-dark"></span><strong>Cinza escuro</strong><small>#374151</small></article>
+        </div>
+    </div>
+</section>
