@@ -235,6 +235,64 @@ html {
     }
 }
 
+.solution-section {
+    background: linear-gradient(135deg, #eff6ff, #ecfdf5);
+}
+
+.solution-panel {
+    align-items: center;
+    background: rgba(255, 255, 255, .78);
+    border: 1px solid rgba(255, 255, 255, .86);
+    border-radius: 8px;
+    box-shadow: 0 24px 70px rgba(37, 99, 235, .12);
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: minmax(0, .95fr) minmax(320px, 1fr);
+    padding: clamp(1.25rem, 4vw, 3rem);
+}
+
+.solution-panel h2 {
+    font-size: clamp(2rem, 4vw, 3.1rem);
+    line-height: 1.08;
+    margin: 0;
+}
+
+.solution-panel p {
+    color: var(--renova-muted);
+    font-size: 1.08rem;
+    line-height: 1.75;
+    margin: 1rem 0 0;
+}
+
+.solution-map {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.solution-map span {
+    background: #fff;
+    border: 1px solid var(--renova-line);
+    border-radius: 8px;
+    color: #1f2937;
+    font-weight: 900;
+    padding: 1rem;
+}
+
+.solution-map span:nth-child(odd) {
+    border-left: 4px solid var(--renova-blue);
+}
+
+.solution-map span:nth-child(even) {
+    border-left: 4px solid var(--renova-green);
+}
+
+@media (max-width: 900px) {
+    .solution-panel {
+        grid-template-columns: 1fr;
+    }
+}
+
 .landing-hero {
     background:
         radial-gradient(circle at 15% 15%, rgba(37, 99, 235, .16), transparent 30%),
