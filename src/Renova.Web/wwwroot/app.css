@@ -330,6 +330,38 @@ html {
     }
 }
 
+.audience-section {
+    background: #fff;
+}
+
+.audience-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.audience-grid article {
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+    border: 1px solid var(--renova-line);
+    border-radius: 8px;
+    color: #1f2937;
+    font-size: 1.05rem;
+    font-weight: 900;
+    padding: 1.25rem;
+}
+
+@media (max-width: 760px) {
+    .audience-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    .audience-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .ead-section {
     background: #fff;
 }
