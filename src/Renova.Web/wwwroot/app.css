@@ -235,6 +235,67 @@ html {
     }
 }
 
+.benefits-section {
+    background: #fff;
+}
+
+.card-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.feature-card {
+    background: #fff;
+    border: 1px solid var(--renova-line);
+    border-radius: 8px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, .06);
+    min-height: 220px;
+    padding: 1.35rem;
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.feature-card:hover {
+    border-color: rgba(37, 99, 235, .36);
+    box-shadow: 0 22px 52px rgba(15, 23, 42, .1);
+    transform: translateY(-2px);
+}
+
+.feature-card span {
+    align-items: center;
+    border: 1px solid rgba(37, 99, 235, .22);
+    border-radius: 8px;
+    color: var(--renova-blue);
+    display: inline-flex;
+    font-weight: 900;
+    height: 2.5rem;
+    justify-content: center;
+    width: 2.5rem;
+}
+
+.feature-card h3 {
+    font-size: 1.18rem;
+    margin: 1rem 0 .5rem;
+}
+
+.feature-card p {
+    color: var(--renova-muted);
+    line-height: 1.65;
+    margin: 0;
+}
+
+@media (max-width: 900px) {
+    .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .solution-section {
     background: linear-gradient(135deg, #eff6ff, #ecfdf5);
 }
