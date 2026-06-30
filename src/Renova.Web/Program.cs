@@ -117,6 +117,15 @@ app.MapControllerRoute(
     pattern: "",
     defaults: new { controller = "Home", action = "Index" });
 
+app.MapAreaControllerRoute(
+    name: "admin",
+    areaName: "Admin",
+    pattern: "Admin/{controller=Dashboard}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
