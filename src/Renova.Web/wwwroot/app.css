@@ -235,6 +235,60 @@ html {
     }
 }
 
+.how-section {
+    background: #f8fafc;
+}
+
+.steps-grid {
+    counter-reset: steps;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.steps-grid article {
+    background: #fff;
+    border: 1px solid var(--renova-line);
+    border-radius: 8px;
+    padding: 1.25rem;
+    position: relative;
+}
+
+.steps-grid span {
+    align-items: center;
+    background: #eff6ff;
+    border-radius: 8px;
+    color: var(--renova-blue);
+    display: inline-flex;
+    font-weight: 900;
+    height: 2.35rem;
+    justify-content: center;
+    width: 2.35rem;
+}
+
+.steps-grid h3 {
+    font-size: 1.12rem;
+    margin: 1rem 0 .45rem;
+}
+
+.steps-grid p {
+    color: var(--renova-muted);
+    line-height: 1.6;
+    margin: 0;
+}
+
+@media (max-width: 980px) {
+    .steps-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .ead-section {
     background: #fff;
 }
