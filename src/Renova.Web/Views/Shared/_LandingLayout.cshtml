@@ -10,10 +10,13 @@
     <meta property="og:description" content="@ViewData["MetaDescription"]" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="/" />
     <link rel="icon" type="image/png" href="~/favicon.png" />
     <link rel="stylesheet" href="~/app.css" asp-append-version="true" />
 </head>
 <body class="landing-body">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
     @RenderBody()
 </body>
 </html>

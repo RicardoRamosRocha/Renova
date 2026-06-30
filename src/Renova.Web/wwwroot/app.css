@@ -14,6 +14,7 @@ html, body {
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 88px;
 }
 
 .landing-body {
@@ -25,6 +26,35 @@ html {
 
 .landing-page * {
     box-sizing: border-box;
+}
+
+.skip-link {
+    background: #fff;
+    border: 2px solid var(--renova-blue);
+    border-radius: 8px;
+    color: var(--renova-blue);
+    font-weight: 900;
+    left: 1rem;
+    padding: .75rem 1rem;
+    position: fixed;
+    top: 1rem;
+    transform: translateY(-140%);
+    transition: transform .2s ease;
+    z-index: 60;
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+.landing-page:focus {
+    outline: none;
+}
+
+.landing-page a:focus-visible,
+.landing-page summary:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, .4);
+    outline-offset: 3px;
 }
 
 .landing-container {
@@ -435,6 +465,55 @@ html {
 @media (max-width: 560px) {
     .steps-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+.platform-section {
+    background: #fff;
+}
+
+.platform-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.platform-grid article {
+    background: #f8fafc;
+    border: 1px solid var(--renova-line);
+    border-radius: 8px;
+    padding: 1.25rem;
+}
+
+.platform-grid h3 {
+    font-size: 1.25rem;
+    margin: 0 0 1rem;
+}
+
+.platform-grid span {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #374151;
+    display: inline-flex;
+    font-weight: 800;
+    margin: 0 .45rem .55rem 0;
+    padding: .55rem .7rem;
+}
+
+@media (max-width: 900px) {
+    .platform-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 520px) {
+    .landing-container {
+        padding: 0 1rem;
+    }
+
+    .hero-actions a {
+        width: 100%;
     }
 }
 
