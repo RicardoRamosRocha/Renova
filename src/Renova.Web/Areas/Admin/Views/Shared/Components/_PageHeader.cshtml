@@ -1,0 +1,10 @@
+<div class="admin-page-header">
+    <div>
+        <span>@(ViewData["PageEyebrow"] ?? "Admin")</span>
+        <h1>@ViewData["Title"]</h1>
+        @if (ViewData["PageDescription"] is not null)
+        {
+            <p>@ViewData["PageDescription"]</p>
+        }
+    </div>
+</div>
