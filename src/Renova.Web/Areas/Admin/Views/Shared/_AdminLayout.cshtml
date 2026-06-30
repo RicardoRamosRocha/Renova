@@ -8,8 +8,24 @@
     <link rel="stylesheet" href="~/app.css" asp-append-version="true" />
 </head>
 <body class="admin-body">
-    <main class="admin-shell">
-        @RenderBody()
-    </main>
+    <a class="skip-link" href="#admin-content">Pular para o conteúdo</a>
+    <div class="admin-shell">
+        <aside class="admin-sidebar-shell" aria-label="Menu administrativo">
+            @await Html.PartialAsync("_AdminSidebar")
+        </aside>
+
+        <div class="admin-main-shell">
+            @await Html.PartialAsync("_AdminTopbar")
+
+            <main id="admin-content" class="admin-content" tabindex="-1">
+                @await Html.PartialAsync("_AdminBreadcrumb")
+                @RenderBody()
+            </main>
+
+            <footer class="admin-footer">
+                <span>Renova Admin © 2026</span>
+            </footer>
+        </div>
+    </div>
 </body>
 </html>
