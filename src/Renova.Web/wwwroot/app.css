@@ -60,6 +60,31 @@ html {
     text-transform: uppercase;
 }
 
+.section-heading {
+    margin: 0 auto 2.5rem;
+    max-width: 760px;
+    text-align: center;
+}
+
+.compact-heading {
+    max-width: 680px;
+}
+
+.section-heading h2 {
+    color: var(--renova-ink);
+    font-size: clamp(2rem, 4vw, 3.1rem);
+    letter-spacing: 0;
+    line-height: 1.08;
+    margin: 0;
+}
+
+.section-heading p {
+    color: var(--renova-muted);
+    font-size: 1.08rem;
+    line-height: 1.7;
+    margin: 1rem auto 0;
+}
+
 .landing-navbar {
     backdrop-filter: blur(18px);
     background: rgba(255, 255, 255, .88);
@@ -460,6 +485,42 @@ html {
 
     .trust-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+.logos-section {
+    background: #f8fafc;
+}
+
+.logo-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.logo-grid span {
+    align-items: center;
+    background: rgba(255, 255, 255, .82);
+    border: 1px solid var(--renova-line);
+    border-radius: 8px;
+    color: #64748b;
+    display: flex;
+    font-weight: 900;
+    justify-content: center;
+    min-height: 5.4rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+@media (max-width: 980px) {
+    .logo-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .logo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
