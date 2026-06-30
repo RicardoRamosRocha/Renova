@@ -1,11 +1,8 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Renova.Web.Areas.Admin.Controllers;
 
-[Area("Admin")]
-[Authorize]
-public sealed class RolesController : Controller
+public sealed class RolesController : AdminControllerBase
 {
     public IActionResult Index() => View();
 }

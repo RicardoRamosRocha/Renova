@@ -1,11 +1,8 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Renova.Web.Areas.Admin.Controllers;
 
-[Area("Admin")]
-[Authorize]
-public sealed class DashboardController : Controller
+public sealed class DashboardController : AdminControllerBase
 {
     public IActionResult Index()
     {

@@ -1,3 +1,8 @@
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    string Active(string controller) => string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase) ? "is-active" : string.Empty;
+}
+
 <div class="admin-sidebar">
     <div class="admin-brand">
         <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" aria-label="Renova Admin">
@@ -11,17 +16,17 @@
     </div>
 
     <nav class="admin-nav" aria-label="Navegação administrativa">
-        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-        <a asp-area="Admin" asp-controller="Students" asp-action="Index">Acolhidos</a>
-        <a asp-area="Admin" asp-controller="Professionals" asp-action="Index">Profissionais</a>
-        <a asp-area="Admin" asp-controller="Families" asp-action="Index">Famílias</a>
-        <a asp-area="Admin" asp-controller="Appointments" asp-action="Index">Atendimentos</a>
-        <a asp-area="Admin" asp-controller="MedicalRecords" asp-action="Index">Prontuários</a>
-        <a asp-area="Admin" asp-controller="Courses" asp-action="Index">Cursos</a>
-        <a asp-area="Admin" asp-controller="Finance" asp-action="Index">Financeiro</a>
-        <a asp-area="Admin" asp-controller="Reports" asp-action="Index">Relatórios</a>
-        <a asp-area="Admin" asp-controller="Users" asp-action="Index">Usuários</a>
-        <a asp-area="Admin" asp-controller="Settings" asp-action="Index">Configurações</a>
+        <a class="@Active("Dashboard")" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+        <a class="@Active("Students")" asp-area="Admin" asp-controller="Students" asp-action="Index">Acolhidos</a>
+        <a class="@Active("Professionals")" asp-area="Admin" asp-controller="Professionals" asp-action="Index">Profissionais</a>
+        <a class="@Active("Families")" asp-area="Admin" asp-controller="Families" asp-action="Index">Famílias</a>
+        <a class="@Active("Appointments")" asp-area="Admin" asp-controller="Appointments" asp-action="Index">Atendimentos</a>
+        <a class="@Active("MedicalRecords")" asp-area="Admin" asp-controller="MedicalRecords" asp-action="Index">Prontuários</a>
+        <a class="@Active("Courses")" asp-area="Admin" asp-controller="Courses" asp-action="Index">Cursos</a>
+        <a class="@Active("Finance")" asp-area="Admin" asp-controller="Finance" asp-action="Index">Financeiro</a>
+        <a class="@Active("Reports")" asp-area="Admin" asp-controller="Reports" asp-action="Index">Relatórios</a>
+        <a class="@Active("Users")" asp-area="Admin" asp-controller="Users" asp-action="Index">Usuários</a>
+        <a class="@Active("Settings")" asp-area="Admin" asp-controller="Settings" asp-action="Index">Configurações</a>
     </nav>
 
     <form class="admin-logout" action="/auth/web-logout" method="post">
