@@ -235,6 +235,63 @@ html {
     }
 }
 
+.ead-section {
+    background: #fff;
+}
+
+.reverse-layout {
+    grid-template-columns: minmax(320px, 1fr) minmax(0, .95fr);
+}
+
+.ead-card {
+    background: linear-gradient(145deg, #0f172a, #1e293b);
+    color: #fff;
+}
+
+.course-preview {
+    display: grid;
+    gap: 1rem;
+}
+
+.video-placeholder {
+    background:
+        linear-gradient(135deg, rgba(37, 99, 235, .46), rgba(16, 185, 129, .5)),
+        #111827;
+    border-radius: 8px;
+    min-height: 240px;
+    position: relative;
+}
+
+.video-placeholder::after {
+    border-bottom: 24px solid transparent;
+    border-left: 36px solid #fff;
+    border-top: 24px solid transparent;
+    content: "";
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-40%, -50%);
+}
+
+.lesson-progress {
+    background: rgba(255, 255, 255, .16);
+    border-radius: 999px;
+    height: .7rem;
+    overflow: hidden;
+}
+
+.lesson-progress span {
+    background: var(--renova-green);
+    display: block;
+    height: 100%;
+}
+
+@media (max-width: 900px) {
+    .reverse-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
 .benefits-section {
     background: #fff;
 }
