@@ -370,6 +370,74 @@ html {
     z-index: 20;
 }
 
+.admin-topbar-title {
+    display: grid;
+    gap: .1rem;
+}
+
+.admin-topbar-title span {
+    color: #64748b;
+    font-size: .82rem;
+    font-weight: 800;
+}
+
+.admin-topbar-title strong {
+    color: var(--renova-ink);
+    font-size: 1.1rem;
+}
+
+.admin-topbar-actions {
+    align-items: center;
+    display: flex;
+    gap: .9rem;
+}
+
+.admin-search input {
+    background: #f8fafc;
+    border: 1px solid var(--renova-line);
+    border-radius: 8px;
+    color: var(--renova-ink);
+    min-height: 2.65rem;
+    min-width: 240px;
+    padding: 0 .9rem;
+}
+
+.admin-search input:focus {
+    border-color: rgba(37, 99, 235, .5);
+    outline: 3px solid rgba(37, 99, 235, .14);
+}
+
+.admin-user {
+    align-items: center;
+    display: flex;
+    gap: .65rem;
+}
+
+.admin-user > span {
+    align-items: center;
+    background: linear-gradient(135deg, var(--renova-blue), var(--renova-green));
+    border-radius: 999px;
+    color: #fff;
+    display: inline-flex;
+    font-weight: 900;
+    height: 2.45rem;
+    justify-content: center;
+    width: 2.45rem;
+}
+
+.admin-user div {
+    display: grid;
+}
+
+.admin-user strong {
+    font-size: .92rem;
+}
+
+.admin-user small {
+    color: var(--renova-green);
+    font-weight: 800;
+}
+
 .admin-breadcrumb {
     align-items: center;
     color: #64748b;
@@ -509,6 +577,24 @@ html {
 
     .admin-nav {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .admin-topbar-actions {
+        align-items: stretch;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .admin-search input {
+        min-width: 0;
+        width: 100%;
     }
 }
 

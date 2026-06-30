@@ -1,3 +1,25 @@
+@{
+    var userName = User.Identity?.Name;
+}
+
 <header class="admin-topbar">
-    <span>Painel Administrativo</span>
+    <div class="admin-topbar-title">
+        <span>Painel Administrativo</span>
+        <strong>@ViewData["Title"]</strong>
+    </div>
+
+    <div class="admin-topbar-actions">
+        <label class="admin-search">
+            <span class="sr-only">Buscar no painel</span>
+            <input type="search" placeholder="Buscar..." />
+        </label>
+
+        <div class="admin-user" aria-label="Usuário logado">
+            <span>@((userName ?? "Admin").Substring(0, 1).ToUpperInvariant())</span>
+            <div>
+                <strong>@(userName ?? "Usuário Renova")</strong>
+                <small>Online</small>
+            </div>
+        </div>
+    </div>
 </header>
