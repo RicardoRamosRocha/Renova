@@ -1,0 +1,11 @@
+@{
+    ViewData["Title"] = "Acolhidos";
+    ViewData["PageEyebrow"] = "CRM";
+    ViewData["PageDescription"] = "Base preparada para gestão de acolhidos, histórico e acompanhamento institucional.";
+}
+
+<section class="admin-page">
+    @await Html.PartialAsync("Components/_PageHeader")
+    @await Html.PartialAsync("Components/_Buttons")
+    @await Html.PartialAsync("Components/_Table")
+</section>

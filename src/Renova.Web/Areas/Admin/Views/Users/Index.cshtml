@@ -1,0 +1,11 @@
+@{
+    ViewData["Title"] = "Usuários";
+    ViewData["PageEyebrow"] = "Acesso";
+    ViewData["PageDescription"] = "Área preparada para administrar usuários autenticados e permissões futuras.";
+}
+
+<section class="admin-page">
+    @await Html.PartialAsync("Components/_PageHeader")
+    @await Html.PartialAsync("Components/_Buttons")
+    @await Html.PartialAsync("Components/_Table")
+</section>
