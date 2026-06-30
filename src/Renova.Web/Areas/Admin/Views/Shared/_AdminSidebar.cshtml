@@ -1,3 +1,30 @@
-<div class="admin-sidebar-placeholder">
-    <strong>Renova</strong>
+<div class="admin-sidebar">
+    <div class="admin-brand">
+        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" aria-label="Renova Admin">
+            <span aria-hidden="true">R</span>
+            <strong>Renova</strong>
+        </a>
+        <button class="sidebar-toggle" type="button" aria-label="Recolher menu" title="Recolher menu">
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+
+    <nav class="admin-nav" aria-label="Navegação administrativa">
+        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+        <a asp-area="Admin" asp-controller="Students" asp-action="Index">Acolhidos</a>
+        <a asp-area="Admin" asp-controller="Professionals" asp-action="Index">Profissionais</a>
+        <a asp-area="Admin" asp-controller="Families" asp-action="Index">Famílias</a>
+        <a asp-area="Admin" asp-controller="Appointments" asp-action="Index">Atendimentos</a>
+        <a asp-area="Admin" asp-controller="MedicalRecords" asp-action="Index">Prontuários</a>
+        <a asp-area="Admin" asp-controller="Courses" asp-action="Index">Cursos</a>
+        <a asp-area="Admin" asp-controller="Finance" asp-action="Index">Financeiro</a>
+        <a asp-area="Admin" asp-controller="Reports" asp-action="Index">Relatórios</a>
+        <a asp-area="Admin" asp-controller="Users" asp-action="Index">Usuários</a>
+        <a asp-area="Admin" asp-controller="Settings" asp-action="Index">Configurações</a>
+    </nav>
+
+    <form class="admin-logout" action="/auth/web-logout" method="post">
+        <button type="submit">Sair</button>
+    </form>
 </div>

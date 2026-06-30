@@ -398,8 +398,99 @@ html {
     padding: 1rem 1.5rem;
 }
 
-.admin-sidebar-placeholder {
-    padding: 1.25rem;
+.admin-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+.admin-brand {
+    align-items: center;
+    display: flex;
+    gap: .75rem;
+    justify-content: space-between;
+}
+
+.admin-brand a {
+    align-items: center;
+    color: #fff;
+    display: inline-flex;
+    font-weight: 900;
+    gap: .65rem;
+    text-decoration: none;
+}
+
+.admin-brand a span {
+    align-items: center;
+    background: linear-gradient(135deg, var(--renova-blue), var(--renova-green));
+    border-radius: 8px;
+    display: inline-flex;
+    height: 2.35rem;
+    justify-content: center;
+    width: 2.35rem;
+}
+
+.sidebar-toggle {
+    align-items: center;
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 8px;
+    display: inline-flex;
+    flex-direction: column;
+    gap: .25rem;
+    height: 2.35rem;
+    justify-content: center;
+    padding: 0;
+    width: 2.35rem;
+}
+
+.sidebar-toggle span {
+    background: #fff;
+    border-radius: 999px;
+    display: block;
+    height: 2px;
+    width: 1rem;
+}
+
+.admin-nav {
+    display: grid;
+    gap: .35rem;
+}
+
+.admin-nav a,
+.admin-logout button {
+    border-radius: 8px;
+    color: #cbd5e1;
+    font-weight: 800;
+    padding: .78rem .85rem;
+    text-align: left;
+    text-decoration: none;
+    transition: background .2s ease, color .2s ease;
+}
+
+.admin-nav a:hover,
+.admin-nav a:focus-visible {
+    background: rgba(37, 99, 235, .22);
+    color: #fff;
+}
+
+.admin-logout {
+    margin-top: auto;
+}
+
+.admin-logout button {
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .12);
+    cursor: pointer;
+    display: block;
+    width: 100%;
+}
+
+.admin-logout button:hover {
+    background: rgba(16, 185, 129, .18);
+    color: #fff;
 }
 
 @media (max-width: 980px) {
@@ -410,6 +501,20 @@ html {
     .admin-sidebar-shell {
         min-height: auto;
         position: static;
+    }
+
+    .admin-sidebar {
+        min-height: auto;
+    }
+
+    .admin-nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .admin-nav {
+        grid-template-columns: 1fr;
     }
 }
 
