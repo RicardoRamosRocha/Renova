@@ -488,6 +488,65 @@ html {
     }
 }
 
+.problem-section {
+    background: #fff;
+}
+
+.split-section {
+    align-items: center;
+    display: grid;
+    gap: 3rem;
+    grid-template-columns: minmax(0, .95fr) minmax(320px, 1fr);
+}
+
+.split-section h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: 0;
+    line-height: 1.1;
+    margin: 0;
+}
+
+.split-section p {
+    color: var(--renova-muted);
+    font-size: 1.08rem;
+    line-height: 1.75;
+    margin: 1rem 0 0;
+}
+
+.problem-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.problem-list article {
+    background: #f8fafc;
+    border: 1px solid var(--renova-line);
+    border-radius: 8px;
+    padding: 1.25rem;
+}
+
+.problem-list strong,
+.problem-list span {
+    display: block;
+}
+
+.problem-list strong {
+    color: var(--renova-ink);
+    font-size: 1.05rem;
+}
+
+.problem-list span {
+    color: var(--renova-muted);
+    line-height: 1.6;
+    margin-top: .4rem;
+}
+
+@media (max-width: 900px) {
+    .split-section {
+        grid-template-columns: 1fr;
+    }
+}
+
 .logos-section {
     background: #f8fafc;
 }
