@@ -12,6 +12,8 @@ using Renova.Web.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllersWithViews();
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
@@ -109,6 +111,11 @@ app.MapPost("/auth/web-logout", async (HttpContext httpContext) =>
     await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     return Results.Redirect("/login");
 }).DisableAntiforgery();
+
+app.MapControllerRoute(
+    name: "landing",
+    pattern: "",
+    defaults: new { controller = "Home", action = "Index" });
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
