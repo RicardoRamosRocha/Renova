@@ -289,6 +289,47 @@ html {
     }
 }
 
+.stats-section {
+    background: #0f172a;
+    color: #fff;
+    padding: 3rem 0;
+}
+
+.stats-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.stats-grid article {
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 8px;
+    padding: 1.25rem;
+    text-align: center;
+}
+
+.stats-grid strong,
+.stats-grid span {
+    display: block;
+}
+
+.stats-grid strong {
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1;
+}
+
+.stats-grid span {
+    color: #cbd5e1;
+    font-weight: 800;
+    margin-top: .55rem;
+}
+
+@media (max-width: 760px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 .ead-section {
     background: #fff;
 }
