@@ -9,255 +9,255 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Renova.Web
 build_property.RootNamespace = Renova.Web
-build_property.ProjectDir = C:\Users\Ricardo\Renova\src\Renova.Web\
+build_property.ProjectDir = /home/usuario/Renova/src/Renova.Web/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\Ricardo\Renova\src\Renova.Web
+build_property.MSBuildProjectDirectory = /home/usuario/Renova/src/Renova.Web
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/App.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
+[/home/usuario/Renova/src/Renova.Web/Components/App.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9BcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/Pages/Courses.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb3Vyc2VzLnJhem9y
+[/home/usuario/Renova/src/Renova.Web/Components/Pages/Courses.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Db3Vyc2VzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/Pages/EadProgress.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFYWRQcm9ncmVzcy5yYXpvcg==
+[/home/usuario/Renova/src/Renova.Web/Components/Pages/EadProgress.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9FYWRQcm9ncmVzcy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/Pages/Error.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
+[/home/usuario/Renova/src/Renova.Web/Components/Pages/Error.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9FcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/Pages/Finance.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xGaW5hbmNlLnJhem9y
+[/home/usuario/Renova/src/Renova.Web/Components/Pages/Finance.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9GaW5hbmNlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/Pages/Home.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
+[/home/usuario/Renova/src/Renova.Web/Components/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Ib21lLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/Pages/Login.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xMb2dpbi5yYXpvcg==
+[/home/usuario/Renova/src/Renova.Web/Components/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Mb2dpbi5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/Pages/Professionals.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9mZXNzaW9uYWxzLnJhem9y
+[/home/usuario/Renova/src/Renova.Web/Components/Pages/Professionals.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Qcm9mZXNzaW9uYWxzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/Pages/StudentDetails.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTdHVkZW50RGV0YWlscy5yYXpvcg==
+[/home/usuario/Renova/src/Renova.Web/Components/Pages/StudentDetails.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9TdHVkZW50RGV0YWlscy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/Pages/Students.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTdHVkZW50cy5yYXpvcg==
+[/home/usuario/Renova/src/Renova.Web/Components/Pages/Students.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9TdHVkZW50cy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/Pages/Users.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xVc2Vycy5yYXpvcg==
+[/home/usuario/Renova/src/Renova.Web/Components/Pages/Users.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Vc2Vycy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/Routes.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSb3V0ZXMucmF6b3I=
+[/home/usuario/Renova/src/Renova.Web/Components/Routes.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Sb3V0ZXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/SessionInitializer.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTZXNzaW9uSW5pdGlhbGl6ZXIucmF6b3I=
+[/home/usuario/Renova/src/Renova.Web/Components/SessionInitializer.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9TZXNzaW9uSW5pdGlhbGl6ZXIucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/_Imports.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xfSW1wb3J0cy5yYXpvcg==
+[/home/usuario/Renova/src/Renova.Web/Components/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9fSW1wb3J0cy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/Layout/MainLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = b-08v3qtha7k
+[/home/usuario/Renova/src/Renova.Web/Components/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTWFpbkxheW91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-75s39t4qtd
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Components/Layout/NavMenu.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2TWVudS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = b-2ppnpiyg2g
+[/home/usuario/Renova/src/Renova.Web/Components/Layout/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTmF2TWVudS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-4jbsio2egy
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Appointments/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQXBwb2ludG1lbnRzXEluZGV4LmNzaHRtbA==
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Appointments/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvQXBwb2ludG1lbnRzL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Courses/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ291cnNlc1xJbmRleC5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Courses/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvQ291cnNlcy9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Dashboard/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Dashboard/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvRGFzaGJvYXJkL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/DesignSystem/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcRGVzaWduU3lzdGVtXEluZGV4LmNzaHRtbA==
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/DesignSystem/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvRGVzaWduU3lzdGVtL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Families/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcRmFtaWxpZXNcSW5kZXguY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Families/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvRmFtaWxpZXMvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Finance/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcRmluYW5jZVxJbmRleC5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Finance/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvRmluYW5jZS9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/MedicalRecords/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcTWVkaWNhbFJlY29yZHNcSW5kZXguY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/MedicalRecords/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvTWVkaWNhbFJlY29yZHMvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Professionals/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUHJvZmVzc2lvbmFsc1xJbmRleC5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Professionals/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvUHJvZmVzc2lvbmFscy9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Reports/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUmVwb3J0c1xJbmRleC5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Reports/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvUmVwb3J0cy9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Roles/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUm9sZXNcSW5kZXguY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Roles/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvUm9sZXMvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Settings/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2V0dGluZ3NcSW5kZXguY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Settings/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvU2V0dGluZ3MvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Shared/Components/_Alert.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXENvbXBvbmVudHNcX0FsZXJ0LmNzaHRtbA==
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Shared/Components/_Alert.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvU2hhcmVkL0NvbXBvbmVudHMvX0FsZXJ0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Shared/Components/_Buttons.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXENvbXBvbmVudHNcX0J1dHRvbnMuY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Shared/Components/_Buttons.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvU2hhcmVkL0NvbXBvbmVudHMvX0J1dHRvbnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Shared/Components/_EmptyState.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXENvbXBvbmVudHNcX0VtcHR5U3RhdGUuY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Shared/Components/_EmptyState.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvU2hhcmVkL0NvbXBvbmVudHMvX0VtcHR5U3RhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Shared/Components/_PageHeader.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXENvbXBvbmVudHNcX1BhZ2VIZWFkZXIuY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Shared/Components/_PageHeader.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvU2hhcmVkL0NvbXBvbmVudHMvX1BhZ2VIZWFkZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Shared/Components/_Table.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXENvbXBvbmVudHNcX1RhYmxlLmNzaHRtbA==
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Shared/Components/_Table.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvU2hhcmVkL0NvbXBvbmVudHMvX1RhYmxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Shared/_AdminBreadcrumb.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9BZG1pbkJyZWFkY3J1bWIuY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Shared/_AdminBreadcrumb.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvU2hhcmVkL19BZG1pbkJyZWFkY3J1bWIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Shared/_AdminLayout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9BZG1pbkxheW91dC5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Shared/_AdminLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvU2hhcmVkL19BZG1pbkxheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Shared/_AdminSidebar.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9BZG1pblNpZGViYXIuY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Shared/_AdminSidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvU2hhcmVkL19BZG1pblNpZGViYXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Shared/_AdminTopbar.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9BZG1pblRvcGJhci5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Shared/_AdminTopbar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvU2hhcmVkL19BZG1pblRvcGJhci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Students/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU3R1ZGVudHNcSW5kZXguY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Students/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvU3R1ZGVudHMvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/Users/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcVXNlcnNcSW5kZXguY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/Users/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvVXNlcnMvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Areas/Admin/Views/_ViewStart.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Areas/Admin/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXMvQWRtaW4vVmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_Audience.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX0F1ZGllbmNlLmNzaHRtbA==
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_Audience.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX0F1ZGllbmNlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_Benefits.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX0JlbmVmaXRzLmNzaHRtbA==
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_Benefits.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX0JlbmVmaXRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_CRM.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX0NSTS5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_CRM.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX0NSTS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_CTA.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX0NUQS5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_CTA.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX0NUQS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_EAD.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX0VBRC5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_EAD.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX0VBRC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_FAQ.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX0ZBUS5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_FAQ.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX0ZBUS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_Footer.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX0Zvb3Rlci5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_Footer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX0Zvb3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_Hero.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX0hlcm8uY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_Hero.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX0hlcm8uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_HowItWorks.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX0hvd0l0V29ya3MuY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_HowItWorks.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX0hvd0l0V29ya3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_Logos.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX0xvZ29zLmNzaHRtbA==
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_Logos.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX0xvZ29zLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_Modules.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX01vZHVsZXMuY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_Modules.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX01vZHVsZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_Navbar.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX05hdmJhci5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_Navbar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX05hdmJhci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_Problem.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX1Byb2JsZW0uY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_Problem.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX1Byb2JsZW0uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_Solution.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX1NvbHV0aW9uLmNzaHRtbA==
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_Solution.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX1NvbHV0aW9uLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_Statistics.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX1N0YXRpc3RpY3MuY3NodG1s
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_Statistics.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX1N0YXRpc3RpY3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_Testimonials.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX1Rlc3RpbW9uaWFscy5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_Testimonials.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX1Rlc3RpbW9uaWFscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Home/_Partials/_Trust.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGFydGlhbHNcX1RydXN0LmNzaHRtbA==
+[/home/usuario/Renova/src/Renova.Web/Views/Home/_Partials/_Trust.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9fUGFydGlhbHMvX1RydXN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/Shared/_LandingLayout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYW5kaW5nTGF5b3V0LmNzaHRtbA==
+[/home/usuario/Renova/src/Renova.Web/Views/Shared/_LandingLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYW5kaW5nTGF5b3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+[/home/usuario/Renova/src/Renova.Web/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ricardo/Renova/src/Renova.Web/Views/_ViewStart.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+[/home/usuario/Renova/src/Renova.Web/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

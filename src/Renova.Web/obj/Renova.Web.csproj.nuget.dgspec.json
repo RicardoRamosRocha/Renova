@@ -1,39 +1,33 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\Renova.Web.csproj": {}
+    "/home/usuario/Renova/src/Renova.Web/Renova.Web.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Ricardo\\Renova\\src\\Renova.Application\\Renova.Application.csproj": {
+    "/home/usuario/Renova/src/Renova.Application/Renova.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Application\\Renova.Application.csproj",
+        "projectUniqueName": "/home/usuario/Renova/src/Renova.Application/Renova.Application.csproj",
         "projectName": "Renova.Application",
-        "projectPath": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Application\\Renova.Application.csproj",
-        "packagesPath": "C:\\Users\\Ricardo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Application\\obj\\",
+        "projectPath": "/home/usuario/Renova/src/Renova.Application/Renova.Application.csproj",
+        "packagesPath": "/home/usuario/.nuget/packages/",
+        "outputPath": "/home/usuario/Renova/src/Renova.Application/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Ricardo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/usuario/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Ricardo\\Renova\\src\\Renova.Domain\\Renova.Domain.csproj": {
-                "projectPath": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Domain\\Renova.Domain.csproj"
+              "/home/usuario/Renova/src/Renova.Domain/Renova.Domain.csproj": {
+                "projectPath": "/home/usuario/Renova/src/Renova.Domain/Renova.Domain.csproj"
               }
             }
           }
@@ -68,32 +62,26 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.422/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.422/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Ricardo\\Renova\\src\\Renova.Domain\\Renova.Domain.csproj": {
+    "/home/usuario/Renova/src/Renova.Domain/Renova.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Domain\\Renova.Domain.csproj",
+        "projectUniqueName": "/home/usuario/Renova/src/Renova.Domain/Renova.Domain.csproj",
         "projectName": "Renova.Domain",
-        "projectPath": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Domain\\Renova.Domain.csproj",
-        "packagesPath": "C:\\Users\\Ricardo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Domain\\obj\\",
+        "projectPath": "/home/usuario/Renova/src/Renova.Domain/Renova.Domain.csproj",
+        "packagesPath": "/home/usuario/.nuget/packages/",
+        "outputPath": "/home/usuario/Renova/src/Renova.Domain/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Ricardo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/usuario/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -132,43 +120,37 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.422/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.422/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Ricardo\\Renova\\src\\Renova.Infrastructure\\Renova.Infrastructure.csproj": {
+    "/home/usuario/Renova/src/Renova.Infrastructure/Renova.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Infrastructure\\Renova.Infrastructure.csproj",
+        "projectUniqueName": "/home/usuario/Renova/src/Renova.Infrastructure/Renova.Infrastructure.csproj",
         "projectName": "Renova.Infrastructure",
-        "projectPath": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Infrastructure\\Renova.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\Ricardo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Infrastructure\\obj\\",
+        "projectPath": "/home/usuario/Renova/src/Renova.Infrastructure/Renova.Infrastructure.csproj",
+        "packagesPath": "/home/usuario/.nuget/packages/",
+        "outputPath": "/home/usuario/Renova/src/Renova.Infrastructure/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Ricardo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/usuario/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Ricardo\\Renova\\src\\Renova.Application\\Renova.Application.csproj": {
-                "projectPath": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Application\\Renova.Application.csproj"
+              "/home/usuario/Renova/src/Renova.Application/Renova.Application.csproj": {
+                "projectPath": "/home/usuario/Renova/src/Renova.Application/Renova.Application.csproj"
               },
-              "C:\\Users\\Ricardo\\Renova\\src\\Renova.Domain\\Renova.Domain.csproj": {
-                "projectPath": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Domain\\Renova.Domain.csproj"
+              "/home/usuario/Renova/src/Renova.Domain/Renova.Domain.csproj": {
+                "projectPath": "/home/usuario/Renova/src/Renova.Domain/Renova.Domain.csproj"
               }
             }
           }
@@ -217,43 +199,37 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.422/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.422/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\Renova.Web.csproj": {
+    "/home/usuario/Renova/src/Renova.Web/Renova.Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\Renova.Web.csproj",
+        "projectUniqueName": "/home/usuario/Renova/src/Renova.Web/Renova.Web.csproj",
         "projectName": "Renova.Web",
-        "projectPath": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\Renova.Web.csproj",
-        "packagesPath": "C:\\Users\\Ricardo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\obj\\",
+        "projectPath": "/home/usuario/Renova/src/Renova.Web/Renova.Web.csproj",
+        "packagesPath": "/home/usuario/.nuget/packages/",
+        "outputPath": "/home/usuario/Renova/src/Renova.Web/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Ricardo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/usuario/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Ricardo\\Renova\\src\\Renova.Application\\Renova.Application.csproj": {
-                "projectPath": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Application\\Renova.Application.csproj"
+              "/home/usuario/Renova/src/Renova.Application/Renova.Application.csproj": {
+                "projectPath": "/home/usuario/Renova/src/Renova.Application/Renova.Application.csproj"
               },
-              "C:\\Users\\Ricardo\\Renova\\src\\Renova.Infrastructure\\Renova.Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Infrastructure\\Renova.Infrastructure.csproj"
+              "/home/usuario/Renova/src/Renova.Infrastructure/Renova.Infrastructure.csproj": {
+                "projectPath": "/home/usuario/Renova/src/Renova.Infrastructure/Renova.Infrastructure.csproj"
               }
             }
           }
@@ -307,7 +283,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.422/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.422/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

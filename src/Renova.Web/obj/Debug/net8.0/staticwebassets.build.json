@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "yqBX/8lE3k9o5Ifxfti8WMDooyrPze04e9rINJ7kuxc=",
+  "Hash": "TfMGBe4/h901KGG3fQgE5hzgJDPJfGiv7w2Iw6WIn/o=",
   "Source": "Renova.Web",
   "BasePath": "_content/Renova.Web",
   "Mode": "Default",
@@ -8,19 +8,19 @@
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [
     {
-      "Name": "Renova.Web\\wwwroot",
+      "Name": "Renova.Web/wwwroot",
       "Source": "Renova.Web",
-      "ContentRoot": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\wwwroot\\",
+      "ContentRoot": "/home/usuario/Renova/src/Renova.Web/wwwroot/",
       "BasePath": "_content/Renova.Web",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Renova.Web.styles.css",
+      "Identity": "/home/usuario/Renova/src/Renova.Web/obj/Debug/net8.0/scopedcss/bundle/Renova.Web.styles.css",
       "SourceId": "Renova.Web",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
+      "ContentRoot": "/home/usuario/Renova/src/Renova.Web/obj/Debug/net8.0/scopedcss/bundle/",
       "BasePath": "_content/Renova.Web",
       "RelativePath": "Renova.Web.styles.css",
       "AssetKind": "All",
@@ -33,13 +33,13 @@
       "AssetTraitValue": "ApplicationBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Renova.Web.styles.css"
+      "OriginalItemSpec": "/home/usuario/Renova/src/Renova.Web/obj/Debug/net8.0/scopedcss/bundle/Renova.Web.styles.css"
     },
     {
-      "Identity": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Renova.Web.bundle.scp.css",
+      "Identity": "/home/usuario/Renova/src/Renova.Web/obj/Debug/net8.0/scopedcss/projectbundle/Renova.Web.bundle.scp.css",
       "SourceId": "Renova.Web",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
+      "ContentRoot": "/home/usuario/Renova/src/Renova.Web/obj/Debug/net8.0/scopedcss/projectbundle/",
       "BasePath": "_content/Renova.Web",
       "RelativePath": "Renova.Web.bundle.scp.css",
       "AssetKind": "All",
@@ -52,13 +52,13 @@
       "AssetTraitValue": "ProjectBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Renova.Web.bundle.scp.css"
+      "OriginalItemSpec": "/home/usuario/Renova/src/Renova.Web/obj/Debug/net8.0/scopedcss/projectbundle/Renova.Web.bundle.scp.css"
     },
     {
-      "Identity": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\wwwroot\\app.css",
+      "Identity": "/home/usuario/Renova/src/Renova.Web/wwwroot/app.css",
       "SourceId": "Renova.Web",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\wwwroot\\",
+      "ContentRoot": "/home/usuario/Renova/src/Renova.Web/wwwroot/",
       "BasePath": "_content/Renova.Web",
       "RelativePath": "app.css",
       "AssetKind": "All",
@@ -71,13 +71,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\app.css"
+      "OriginalItemSpec": "wwwroot/app.css"
     },
     {
-      "Identity": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Identity": "/home/usuario/Renova/src/Renova.Web/wwwroot/bootstrap/bootstrap.min.css",
       "SourceId": "Renova.Web",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\wwwroot\\",
+      "ContentRoot": "/home/usuario/Renova/src/Renova.Web/wwwroot/",
       "BasePath": "_content/Renova.Web",
       "RelativePath": "bootstrap/bootstrap.min.css",
       "AssetKind": "All",
@@ -90,13 +90,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css"
+      "OriginalItemSpec": "wwwroot/bootstrap/bootstrap.min.css"
     },
     {
-      "Identity": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Identity": "/home/usuario/Renova/src/Renova.Web/wwwroot/bootstrap/bootstrap.min.css.map",
       "SourceId": "Renova.Web",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\wwwroot\\",
+      "ContentRoot": "/home/usuario/Renova/src/Renova.Web/wwwroot/",
       "BasePath": "_content/Renova.Web",
       "RelativePath": "bootstrap/bootstrap.min.css.map",
       "AssetKind": "All",
@@ -109,13 +109,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css.map"
+      "OriginalItemSpec": "wwwroot/bootstrap/bootstrap.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\wwwroot\\favicon.png",
+      "Identity": "/home/usuario/Renova/src/Renova.Web/wwwroot/favicon.png",
       "SourceId": "Renova.Web",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Ricardo\\Renova\\src\\Renova.Web\\wwwroot\\",
+      "ContentRoot": "/home/usuario/Renova/src/Renova.Web/wwwroot/",
       "BasePath": "_content/Renova.Web",
       "RelativePath": "favicon.png",
       "AssetKind": "All",
@@ -128,7 +128,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\favicon.png"
+      "OriginalItemSpec": "wwwroot/favicon.png"
     }
   ]
 }
