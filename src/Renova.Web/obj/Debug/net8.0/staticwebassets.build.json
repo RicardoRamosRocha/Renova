@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "TfMGBe4/h901KGG3fQgE5hzgJDPJfGiv7w2Iw6WIn/o=",
+  "Hash": "JXltnJd5/Rx5CipKQNjZGug5U7SzxKIP94CjocYJc4I=",
   "Source": "Renova.Web",
   "BasePath": "_content/Renova.Web",
   "Mode": "Default",
@@ -16,44 +16,6 @@
     }
   ],
   "Assets": [
-    {
-      "Identity": "/home/usuario/Renova/src/Renova.Web/obj/Debug/net8.0/scopedcss/bundle/Renova.Web.styles.css",
-      "SourceId": "Renova.Web",
-      "SourceType": "Computed",
-      "ContentRoot": "/home/usuario/Renova/src/Renova.Web/obj/Debug/net8.0/scopedcss/bundle/",
-      "BasePath": "_content/Renova.Web",
-      "RelativePath": "Renova.Web.styles.css",
-      "AssetKind": "All",
-      "AssetMode": "CurrentProject",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "ScopedCss",
-      "AssetTraitValue": "ApplicationBundle",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "/home/usuario/Renova/src/Renova.Web/obj/Debug/net8.0/scopedcss/bundle/Renova.Web.styles.css"
-    },
-    {
-      "Identity": "/home/usuario/Renova/src/Renova.Web/obj/Debug/net8.0/scopedcss/projectbundle/Renova.Web.bundle.scp.css",
-      "SourceId": "Renova.Web",
-      "SourceType": "Computed",
-      "ContentRoot": "/home/usuario/Renova/src/Renova.Web/obj/Debug/net8.0/scopedcss/projectbundle/",
-      "BasePath": "_content/Renova.Web",
-      "RelativePath": "Renova.Web.bundle.scp.css",
-      "AssetKind": "All",
-      "AssetMode": "Reference",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "ScopedCss",
-      "AssetTraitValue": "ProjectBundle",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "/home/usuario/Renova/src/Renova.Web/obj/Debug/net8.0/scopedcss/projectbundle/Renova.Web.bundle.scp.css"
-    },
     {
       "Identity": "/home/usuario/Renova/src/Renova.Web/wwwroot/app.css",
       "SourceId": "Renova.Web",

@@ -1,9 +1,0 @@
-@using Renova.Web.Services
-@inject UserSessionLoader UserSessionLoader
-
-@code {
-    protected override async Task OnInitializedAsync()
-    {
-        await UserSessionLoader.LoadAsync();
-    }
-}
