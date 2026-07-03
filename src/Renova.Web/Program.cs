@@ -44,6 +44,7 @@ builder.Services
 
 var app = builder.Build();
 
+await app.MigrateDatabaseAsync();
 await app.SeedIdentityAsync();
 
 if (!app.Environment.IsDevelopment())

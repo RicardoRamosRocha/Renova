@@ -1,0 +1,14 @@
+[2026-07-03 00:16:50.683] [00004280] === Logging started ===
+[2026-07-03 00:16:50.689] [00004280] Executing: "C:\Program Files\dotnet\dotnet.exe" build src\Renova.Web\Renova.Web.csproj --no-restore -p:UseSharedCompilation=false -p:OutputPath=..\..\artifacts\validation-bin\Renova.Web\, PID: 17024, PPID: 17976
+[2026-07-03 00:16:50.691] [00004280] IsElevated: False
+[2026-07-03 00:16:50.691] [00004280] Is64BitProcess: True
+[2026-07-03 00:16:50.691] [00004280] RebootPending: False
+[2026-07-03 00:16:50.691] [00004280] ProcessorArchitecture: amd64
+[2026-07-03 00:16:50.691] [00004280] HostArchitecture: x64
+[2026-07-03 00:16:50.691] [00004280] SdkDirectory: 8.0.422
+[2026-07-03 00:16:50.691] [00004280] VerifySignatures: False
+[2026-07-03 00:16:50.691] [00004280] SDK feature band: 8.0.400
+[2026-07-03 00:17:02.340] [00004280] Shutting down
+[2026-07-03 00:17:02.340] [00004280] Shutdown completed.
+[2026-07-03 00:17:02.340] [00004280] Restart required: False
+[2026-07-03 00:17:02.340] [00004280] === Logging ended ===
