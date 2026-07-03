@@ -18,6 +18,8 @@ public class Professional
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    public string? PhotoPath { get; set; }
+
     public DateTime? UpdatedAt { get; set; }
 
     public ICollection<MedicalEvolution> MedicalEvolutions { get; set; } = [];

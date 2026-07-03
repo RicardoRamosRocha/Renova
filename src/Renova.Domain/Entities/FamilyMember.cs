@@ -14,6 +14,8 @@ public class FamilyMember
 
     public string? Email { get; set; }
 
+    public string? PhotoPath { get; set; }
+
     public bool CanAccessPortal { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

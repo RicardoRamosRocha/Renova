@@ -28,6 +28,8 @@ public class Student
 
     public MedicalRecord? MedicalRecord { get; set; }
 
+    public string? PhotoPath { get; set; }
+
     public ICollection<MedicalEvolution> MedicalEvolutions { get; set; } = [];
 
     public ICollection<Appointment> Appointments { get; set; } = [];
