@@ -2554,6 +2554,85 @@ h1:focus {
     color: #c2410c;
 }
 
+.admin-pagination {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.admin-pagination a {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #dbe3ef;
+    border-radius: 8px;
+    color: #334155;
+    display: inline-flex;
+    font-weight: 900;
+    min-height: 2.35rem;
+    padding: .55rem .8rem;
+    text-decoration: none;
+}
+
+.admin-pagination a.is-active {
+    background: var(--renova-blue);
+    border-color: var(--renova-blue);
+    color: #fff;
+}
+
+.admin-pagination a.is-disabled {
+    color: #94a3b8;
+    pointer-events: none;
+}
+
+.admin-delete-modal {
+    align-items: center;
+    background: rgba(15, 23, 42, .58);
+    display: none;
+    inset: 0;
+    justify-content: center;
+    padding: 1rem;
+    position: fixed;
+    z-index: 100;
+}
+
+.admin-delete-modal:target {
+    display: flex;
+}
+
+.admin-delete-dialog {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 30px 80px rgba(15, 23, 42, .28);
+    display: grid;
+    gap: 1rem;
+    max-width: 460px;
+    padding: 1.25rem;
+    width: min(100%, 460px);
+}
+
+.admin-delete-dialog h2 {
+    color: var(--renova-ink);
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.admin-delete-dialog p {
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.admin-delete-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    justify-content: flex-end;
+}
+
 @media (max-width: 900px) {
     .admin-form-header,
     .admin-form-section-title {

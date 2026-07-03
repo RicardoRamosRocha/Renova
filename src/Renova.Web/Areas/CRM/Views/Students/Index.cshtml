@@ -1,6 +1,7 @@
 @using Renova.Domain.Entities
 @using Renova.Web.Areas.CRM.ViewModels.Students
-@model IReadOnlyList<Student>
+@using Renova.Web.ViewModels
+@model PagedResult<Student>
 @{
     ViewData["Title"] = "Acolhidos";
     var statuses = (IReadOnlyDictionary<int, string>)ViewBag.Statuses;
@@ -9,9 +10,9 @@
 <section class="demo-page">
     <div class="demo-hero">
         <div>
-            <span class="demo-kicker">CRM institucional</span>
+            <span class="demo-kicker">CRM / Acolhidos</span>
             <h1>Acolhidos</h1>
-            <p>Cadastro, acompanhamento e gestão operacional dos acolhidos.</p>
+            <p>Gerencie todos os acolhidos da instituição.</p>
         </div>
         <a class="demo-button" asp-action="Create">Novo Acolhido</a>
     </div>
@@ -22,17 +23,17 @@
     }
 
     <div class="demo-grid-4">
-        <article class="demo-card"><span>Total</span><strong>@ViewBag.Total</strong><small>Registros</small></article>
+        <article class="demo-card"><span>Acolhidos</span><strong>@ViewBag.Total</strong><small>Total</small></article>
         <article class="demo-card"><span>Ativos</span><strong>@ViewBag.Active</strong><small>Em operação</small></article>
         <article class="demo-card"><span>Em tratamento</span><strong>@ViewBag.InTreatment</strong><small>Planos ativos</small></article>
-        <article class="demo-card"><span>Alta prevista</span><strong>@ViewBag.DischargePlanned</strong><small>Próximas altas</small></article>
+        <article class="demo-card"><span>Altas previstas</span><strong>@ViewBag.DischargePlanned</strong><small>Próximas altas</small></article>
     </div>
 
     <section class="demo-panel">
         <div class="demo-section-title">
             <div><span class="demo-kicker">Busca e filtros</span><h2>Lista de acolhidos</h2></div>
             <form class="demo-filter-row" method="get">
-                <input name="search" value="@ViewBag.Search" type="search" placeholder="Buscar por nome, CPF ou email" />
+                <input name="search" value="@ViewBag.Search" type="search" placeholder="Pesquisar por nome, CPF ou email" />
                 <select name="status">
                     <option value="">Todos os status</option>
                     @foreach (var status in statuses)
@@ -44,41 +45,48 @@
             </form>
         </div>
 
-        @if (Model.Count == 0)
+        @if (Model.Items.Count == 0)
         {
             <div class="admin-empty-state">
-                <strong>Nenhum acolhido encontrado</strong>
+                <strong>Nenhum registro encontrado.</strong>
                 <p>Cadastre o primeiro acolhido ou ajuste os filtros de busca.</p>
+                <a class="demo-button" asp-action="Create">Criar primeiro cadastro</a>
             </div>
         }
         else
         {
             <div class="demo-table-wrap">
                 <table class="demo-table">
-                    <thead><tr><th>Acolhido</th><th>CPF</th><th>Telefone</th><th>Entrada</th><th>Status</th><th>Ações</th></tr></thead>
+                    <thead><tr><th>Nome</th><th>CPF</th><th>Telefone</th><th>Data Entrada</th><th>Situação</th><th>Ações</th></tr></thead>
                     <tbody>
-                    @foreach (var student in Model)
+                    @foreach (var student in Model.Items)
                     {
                         <tr>
                             <td><div class="demo-person"><span class="demo-avatar">@student.FullName[..1]</span><strong>@student.FullName</strong></div></td>
                             <td>@student.CPF</td>
                             <td>@student.Phone</td>
                             <td>@student.AdmissionDate.ToString("dd/MM/yyyy")</td>
-                            <td><span class="demo-pill @(student.Status == StudentStatuses.Inactive ? "danger" : "ok")">@StudentStatuses.Label(student.Status)</span></td>
-                            <td>
-                                <div class="admin-table-actions">
-                                    <a class="admin-action-button details" asp-action="Details" asp-route-id="@student.Id">Ver</a>
-                                    <a class="admin-action-button edit" asp-action="Edit" asp-route-id="@student.Id">Editar</a>
-                                    <form asp-action="Inactivate" asp-route-id="@student.Id" method="post">
-                                        <button class="admin-action-button danger" type="submit">Inativar</button>
-                                    </form>
-                                </div>
-                            </td>
+                            <td><span class="demo-pill @(student.Status == StudentStatuses.Inactive ? "danger" : student.Status == StudentStatuses.InTreatment ? "info" : student.Status == StudentStatuses.DischargePlanned ? "warn" : "ok")">@StudentStatuses.Label(student.Status)</span></td>
+                            <td><div class="admin-table-actions"><a class="admin-action-button details" asp-action="Details" asp-route-id="@student.Id">Detalhes</a><a class="admin-action-button edit" asp-action="Edit" asp-route-id="@student.Id">Editar</a><a class="admin-action-button danger" href="#delete-student-@student.Id">Excluir</a></div></td>
                         </tr>
                     }
                     </tbody>
                 </table>
             </div>
+            @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model)
+            @foreach (var student in Model.Items)
+            {
+                <div id="delete-student-@student.Id" class="admin-delete-modal" role="dialog" aria-modal="true">
+                    <div class="admin-delete-dialog">
+                        <h2>Excluir acolhido</h2>
+                        <p>Deseja realmente excluir este registro? Se houver vínculos, o acolhido será inativado com segurança.</p>
+                        <div class="admin-delete-actions">
+                            <a class="admin-button-secondary" href="#">Cancelar</a>
+                            <form asp-action="Delete" asp-route-id="@student.Id" method="post"><button class="admin-action-button danger" type="submit">Excluir</button></form>
+                        </div>
+                    </div>
+                </div>
+            }
         }
     </section>
 </section>

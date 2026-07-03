@@ -44,6 +44,8 @@ builder.Services
 
 var app = builder.Build();
 
+await app.SeedIdentityAsync();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");

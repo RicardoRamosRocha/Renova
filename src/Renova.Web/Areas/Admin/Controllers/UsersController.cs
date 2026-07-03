@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Renova.Infrastructure.Identity;
 using Renova.Web.Areas.Admin.ViewModels.Users;
+using Renova.Web.ViewModels;
 
 namespace Renova.Web.Areas.Admin.Controllers;
 
@@ -10,7 +11,7 @@ public sealed class UsersController(
     UserManager<ApplicationUser> userManager,
     RoleManager<IdentityRole> roleManager) : AdminControllerBase
 {
-    public async Task<IActionResult> Index(string? search, bool? active)
+    public async Task<IActionResult> Index(string? search, bool? active, int page = 1)
     {
         var query = userManager.Users.AsNoTracking();
 
@@ -34,7 +35,22 @@ public sealed class UsersController(
         ViewBag.InactiveCount = await userManager.Users.CountAsync(user => !user.IsActive);
         ViewBag.RolesCount = await roleManager.Roles.CountAsync();
 
-        return View(await query.OrderBy(user => user.FullName).ToListAsync());
+        const int pageSize = 10;
+        page = Math.Max(1, page);
+        var totalItems = await query.CountAsync();
+        var users = await query
+            .OrderBy(user => user.FullName)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return View(new PagedResult<ApplicationUser>
+        {
+            Items = users,
+            Page = page,
+            PageSize = pageSize,
+            TotalItems = totalItems
+        });
     }
 
     public async Task<IActionResult> Details(string id)
@@ -70,6 +86,7 @@ public sealed class UsersController(
             UserName = model.Email.Trim(),
             Email = model.Email.Trim(),
             FullName = model.FullName.Trim(),
+            PhoneNumber = model.Phone?.Trim(),
             IsActive = model.IsActive,
             EmailConfirmed = true
         };
@@ -106,6 +123,7 @@ public sealed class UsersController(
             Id = user.Id,
             FullName = user.FullName,
             Email = user.Email ?? string.Empty,
+            Phone = user.PhoneNumber,
             IsActive = user.IsActive,
             Role = roles.FirstOrDefault()
         });
@@ -130,6 +148,7 @@ public sealed class UsersController(
         user.FullName = model.FullName.Trim();
         user.Email = model.Email.Trim();
         user.UserName = model.Email.Trim();
+        user.PhoneNumber = model.Phone?.Trim();
         user.IsActive = model.IsActive;
         user.UpdatedAt = DateTime.UtcNow;
 
@@ -182,6 +201,30 @@ public sealed class UsersController(
         user.UpdatedAt = DateTime.UtcNow;
         await userManager.UpdateAsync(user);
         TempData["Success"] = "Usuário inativado com sucesso.";
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(string id)
+    {
+        var user = await userManager.FindByIdAsync(id);
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        var result = await userManager.DeleteAsync(user);
+        if (result.Succeeded)
+        {
+            TempData["Success"] = "Usuário excluído com sucesso.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        user.IsActive = false;
+        user.UpdatedAt = DateTime.UtcNow;
+        await userManager.UpdateAsync(user);
+        TempData["Success"] = "Usuário não pôde ser excluído e foi inativado com segurança.";
         return RedirectToAction(nameof(Index));
     }
 

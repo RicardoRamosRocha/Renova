@@ -1,0 +1,19 @@
+@model dynamic
+@{
+    var page = (int)Model.Page;
+    var totalPages = (int)Model.TotalPages;
+    var hasPrevious = (bool)Model.HasPreviousPage;
+    var hasNext = (bool)Model.HasNextPage;
+}
+
+@if (totalPages > 1)
+{
+    <nav class="admin-pagination" aria-label="Paginação">
+        <a class="@(hasPrevious ? string.Empty : "is-disabled")" href="@Url.Action(null, new { page = page - 1, search = ViewBag.Search, status = ViewBag.Status, active = ViewBag.Active })">Anterior</a>
+        @for (var item = 1; item <= totalPages; item++)
+        {
+            <a class="@(item == page ? "is-active" : string.Empty)" href="@Url.Action(null, new { page = item, search = ViewBag.Search, status = ViewBag.Status, active = ViewBag.Active })">@item</a>
+        }
+        <a class="@(hasNext ? string.Empty : "is-disabled")" href="@Url.Action(null, new { page = page + 1, search = ViewBag.Search, status = ViewBag.Status, active = ViewBag.Active })">Próxima</a>
+    </nav>
+}

@@ -15,6 +15,7 @@
         <div class="admin-form-grid">
             <div class="admin-form-group"><label class="admin-label required" asp-for="FullName">Nome completo</label><input class="admin-input" asp-for="FullName" autocomplete="name" /><span class="admin-validation" asp-validation-for="FullName"></span></div>
             <div class="admin-form-group"><label class="admin-label required" asp-for="Email">Email</label><input class="admin-input" asp-for="Email" autocomplete="email" /><span class="admin-validation" asp-validation-for="Email"></span></div>
+            <div class="admin-form-group"><label class="admin-label" asp-for="Phone">Telefone</label><input class="admin-input" asp-for="Phone" inputmode="tel" autocomplete="tel" /><span class="admin-validation" asp-validation-for="Phone"></span></div>
             <div class="admin-form-group"><label class="admin-label" asp-for="IsActive">Status</label><select class="admin-select" asp-for="IsActive"><option value="true">Ativo</option><option value="false">Inativo</option></select><span class="admin-validation" asp-validation-for="IsActive"></span></div>
         </div>
     </section>

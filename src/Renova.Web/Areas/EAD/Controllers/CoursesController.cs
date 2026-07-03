@@ -3,13 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Renova.Domain.Entities;
 using Renova.Infrastructure.Data;
 using Renova.Web.Areas.EAD.ViewModels.Courses;
+using Renova.Web.ViewModels;
 
 namespace Renova.Web.Areas.EAD.Controllers;
 
 [Area("EAD")]
 public sealed class CoursesController(IDbContextFactory<AppDbContext> dbContextFactory) : Controller
 {
-    public async Task<IActionResult> Index(string? search, bool? active)
+    public async Task<IActionResult> Index(string? search, bool? active, int page = 1)
     {
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var query = db.Courses.AsNoTracking();
@@ -34,7 +35,22 @@ public sealed class CoursesController(IDbContextFactory<AppDbContext> dbContextF
         ViewBag.Archived = await db.Courses.CountAsync(course => !course.IsActive);
         ViewBag.CreatedThisMonth = await db.Courses.CountAsync(course => course.CreatedAt >= DateTime.UtcNow.AddDays(-30));
 
-        return View(await query.OrderBy(course => course.Title).ToListAsync());
+        const int pageSize = 10;
+        page = Math.Max(1, page);
+        var totalItems = await query.CountAsync();
+        var courses = await query
+            .OrderBy(course => course.Title)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return View(new PagedResult<Course>
+        {
+            Items = courses,
+            Page = page,
+            PageSize = pageSize,
+            TotalItems = totalItems
+        });
     }
 
     public async Task<IActionResult> Details(Guid id)
@@ -116,6 +132,34 @@ public sealed class CoursesController(IDbContextFactory<AppDbContext> dbContextF
         course.UpdatedAt = DateTime.UtcNow;
         await db.SaveChangesAsync();
         TempData["Success"] = "Curso arquivado com sucesso.";
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await using var db = await dbContextFactory.CreateDbContextAsync();
+        var course = await db.Courses.FindAsync(id);
+        if (course is null)
+        {
+            return NotFound();
+        }
+
+        try
+        {
+            db.Courses.Remove(course);
+            await db.SaveChangesAsync();
+            TempData["Success"] = "Curso excluído com sucesso.";
+        }
+        catch (DbUpdateException)
+        {
+            course.IsActive = false;
+            course.UpdatedAt = DateTime.UtcNow;
+            await db.SaveChangesAsync();
+            TempData["Success"] = "Curso possui vínculos e foi arquivado com segurança.";
+        }
+
         return RedirectToAction(nameof(Index));
     }
 

@@ -3,13 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Renova.Domain.Entities;
 using Renova.Infrastructure.Data;
 using Renova.Web.Areas.CRM.ViewModels.Students;
+using Renova.Web.ViewModels;
 
 namespace Renova.Web.Areas.CRM.Controllers;
 
 [Area("CRM")]
 public sealed class StudentsController(IDbContextFactory<AppDbContext> dbContextFactory) : Controller
 {
-    public async Task<IActionResult> Index(string? search, int? status)
+    public async Task<IActionResult> Index(string? search, int? status, int page = 1)
     {
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var query = db.Students.AsNoTracking();
@@ -36,11 +37,23 @@ public sealed class StudentsController(IDbContextFactory<AppDbContext> dbContext
         ViewBag.InTreatment = await db.Students.CountAsync(student => student.Status == StudentStatuses.InTreatment);
         ViewBag.DischargePlanned = await db.Students.CountAsync(student => student.Status == StudentStatuses.DischargePlanned);
 
+        const int pageSize = 10;
+        page = Math.Max(1, page);
+        var totalItems = await query.CountAsync();
+
         var students = await query
             .OrderBy(student => student.FullName)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
-        return View(students);
+        return View(new PagedResult<Student>
+        {
+            Items = students,
+            Page = page,
+            PageSize = pageSize,
+            TotalItems = totalItems
+        });
     }
 
     public async Task<IActionResult> Details(Guid id)
@@ -137,6 +150,34 @@ public sealed class StudentsController(IDbContextFactory<AppDbContext> dbContext
         student.Status = StudentStatuses.Inactive;
         student.UpdatedAt = DateTime.UtcNow;
         await TrySaveAsync(db, "Acolhido inativado com sucesso.");
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await using var db = await dbContextFactory.CreateDbContextAsync();
+        var student = await db.Students.FindAsync(id);
+        if (student is null)
+        {
+            return NotFound();
+        }
+
+        try
+        {
+            db.Students.Remove(student);
+            await db.SaveChangesAsync();
+            TempData["Success"] = "Acolhido excluído com sucesso.";
+        }
+        catch (DbUpdateException)
+        {
+            student.Status = StudentStatuses.Inactive;
+            student.UpdatedAt = DateTime.UtcNow;
+            await db.SaveChangesAsync();
+            TempData["Success"] = "Acolhido possui vínculos e foi inativado com segurança.";
+        }
+
         return RedirectToAction(nameof(Index));
     }
 

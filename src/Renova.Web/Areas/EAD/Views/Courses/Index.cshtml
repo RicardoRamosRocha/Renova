@@ -1,15 +1,16 @@
 @using Renova.Domain.Entities
-@model IReadOnlyList<Course>
+@using Renova.Web.ViewModels
+@model PagedResult<Course>
 @{ ViewData["Title"] = "Cursos"; }
 
 <section class="demo-page">
     <div class="demo-hero">
-        <div><span class="demo-kicker">EAD</span><h1>Cursos</h1><p>Cadastro e publicação de cursos para acolhidos, famílias e equipe.</p></div>
+        <div><span class="demo-kicker">EAD / Cursos</span><h1>Cursos</h1><p>Gerencie cursos, publicação e status da biblioteca EAD.</p></div>
         <a class="demo-button" asp-action="Create">Novo Curso</a>
     </div>
     @if (TempData["Success"] is string success) { <div class="admin-alert">@success</div> }
     <div class="demo-grid-4">
-        <article class="demo-card"><span>Total</span><strong>@ViewBag.Total</strong><small>Cursos</small></article>
+        <article class="demo-card"><span>Cursos</span><strong>@ViewBag.Total</strong><small>Total</small></article>
         <article class="demo-card"><span>Publicados</span><strong>@ViewBag.Published</strong><small>Ativos</small></article>
         <article class="demo-card"><span>Arquivados</span><strong>@ViewBag.Archived</strong><small>Fora da vitrine</small></article>
         <article class="demo-card"><span>Criados no mês</span><strong>@ViewBag.CreatedThisMonth</strong><small>Últimos 30 dias</small></article>
@@ -18,30 +19,44 @@
         <div class="demo-section-title">
             <div><span class="demo-kicker">Busca e filtros</span><h2>Biblioteca de cursos</h2></div>
             <form class="demo-filter-row" method="get">
-                <input name="search" value="@ViewBag.Search" type="search" placeholder="Buscar por título ou descrição" />
+                <input name="search" value="@ViewBag.Search" type="search" placeholder="Pesquisar por título ou descrição" />
                 <select name="active"><option value="">Todos os status</option><option value="true" selected="@(ViewBag.Active == true)">Publicado</option><option value="false" selected="@(ViewBag.Active == false)">Arquivado</option></select>
                 <button class="demo-button-secondary" type="submit">Filtrar</button>
             </form>
         </div>
-        @if (Model.Count == 0)
+        @if (Model.Items.Count == 0)
         {
-            <div class="admin-empty-state"><strong>Nenhum curso encontrado</strong><p>Cadastre o primeiro curso para preparar a demonstração EAD.</p></div>
+            <div class="admin-empty-state"><strong>Nenhum registro encontrado.</strong><p>Cadastre o primeiro curso para preparar a demonstração EAD.</p><a class="demo-button" asp-action="Create">Criar primeiro cadastro</a></div>
         }
         else
         {
             <div class="demo-course-grid">
-            @foreach (var course in Model)
+            @foreach (var course in Model.Items)
             {
                 <article class="demo-course-card">
                     <div class="demo-course-cover"><span class="demo-pill @(course.IsActive ? "ok" : "danger")">@(course.IsActive ? "Publicado" : "Arquivado")</span><h2>@course.Title</h2></div>
                     <div class="demo-course-body">
                         <p class="demo-muted">@course.Description</p>
                         <span>Criado em @course.CreatedAt.ToString("dd/MM/yyyy")</span>
-                        <div class="admin-table-actions"><a class="admin-action-button details" asp-action="Details" asp-route-id="@course.Id">Ver</a><a class="admin-action-button edit" asp-action="Edit" asp-route-id="@course.Id">Editar</a><form asp-action="Inactivate" asp-route-id="@course.Id" method="post"><button class="admin-action-button danger" type="submit">Arquivar</button></form></div>
+                        <div class="admin-table-actions"><a class="admin-action-button details" asp-action="Details" asp-route-id="@course.Id">Detalhes</a><a class="admin-action-button edit" asp-action="Edit" asp-route-id="@course.Id">Editar</a><a class="admin-action-button danger" href="#delete-course-@course.Id">Excluir</a></div>
                     </div>
                 </article>
             }
             </div>
+            @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model)
+            @foreach (var course in Model.Items)
+            {
+                <div id="delete-course-@course.Id" class="admin-delete-modal" role="dialog" aria-modal="true">
+                    <div class="admin-delete-dialog">
+                        <h2>Excluir curso</h2>
+                        <p>Deseja realmente excluir este registro? Se houver vínculos, o curso será arquivado com segurança.</p>
+                        <div class="admin-delete-actions">
+                            <a class="admin-button-secondary" href="#">Cancelar</a>
+                            <form asp-action="Delete" asp-route-id="@course.Id" method="post"><button class="admin-action-button danger" type="submit">Excluir</button></form>
+                        </div>
+                    </div>
+                </div>
+            }
         }
     </section>
 </section>

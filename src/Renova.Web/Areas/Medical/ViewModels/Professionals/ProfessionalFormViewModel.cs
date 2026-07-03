@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Renova.Web.Areas.CRM.ViewModels.Professionals;
+namespace Renova.Web.Areas.Medical.ViewModels.Professionals;
 
 public sealed class ProfessionalFormViewModel
 {

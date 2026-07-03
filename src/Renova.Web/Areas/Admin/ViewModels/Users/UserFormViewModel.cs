@@ -16,6 +16,9 @@ public sealed class UserFormViewModel
 
     public bool IsActive { get; set; } = true;
 
+    [StringLength(20)]
+    public string? Phone { get; set; }
+
     public string? Role { get; set; }
 
     [DataType(DataType.Password)]
