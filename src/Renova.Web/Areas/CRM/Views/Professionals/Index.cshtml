@@ -1,0 +1,58 @@
+@using Renova.Domain.Entities
+@model IReadOnlyList<Professional>
+@{
+    ViewData["Title"] = "Profissionais";
+}
+
+<section class="demo-page">
+    <div class="demo-hero">
+        <div><span class="demo-kicker">Equipe</span><h1>Profissionais</h1><p>Gestão dos profissionais, especialidades e status de atendimento.</p></div>
+        <a class="demo-button" asp-action="Create">Novo Profissional</a>
+    </div>
+    @if (TempData["Success"] is string success) { <div class="admin-alert">@success</div> }
+    <div class="demo-grid-4">
+        <article class="demo-card"><span>Total</span><strong>@ViewBag.Total</strong><small>Profissionais</small></article>
+        <article class="demo-card"><span>Ativos</span><strong>@ViewBag.ActiveCount</strong><small>Disponíveis</small></article>
+        <article class="demo-card"><span>Inativos</span><strong>@ViewBag.InactiveCount</strong><small>Arquivados</small></article>
+        <article class="demo-card"><span>Especialidades</span><strong>@ViewBag.Specialties</strong><small>Áreas técnicas</small></article>
+    </div>
+    <section class="demo-panel">
+        <div class="demo-section-title">
+            <div><span class="demo-kicker">Busca e filtros</span><h2>Lista de profissionais</h2></div>
+            <form class="demo-filter-row" method="get">
+                <input name="search" value="@ViewBag.Search" type="search" placeholder="Buscar por nome, especialidade ou registro" />
+                <select name="active">
+                    <option value="">Todos os status</option>
+                    <option value="true" selected="@(ViewBag.Active == true)">Ativo</option>
+                    <option value="false" selected="@(ViewBag.Active == false)">Inativo</option>
+                </select>
+                <button class="demo-button-secondary" type="submit">Filtrar</button>
+            </form>
+        </div>
+        @if (Model.Count == 0)
+        {
+            <div class="admin-empty-state"><strong>Nenhum profissional encontrado</strong><p>Cadastre a equipe técnica para iniciar a operação.</p></div>
+        }
+        else
+        {
+            <div class="demo-table-wrap">
+                <table class="demo-table">
+                    <thead><tr><th>Profissional</th><th>Especialidade</th><th>Registro</th><th>Telefone</th><th>Status</th><th>Ações</th></tr></thead>
+                    <tbody>
+                    @foreach (var professional in Model)
+                    {
+                        <tr>
+                            <td><div class="demo-person"><span class="demo-avatar">@professional.FullName[..1]</span><strong>@professional.FullName</strong></div></td>
+                            <td>@professional.Specialty</td>
+                            <td>@professional.RegistrationNumber</td>
+                            <td>@professional.Phone</td>
+                            <td><span class="demo-pill @(professional.IsActive ? "ok" : "danger")">@(professional.IsActive ? "Ativo" : "Inativo")</span></td>
+                            <td><div class="admin-table-actions"><a class="admin-action-button details" asp-action="Details" asp-route-id="@professional.Id">Ver</a><a class="admin-action-button edit" asp-action="Edit" asp-route-id="@professional.Id">Editar</a><form asp-action="Inactivate" asp-route-id="@professional.Id" method="post"><button class="admin-action-button danger" type="submit">Inativar</button></form></div></td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+</section>

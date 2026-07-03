@@ -1,11 +1,51 @@
-@{
-    ViewData["Title"] = "Usuários";
-    ViewData["PageEyebrow"] = "Acesso";
-    ViewData["PageDescription"] = "Área preparada para administrar usuários autenticados e permissões futuras.";
-}
+@using Renova.Infrastructure.Identity
+@model IReadOnlyList<ApplicationUser>
+@{ ViewData["Title"] = "Usuários"; }
 
-<section class="admin-page">
-    @await Html.PartialAsync("Components/_PageHeader")
-    @await Html.PartialAsync("Components/_Buttons")
-    @await Html.PartialAsync("Components/_Table")
+<section class="demo-page">
+    <div class="demo-hero">
+        <div><span class="demo-kicker">Acesso e segurança</span><h1>Usuários</h1><p>Gerencie contas, status de acesso e perfis do Renova.</p></div>
+        <a class="demo-button" asp-action="Create">Novo Usuário</a>
+    </div>
+    @if (TempData["Success"] is string success) { <div class="admin-alert">@success</div> }
+    <div class="demo-grid-4">
+        <article class="demo-card"><span>Total</span><strong>@ViewBag.Total</strong><small>Usuários</small></article>
+        <article class="demo-card"><span>Ativos</span><strong>@ViewBag.ActiveCount</strong><small>Com acesso</small></article>
+        <article class="demo-card"><span>Inativos</span><strong>@ViewBag.InactiveCount</strong><small>Bloqueados</small></article>
+        <article class="demo-card"><span>Perfis</span><strong>@ViewBag.RolesCount</strong><small>Roles</small></article>
+    </div>
+    <section class="demo-panel">
+        <div class="demo-section-title">
+            <div><span class="demo-kicker">Busca e filtros</span><h2>Lista de usuários</h2></div>
+            <form class="demo-filter-row" method="get">
+                <input name="search" value="@ViewBag.Search" type="search" placeholder="Buscar por nome ou email" />
+                <select name="active"><option value="">Todos os status</option><option value="true" selected="@(ViewBag.Active == true)">Ativo</option><option value="false" selected="@(ViewBag.Active == false)">Inativo</option></select>
+                <button class="demo-button-secondary" type="submit">Filtrar</button>
+            </form>
+        </div>
+        @if (Model.Count == 0)
+        {
+            <div class="admin-empty-state"><strong>Nenhum usuário encontrado</strong><p>Crie usuários administrativos para a demonstração.</p></div>
+        }
+        else
+        {
+            <div class="demo-table-wrap">
+                <table class="demo-table">
+                    <thead><tr><th>Usuário</th><th>Email</th><th>Criado em</th><th>Status</th><th>Ações</th></tr></thead>
+                    <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td><div class="demo-person"><span class="demo-avatar">@user.FullName[..1]</span><strong>@user.FullName</strong></div></td>
+                            <td>@user.Email</td>
+                            <td>@user.CreatedAt.ToString("dd/MM/yyyy")</td>
+                            <td><span class="demo-pill @(user.IsActive ? "ok" : "danger")">@(user.IsActive ? "Ativo" : "Inativo")</span></td>
+                            <td><div class="admin-table-actions"><a class="admin-action-button details" asp-action="Details" asp-route-id="@user.Id">Ver</a><a class="admin-action-button edit" asp-action="Edit" asp-route-id="@user.Id">Editar</a><form asp-action="Inactivate" asp-route-id="@user.Id" method="post"><button class="admin-action-button danger" type="submit">Inativar</button></form></div></td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
 </section>

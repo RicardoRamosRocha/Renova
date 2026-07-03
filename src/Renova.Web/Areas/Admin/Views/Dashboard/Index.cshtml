@@ -1,62 +1,99 @@
 @{
     ViewData["Title"] = "Dashboard";
-     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<section class="admin-page">
-    <div class="admin-page-header">
+<section class="demo-page">
+    <div class="demo-hero">
         <div>
-            <span>Visão geral</span>
-            <h1>Dashboard Administrativo</h1>
-            <p>Acompanhe os principais indicadores operacionais do Renova em um único painel.</p>
+            <span class="demo-kicker">Painel executivo</span>
+            <h1>Bom dia, Ricardo!</h1>
+            <p>Hoje é Quinta-feira, 03 de Julho. O Renova está operando com alta previsibilidade clínica, financeira e educacional.</p>
         </div>
-        <a class="admin-primary-button" asp-area="Admin" asp-controller="Students" asp-action="Index">Novo acolhido</a>
+        <div class="demo-hero-actions">
+            <a class="demo-button" asp-area="CRM" asp-controller="Students" asp-action="Index">Novo acolhido</a>
+            <a class="demo-button-secondary" asp-area="Reports" asp-controller="Reports" asp-action="Index">Ver relatórios</a>
+        </div>
     </div>
 
-    <div class="admin-kpi-grid">
-        <article class="admin-kpi-card">
-            <span>Total de acolhidos</span>
-            <strong>128</strong>
-            <small>+12 neste mês</small>
-        </article>
-        <article class="admin-kpi-card">
-            <span>Profissionais ativos</span>
-            <strong>24</strong>
-            <small>Equipe multidisciplinar</small>
-        </article>
-        <article class="admin-kpi-card">
-            <span>Cursos publicados</span>
-            <strong>18</strong>
-            <small>Plataforma EAD</small>
-        </article>
-        <article class="admin-kpi-card">
-            <span>Atendimentos do dia</span>
-            <strong>36</strong>
-            <small>Agenda atualizada</small>
-        </article>
+    <div class="demo-grid-6">
+        <article class="demo-card"><span class="demo-card-icon">👥</span><span>Acolhidos ativos</span><strong>126</strong><small>+8% no mês</small></article>
+        <article class="demo-card"><span class="demo-card-icon">📅</span><span>Atendimentos hoje</span><strong>32</strong><small>91% confirmados</small></article>
+        <article class="demo-card"><span class="demo-card-icon">📚</span><span>Cursos publicados</span><strong>18</strong><small>4 trilhas novas</small></article>
+        <article class="demo-card"><span class="demo-card-icon">🎓</span><span>Alunos estudando</span><strong>94</strong><small>72% engajados</small></article>
+        <article class="demo-card"><span class="demo-card-icon">💰</span><span>Mensalidades em aberto</span><strong>7</strong><small>R$ 12.840</small></article>
+        <article class="demo-card"><span class="demo-card-icon">⚠</span><span>Alertas importantes</span><strong>3</strong><small>Prioridade alta</small></article>
     </div>
 
-    <div class="admin-dashboard-grid">
-        <section class="admin-panel" aria-labelledby="chart-title">
-            <div class="admin-panel-heading">
-                <h2 id="chart-title">Indicadores futuros</h2>
-                <span>Reservado para gráficos</span>
-            </div>
-            <div class="admin-chart-placeholder" aria-hidden="true">
-                <span></span><span></span><span></span><span></span><span></span>
-            </div>
-        </section>
+    <div class="demo-dashboard-grid">
+        <div class="demo-side-stack">
+            <section class="demo-panel">
+                <div class="demo-section-title">
+                    <div>
+                        <span class="demo-kicker">Operação</span>
+                        <h2>Agenda de Hoje</h2>
+                    </div>
+                    <span class="demo-pill info">32 atendimentos</span>
+                </div>
+                <div class="demo-list">
+                    <article class="demo-list-item"><strong>08:00 João Silva</strong><span class="demo-pill ok">Confirmado</span></article>
+                    <article class="demo-list-item"><strong>09:30 Maria Oliveira</strong><span class="demo-pill ok">Confirmado</span></article>
+                    <article class="demo-list-item"><strong>11:00 Atendimento Familiar</strong><span class="demo-pill info">Equipe social</span></article>
+                    <article class="demo-list-item"><strong>14:00 Avaliação Psicológica</strong><span class="demo-pill warn">Aguardando</span></article>
+                    <article class="demo-list-item"><strong>16:00 Grupo Terapêutico</strong><span class="demo-pill ok">Sala 2</span></article>
+                </div>
+            </section>
 
-        <section class="admin-panel" aria-labelledby="activity-title">
-            <div class="admin-panel-heading">
-                <h2 id="activity-title">Atividades recentes</h2>
-                <span>Placeholder</span>
-            </div>
-            <div class="admin-activity-list">
-                <article><strong>Prontuários</strong><span>Novas evoluções aparecerão aqui.</span></article>
-                <article><strong>Cursos</strong><span>Publicações EAD serão destacadas neste espaço.</span></article>
-                <article><strong>Financeiro</strong><span>Resumo de cobranças e assinaturas futuras.</span></article>
-            </div>
-        </section>
+            <section class="demo-panel">
+                <div class="demo-section-title">
+                    <div>
+                        <span class="demo-kicker">Movimentações</span>
+                        <h2>Atividades recentes</h2>
+                    </div>
+                </div>
+                <div class="demo-list">
+                    <article class="demo-list-item"><span><i class="demo-dot"></i> Novo acolhido cadastrado</span><small>há 12 min</small></article>
+                    <article class="demo-list-item"><span><i class="demo-dot"></i> Curso publicado</span><small>há 36 min</small></article>
+                    <article class="demo-list-item"><span><i class="demo-dot"></i> Alta terapêutica registrada</span><small>10:14</small></article>
+                    <article class="demo-list-item"><span><i class="demo-dot"></i> Novo profissional adicionado</span><small>09:52</small></article>
+                    <article class="demo-list-item"><span><i class="demo-dot"></i> Pagamento confirmado</span><small>09:18</small></article>
+                </div>
+            </section>
+        </div>
+
+        <aside class="demo-side-stack">
+            <section class="demo-panel">
+                <div class="demo-section-title"><h2>Próximos aniversariantes</h2></div>
+                <div class="demo-mini-list">
+                    <span>Ana Paula <strong>05/07</strong></span>
+                    <span>Renato Lima <strong>08/07</strong></span>
+                    <span>Clara Nunes <strong>11/07</strong></span>
+                </div>
+            </section>
+            <section class="demo-panel">
+                <div class="demo-section-title"><h2>Documentos pendentes</h2></div>
+                <div class="demo-mini-list">
+                    <span>Termos LGPD <strong>4</strong></span>
+                    <span>Relatórios médicos <strong>6</strong></span>
+                    <span>Contratos familiares <strong>3</strong></span>
+                </div>
+            </section>
+            <section class="demo-panel">
+                <div class="demo-section-title"><h2>Próximas altas</h2></div>
+                <div class="demo-mini-list">
+                    <span>João Silva <strong>12 dias</strong></span>
+                    <span>Marina Costa <strong>18 dias</strong></span>
+                    <span>Pedro Almeida <strong>24 dias</strong></span>
+                </div>
+            </section>
+            <section class="demo-panel">
+                <div class="demo-section-title"><h2>Cursos mais acessados</h2></div>
+                <div class="demo-mini-list">
+                    <span>Prevenção de recaídas <strong>82%</strong></span>
+                    <span>Família e reintegração <strong>74%</strong></span>
+                    <span>Rotina saudável <strong>69%</strong></span>
+                </div>
+            </section>
+        </aside>
     </div>
 </section>

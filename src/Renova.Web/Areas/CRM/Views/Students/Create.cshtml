@@ -1,0 +1,20 @@
+@using Renova.Web.Areas.CRM.ViewModels.Students
+@model StudentFormViewModel
+@{
+    ViewData["Title"] = "Novo Acolhido";
+}
+
+<section class="admin-form-page">
+    <header class="admin-form-header">
+        <div>
+            <nav class="admin-form-breadcrumb"><a asp-action="Index">Acolhidos</a><span>/</span><span>Novo cadastro</span></nav>
+            <span class="demo-kicker">Acolhidos</span>
+            <h1>Novo Acolhido</h1>
+            <p>Organize os dados pessoais, contato e informações de acolhimento em uma tela clara e segura.</p>
+        </div>
+        <a class="admin-button-secondary" asp-action="Index">Voltar</a>
+    </header>
+    <form asp-action="Create" method="post">
+        @await Html.PartialAsync("_Form", Model)
+    </form>
+</section>

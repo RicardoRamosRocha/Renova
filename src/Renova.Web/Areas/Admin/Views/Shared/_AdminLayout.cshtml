@@ -11,14 +11,14 @@
     <a class="skip-link" href="#admin-content">Pular para o conteúdo</a>
     <div class="admin-shell">
         <aside class="admin-sidebar-shell" aria-label="Menu administrativo">
-            @await Html.PartialAsync("_AdminSidebar")
+            @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_AdminSidebar.cshtml")
         </aside>
 
         <div class="admin-main-shell">
-            @await Html.PartialAsync("_AdminTopbar")
+            @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_AdminTopbar.cshtml")
 
             <main id="admin-content" class="admin-content" tabindex="-1">
-                @await Html.PartialAsync("_AdminBreadcrumb")
+                @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_AdminBreadcrumb.cshtml")
                 @RenderBody()
             </main>
 

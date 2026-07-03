@@ -1,0 +1,21 @@
+@using Renova.Domain.Entities
+@using Renova.Web.Areas.CRM.ViewModels.Students
+@model Student
+@{
+    ViewData["Title"] = "Detalhes do Acolhido";
+}
+
+<section class="demo-page">
+    <div class="demo-profile-hero">
+        <span class="demo-photo">@Model.FullName[..1]</span>
+        <div><span class="demo-kicker">Acolhido</span><h1>@Model.FullName</h1><p><span class="demo-pill ok">@StudentStatuses.Label(Model.Status)</span> Entrada em @Model.AdmissionDate.ToString("dd/MM/yyyy")</p></div>
+        <a class="demo-button" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
+    </div>
+    <div class="demo-profile-meta">
+        <article><small>CPF</small><strong>@Model.CPF</strong></article>
+        <article><small>Nascimento</small><strong>@Model.BirthDate.ToString("dd/MM/yyyy")</strong></article>
+        <article><small>Telefone</small><strong>@Model.Phone</strong></article>
+        <article><small>Email</small><strong>@(Model.Email ?? "Não informado")</strong></article>
+    </div>
+    <section class="demo-panel"><div class="demo-section-title"><h2>Endereço</h2></div><p class="demo-muted">@(Model.Address ?? "Não informado")</p></section>
+</section>

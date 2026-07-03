@@ -1,0 +1,84 @@
+@using Renova.Domain.Entities
+@using Renova.Web.Areas.CRM.ViewModels.Students
+@model IReadOnlyList<Student>
+@{
+    ViewData["Title"] = "Acolhidos";
+    var statuses = (IReadOnlyDictionary<int, string>)ViewBag.Statuses;
+}
+
+<section class="demo-page">
+    <div class="demo-hero">
+        <div>
+            <span class="demo-kicker">CRM institucional</span>
+            <h1>Acolhidos</h1>
+            <p>Cadastro, acompanhamento e gestão operacional dos acolhidos.</p>
+        </div>
+        <a class="demo-button" asp-action="Create">Novo Acolhido</a>
+    </div>
+
+    @if (TempData["Success"] is string success)
+    {
+        <div class="admin-alert">@success</div>
+    }
+
+    <div class="demo-grid-4">
+        <article class="demo-card"><span>Total</span><strong>@ViewBag.Total</strong><small>Registros</small></article>
+        <article class="demo-card"><span>Ativos</span><strong>@ViewBag.Active</strong><small>Em operação</small></article>
+        <article class="demo-card"><span>Em tratamento</span><strong>@ViewBag.InTreatment</strong><small>Planos ativos</small></article>
+        <article class="demo-card"><span>Alta prevista</span><strong>@ViewBag.DischargePlanned</strong><small>Próximas altas</small></article>
+    </div>
+
+    <section class="demo-panel">
+        <div class="demo-section-title">
+            <div><span class="demo-kicker">Busca e filtros</span><h2>Lista de acolhidos</h2></div>
+            <form class="demo-filter-row" method="get">
+                <input name="search" value="@ViewBag.Search" type="search" placeholder="Buscar por nome, CPF ou email" />
+                <select name="status">
+                    <option value="">Todos os status</option>
+                    @foreach (var status in statuses)
+                    {
+                        <option value="@status.Key" selected="@(ViewBag.Status == status.Key)">@status.Value</option>
+                    }
+                </select>
+                <button class="demo-button-secondary" type="submit">Filtrar</button>
+            </form>
+        </div>
+
+        @if (Model.Count == 0)
+        {
+            <div class="admin-empty-state">
+                <strong>Nenhum acolhido encontrado</strong>
+                <p>Cadastre o primeiro acolhido ou ajuste os filtros de busca.</p>
+            </div>
+        }
+        else
+        {
+            <div class="demo-table-wrap">
+                <table class="demo-table">
+                    <thead><tr><th>Acolhido</th><th>CPF</th><th>Telefone</th><th>Entrada</th><th>Status</th><th>Ações</th></tr></thead>
+                    <tbody>
+                    @foreach (var student in Model)
+                    {
+                        <tr>
+                            <td><div class="demo-person"><span class="demo-avatar">@student.FullName[..1]</span><strong>@student.FullName</strong></div></td>
+                            <td>@student.CPF</td>
+                            <td>@student.Phone</td>
+                            <td>@student.AdmissionDate.ToString("dd/MM/yyyy")</td>
+                            <td><span class="demo-pill @(student.Status == StudentStatuses.Inactive ? "danger" : "ok")">@StudentStatuses.Label(student.Status)</span></td>
+                            <td>
+                                <div class="admin-table-actions">
+                                    <a class="admin-action-button details" asp-action="Details" asp-route-id="@student.Id">Ver</a>
+                                    <a class="admin-action-button edit" asp-action="Edit" asp-route-id="@student.Id">Editar</a>
+                                    <form asp-action="Inactivate" asp-route-id="@student.Id" method="post">
+                                        <button class="admin-action-button danger" type="submit">Inativar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+</section>

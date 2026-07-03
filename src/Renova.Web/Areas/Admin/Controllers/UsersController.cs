@@ -1,8 +1,203 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Renova.Infrastructure.Identity;
+using Renova.Web.Areas.Admin.ViewModels.Users;
 
 namespace Renova.Web.Areas.Admin.Controllers;
 
-public sealed class UsersController : AdminControllerBase
+public sealed class UsersController(
+    UserManager<ApplicationUser> userManager,
+    RoleManager<IdentityRole> roleManager) : AdminControllerBase
 {
-    public IActionResult Index() => View();
+    public async Task<IActionResult> Index(string? search, bool? active)
+    {
+        var query = userManager.Users.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim().ToLower();
+            query = query.Where(user =>
+                user.FullName.ToLower().Contains(term) ||
+                (user.Email != null && user.Email.ToLower().Contains(term)));
+        }
+
+        if (active.HasValue)
+        {
+            query = query.Where(user => user.IsActive == active.Value);
+        }
+
+        ViewBag.Search = search;
+        ViewBag.Active = active;
+        ViewBag.Total = await userManager.Users.CountAsync();
+        ViewBag.ActiveCount = await userManager.Users.CountAsync(user => user.IsActive);
+        ViewBag.InactiveCount = await userManager.Users.CountAsync(user => !user.IsActive);
+        ViewBag.RolesCount = await roleManager.Roles.CountAsync();
+
+        return View(await query.OrderBy(user => user.FullName).ToListAsync());
+    }
+
+    public async Task<IActionResult> Details(string id)
+    {
+        var user = await userManager.FindByIdAsync(id);
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        ViewBag.Roles = await userManager.GetRolesAsync(user);
+        return View(user);
+    }
+
+    public async Task<IActionResult> Create()
+    {
+        await LoadRolesAsync();
+        return View(new UserFormViewModel { TemporaryPassword = "Renova@123" });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(UserFormViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            await LoadRolesAsync();
+            return View(model);
+        }
+
+        var user = new ApplicationUser
+        {
+            UserName = model.Email.Trim(),
+            Email = model.Email.Trim(),
+            FullName = model.FullName.Trim(),
+            IsActive = model.IsActive,
+            EmailConfirmed = true
+        };
+
+        var result = await userManager.CreateAsync(user, string.IsNullOrWhiteSpace(model.TemporaryPassword) ? "Renova@123" : model.TemporaryPassword);
+        if (!result.Succeeded)
+        {
+            AddIdentityErrors(result);
+            await LoadRolesAsync();
+            return View(model);
+        }
+
+        if (!string.IsNullOrWhiteSpace(model.Role))
+        {
+            await userManager.AddToRoleAsync(user, model.Role);
+        }
+
+        TempData["Success"] = "Usuário cadastrado com sucesso.";
+        return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> Edit(string id)
+    {
+        var user = await userManager.FindByIdAsync(id);
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        var roles = await userManager.GetRolesAsync(user);
+        await LoadRolesAsync();
+        return View(new UserFormViewModel
+        {
+            Id = user.Id,
+            FullName = user.FullName,
+            Email = user.Email ?? string.Empty,
+            IsActive = user.IsActive,
+            Role = roles.FirstOrDefault()
+        });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(string id, UserFormViewModel model)
+    {
+        if (id != model.Id || !ModelState.IsValid)
+        {
+            await LoadRolesAsync();
+            return View(model);
+        }
+
+        var user = await userManager.FindByIdAsync(id);
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        user.FullName = model.FullName.Trim();
+        user.Email = model.Email.Trim();
+        user.UserName = model.Email.Trim();
+        user.IsActive = model.IsActive;
+        user.UpdatedAt = DateTime.UtcNow;
+
+        var result = await userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+        {
+            AddIdentityErrors(result);
+            await LoadRolesAsync();
+            return View(model);
+        }
+
+        var currentRoles = await userManager.GetRolesAsync(user);
+        if (currentRoles.Count > 0)
+        {
+            await userManager.RemoveFromRolesAsync(user, currentRoles);
+        }
+
+        if (!string.IsNullOrWhiteSpace(model.Role))
+        {
+            await userManager.AddToRoleAsync(user, model.Role);
+        }
+
+        if (!string.IsNullOrWhiteSpace(model.TemporaryPassword))
+        {
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+            var resetResult = await userManager.ResetPasswordAsync(user, token, model.TemporaryPassword);
+            if (!resetResult.Succeeded)
+            {
+                AddIdentityErrors(resetResult);
+                await LoadRolesAsync();
+                return View(model);
+            }
+        }
+
+        TempData["Success"] = "Usuário atualizado com sucesso.";
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Inactivate(string id)
+    {
+        var user = await userManager.FindByIdAsync(id);
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        user.IsActive = false;
+        user.UpdatedAt = DateTime.UtcNow;
+        await userManager.UpdateAsync(user);
+        TempData["Success"] = "Usuário inativado com sucesso.";
+        return RedirectToAction(nameof(Index));
+    }
+
+    private async Task LoadRolesAsync()
+    {
+        ViewBag.Roles = await roleManager.Roles
+            .OrderBy(role => role.Name)
+            .Select(role => role.Name!)
+            .ToListAsync();
+    }
+
+    private void AddIdentityErrors(IdentityResult result)
+    {
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
+    }
 }

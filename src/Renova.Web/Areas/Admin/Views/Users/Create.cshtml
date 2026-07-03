@@ -1,0 +1,20 @@
+@using Renova.Web.Areas.Admin.ViewModels.Users
+@model UserFormViewModel
+@{
+    ViewData["Title"] = "Novo Usuário";
+}
+
+<section class="admin-form-page">
+    <header class="admin-form-header">
+        <div>
+            <nav class="admin-form-breadcrumb"><a asp-action="Index">Usuários</a><span>/</span><span>Novo usuário</span></nav>
+            <span class="demo-kicker">Acesso</span>
+            <h1>Novo Usuário</h1>
+            <p>Crie uma conta com identificação, status, perfil de acesso e senha provisória.</p>
+        </div>
+        <a class="admin-button-secondary" asp-action="Index">Voltar</a>
+    </header>
+    <form asp-action="Create" method="post">
+        @await Html.PartialAsync("_Form", Model)
+    </form>
+</section>

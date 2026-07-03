@@ -1,0 +1,20 @@
+@using Renova.Web.Areas.EAD.ViewModels.Courses
+@model CourseFormViewModel
+@{
+    ViewData["Title"] = "Editar Curso";
+}
+
+<section class="admin-form-page">
+    <header class="admin-form-header">
+        <div>
+            <nav class="admin-form-breadcrumb"><a asp-action="Index">Cursos</a><span>/</span><span>Editar curso</span></nav>
+            <span class="demo-kicker">EAD</span>
+            <h1>Editar Curso</h1>
+            <p>Atualize informações de conteúdo, publicação e descrição do curso.</p>
+        </div>
+        <a class="admin-button-secondary" asp-action="Index">Voltar</a>
+    </header>
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        @await Html.PartialAsync("_Form", Model)
+    </form>
+</section>

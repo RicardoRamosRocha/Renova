@@ -1,4 +1,24 @@
+@{
+    var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var sectionLabel = currentArea switch
+    {
+        "CRM" => "CRM",
+        "Medical" => "Cuidado",
+        "EAD" => "EAD",
+        "Finance" => "Financeiro",
+        "Reports" => "Inteligência",
+        "Settings" => "Sistema",
+        "Admin" when currentController == "Dashboard" => null,
+        "Admin" => "Administração",
+        _ => null
+    };
+}
+
 <nav class="admin-breadcrumb" aria-label="Breadcrumb">
-    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
-    <span>@ViewData["Title"]</span>
+    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Início</a>
+    @if (!string.IsNullOrWhiteSpace(sectionLabel))
+    {
+        <span>@sectionLabel</span>
+    }
 </nav>

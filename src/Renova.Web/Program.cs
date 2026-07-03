@@ -110,6 +110,36 @@ app.MapAreaControllerRoute(
     areaName: "Admin",
     pattern: "Admin/{controller=Dashboard}/{action=Index}/{id?}");
 
+app.MapAreaControllerRoute(
+    name: "crm",
+    areaName: "CRM",
+    pattern: "CRM/{controller=Students}/{action=Index}/{id?}");
+
+app.MapAreaControllerRoute(
+    name: "medical",
+    areaName: "Medical",
+    pattern: "Medical/{controller=MedicalRecords}/{action=Index}/{id?}");
+
+app.MapAreaControllerRoute(
+    name: "ead",
+    areaName: "EAD",
+    pattern: "EAD/{controller=Courses}/{action=Index}/{id?}");
+
+app.MapAreaControllerRoute(
+    name: "finance",
+    areaName: "Finance",
+    pattern: "Finance/{controller=Finance}/{action=Index}/{id?}");
+
+app.MapAreaControllerRoute(
+    name: "reports",
+    areaName: "Reports",
+    pattern: "Reports/{controller=Reports}/{action=Index}/{id?}");
+
+app.MapAreaControllerRoute(
+    name: "settings",
+    areaName: "Settings",
+    pattern: "Settings/{controller=Settings}/{action=Index}/{id?}");
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

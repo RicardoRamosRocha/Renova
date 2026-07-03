@@ -1,0 +1,20 @@
+@using Renova.Web.Areas.CRM.ViewModels.Students
+@model StudentFormViewModel
+@{
+    ViewData["Title"] = "Editar Acolhido";
+}
+
+<section class="admin-form-page">
+    <header class="admin-form-header">
+        <div>
+            <nav class="admin-form-breadcrumb"><a asp-action="Index">Acolhidos</a><span>/</span><span>Editar cadastro</span></nav>
+            <span class="demo-kicker">Acolhidos</span>
+            <h1>Editar Acolhido</h1>
+            <p>Atualize dados cadastrais, contato, status e informações do acompanhamento.</p>
+        </div>
+        <a class="admin-button-secondary" asp-action="Index">Voltar</a>
+    </header>
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        @await Html.PartialAsync("_Form", Model)
+    </form>
+</section>

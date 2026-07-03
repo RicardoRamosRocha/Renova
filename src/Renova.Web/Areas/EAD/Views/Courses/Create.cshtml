@@ -1,0 +1,20 @@
+@using Renova.Web.Areas.EAD.ViewModels.Courses
+@model CourseFormViewModel
+@{
+    ViewData["Title"] = "Novo Curso";
+}
+
+<section class="admin-form-page">
+    <header class="admin-form-header">
+        <div>
+            <nav class="admin-form-breadcrumb"><a asp-action="Index">Cursos</a><span>/</span><span>Novo curso</span></nav>
+            <span class="demo-kicker">EAD</span>
+            <h1>Novo Curso</h1>
+            <p>Estruture conteúdo, categoria, responsável e publicação para a biblioteca EAD.</p>
+        </div>
+        <a class="admin-button-secondary" asp-action="Index">Voltar</a>
+    </header>
+    <form asp-action="Create" method="post">
+        @await Html.PartialAsync("_Form", Model)
+    </form>
+</section>

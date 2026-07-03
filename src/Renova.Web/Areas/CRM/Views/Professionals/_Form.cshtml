@@ -1,0 +1,51 @@
+@using Renova.Web.Areas.CRM.ViewModels.Professionals
+@model ProfessionalFormViewModel
+@{
+    var specialties = new[] { "Psicólogo", "Terapeuta", "Assistente Social", "Coordenador", "Médico", "Educador", "Administrativo" };
+}
+
+<input type="hidden" asp-for="Id" />
+<div asp-validation-summary="ModelOnly" class="admin-validation-summary"></div>
+
+<div class="admin-form-card">
+    <section class="admin-form-section">
+        <div class="admin-form-section-title">
+            <div><span class="demo-kicker">Dados pessoais</span><h2>Identificação profissional</h2><p>Dados usados para agenda, prontuário e gestão da equipe.</p></div>
+        </div>
+        <div class="admin-form-grid three">
+            <div class="admin-form-group"><label class="admin-label required" asp-for="FullName">Nome completo</label><input class="admin-input" asp-for="FullName" autocomplete="name" /><span class="admin-validation" asp-validation-for="FullName"></span></div>
+            <div class="admin-form-group"><label class="admin-label" asp-for="CPF">CPF</label><input class="admin-input" asp-for="CPF" inputmode="numeric" /><span class="admin-validation" asp-validation-for="CPF"></span></div>
+            <div class="admin-form-group"><label class="admin-label required" asp-for="RegistrationNumber">Registro profissional</label><input class="admin-input" asp-for="RegistrationNumber" /><span class="admin-validation" asp-validation-for="RegistrationNumber"></span></div>
+            <div class="admin-form-group"><label class="admin-label required" asp-for="Specialty">Especialidade</label><select class="admin-select" asp-for="Specialty">@foreach (var item in specialties) { <option value="@item">@item</option> }</select><span class="admin-validation" asp-validation-for="Specialty"></span></div>
+            <div class="admin-form-group"><label class="admin-label required" asp-for="IsActive">Status</label><select class="admin-select" asp-for="IsActive"><option value="true">Ativo</option><option value="false">Inativo</option></select><span class="admin-validation" asp-validation-for="IsActive"></span></div>
+        </div>
+    </section>
+
+    <section class="admin-form-section">
+        <div class="admin-form-section-title">
+            <div><span class="demo-kicker">Contato</span><h2>Canais de comunicação</h2><p>Informações para notificações, agenda e contatos da operação.</p></div>
+        </div>
+        <div class="admin-form-grid three">
+            <div class="admin-form-group"><label class="admin-label required" asp-for="Phone">Telefone</label><input class="admin-input" asp-for="Phone" inputmode="tel" autocomplete="tel" /><span class="admin-validation" asp-validation-for="Phone"></span></div>
+            <div class="admin-form-group"><label class="admin-label" asp-for="WhatsApp">WhatsApp</label><input class="admin-input" asp-for="WhatsApp" inputmode="tel" /><span class="admin-validation" asp-validation-for="WhatsApp"></span></div>
+            <div class="admin-form-group"><label class="admin-label" asp-for="Email">Email</label><input class="admin-input" asp-for="Email" autocomplete="email" /><span class="admin-validation" asp-validation-for="Email"></span></div>
+        </div>
+    </section>
+
+    <section class="admin-form-section">
+        <div class="admin-form-section-title">
+            <div><span class="demo-kicker">Observações</span><h2>Notas internas</h2><p>Use para informações complementares durante a demonstração.</p></div>
+        </div>
+        <div class="admin-form-group-full">
+            <label class="admin-label" asp-for="Notes">Observações</label>
+            <textarea class="admin-textarea" asp-for="Notes"></textarea>
+            <span class="admin-help-text">Campo visual para apoio à demonstração. Não altera o modelo de domínio atual.</span>
+            <span class="admin-validation" asp-validation-for="Notes"></span>
+        </div>
+    </section>
+
+    <div class="admin-form-actions">
+        <a class="admin-button-secondary" asp-action="Index">Cancelar</a>
+        <button class="admin-button-primary" type="submit">Salvar profissional</button>
+    </div>
+</div>

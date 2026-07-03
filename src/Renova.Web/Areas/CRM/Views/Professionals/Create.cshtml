@@ -1,0 +1,20 @@
+@using Renova.Web.Areas.CRM.ViewModels.Professionals
+@model ProfessionalFormViewModel
+@{
+    ViewData["Title"] = "Novo Profissional";
+}
+
+<section class="admin-form-page">
+    <header class="admin-form-header">
+        <div>
+            <nav class="admin-form-breadcrumb"><a asp-action="Index">Profissionais</a><span>/</span><span>Novo cadastro</span></nav>
+            <span class="demo-kicker">Equipe</span>
+            <h1>Novo Profissional</h1>
+            <p>Cadastre dados técnicos, contato e status para agenda, prontuário e operação clínica.</p>
+        </div>
+        <a class="admin-button-secondary" asp-action="Index">Voltar</a>
+    </header>
+    <form asp-action="Create" method="post">
+        @await Html.PartialAsync("_Form", Model)
+    </form>
+</section>

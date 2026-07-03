@@ -1,0 +1,10 @@
+@{
+    ViewData["Title"] = "Configurações";
+    ViewData["PageEyebrow"] = "Sistema";
+    ViewData["PageDescription"] = "Base para preferências institucionais, parâmetros e identidade do ambiente.";
+}
+
+<section class="admin-page">
+    @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Components/_PageHeader.cshtml")
+    @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Components/_EmptyState.cshtml")
+</section>

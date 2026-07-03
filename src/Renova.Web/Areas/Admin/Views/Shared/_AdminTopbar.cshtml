@@ -1,11 +1,25 @@
 @{
     var userName = User.Identity?.Name;
+    var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var contextLabel = currentArea switch
+    {
+        "CRM" => "Relacionamento e acolhimento",
+        "Medical" => "Cuidado clínico",
+        "EAD" => "Educação digital",
+        "Finance" => "Gestão financeira",
+        "Reports" => "Inteligência operacional",
+        "Settings" => "Configurações do sistema",
+        "Admin" when currentController == "Dashboard" => "Visão executiva",
+        "Admin" => "Administração",
+        _ => "Gestão integrada"
+    };
 }
 
 <header class="admin-topbar">
     <div class="admin-topbar-title">
-        <span>Painel Administrativo</span>
-        <strong>@ViewData["Title"]</strong>
+        <span>Painel Renova</span>
+        <strong>@contextLabel</strong>
     </div>
 
     <div class="admin-topbar-actions">

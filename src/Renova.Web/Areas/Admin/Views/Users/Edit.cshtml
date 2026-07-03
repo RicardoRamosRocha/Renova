@@ -1,0 +1,20 @@
+@using Renova.Web.Areas.Admin.ViewModels.Users
+@model UserFormViewModel
+@{
+    ViewData["Title"] = "Editar Usuário";
+}
+
+<section class="admin-form-page">
+    <header class="admin-form-header">
+        <div>
+            <nav class="admin-form-breadcrumb"><a asp-action="Index">Usuários</a><span>/</span><span>Editar usuário</span></nav>
+            <span class="demo-kicker">Acesso</span>
+            <h1>Editar Usuário</h1>
+            <p>Atualize identificação, email, status, perfil e senha provisória quando necessário.</p>
+        </div>
+        <a class="admin-button-secondary" asp-action="Index">Voltar</a>
+    </header>
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        @await Html.PartialAsync("_Form", Model)
+    </form>
+</section>

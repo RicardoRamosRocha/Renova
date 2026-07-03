@@ -1,0 +1,44 @@
+@{
+    ViewData["Title"] = "Financeiro";
+}
+
+<section class="demo-page">
+    <div class="demo-hero">
+        <div>
+            <span class="demo-kicker">Gestão financeira</span>
+            <h1>Financeiro</h1>
+            <p>Resumo de receitas, despesas, mensalidades e inadimplência para tomada de decisão rápida.</p>
+        </div>
+        <div class="demo-button-row">
+            <a class="demo-button" href="#">Nova cobrança</a>
+            <a class="demo-button-secondary" href="#">Exportar</a>
+        </div>
+    </div>
+
+    <div class="demo-grid-4">
+        <article class="demo-card"><span>Receitas</span><strong>R$ 248k</strong><small>+14% vs. mês anterior</small></article>
+        <article class="demo-card"><span>Despesas</span><strong>R$ 116k</strong><small>Operação controlada</small></article>
+        <article class="demo-card"><span>Mensalidades</span><strong>143</strong><small>136 pagas</small></article>
+        <article class="demo-card"><span>Inadimplência</span><strong>4,9%</strong><small>7 em aberto</small></article>
+    </div>
+
+    <section class="demo-panel">
+        <div class="demo-section-title">
+            <div><span class="demo-kicker">Cobranças</span><h2>Mensalidades e pagamentos</h2></div>
+            <span class="demo-pill warn">R$ 12.840 em aberto</span>
+        </div>
+        <div class="demo-table-wrap">
+            <table class="demo-table">
+                <thead><tr><th>Responsável</th><th>Acolhido</th><th>Plano</th><th>Vencimento</th><th>Valor</th><th>Status</th></tr></thead>
+                <tbody>
+                    <tr><td>Helena Silva</td><td>João Silva</td><td>Integral Premium</td><td>03/07</td><td>R$ 3.200</td><td><span class="demo-pill ok">Pago</span></td></tr>
+                    <tr><td>Paulo Oliveira</td><td>Maria Oliveira</td><td>Clínico Plus</td><td>03/07</td><td>R$ 2.840</td><td><span class="demo-pill warn">Em aberto</span></td></tr>
+                    <tr><td>Lívia Andrade</td><td>Rafael Andrade</td><td>Reintegração</td><td>05/07</td><td>R$ 1.980</td><td><span class="demo-pill info">Agendado</span></td></tr>
+                    <tr><td>Carlos Costa</td><td>Marina Costa</td><td>Integral Premium</td><td>06/07</td><td>R$ 3.200</td><td><span class="demo-pill ok">Pago</span></td></tr>
+                    <tr><td>Rita Lima</td><td>Pedro Lima</td><td>Essencial</td><td>08/07</td><td>R$ 1.720</td><td><span class="demo-pill danger">Atrasado</span></td></tr>
+                    <tr><td>Márcia Nunes</td><td>Ana Nunes</td><td>Clínico Plus</td><td>10/07</td><td>R$ 2.840</td><td><span class="demo-pill info">A vencer</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>

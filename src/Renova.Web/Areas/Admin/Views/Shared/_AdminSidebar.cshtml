@@ -1,6 +1,11 @@
 @{
+    var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
-    string Active(string controller) => string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase) ? "is-active" : string.Empty;
+    string Active(string area, string controller) =>
+        string.Equals(currentArea, area, StringComparison.OrdinalIgnoreCase)
+        && string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase)
+            ? "is-active"
+            : string.Empty;
 }
 
 <div class="admin-sidebar">
@@ -16,21 +21,31 @@
     </div>
 
     <nav class="admin-nav" aria-label="Navegação administrativa">
-        <a class="@Active("Dashboard")" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-        <a class="@Active("Students")" asp-area="Admin" asp-controller="Students" asp-action="Index">Acolhidos</a>
-        <a class="@Active("Professionals")" asp-area="Admin" asp-controller="Professionals" asp-action="Index">Profissionais</a>
-        <a class="@Active("Families")" asp-area="Admin" asp-controller="Families" asp-action="Index">Famílias</a>
-        <a class="@Active("Appointments")" asp-area="Admin" asp-controller="Appointments" asp-action="Index">Atendimentos</a>
-        <a class="@Active("MedicalRecords")" asp-area="Admin" asp-controller="MedicalRecords" asp-action="Index">Prontuários</a>
-        <a class="@Active("Courses")" asp-area="Admin" asp-controller="Courses" asp-action="Index">Cursos</a>
-        <a class="@Active("Finance")" asp-area="Admin" asp-controller="Finance" asp-action="Index">Financeiro</a>
-        <a class="@Active("Reports")" asp-area="Admin" asp-controller="Reports" asp-action="Index">Relatórios</a>
-        <a class="@Active("Users")" asp-area="Admin" asp-controller="Users" asp-action="Index">Usuários</a>
-        <a class="@Active("Settings")" asp-area="Admin" asp-controller="Settings" asp-action="Index">Configurações</a>
-        <a class="@Active("DesignSystem")" asp-area="Admin" asp-controller="DesignSystem" asp-action="Index">Design System</a>
+        <a data-icon="⌂" class="@Active("Admin", "Dashboard")" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+        <a data-icon="👥" class="@Active("CRM", "Students")" asp-area="CRM" asp-controller="Students" asp-action="Index">Acolhidos</a>
+        <a data-icon="♡" class="@Active("CRM", "Families")" asp-area="CRM" asp-controller="Families" asp-action="Index">Famílias</a>
+        <a data-icon="✦" class="@Active("CRM", "Professionals")" asp-area="CRM" asp-controller="Professionals" asp-action="Index">Profissionais</a>
+        <a data-icon="📅" class="@Active("CRM", "Appointments")" asp-area="CRM" asp-controller="Appointments" asp-action="Index">Agenda</a>
+        <a data-icon="✚" class="@Active("Medical", "MedicalRecords")" asp-area="Medical" asp-controller="MedicalRecords" asp-action="Index">Prontuário</a>
+        <a data-icon="📚" class="@Active("EAD", "Courses")" asp-area="EAD" asp-controller="Courses" asp-action="Index">Cursos</a>
+        <a data-icon="$" class="@Active("Finance", "Finance")" asp-area="Finance" asp-controller="Finance" asp-action="Index">Financeiro</a>
+        <a data-icon="▣" class="@Active("Reports", "Reports")" asp-area="Reports" asp-controller="Reports" asp-action="Index">Relatórios</a>
+        <a data-icon="👤" class="@Active("Admin", "Users")" asp-area="Admin" asp-controller="Users" asp-action="Index">Usuários</a>
+        <a data-icon="◆" class="@Active("Admin", "Roles")" asp-area="Admin" asp-controller="Roles" asp-action="Index">Perfis</a>
+        <a data-icon="⚙" class="@Active("Settings", "Settings")" asp-area="Settings" asp-controller="Settings" asp-action="Index">Configurações</a>
+        <a data-icon="◇" class="@Active("Admin", "DesignSystem")" asp-area="Admin" asp-controller="DesignSystem" asp-action="Index">Design System</a>
     </nav>
 
+    <div class="admin-sidebar-user">
+        <span>R</span>
+        <div>
+            <strong>Ricardo</strong>
+            <small>Diretor executivo</small>
+        </div>
+    </div>
+    <div class="admin-sidebar-version">Renova v1.0</div>
+
     <form class="admin-logout" action="/auth/web-logout" method="post">
-        <button type="submit">Sair</button>
+        <button data-icon="↗" type="submit">Sair</button>
     </form>
 </div>

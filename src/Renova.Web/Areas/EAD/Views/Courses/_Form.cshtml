@@ -1,0 +1,54 @@
+@using Renova.Web.Areas.EAD.ViewModels.Courses
+@model CourseFormViewModel
+
+<input type="hidden" asp-for="Id" />
+<div asp-validation-summary="ModelOnly" class="admin-validation-summary"></div>
+
+<div class="admin-form-card">
+    <section class="admin-form-section">
+        <div class="admin-form-section-title">
+            <div><span class="demo-kicker">Informações do curso</span><h2>Conteúdo e categorização</h2><p>Dados principais para organizar a biblioteca EAD.</p></div>
+        </div>
+        <div class="admin-form-grid three">
+            <div class="admin-form-group-full"><label class="admin-label required" asp-for="Title">Título</label><input class="admin-input" asp-for="Title" /><span class="admin-validation" asp-validation-for="Title"></span></div>
+            <div class="admin-form-group"><label class="admin-label" asp-for="Category">Categoria</label><input class="admin-input" asp-for="Category" placeholder="Ex.: Reintegração" /><span class="admin-validation" asp-validation-for="Category"></span></div>
+            <div class="admin-form-group"><label class="admin-label" asp-for="Teacher">Professor/responsável</label><input class="admin-input" asp-for="Teacher" placeholder="Ex.: Dra. Camila Torres" /><span class="admin-validation" asp-validation-for="Teacher"></span></div>
+            <div class="admin-form-group"><label class="admin-label" asp-for="WorkloadHours">Carga horária</label><input class="admin-input" asp-for="WorkloadHours" type="number" min="1" /><span class="admin-validation" asp-validation-for="WorkloadHours"></span></div>
+            <div class="admin-form-group"><label class="admin-label" asp-for="Status">Status</label><select class="admin-select" asp-for="Status"><option>Rascunho</option><option>Publicado</option><option>Arquivado</option></select><span class="admin-validation" asp-validation-for="Status"></span></div>
+        </div>
+    </section>
+
+    <section class="admin-form-section">
+        <div class="admin-form-section-title">
+            <div><span class="demo-kicker">Publicação</span><h2>Disponibilidade</h2><p>Controle simples para exibir ou arquivar o curso na biblioteca.</p></div>
+        </div>
+        <div class="admin-form-grid">
+            <div class="admin-form-group">
+                <label class="admin-label" asp-for="IsActive">Publicado</label>
+                <select class="admin-select" asp-for="IsActive"><option value="true">Sim</option><option value="false">Não</option></select>
+                <span class="admin-validation" asp-validation-for="IsActive"></span>
+            </div>
+            <div class="admin-form-group">
+                <label class="admin-label">Data de criação</label>
+                <input class="admin-input" value="@DateTime.Today.ToString("yyyy-MM-dd")" type="date" disabled />
+                <span class="admin-help-text">Exibição visual; a data real é controlada pelo sistema.</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="admin-form-section">
+        <div class="admin-form-section-title">
+            <div><span class="demo-kicker">Descrição</span><h2>Resumo do curso</h2><p>Texto de apresentação para ajudar o cliente a visualizar a biblioteca EAD.</p></div>
+        </div>
+        <div class="admin-form-group-full">
+            <label class="admin-label required" asp-for="Description">Descrição</label>
+            <textarea class="admin-textarea" asp-for="Description"></textarea>
+            <span class="admin-validation" asp-validation-for="Description"></span>
+        </div>
+    </section>
+
+    <div class="admin-form-actions">
+        <a class="admin-button-secondary" asp-action="Index">Cancelar</a>
+        <button class="admin-button-primary" type="submit">Salvar curso</button>
+    </div>
+</div>
