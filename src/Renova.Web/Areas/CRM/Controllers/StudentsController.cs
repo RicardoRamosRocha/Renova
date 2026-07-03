@@ -3,12 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using Renova.Domain.Entities;
 using Renova.Infrastructure.Data;
 using Renova.Web.Areas.CRM.ViewModels.Students;
+using Renova.Web.Services;
 using Renova.Web.ViewModels;
+
+
 
 namespace Renova.Web.Areas.CRM.Controllers;
 
 [Area("CRM")]
-public sealed class StudentsController(IDbContextFactory<AppDbContext> dbContextFactory) : Controller
+public sealed class StudentsController(
+    IDbContextFactory<AppDbContext> dbContextFactory,
+    IPhotoService photoService) : Controller
 {
     public async Task<IActionResult> Index(string? search, int? status, int page = 1)
     {
@@ -60,10 +65,19 @@ public sealed class StudentsController(IDbContextFactory<AppDbContext> dbContext
     {
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var student = await db.Students.AsNoTracking().FirstOrDefaultAsync(item => item.Id == id);
+
         return student is null ? NotFound() : View(student);
     }
 
-    public IActionResult Create() => View(new StudentFormViewModel());
+    public IActionResult Create()
+    {
+        return View(new StudentFormViewModel
+        {
+            BirthDate = DateTime.Today.AddYears(-30),
+            AdmissionDate = DateTime.Today,
+            Status = StudentStatuses.InTreatment
+        });
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -75,20 +89,38 @@ public sealed class StudentsController(IDbContextFactory<AppDbContext> dbContext
         }
 
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        db.Students.Add(new Student
+
+        string? photoPath;
+
+        try
+        {
+            photoPath = await photoService.SavePhotoAsync(model.Photo, "students");
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(nameof(model.Photo), ex.Message);
+            return View(model);
+        }
+
+        var student = new Student
         {
             FullName = model.FullName.Trim(),
             CPF = model.CPF.Trim(),
             BirthDate = DateTime.SpecifyKind(model.BirthDate.Date, DateTimeKind.Utc),
             Phone = model.Phone.Trim(),
-            Email = model.Email?.Trim(),
-            Address = model.Address?.Trim(),
+            Email = string.IsNullOrWhiteSpace(model.Email) ? null : model.Email.Trim(),
+            Address = string.IsNullOrWhiteSpace(model.Address) ? null : model.Address.Trim(),
             Status = model.Status,
-            AdmissionDate = DateTime.SpecifyKind(model.AdmissionDate.Date, DateTimeKind.Utc)
-        });
+            AdmissionDate = DateTime.SpecifyKind(model.AdmissionDate.Date, DateTimeKind.Utc),
+            PhotoPath = photoPath,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        db.Students.Add(student);
 
         if (!await TrySaveAsync(db, "Acolhido cadastrado com sucesso."))
         {
+            photoService.DeletePhoto(photoPath);
             return View(model);
         }
 
@@ -99,6 +131,7 @@ public sealed class StudentsController(IDbContextFactory<AppDbContext> dbContext
     {
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var student = await db.Students.FindAsync(id);
+
         return student is null ? NotFound() : View(ToForm(student));
     }
 
@@ -113,24 +146,38 @@ public sealed class StudentsController(IDbContextFactory<AppDbContext> dbContext
 
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var student = await db.Students.FindAsync(id);
+
         if (student is null)
         {
             return NotFound();
+        }
+
+        var oldPhotoPath = student.PhotoPath;
+
+        try
+        {
+            student.PhotoPath = await photoService.SavePhotoAsync(model.Photo, "students", student.PhotoPath);
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(nameof(model.Photo), ex.Message);
+            model.PhotoPath = oldPhotoPath;
+            return View(model);
         }
 
         student.FullName = model.FullName.Trim();
         student.CPF = model.CPF.Trim();
         student.BirthDate = DateTime.SpecifyKind(model.BirthDate.Date, DateTimeKind.Utc);
         student.Phone = model.Phone.Trim();
-        student.Email = model.Email?.Trim();
-        student.Address = model.Address?.Trim();
+        student.Email = string.IsNullOrWhiteSpace(model.Email) ? null : model.Email.Trim();
+        student.Address = string.IsNullOrWhiteSpace(model.Address) ? null : model.Address.Trim();
         student.Status = model.Status;
         student.AdmissionDate = DateTime.SpecifyKind(model.AdmissionDate.Date, DateTimeKind.Utc);
         student.UpdatedAt = DateTime.UtcNow;
 
         if (!await TrySaveAsync(db, "Acolhido atualizado com sucesso."))
         {
-            return View(model);
+            return View(ToForm(student));
         }
 
         return RedirectToAction(nameof(Index));
@@ -142,6 +189,7 @@ public sealed class StudentsController(IDbContextFactory<AppDbContext> dbContext
     {
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var student = await db.Students.FindAsync(id);
+
         if (student is null)
         {
             return NotFound();
@@ -149,7 +197,9 @@ public sealed class StudentsController(IDbContextFactory<AppDbContext> dbContext
 
         student.Status = StudentStatuses.Inactive;
         student.UpdatedAt = DateTime.UtcNow;
+
         await TrySaveAsync(db, "Acolhido inativado com sucesso.");
+
         return RedirectToAction(nameof(Index));
     }
 
@@ -159,6 +209,7 @@ public sealed class StudentsController(IDbContextFactory<AppDbContext> dbContext
     {
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var student = await db.Students.FindAsync(id);
+
         if (student is null)
         {
             return NotFound();
@@ -166,22 +217,32 @@ public sealed class StudentsController(IDbContextFactory<AppDbContext> dbContext
 
         try
         {
+            var photoPath = student.PhotoPath;
+
             db.Students.Remove(student);
             await db.SaveChangesAsync();
+
+            photoService.DeletePhoto(photoPath);
+
             TempData["Success"] = "Acolhido excluído com sucesso.";
         }
         catch (DbUpdateException)
         {
             student.Status = StudentStatuses.Inactive;
             student.UpdatedAt = DateTime.UtcNow;
+
             await db.SaveChangesAsync();
+
             TempData["Success"] = "Acolhido possui vínculos e foi inativado com segurança.";
         }
 
         return RedirectToAction(nameof(Index));
     }
 
-    public IActionResult Profile() => View();
+    public IActionResult Profile()
+    {
+        return View();
+    }
 
     private async Task<bool> TrySaveAsync(AppDbContext db, string successMessage)
     {
@@ -198,16 +259,20 @@ public sealed class StudentsController(IDbContextFactory<AppDbContext> dbContext
         }
     }
 
-    private static StudentFormViewModel ToForm(Student student) => new()
+    private static StudentFormViewModel ToForm(Student student)
     {
-        Id = student.Id,
-        FullName = student.FullName,
-        CPF = student.CPF,
-        BirthDate = student.BirthDate,
-        Phone = student.Phone,
-        Email = student.Email,
-        Address = student.Address,
-        Status = student.Status,
-        AdmissionDate = student.AdmissionDate
-    };
+        return new StudentFormViewModel
+        {
+            Id = student.Id,
+            FullName = student.FullName,
+            CPF = student.CPF,
+            BirthDate = student.BirthDate,
+            Phone = student.Phone,
+            Email = student.Email,
+            Address = student.Address,
+            Status = student.Status,
+            AdmissionDate = student.AdmissionDate,
+            PhotoPath = student.PhotoPath
+        };
+    }
 }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace Renova.Web.Areas.CRM.ViewModels.Students;
 
@@ -44,6 +45,10 @@ public sealed class StudentFormViewModel
 
     [StringLength(1000)]
     public string? Notes { get; set; }
+
+    public IFormFile? Photo { get; set; }
+
+    public string? PhotoPath { get; set; }
 }
 
 public static class StudentStatuses
