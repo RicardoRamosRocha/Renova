@@ -12,7 +12,7 @@
 <div class="admin-form-card">
     @await Html.PartialAsync("_ProfileHeader", Model)
 
-    <section class="admin-form-section">
+    <section class="admin-form-section form-section-identity">
         <div class="admin-form-section-title">
             <div>
                 <span class="demo-kicker">Dados pessoais</span>
@@ -24,42 +24,57 @@
         <div class="admin-form-grid three">
             <div class="admin-form-group">
                 <label class="admin-label required" asp-for="FullName">Nome completo</label>
-                <input class="admin-input" asp-for="FullName" autocomplete="name" />
+                <div class="form-field-with-icon">
+                    <i class="bi bi-person"></i>
+                    <input class="admin-input" asp-for="FullName" autocomplete="name" placeholder="Digite o nome completo do acolhido" />
+                </div>
                 <span class="admin-validation" asp-validation-for="FullName"></span>
             </div>
 
             <div class="admin-form-group">
                 <label class="admin-label required" asp-for="CPF">CPF</label>
-                <input class="admin-input" asp-for="CPF" inputmode="numeric" />
+                <div class="form-field-with-icon">
+                    <i class="bi bi-card-text"></i>
+                    <input class="admin-input" asp-for="CPF" inputmode="numeric" placeholder="000.000.000-00" />
+                </div>
                 <span class="admin-validation" asp-validation-for="CPF"></span>
             </div>
 
             <div class="admin-form-group">
                 <label class="admin-label" asp-for="RG">RG</label>
-                <input class="admin-input" asp-for="RG" />
+                <div class="form-field-with-icon">
+                    <i class="bi bi-card-text"></i>
+                    <input class="admin-input" asp-for="RG" placeholder="Digite o RG" />
+                </div>
                 <span class="admin-validation" asp-validation-for="RG"></span>
             </div>
 
             <div class="admin-form-group">
                 <label class="admin-label required" asp-for="BirthDate">Data de nascimento</label>
-                <input class="admin-input" asp-for="BirthDate" type="date" />
+                <div class="form-field-with-icon">
+                    <i class="bi bi-calendar3"></i>
+                    <input class="admin-input" asp-for="BirthDate" type="date" />
+                </div>
                 <span class="admin-validation" asp-validation-for="BirthDate"></span>
             </div>
 
             <div class="admin-form-group">
                 <label class="admin-label required" asp-for="Status">Status</label>
-                <select class="admin-select" asp-for="Status">
-                    @foreach (var status in StudentStatuses.Labels)
-                    {
-                        <option value="@status.Key">@status.Value</option>
-                    }
-                </select>
+                <div class="form-field-with-icon">
+                    <i class="bi bi-check2-circle"></i>
+                    <select class="admin-select" asp-for="Status">
+                        @foreach (var status in StudentStatuses.Labels)
+                        {
+                            <option value="@status.Key">@status.Value</option>
+                        }
+                    </select>
+                </div>
                 <span class="admin-validation" asp-validation-for="Status"></span>
             </div>
         </div>
     </section>
 
-    <section class="admin-form-section">
+    <section class="admin-form-section form-section-contact">
         <div class="admin-form-section-title">
             <div>
                 <span class="demo-kicker">Contato</span>
@@ -71,25 +86,34 @@
         <div class="admin-form-grid three">
             <div class="admin-form-group">
                 <label class="admin-label required" asp-for="Phone">Telefone</label>
-                <input class="admin-input" asp-for="Phone" inputmode="tel" autocomplete="tel" />
+                <div class="form-field-with-icon">
+                    <i class="bi bi-telephone"></i>
+                    <input class="admin-input" asp-for="Phone" inputmode="tel" autocomplete="tel" placeholder="(00) 00000-0000" />
+                </div>
                 <span class="admin-validation" asp-validation-for="Phone"></span>
             </div>
 
             <div class="admin-form-group">
                 <label class="admin-label" asp-for="WhatsApp">WhatsApp</label>
-                <input class="admin-input" asp-for="WhatsApp" inputmode="tel" />
+                <div class="form-field-with-icon">
+                    <i class="bi bi-whatsapp"></i>
+                    <input class="admin-input" asp-for="WhatsApp" inputmode="tel" placeholder="(00) 00000-0000" />
+                </div>
                 <span class="admin-validation" asp-validation-for="WhatsApp"></span>
             </div>
 
             <div class="admin-form-group">
                 <label class="admin-label" asp-for="Email">Email</label>
-                <input class="admin-input" asp-for="Email" autocomplete="email" />
+                <div class="form-field-with-icon">
+                    <i class="bi bi-envelope"></i>
+                    <input class="admin-input" asp-for="Email" autocomplete="email" placeholder="email@exemplo.com" />
+                </div>
                 <span class="admin-validation" asp-validation-for="Email"></span>
             </div>
         </div>
     </section>
 
-    <section class="admin-form-section">
+    <section class="admin-form-section form-section-location">
         <div class="admin-form-section-title">
             <div>
                 <span class="demo-kicker">Endereco</span>
@@ -101,13 +125,16 @@
         <div class="admin-form-grid">
             <div class="admin-form-group-full">
                 <label class="admin-label" asp-for="Address">Endereco completo</label>
-                <input class="admin-input" asp-for="Address" autocomplete="street-address" />
+                <div class="form-field-with-icon">
+                    <i class="bi bi-geo-alt"></i>
+                    <input class="admin-input" asp-for="Address" autocomplete="street-address" placeholder="Rua, numero, bairro, cidade e UF" />
+                </div>
                 <span class="admin-validation" asp-validation-for="Address"></span>
             </div>
         </div>
     </section>
 
-    <section class="admin-form-section">
+    <section class="admin-form-section form-section-care">
         <div class="admin-form-section-title">
             <div>
                 <span class="demo-kicker">Acolhimento</span>
@@ -119,13 +146,19 @@
         <div class="admin-form-grid">
             <div class="admin-form-group">
                 <label class="admin-label required" asp-for="AdmissionDate">Data de entrada</label>
-                <input class="admin-input" asp-for="AdmissionDate" type="date" />
+                <div class="form-field-with-icon">
+                    <i class="bi bi-calendar3"></i>
+                    <input class="admin-input" asp-for="AdmissionDate" type="date" />
+                </div>
                 <span class="admin-validation" asp-validation-for="AdmissionDate"></span>
             </div>
 
             <div class="admin-form-group-full">
                 <label class="admin-label" asp-for="Notes">Observacoes</label>
-                <textarea class="admin-textarea" asp-for="Notes"></textarea>
+                <div class="form-field-with-icon textarea">
+                    <i class="bi bi-card-text"></i>
+                    <textarea class="admin-textarea" asp-for="Notes" placeholder="Registre observacoes relevantes para a equipe"></textarea>
+                </div>
                 <span class="admin-help-text">Campo visual para apoio a demonstracao. Nao altera o modelo de dominio atual.</span>
                 <span class="admin-validation" asp-validation-for="Notes"></span>
             </div>
@@ -133,8 +166,9 @@
     </section>
 
     <div class="admin-form-actions">
-        <a class="admin-button-secondary" asp-action="Index">Cancelar</a>
+        <a class="admin-button-secondary" asp-action="Index"><i class="bi bi-x-lg"></i>Cancelar</a>
         <button class="admin-button-primary" type="submit">
+            <i class="bi bi-save"></i>
             @(isEdit ? "Salvar alteracoes" : "Cadastrar acolhido")
         </button>
     </div>

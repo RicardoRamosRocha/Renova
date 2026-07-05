@@ -14,52 +14,58 @@
 
     <section class="login-premium-shell" aria-label="Acesso ao sistema Renova">
         <aside class="login-brand-panel">
-            <a class="login-brand-logo" asp-controller="Home" asp-action="Index" aria-label="Renova">
-                <span aria-hidden="true">R</span>
-                <strong>Renova</strong>
-            </a>
+            <div class="login-care-visual" aria-hidden="true"></div>
 
-            <div class="login-brand-copy">
-                <span class="login-brand-title">Plataforma Cl&iacute;nica</span>
-                <h1>Cuidado que transforma. Gest&atilde;o que evolui.</h1>
-                <p>
-                    Uma plataforma completa para acolhimento, acompanhamento e transforma&ccedil;&atilde;o de vidas.
-                    Tecnologia, empatia e seguran&ccedil;a em cada etapa do cuidado.
-                </p>
+            <div class="login-brand-content">
+                <a class="login-brand-logo" asp-controller="Home" asp-action="Index" aria-label="Renova">
+                    <span aria-hidden="true">R</span>
+                    <strong>Renova</strong>
+                    <small>Plataforma Cl&iacute;nica</small>
+                </a>
+
+                <div class="login-brand-copy">
+                    <span class="login-brand-title"><i aria-hidden="true">+</i> Gest&atilde;o que transforma vidas</span>
+                    <h1>Cuidado que <em>transforma.</em><br />Gest&atilde;o que evolui.</h1>
+                    <p>
+                        Uma plataforma completa para acolhimento, acompanhamento e transforma&ccedil;&atilde;o de vidas.
+                        Tecnologia, empatia e seguran&ccedil;a em cada etapa do cuidado.
+                    </p>
+                </div>
+
+                <div class="login-feature-grid" aria-label="Recursos principais">
+                    <article class="login-feature-card">
+                        <span aria-hidden="true">P</span>
+                        <strong>Acolhimento</strong>
+                        <p>Gest&atilde;o completa de acolhidos e fam&iacute;lias</p>
+                    </article>
+                    <article class="login-feature-card">
+                        <span aria-hidden="true">C</span>
+                        <strong>Cl&iacute;nico</strong>
+                        <p>Prontu&aacute;rios, evolu&ccedil;&otilde;es e agenda integrada</p>
+                    </article>
+                    <article class="login-feature-card">
+                        <span aria-hidden="true">E</span>
+                        <strong>EAD</strong>
+                        <p>Cursos, trilhas e acompanhamento</p>
+                    </article>
+                </div>
+
+                <div class="login-stats-grid" aria-label="Indicadores do Renova">
+                    <article class="login-stats-card"><i aria-hidden="true">S</i><strong>100%</strong><span>Seguran&ccedil;a de dados e LGPD</span></article>
+                    <article class="login-stats-card"><i aria-hidden="true">M</i><strong>+10</strong><span>M&oacute;dulos integrados</span></article>
+                    <article class="login-stats-card"><i aria-hidden="true">D</i><strong>Dados</strong><span>Relat&oacute;rios e dashboards em tempo real</span></article>
+                    <article class="login-stats-card"><i aria-hidden="true">C</i><strong>Confi&aacute;vel</strong><span>Para institui&ccedil;&otilde;es e profissionais</span></article>
+                </div>
+
+                <p class="login-brand-footer"><span aria-hidden="true">&ldquo;</span>A tecnologia &eacute; o nosso meio. O <strong>cuidado</strong> &eacute; o nosso prop&oacute;sito.<i aria-hidden="true">♡</i></p>
+                <p class="login-copyright">&copy; 2026 Renova. Todos os direitos reservados.</p>
             </div>
-
-            <div class="login-feature-grid" aria-label="Recursos principais">
-                <article class="login-feature-card">
-                    <span aria-hidden="true">+</span>
-                    <strong>Acolhimento</strong>
-                    <p>Gest&atilde;o completa de acolhidos e fam&iacute;lias</p>
-                </article>
-                <article class="login-feature-card">
-                    <span aria-hidden="true">+</span>
-                    <strong>Cl&iacute;nico</strong>
-                    <p>Prontu&aacute;rios, evolu&ccedil;&otilde;es e agenda integrada</p>
-                </article>
-                <article class="login-feature-card">
-                    <span aria-hidden="true">+</span>
-                    <strong>EAD</strong>
-                    <p>Cursos, trilhas e acompanhamento</p>
-                </article>
-            </div>
-
-            <div class="login-stats-grid" aria-label="Indicadores do Renova">
-                <article class="login-stats-card"><strong>100%</strong><span>Seguran&ccedil;a de dados e LGPD</span></article>
-                <article class="login-stats-card"><strong>+10</strong><span>M&oacute;dulos integrados</span></article>
-                <article class="login-stats-card"><strong>Dados</strong><span>Relat&oacute;rios e dashboards em tempo real</span></article>
-                <article class="login-stats-card"><strong>Confi&aacute;vel</strong><span>Para institui&ccedil;&otilde;es e profissionais</span></article>
-            </div>
-
-            <p class="login-brand-footer">A tecnologia &eacute; o nosso meio. O cuidado &eacute; o nosso prop&oacute;sito.</p>
         </aside>
 
         <section class="login-auth-panel">
             <div class="login-auth-card">
                 <div class="login-auth-heading">
-                    <span>Acesso restrito</span>
+                    <span><i aria-hidden="true">S</i> Acesso restrito</span>
                     <h2>Entrar no Renova</h2>
                     <p>Use seu email institucional para acessar o painel administrativo com seguran&ccedil;a.</p>
                 </div>
@@ -102,7 +108,10 @@
                     <button class="login-submit-button" type="submit">Entrar no sistema</button>
                 </form>
 
-                <p class="login-auth-footer">Tecnologia com prop&oacute;sito. Pessoas no centro.</p>
+                <div class="login-divider"><span>ou</span></div>
+                <button class="login-google-button" type="button"><span aria-hidden="true">G</span>Entrar com Google</button>
+
+                <p class="login-auth-footer"><span aria-hidden="true">S</span>Tecnologia com prop&oacute;sito. Pessoas no centro.</p>
             </div>
         </section>
     </section>
