@@ -64,7 +64,17 @@ public sealed class StudentsController(
     public async Task<IActionResult> Details(Guid id)
     {
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var student = await db.Students.AsNoTracking().FirstOrDefaultAsync(item => item.Id == id);
+        var student = await db.Students
+            .AsNoTracking()
+            .Include(item => item.FamilyMembers)
+            .Include(item => item.Appointments)
+                .ThenInclude(appointment => appointment.Professional)
+            .Include(item => item.Subscriptions)
+            .Include(item => item.ProgressEntries)
+                .ThenInclude(progress => progress.Lesson)
+            .Include(item => item.MedicalEvolutions)
+                .ThenInclude(evolution => evolution.Professional)
+            .FirstOrDefaultAsync(item => item.Id == id);
 
         return student is null ? NotFound() : View(student);
     }

@@ -20,17 +20,20 @@ public sealed class PhotoService : IPhotoService
 
         if (photo.Length > MaxFileSize)
         {
-            throw new InvalidOperationException("A imagem deve ter no máximo 5 MB.");
+            throw new InvalidOperationException("A imagem deve ter no maximo 5 MB.");
         }
 
         var extension = Path.GetExtension(photo.FileName).ToLowerInvariant();
 
         if (!_allowedExtensions.Contains(extension))
         {
-            throw new InvalidOperationException("Formato inválido. Use JPG, JPEG, PNG ou WEBP.");
+            throw new InvalidOperationException("Formato invalido. Use JPG, JPEG, PNG ou WEBP.");
         }
 
-        DeletePhoto(oldPhotoPath);
+        if (!await HasValidImageSignatureAsync(photo, extension))
+        {
+            throw new InvalidOperationException("Arquivo invalido. Envie uma imagem JPG, PNG ou WEBP.");
+        }
 
         var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads", folderName);
         Directory.CreateDirectory(uploadsFolder);
@@ -40,6 +43,8 @@ public sealed class PhotoService : IPhotoService
 
         await using var stream = new FileStream(filePath, FileMode.Create);
         await photo.CopyToAsync(stream);
+
+        DeletePhoto(oldPhotoPath);
 
         return $"/uploads/{folderName}/{fileName}";
     }
@@ -58,5 +63,36 @@ public sealed class PhotoService : IPhotoService
         {
             File.Delete(fullPath);
         }
+    }
+
+    private static async Task<bool> HasValidImageSignatureAsync(IFormFile photo, string extension)
+    {
+        var header = new byte[12];
+        await using var stream = photo.OpenReadStream();
+        var read = await stream.ReadAsync(header);
+
+        return extension switch
+        {
+            ".jpg" or ".jpeg" => read >= 3 && header[0] == 0xFF && header[1] == 0xD8 && header[2] == 0xFF,
+            ".png" => read >= 8 &&
+                header[0] == 0x89 &&
+                header[1] == 0x50 &&
+                header[2] == 0x4E &&
+                header[3] == 0x47 &&
+                header[4] == 0x0D &&
+                header[5] == 0x0A &&
+                header[6] == 0x1A &&
+                header[7] == 0x0A,
+            ".webp" => read >= 12 &&
+                header[0] == 0x52 &&
+                header[1] == 0x49 &&
+                header[2] == 0x46 &&
+                header[3] == 0x46 &&
+                header[8] == 0x57 &&
+                header[9] == 0x45 &&
+                header[10] == 0x42 &&
+                header[11] == 0x50,
+            _ => false
+        };
     }
 }

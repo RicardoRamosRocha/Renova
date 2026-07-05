@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320" role="img" aria-label="Avatar padrao Renova">
+  <rect width="320" height="320" rx="160" fill="#F3F4F6"/>
+  <circle cx="160" cy="124" r="54" fill="#DDE7F5"/>
+  <path d="M72 270c12-62 52-96 88-96s76 34 88 96" fill="#CFE8E0"/>
+  <path d="M90 252c22-38 44-56 70-56s48 18 70 56" fill="#2563EB" opacity=".86"/>
+  <circle cx="160" cy="124" r="42" fill="#10B981" opacity=".82"/>
+</svg>

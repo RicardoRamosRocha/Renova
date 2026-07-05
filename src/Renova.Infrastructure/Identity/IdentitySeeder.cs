@@ -80,6 +80,63 @@ public sealed class IdentitySeeder
             logger.LogInformation("Administrator already exists.");
         }
 
+        var administratorChanged = false;
+
+        if (administrator.UserName != AdminEmail)
+        {
+            administrator.UserName = AdminEmail;
+            administratorChanged = true;
+        }
+
+        if (administrator.Email != AdminEmail)
+        {
+            administrator.Email = AdminEmail;
+            administratorChanged = true;
+        }
+
+        if (administrator.FullName != AdminFullName)
+        {
+            administrator.FullName = AdminFullName;
+            administratorChanged = true;
+        }
+
+        if (administrator.PhoneNumber != AdminPhone)
+        {
+            administrator.PhoneNumber = AdminPhone;
+            administratorChanged = true;
+        }
+
+        if (!administrator.IsActive)
+        {
+            administrator.IsActive = true;
+            administratorChanged = true;
+        }
+
+        if (!administrator.EmailConfirmed)
+        {
+            administrator.EmailConfirmed = true;
+            administratorChanged = true;
+        }
+
+        if (administratorChanged)
+        {
+            administrator.UpdatedAt = DateTime.UtcNow;
+            var updateResult = await userManager.UpdateAsync(administrator);
+            ThrowIfFailed(updateResult, "Could not update default administrator.");
+        }
+
+        if (!await userManager.CheckPasswordAsync(administrator, AdminPassword))
+        {
+            if (await userManager.HasPasswordAsync(administrator))
+            {
+                var removePasswordResult = await userManager.RemovePasswordAsync(administrator);
+                ThrowIfFailed(removePasswordResult, "Could not reset default administrator password.");
+            }
+
+            var addPasswordResult = await userManager.AddPasswordAsync(administrator, AdminPassword);
+            ThrowIfFailed(addPasswordResult, "Could not set default administrator password.");
+        }
+
         if (!await userManager.IsInRoleAsync(administrator, ApplicationRoles.Administrator))
         {
             var roleResult = await userManager.AddToRoleAsync(administrator, ApplicationRoles.Administrator);

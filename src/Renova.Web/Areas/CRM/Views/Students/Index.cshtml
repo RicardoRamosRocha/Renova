@@ -7,12 +7,12 @@
     var statuses = (IReadOnlyDictionary<int, string>)ViewBag.Statuses;
 }
 
-<section class="demo-page">
-    <div class="demo-hero">
+<section class="demo-page students-page">
+    <div class="demo-hero students-hero">
         <div>
             <span class="demo-kicker">CRM / Acolhidos</span>
             <h1>Acolhidos</h1>
-            <p>Gerencie todos os acolhidos da instituição.</p>
+            <p>Visao clinica e operacional dos acolhidos, com identificacao visual, status e acesso rapido ao prontuario.</p>
         </div>
         <a class="demo-button" asp-action="Create">Novo Acolhido</a>
     </div>
@@ -24,14 +24,17 @@
 
     <div class="demo-grid-4">
         <article class="demo-card"><span>Acolhidos</span><strong>@ViewBag.Total</strong><small>Total</small></article>
-        <article class="demo-card"><span>Ativos</span><strong>@ViewBag.Active</strong><small>Em operação</small></article>
+        <article class="demo-card"><span>Ativos</span><strong>@ViewBag.Active</strong><small>Em operacao</small></article>
         <article class="demo-card"><span>Em tratamento</span><strong>@ViewBag.InTreatment</strong><small>Planos ativos</small></article>
-        <article class="demo-card"><span>Altas previstas</span><strong>@ViewBag.DischargePlanned</strong><small>Próximas altas</small></article>
+        <article class="demo-card"><span>Altas previstas</span><strong>@ViewBag.DischargePlanned</strong><small>Proximas altas</small></article>
     </div>
 
-    <section class="demo-panel">
+    <section class="demo-panel students-table-panel">
         <div class="demo-section-title">
-            <div><span class="demo-kicker">Busca e filtros</span><h2>Lista de acolhidos</h2></div>
+            <div>
+                <span class="demo-kicker">Busca e filtros</span>
+                <h2>Lista de acolhidos</h2>
+            </div>
             <form class="demo-filter-row" method="get">
                 <input name="search" value="@ViewBag.Search" type="search" placeholder="Pesquisar por nome, CPF ou email" />
                 <select name="status">
@@ -56,18 +59,50 @@
         else
         {
             <div class="demo-table-wrap">
-                <table class="demo-table">
-                    <thead><tr><th>Nome</th><th>CPF</th><th>Telefone</th><th>Data Entrada</th><th>Situação</th><th>Ações</th></tr></thead>
+                <table class="demo-table students-table">
+                    <thead>
+                        <tr>
+                            <th>Acolhido</th>
+                            <th>CPF</th>
+                            <th>Telefone</th>
+                            <th>Entrada</th>
+                            <th>Situacao</th>
+                            <th>Acoes</th>
+                        </tr>
+                    </thead>
                     <tbody>
                     @foreach (var student in Model.Items)
                     {
+                        var photo = string.IsNullOrWhiteSpace(student.PhotoPath) ? "/images/avatar-default.svg" : student.PhotoPath;
+                        var statusClass = student.Status == StudentStatuses.Inactive
+                            ? "danger"
+                            : student.Status == StudentStatuses.InTreatment
+                                ? "info"
+                                : student.Status == StudentStatuses.DischargePlanned
+                                    ? "warn"
+                                    : "ok";
+
                         <tr>
-                            <td><div class="demo-person"><span class="demo-avatar">@student.FullName[..1]</span><strong>@student.FullName</strong></div></td>
+                            <td>
+                                <a class="student-person" asp-action="Details" asp-route-id="@student.Id">
+                                    <img src="@photo" alt="Foto de @student.FullName" class="student-avatar" />
+                                    <span>
+                                        <strong>@student.FullName</strong>
+                                        <small>@StudentStatuses.Label(student.Status)</small>
+                                    </span>
+                                </a>
+                            </td>
                             <td>@student.CPF</td>
                             <td>@student.Phone</td>
                             <td>@student.AdmissionDate.ToString("dd/MM/yyyy")</td>
-                            <td><span class="demo-pill @(student.Status == StudentStatuses.Inactive ? "danger" : student.Status == StudentStatuses.InTreatment ? "info" : student.Status == StudentStatuses.DischargePlanned ? "warn" : "ok")">@StudentStatuses.Label(student.Status)</span></td>
-                            <td><div class="admin-table-actions"><a class="admin-action-button details" asp-action="Details" asp-route-id="@student.Id">Detalhes</a><a class="admin-action-button edit" asp-action="Edit" asp-route-id="@student.Id">Editar</a><a class="admin-action-button danger" href="#delete-student-@student.Id">Excluir</a></div></td>
+                            <td><span class="demo-pill @statusClass">@StudentStatuses.Label(student.Status)</span></td>
+                            <td>
+                                <div class="admin-table-actions">
+                                    <a class="admin-action-button details" asp-action="Details" asp-route-id="@student.Id">Detalhes</a>
+                                    <a class="admin-action-button edit" asp-action="Edit" asp-route-id="@student.Id">Editar</a>
+                                    <a class="admin-action-button danger" href="#delete-student-@student.Id">Excluir</a>
+                                </div>
+                            </td>
                         </tr>
                     }
                     </tbody>
@@ -79,7 +114,7 @@
                 <div id="delete-student-@student.Id" class="admin-delete-modal" role="dialog" aria-modal="true">
                     <div class="admin-delete-dialog">
                         <h2>Excluir acolhido</h2>
-                        <p>Deseja realmente excluir este registro? Se houver vínculos, o acolhido será inativado com segurança.</p>
+                        <p>Deseja realmente excluir este registro? Se houver vinculos, o acolhido sera inativado com seguranca.</p>
                         <div class="admin-delete-actions">
                             <a class="admin-button-secondary" href="#">Cancelar</a>
                             <form asp-action="Delete" asp-route-id="@student.Id" method="post"><button class="admin-action-button danger" type="submit">Excluir</button></form>

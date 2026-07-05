@@ -2,12 +2,6 @@
 @model StudentFormViewModel
 @{
     var isEdit = Model.Id.HasValue;
-    var photo = string.IsNullOrWhiteSpace(Model.PhotoPath)
-    ? "/images/demo/student.jpg"
-    : Model.PhotoPath;
-    var displayName = string.IsNullOrWhiteSpace(Model.FullName)
-        ? "Novo acolhido"
-        : Model.FullName;
 }
 
 <input type="hidden" asp-for="Id" />
@@ -16,42 +10,14 @@
 <div asp-validation-summary="ModelOnly" class="admin-validation-summary"></div>
 
 <div class="admin-form-card">
-    <section class="profile-header">
-        <div class="profile-photo-wrap">
-            <img src="@photo" alt="Foto do acolhido" class="profile-photo" />
-            <label class="profile-photo-button">
-
-                <i class="bi bi-camera-fill"></i>
-
-                Alterar Foto
-
-                <input asp-for="Photo" hidden type="file" accept=".jpg,.jpeg,.png,.webp" />
-
-            </label>
-        </div>
-
-        <div class="profile-header-content">
-            <span class="demo-kicker">Cadastro do acolhido</span>
-            <h2>@displayName</h2>
-            <p>
-                Organize os dados pessoais, contato, acolhimento e imagem de identificação do acolhido.
-            </p>
-
-            <div class="profile-meta-grid">
-                <span><strong>Status</strong>@StudentStatuses.Label(Model.Status)</span>
-                <span><strong>CPF</strong>@(string.IsNullOrWhiteSpace(Model.CPF) ? "Não informado" : Model.CPF)</span>
-                <span><strong>Telefone</strong>@(string.IsNullOrWhiteSpace(Model.Phone) ? "Não informado" : Model.Phone)</span>
-                <span><strong>Entrada</strong>@Model.AdmissionDate.ToString("dd/MM/yyyy")</span>
-            </div>
-        </div>
-    </section>
+    @await Html.PartialAsync("_ProfileHeader", Model)
 
     <section class="admin-form-section">
         <div class="admin-form-section-title">
             <div>
                 <span class="demo-kicker">Dados pessoais</span>
-                <h2>Identificação do acolhido</h2>
-                <p>Informações básicas para localizar e acompanhar o acolhido no CRM.</p>
+                <h2>Identificacao do acolhido</h2>
+                <p>Informacoes basicas para localizar e acompanhar o acolhido no CRM.</p>
             </div>
         </div>
 
@@ -97,8 +63,8 @@
         <div class="admin-form-section-title">
             <div>
                 <span class="demo-kicker">Contato</span>
-                <h2>Canais de comunicação</h2>
-                <p>Telefones e email usados pela equipe para contato rápido.</p>
+                <h2>Canais de comunicacao</h2>
+                <p>Telefones e email usados pela equipe para contato rapido.</p>
             </div>
         </div>
 
@@ -126,15 +92,15 @@
     <section class="admin-form-section">
         <div class="admin-form-section-title">
             <div>
-                <span class="demo-kicker">Endereço</span>
-                <h2>Localização</h2>
-                <p>Endereço completo para cadastro institucional.</p>
+                <span class="demo-kicker">Endereco</span>
+                <h2>Localizacao</h2>
+                <p>Endereco completo para cadastro institucional.</p>
             </div>
         </div>
 
         <div class="admin-form-grid">
             <div class="admin-form-group-full">
-                <label class="admin-label" asp-for="Address">Endereço completo</label>
+                <label class="admin-label" asp-for="Address">Endereco completo</label>
                 <input class="admin-input" asp-for="Address" autocomplete="street-address" />
                 <span class="admin-validation" asp-validation-for="Address"></span>
             </div>
@@ -145,8 +111,8 @@
         <div class="admin-form-section-title">
             <div>
                 <span class="demo-kicker">Acolhimento</span>
-                <h2>Informações do acompanhamento</h2>
-                <p>Dados operacionais para início e histórico do tratamento.</p>
+                <h2>Informacoes do acompanhamento</h2>
+                <p>Dados operacionais para inicio e historico do tratamento.</p>
             </div>
         </div>
 
@@ -158,9 +124,9 @@
             </div>
 
             <div class="admin-form-group-full">
-                <label class="admin-label" asp-for="Notes">Observações</label>
+                <label class="admin-label" asp-for="Notes">Observacoes</label>
                 <textarea class="admin-textarea" asp-for="Notes"></textarea>
-                <span class="admin-help-text">Campo visual para apoio à demonstração. Não altera o modelo de domínio atual.</span>
+                <span class="admin-help-text">Campo visual para apoio a demonstracao. Nao altera o modelo de dominio atual.</span>
                 <span class="admin-validation" asp-validation-for="Notes"></span>
             </div>
         </div>
@@ -169,7 +135,7 @@
     <div class="admin-form-actions">
         <a class="admin-button-secondary" asp-action="Index">Cancelar</a>
         <button class="admin-button-primary" type="submit">
-            @(isEdit ? "Salvar alterações" : "Cadastrar acolhido")
+            @(isEdit ? "Salvar alteracoes" : "Cadastrar acolhido")
         </button>
     </div>
 </div>

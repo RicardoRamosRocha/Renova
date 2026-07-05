@@ -1,0 +1,38 @@
+@using Renova.Web.Areas.CRM.ViewModels.Students
+@model StudentFormViewModel
+@{
+    var photo = string.IsNullOrWhiteSpace(Model.PhotoPath)
+        ? "/images/avatar-default.svg"
+        : Model.PhotoPath;
+    var displayName = string.IsNullOrWhiteSpace(Model.FullName)
+        ? "Novo acolhido"
+        : Model.FullName;
+}
+
+<section class="profile-header">
+    <div class="profile-photo-wrap">
+        <img src="@photo" alt="Foto do acolhido" class="profile-photo" />
+        <label class="profile-photo-button">
+            <span aria-hidden="true">+</span>
+            Alterar Foto
+            <input asp-for="Photo" hidden type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
+        </label>
+        <span class="profile-photo-help">JPG, PNG ou WEBP ate 5 MB</span>
+        <span class="admin-validation" asp-validation-for="Photo"></span>
+    </div>
+
+    <div class="profile-header-content">
+        <span class="demo-kicker">Prontuario do acolhido</span>
+        <h2>@displayName</h2>
+        <p>
+            Cadastro institucional com imagem de identificacao, dados essenciais e base para acompanhamento clinico.
+        </p>
+
+        <div class="profile-meta-grid">
+            <span><strong>Status</strong>@StudentStatuses.Label(Model.Status)</span>
+            <span><strong>CPF</strong>@(string.IsNullOrWhiteSpace(Model.CPF) ? "Nao informado" : Model.CPF)</span>
+            <span><strong>Telefone</strong>@(string.IsNullOrWhiteSpace(Model.Phone) ? "Nao informado" : Model.Phone)</span>
+            <span><strong>Entrada</strong>@Model.AdmissionDate.ToString("dd/MM/yyyy")</span>
+        </div>
+    </div>
+</section>

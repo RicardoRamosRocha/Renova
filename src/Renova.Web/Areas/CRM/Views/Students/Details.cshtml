@@ -2,20 +2,213 @@
 @using Renova.Web.Areas.CRM.ViewModels.Students
 @model Student
 @{
-    ViewData["Title"] = "Detalhes do Acolhido";
+    ViewData["Title"] = "Prontuario do Acolhido";
+    var photo = string.IsNullOrWhiteSpace(Model.PhotoPath) ? "/images/avatar-default.svg" : Model.PhotoPath;
+    var today = DateTime.Today;
+    var birthDate = Model.BirthDate.Date;
+    var admissionDate = Model.AdmissionDate.Date;
+    var age = today.Year - birthDate.Year;
+    if (birthDate > today.AddYears(-age))
+    {
+        age--;
+    }
+
+    var treatmentDays = Math.Max(0, (today - admissionDate).Days);
+    var statusClass = Model.Status == StudentStatuses.Inactive
+        ? "danger"
+        : Model.Status == StudentStatuses.InTreatment
+            ? "info"
+            : Model.Status == StudentStatuses.DischargePlanned
+                ? "warn"
+                : "ok";
+    var nextAppointments = Model.Appointments
+        .Where(item => item.ScheduledAt.Date >= today)
+        .OrderBy(item => item.ScheduledAt)
+        .Take(3)
+        .ToList();
+    var evolutions = Model.MedicalEvolutions
+        .Where(item => !item.IsDeleted)
+        .OrderByDescending(item => item.CreatedAt)
+        .Take(3)
+        .ToList();
+    var courses = Model.ProgressEntries
+        .OrderByDescending(item => item.UpdatedAt ?? item.CreatedAt)
+        .Take(3)
+        .ToList();
 }
 
-<section class="demo-page">
-    <div class="demo-profile-hero">
-        <span class="demo-photo">@Model.FullName[..1]</span>
-        <div><span class="demo-kicker">Acolhido</span><h1>@Model.FullName</h1><p><span class="demo-pill ok">@StudentStatuses.Label(Model.Status)</span> Entrada em @Model.AdmissionDate.ToString("dd/MM/yyyy")</p></div>
-        <a class="demo-button" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
+<section class="demo-page patient-profile">
+    <div class="patient-hero">
+        <div class="patient-identity">
+            <img src="@photo" alt="Foto de @Model.FullName" class="patient-photo" />
+            <div>
+                <span class="demo-kicker">Prontuario clinico</span>
+                <h1>@Model.FullName</h1>
+                <p>
+                    <span class="demo-pill @statusClass">@StudentStatuses.Label(Model.Status)</span>
+                    <span>Entrada em @Model.AdmissionDate.ToString("dd/MM/yyyy")</span>
+                </p>
+            </div>
+        </div>
+        <div class="patient-actions">
+            <a class="demo-button" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
+            <button class="demo-button-secondary" type="button" onclick="window.print()">Imprimir</button>
+            <button class="demo-button-secondary" type="button" onclick="window.print()">Gerar PDF</button>
+            <a class="demo-button-secondary" asp-action="Index">Voltar</a>
+        </div>
     </div>
-    <div class="demo-profile-meta">
+
+    <div class="patient-kpi-grid">
+        <article><small>Idade</small><strong>@age anos</strong></article>
+        <article><small>Dias em tratamento</small><strong>@treatmentDays</strong></article>
         <article><small>CPF</small><strong>@Model.CPF</strong></article>
-        <article><small>Nascimento</small><strong>@Model.BirthDate.ToString("dd/MM/yyyy")</strong></article>
         <article><small>Telefone</small><strong>@Model.Phone</strong></article>
-        <article><small>Email</small><strong>@(Model.Email ?? "Não informado")</strong></article>
     </div>
-    <section class="demo-panel"><div class="demo-section-title"><h2>Endereço</h2></div><p class="demo-muted">@(Model.Address ?? "Não informado")</p></section>
+
+    <div class="patient-profile-grid">
+        <section class="patient-card">
+            <div class="patient-card-title">
+                <span>01</span>
+                <div><h2>Dados pessoais</h2><p>Identificacao principal do acolhido.</p></div>
+            </div>
+            <dl class="patient-data-list">
+                <div><dt>Nome completo</dt><dd>@Model.FullName</dd></div>
+                <div><dt>CPF</dt><dd>@Model.CPF</dd></div>
+                <div><dt>Nascimento</dt><dd>@Model.BirthDate.ToString("dd/MM/yyyy")</dd></div>
+                <div><dt>Idade</dt><dd>@age anos</dd></div>
+            </dl>
+        </section>
+
+        <section class="patient-card">
+            <div class="patient-card-title">
+                <span>02</span>
+                <div><h2>Contato</h2><p>Canais para comunicacao da equipe.</p></div>
+            </div>
+            <dl class="patient-data-list">
+                <div><dt>Telefone</dt><dd>@Model.Phone</dd></div>
+                <div><dt>Email</dt><dd>@(Model.Email ?? "Nao informado")</dd></div>
+                <div><dt>Endereco</dt><dd>@(Model.Address ?? "Nao informado")</dd></div>
+            </dl>
+        </section>
+
+        <section class="patient-card">
+            <div class="patient-card-title">
+                <span>03</span>
+                <div><h2>Acolhimento</h2><p>Status e tempo de acompanhamento.</p></div>
+            </div>
+            <div class="patient-metric-row">
+                <article><strong>@StudentStatuses.Label(Model.Status)</strong><small>Status atual</small></article>
+                <article><strong>@treatmentDays dias</strong><small>Em tratamento</small></article>
+                <article><strong>@Model.AdmissionDate.ToString("dd/MM/yyyy")</strong><small>Data de entrada</small></article>
+            </div>
+        </section>
+
+        <section class="patient-card">
+            <div class="patient-card-title">
+                <span>04</span>
+                <div><h2>Historico</h2><p>Evolucoes recentes do prontuario.</p></div>
+            </div>
+            <div class="patient-timeline">
+                @if (evolutions.Count == 0)
+                {
+                    <article><strong>Acolhimento inicial</strong><p>Plano terapeutico estruturado, rotina acompanhada e evolucao clinica monitorada pela equipe.</p></article>
+                    <article><strong>Revisao multiprofissional</strong><p>Participacao regular em atendimentos, grupos e atividades de reinsercao.</p></article>
+                }
+                else
+                {
+                    @foreach (var evolution in evolutions)
+                    {
+                        <article>
+                            <strong>@evolution.CreatedAt.ToString("dd/MM/yyyy") - @evolution.Professional.FullName</strong>
+                            <p>@evolution.Description</p>
+                        </article>
+                    }
+                }
+            </div>
+        </section>
+
+        <section class="patient-card">
+            <div class="patient-card-title">
+                <span>05</span>
+                <div><h2>Proximos atendimentos</h2><p>Agenda clinica vinculada ao acolhido.</p></div>
+            </div>
+            <div class="patient-list">
+                @if (nextAppointments.Count == 0)
+                {
+                    <article><strong>Psicoterapia individual</strong><span>Agendamento demonstrativo - proxima semana</span></article>
+                    <article><strong>Atendimento familiar</strong><span>Agenda sugerida para acompanhamento da rede de apoio</span></article>
+                }
+                else
+                {
+                    @foreach (var appointment in nextAppointments)
+                    {
+                        <article>
+                            <strong>@appointment.ScheduledAt.ToString("dd/MM/yyyy HH:mm")</strong>
+                            <span>@(appointment.Professional?.FullName ?? "Profissional a definir")</span>
+                        </article>
+                    }
+                }
+            </div>
+        </section>
+
+        <section class="patient-card">
+            <div class="patient-card-title">
+                <span>06</span>
+                <div><h2>Cursos vinculados</h2><p>Engajamento nas trilhas EAD.</p></div>
+            </div>
+            <div class="patient-list">
+                @if (courses.Count == 0)
+                {
+                    <article><strong>Prevencao de recaidas</strong><span>92% concluido</span></article>
+                    <article><strong>Projeto de vida</strong><span>84% concluido</span></article>
+                }
+                else
+                {
+                    @foreach (var progress in courses)
+                    {
+                        <article>
+                            <strong>@progress.Lesson.Title</strong>
+                            <span>@progress.WatchedPercentage% assistido</span>
+                        </article>
+                    }
+                }
+            </div>
+        </section>
+
+        <section class="patient-card">
+            <div class="patient-card-title">
+                <span>07</span>
+                <div><h2>Familia</h2><p>Rede de apoio cadastrada.</p></div>
+            </div>
+            <div class="patient-list">
+                @if (Model.FamilyMembers.Count == 0)
+                {
+                    <article><strong>Responsavel principal</strong><span>Cadastro familiar pendente para demonstracao</span></article>
+                }
+                else
+                {
+                    @foreach (var member in Model.FamilyMembers.Take(3))
+                    {
+                        <article>
+                            <strong>@member.FullName</strong>
+                            <span>@member.Relationship - @member.Phone</span>
+                        </article>
+                    }
+                }
+            </div>
+        </section>
+
+        <section class="patient-card">
+            <div class="patient-card-title">
+                <span>08</span>
+                <div><h2>Documentos</h2><p>Checklist visual do prontuario.</p></div>
+            </div>
+            <div class="document-grid">
+                <span class="is-ready">Documento pessoal</span>
+                <span class="is-ready">Termo de acolhimento</span>
+                <span>Plano terapeutico</span>
+                <span>Autorizacao familiar</span>
+            </div>
+        </section>
+    </div>
 </section>

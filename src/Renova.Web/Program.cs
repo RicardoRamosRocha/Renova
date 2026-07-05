@@ -70,9 +70,12 @@ app.MapPost("/auth/web-login", async (
 {
     var user = await userManager.FindByEmailAsync(email.Trim());
 
-    if (user is null || !user.IsActive || !await userManager.CheckPasswordAsync(user, password))
+    if (user is null ||
+        !user.IsActive ||
+        !await userManager.IsEmailConfirmedAsync(user) ||
+        !await userManager.CheckPasswordAsync(user, password))
     {
-        return Results.Redirect("/login?error=1");
+        return Results.Redirect(GetLoginErrorUrl(returnUrl));
     }
 
     var roles = await userManager.GetRolesAsync(user);
@@ -162,4 +165,10 @@ static string GetSafeReturnUrl(string? returnUrl)
         && !returnUrl.Contains("://", StringComparison.Ordinal)
             ? returnUrl
             : "/Admin";
+}
+
+static string GetLoginErrorUrl(string? returnUrl)
+{
+    var safeReturnUrl = GetSafeReturnUrl(returnUrl);
+    return $"/login?error=1&returnUrl={Uri.EscapeDataString(safeReturnUrl)}";
 }
