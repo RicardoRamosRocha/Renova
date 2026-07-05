@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Renova.Domain.Entities;
+using Renova.Domain.Security;
+using Renova.Infrastructure.Data;
 
 namespace Renova.Infrastructure.Identity;
 
@@ -13,6 +17,7 @@ public sealed class IdentitySeeder
 
     private static readonly string[] RequiredRoles =
     [
+        ApplicationRoles.SuperAdmin,
         ApplicationRoles.Administrator,
         ApplicationRoles.Coordinator,
         ApplicationRoles.Professional,
@@ -28,10 +33,12 @@ public sealed class IdentitySeeder
 
         try
         {
-            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
+            var db = services.GetRequiredService<AppDbContext>();
             var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
             await EnsureRolesAsync(roleManager, logger);
+            await EnsureModulesAndPermissionsAsync(db, roleManager, logger);
             await EnsureAdministratorAsync(userManager, logger);
 
             logger.LogInformation("Identity seed finished.");
@@ -44,7 +51,7 @@ public sealed class IdentitySeeder
     }
 
     private static async Task EnsureRolesAsync(
-        RoleManager<IdentityRole> roleManager,
+        RoleManager<ApplicationRole> roleManager,
         ILogger logger)
     {
         foreach (var roleName in RequiredRoles)
@@ -56,9 +63,155 @@ public sealed class IdentitySeeder
             }
 
             logger.LogInformation("Creating role {RoleName}...", roleName);
-            var result = await roleManager.CreateAsync(new IdentityRole(roleName));
+            var role = ApplicationRoles.Seed.FirstOrDefault(item => item.Name == roleName)
+                ?? new ApplicationRole { Name = roleName, Description = roleName, IsSystemRole = true };
+            var result = await roleManager.CreateAsync(role);
             ThrowIfFailed(result, $"Could not create role {roleName}.");
         }
+    }
+
+    private static async Task EnsureModulesAndPermissionsAsync(
+        AppDbContext db,
+        RoleManager<ApplicationRole> roleManager,
+        ILogger logger)
+    {
+        var modules = SecuritySeedData.Modules;
+
+        foreach (var moduleSeed in modules)
+        {
+            var module = await db.Modules.IgnoreQueryFilters().FirstOrDefaultAsync(item => item.Key == moduleSeed.Key);
+
+            if (module is null)
+            {
+                db.Modules.Add(new Module
+                {
+                    Id = moduleSeed.Id,
+                    Name = moduleSeed.Name,
+                    Key = moduleSeed.Key,
+                    Description = moduleSeed.Description,
+                    Icon = moduleSeed.Icon,
+                    DisplayOrder = moduleSeed.DisplayOrder,
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow
+                });
+                continue;
+            }
+
+            module.Name = moduleSeed.Name;
+            module.Description = moduleSeed.Description;
+            module.Icon = moduleSeed.Icon;
+            module.DisplayOrder = moduleSeed.DisplayOrder;
+            module.IsActive = true;
+            module.IsDeleted = false;
+            module.UpdatedAt = DateTime.UtcNow;
+        }
+
+        await db.SaveChangesAsync();
+
+        foreach (var permissionSeed in SecuritySeedData.Permissions)
+        {
+            var permission = await db.Permissions.IgnoreQueryFilters().FirstOrDefaultAsync(item => item.Key == permissionSeed.Key);
+
+            if (permission is null)
+            {
+                db.Permissions.Add(new Permission
+                {
+                    Id = permissionSeed.Id,
+                    Name = permissionSeed.Name,
+                    Key = permissionSeed.Key,
+                    Description = permissionSeed.Description,
+                    ModuleId = permissionSeed.ModuleId,
+                    CreatedAt = DateTime.UtcNow
+                });
+                continue;
+            }
+
+            permission.Name = permissionSeed.Name;
+            permission.Description = permissionSeed.Description;
+            permission.ModuleId = permissionSeed.ModuleId;
+            permission.IsDeleted = false;
+            permission.UpdatedAt = DateTime.UtcNow;
+        }
+
+        await db.SaveChangesAsync();
+
+        foreach (var menuPermissionSeed in SecuritySeedData.Permissions)
+        {
+            var exists = await db.MenuPermissions.IgnoreQueryFilters().AnyAsync(item =>
+                item.ModuleId == menuPermissionSeed.ModuleId &&
+                item.PermissionId == menuPermissionSeed.Id &&
+                !item.IsDeleted);
+
+            if (!exists)
+            {
+                db.MenuPermissions.Add(new MenuPermission
+                {
+                    ModuleId = menuPermissionSeed.ModuleId,
+                    PermissionId = menuPermissionSeed.Id,
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+        }
+
+        await db.SaveChangesAsync();
+
+        foreach (var roleName in ApplicationRoles.All)
+        {
+            if (!await roleManager.RoleExistsAsync(roleName))
+            {
+                await roleManager.CreateAsync(new ApplicationRole
+                {
+                    Name = roleName,
+                    Description = roleName,
+                    IsSystemRole = true,
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+        }
+
+        var permissionsByKey = await db.Permissions.IgnoreQueryFilters()
+            .Where(permission => !permission.IsDeleted)
+            .ToDictionaryAsync(permission => permission.Key, permission => permission.Id);
+
+        foreach (var rolePermissions in SecuritySeedData.RolePermissions)
+        {
+            var role = await roleManager.FindByNameAsync(rolePermissions.Key);
+            if (role is null)
+            {
+                logger.LogWarning("Role {RoleName} was not found while seeding permissions.", rolePermissions.Key);
+                continue;
+            }
+
+            foreach (var permissionKey in rolePermissions.Value)
+            {
+                if (!permissionsByKey.TryGetValue(permissionKey, out var permissionId))
+                {
+                    logger.LogWarning("Permission {PermissionKey} was not found while seeding role permissions.", permissionKey);
+                    continue;
+                }
+
+                var existing = await db.RolePermissions.IgnoreQueryFilters().FirstOrDefaultAsync(item =>
+                    item.RoleId == role.Id &&
+                    item.PermissionId == permissionId);
+
+                if (existing is null)
+                {
+                    db.RolePermissions.Add(new RolePermission
+                    {
+                        RoleId = role.Id,
+                        PermissionId = permissionId,
+                        CreatedAt = DateTime.UtcNow
+                    });
+                }
+                else if (existing.IsDeleted)
+                {
+                    existing.IsDeleted = false;
+                    existing.UpdatedAt = DateTime.UtcNow;
+                }
+            }
+        }
+
+        await db.SaveChangesAsync();
     }
 
     private static async Task EnsureAdministratorAsync(
@@ -141,6 +294,12 @@ public sealed class IdentitySeeder
         {
             var roleResult = await userManager.AddToRoleAsync(administrator, ApplicationRoles.Administrator);
             ThrowIfFailed(roleResult, "Could not add default administrator to Administrador role.");
+        }
+
+        if (!await userManager.IsInRoleAsync(administrator, ApplicationRoles.SuperAdmin))
+        {
+            var roleResult = await userManager.AddToRoleAsync(administrator, ApplicationRoles.SuperAdmin);
+            ThrowIfFailed(roleResult, "Could not add default administrator to SuperAdmin role.");
         }
     }
 

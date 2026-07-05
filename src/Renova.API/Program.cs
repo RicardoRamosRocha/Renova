@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Renova.API.Auth;
+using Renova.Application.Security;
 using Renova.Infrastructure.Data;
 using Renova.Infrastructure.Identity;
+using Renova.Infrastructure.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,9 +28,11 @@ builder.Services
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequiredLength = 8;
     })
-    .AddRoles<IdentityRole>()
+    .AddRoles<ApplicationRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddSignInManager();
+
+builder.Services.AddScoped<IPermissionService, PermissionService>();
 
 builder.Services
     .AddAuthentication(RenovaAuthenticationDefaults.AuthenticationScheme)

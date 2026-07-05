@@ -12,6 +12,13 @@ public class FamilyMemberConfiguration : IEntityTypeConfiguration<FamilyMember>
 
         entity.HasKey(familyMember => familyMember.Id);
 
+        entity.Property(familyMember => familyMember.TenantId)
+            .IsRequired();
+
+        entity.Ignore(familyMember => familyMember.Tenant);
+
+        entity.Property(familyMember => familyMember.PersonId);
+
         entity.Property(familyMember => familyMember.FullName)
             .HasMaxLength(200)
             .IsRequired();
@@ -30,14 +37,28 @@ public class FamilyMemberConfiguration : IEntityTypeConfiguration<FamilyMember>
         entity.Property(familyMember => familyMember.CanAccessPortal)
             .IsRequired();
 
+        entity.Property(familyMember => familyMember.IsResponsible)
+            .IsRequired();
+
         entity.Property(familyMember => familyMember.CreatedAt)
+            .IsRequired();
+
+        entity.Property(familyMember => familyMember.IsDeleted)
             .IsRequired();
 
         entity.HasOne(familyMember => familyMember.Student)
             .WithMany(student => student.FamilyMembers)
             .HasForeignKey(familyMember => familyMember.StudentId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
+
+        entity.HasOne(familyMember => familyMember.Person)
+            .WithMany(person => person.FamilyProfiles)
+            .HasForeignKey(familyMember => familyMember.PersonId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         entity.HasIndex(familyMember => familyMember.StudentId);
+
+        entity.HasIndex(familyMember => familyMember.PersonId)
+            .HasFilter("\"PersonId\" IS NOT NULL");
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Renova.Infrastructure.Data;
@@ -11,9 +12,11 @@ using Renova.Infrastructure.Data;
 namespace Renova.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260705225144_AddSecurityPermissionsFoundation")]
+    partial class AddSecurityPermissionsFoundation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,127 +131,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Address", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
-
-                    b.Property<string>("Complement")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Neighborhood")
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
-
-                    b.Property<string>("Number")
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
-
-                    b.Property<Guid>("PersonId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("character varying(2)");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasMaxLength(12)
-                        .HasColumnType("character varying(12)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonId")
-                        .IsUnique();
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("Addresses", (string)null);
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Admission", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("AdmissionDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("AdmissionReason")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<int>("AdmissionStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DischargeDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("DischargeReason")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<DateTime?>("ExpectedDischargeDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<string>("ReferredBy")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<Guid>("StudentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.HasIndex("TenantId", "StudentId", "AdmissionDate");
-
-                    b.ToTable("Admissions", (string)null);
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.Appointment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -320,48 +202,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.ToTable("Certificates", (string)null);
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Contact", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("ContactType")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Observation")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<Guid>("PersonId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
-
-                    b.HasIndex("PersonId", "ContactType");
-
-                    b.ToTable("Contacts", (string)null);
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.Course", b =>
                 {
                     b.Property<Guid>("Id")
@@ -426,161 +266,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.ToTable("CourseModules", (string)null);
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Document", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("PersonId")
-                        .HasColumnType("uuid");
-
-                    b.Property<long>("Size")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("UploadDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UploadedBy")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
-
-                    b.HasIndex("PersonId", "UploadDate");
-
-                    b.ToTable("Documents", (string)null);
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.EmergencyContact", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<Guid>("PersonId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<int>("RelationshipType")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Whatsapp")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonId");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("EmergencyContacts", (string)null);
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Employee", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("AdmissionDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Department")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid?>("PersonId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonId")
-                        .IsUnique()
-                        .HasFilter("\"PersonId\" IS NOT NULL");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("Employees", (string)null);
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.FamilyMember", b =>
                 {
                     b.Property<Guid>("Id")
@@ -602,15 +287,6 @@ namespace Renova.Infrastructure.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsResponsible")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid?>("PersonId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -624,22 +300,13 @@ namespace Renova.Infrastructure.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int?>("RelationshipType")
-                        .HasColumnType("integer");
-
                     b.Property<Guid>("StudentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TenantId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PersonId")
-                        .HasFilter("\"PersonId\" IS NOT NULL");
 
                     b.HasIndex("StudentId");
 
@@ -921,108 +588,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.ToTable("Permissions", (string)null);
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Person", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("BirthPlace")
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
-
-                    b.Property<string>("Cpf")
-                        .HasMaxLength(14)
-                        .HasColumnType("character varying(14)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<int?>("Gender")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<int?>("MaritalStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Mobile")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("Nationality")
-                        .HasMaxLength(80)
-                        .HasColumnType("character varying(80)");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<string>("Occupation")
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
-
-                    b.Property<string>("Phone")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("PhotoUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<string>("RegistrationNumber")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("Rg")
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
-
-                    b.Property<string>("SocialName")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Whatsapp")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId", "Cpf")
-                        .IsUnique()
-                        .HasFilter("\"Cpf\" IS NOT NULL AND \"IsDeleted\" = false");
-
-                    b.HasIndex("TenantId", "FullName");
-
-                    b.HasIndex("TenantId", "RegistrationNumber")
-                        .IsUnique()
-                        .HasFilter("\"RegistrationNumber\" IS NOT NULL AND \"IsDeleted\" = false");
-
-                    b.ToTable("People", (string)null);
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.Professional", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1044,12 +609,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid?>("PersonId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -1057,9 +616,6 @@ namespace Renova.Infrastructure.Data.Migrations
 
                     b.Property<string>("PhotoPath")
                         .HasColumnType("text");
-
-                    b.Property<int?>("ProfessionalType")
-                        .HasColumnType("integer");
 
                     b.Property<string>("RegistrationNumber")
                         .IsRequired()
@@ -1071,21 +627,13 @@ namespace Renova.Infrastructure.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PersonId")
-                        .IsUnique()
-                        .HasFilter("\"PersonId\" IS NOT NULL");
-
-                    b.HasIndex("TenantId", "RegistrationNumber")
-                        .IsUnique()
-                        .HasFilter("\"RegistrationNumber\" IS NOT NULL AND \"IsDeleted\" = false");
+                    b.HasIndex("RegistrationNumber")
+                        .IsUnique();
 
                     b.ToTable("Professionals", (string)null);
                 });
@@ -1103,18 +651,8 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.Property<DateTime>("AdmissionDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("AdmissionType")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("AllergyDescription")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("BloodType")
-                        .HasColumnType("integer");
 
                     b.Property<string>("CPF")
                         .IsRequired()
@@ -1124,10 +662,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("DisabilityDescription")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
@@ -1136,26 +670,6 @@ namespace Renova.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
-
-                    b.Property<bool>("HasAllergy")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasDisability")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("MedicationDescription")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<string>("Observation")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<Guid?>("PersonId")
-                        .HasColumnType("uuid");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -1168,27 +682,13 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("StudentStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("UsesMedication")
-                        .HasColumnType("boolean");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("PersonId")
-                        .IsUnique()
-                        .HasFilter("\"PersonId\" IS NOT NULL");
-
-                    b.HasIndex("TenantId", "CPF")
-                        .IsUnique()
-                        .HasFilter("\"CPF\" IS NOT NULL AND \"IsDeleted\" = false");
+                    b.HasIndex("CPF")
+                        .IsUnique();
 
                     b.ToTable("Students", (string)null);
                 });
@@ -1488,47 +988,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("TenantSubscriptions", (string)null);
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Volunteer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Area")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
-
-                    b.Property<string>("Availability")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid?>("PersonId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonId")
-                        .IsUnique()
-                        .HasFilter("\"PersonId\" IS NOT NULL");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("Volunteers", (string)null);
                 });
 
             modelBuilder.Entity("Renova.Infrastructure.Identity.ApplicationRole", b =>
@@ -1861,44 +1320,6 @@ namespace Renova.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Address", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Person", "Person")
-                        .WithOne("Address")
-                        .HasForeignKey("Renova.Domain.Entities.Address", "PersonId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Renova.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Person");
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Admission", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Student", "Student")
-                        .WithMany("Admissions")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Renova.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-
-                    b.Navigation("Tenant");
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.Appointment", b =>
                 {
                     b.HasOne("Renova.Domain.Entities.Professional", "Professional")
@@ -1936,25 +1357,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Contact", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Person", "Person")
-                        .WithMany("Contacts")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Renova.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Person");
-
-                    b.Navigation("Tenant");
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.CourseModule", b =>
                 {
                     b.HasOne("Renova.Domain.Entities.Course", "Course")
@@ -1966,76 +1368,13 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Document", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Person", "Person")
-                        .WithMany("Documents")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Renova.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Person");
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.EmergencyContact", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Person", "Person")
-                        .WithMany("EmergencyContacts")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Renova.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Person");
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Employee", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Person", "Person")
-                        .WithOne("Employee")
-                        .HasForeignKey("Renova.Domain.Entities.Employee", "PersonId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Renova.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Person");
-
-                    b.Navigation("Tenant");
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.FamilyMember", b =>
                 {
-                    b.HasOne("Renova.Domain.Entities.Person", "Person")
-                        .WithMany("FamilyProfiles")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Renova.Domain.Entities.Student", "Student")
                         .WithMany("FamilyMembers")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Person");
 
                     b.Navigation("Student");
                 });
@@ -2122,37 +1461,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.Navigation("Module");
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Person", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Professional", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Person", "Person")
-                        .WithOne("Professional")
-                        .HasForeignKey("Renova.Domain.Entities.Professional", "PersonId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Person");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Student", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Person", "Person")
-                        .WithOne("Student")
-                        .HasForeignKey("Renova.Domain.Entities.Student", "PersonId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Person");
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.StudentProgress", b =>
                 {
                     b.HasOne("Renova.Domain.Entities.Lesson", "Lesson")
@@ -2209,24 +1517,6 @@ namespace Renova.Infrastructure.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("SubscriptionPlan");
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("Renova.Domain.Entities.Volunteer", b =>
-                {
-                    b.HasOne("Renova.Domain.Entities.Person", "Person")
-                        .WithOne("Volunteer")
-                        .HasForeignKey("Renova.Domain.Entities.Volunteer", "PersonId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Renova.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Person");
 
                     b.Navigation("Tenant");
                 });
@@ -2298,27 +1588,6 @@ namespace Renova.Infrastructure.Data.Migrations
                     b.Navigation("MenuPermissions");
                 });
 
-            modelBuilder.Entity("Renova.Domain.Entities.Person", b =>
-                {
-                    b.Navigation("Address");
-
-                    b.Navigation("Contacts");
-
-                    b.Navigation("Documents");
-
-                    b.Navigation("EmergencyContacts");
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("FamilyProfiles");
-
-                    b.Navigation("Professional");
-
-                    b.Navigation("Student");
-
-                    b.Navigation("Volunteer");
-                });
-
             modelBuilder.Entity("Renova.Domain.Entities.Professional", b =>
                 {
                     b.Navigation("Appointments");
@@ -2328,8 +1597,6 @@ namespace Renova.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Renova.Domain.Entities.Student", b =>
                 {
-                    b.Navigation("Admissions");
-
                     b.Navigation("Appointments");
 
                     b.Navigation("Certificates");

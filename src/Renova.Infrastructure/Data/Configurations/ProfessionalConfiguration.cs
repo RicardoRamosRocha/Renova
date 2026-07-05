@@ -12,6 +12,13 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
 
         entity.HasKey(professional => professional.Id);
 
+        entity.Property(professional => professional.TenantId)
+            .IsRequired();
+
+        entity.Ignore(professional => professional.Tenant);
+
+        entity.Property(professional => professional.PersonId);
+
         entity.Property(professional => professional.FullName)
             .HasMaxLength(200)
             .IsRequired();
@@ -37,7 +44,20 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
         entity.Property(professional => professional.CreatedAt)
             .IsRequired();
 
-        entity.HasIndex(professional => professional.RegistrationNumber)
-            .IsUnique();
+        entity.Property(professional => professional.IsDeleted)
+            .IsRequired();
+
+        entity.HasOne(professional => professional.Person)
+            .WithOne(person => person.Professional)
+            .HasForeignKey<Professional>(professional => professional.PersonId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        entity.HasIndex(professional => new { professional.TenantId, professional.RegistrationNumber })
+            .IsUnique()
+            .HasFilter("\"RegistrationNumber\" IS NOT NULL AND \"IsDeleted\" = false");
+
+        entity.HasIndex(professional => professional.PersonId)
+            .IsUnique()
+            .HasFilter("\"PersonId\" IS NOT NULL");
     }
 }

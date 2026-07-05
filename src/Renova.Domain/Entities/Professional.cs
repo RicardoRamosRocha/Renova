@@ -1,10 +1,12 @@
 namespace Renova.Domain.Entities;
 
-public class Professional
+public class Professional : BaseTenantEntity
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid? PersonId { get; set; }
 
     public string FullName { get; set; } = string.Empty;
+
+    public ProfessionalType? ProfessionalType { get; set; }
 
     public string Specialty { get; set; } = string.Empty;
 
@@ -16,11 +18,9 @@ public class Professional
 
     public bool IsActive { get; set; } = true;
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
     public string? PhotoPath { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public Person? Person { get; set; }
 
     public ICollection<MedicalEvolution> MedicalEvolutions { get; set; } = [];
 

@@ -9,7 +9,7 @@ namespace Renova.Web.Areas.Admin.Controllers;
 
 public sealed class UsersController(
     UserManager<ApplicationUser> userManager,
-    RoleManager<IdentityRole> roleManager) : AdminControllerBase
+    RoleManager<ApplicationRole> roleManager) : AdminControllerBase
 {
     public async Task<IActionResult> Index(string? search, bool? active, int page = 1)
     {

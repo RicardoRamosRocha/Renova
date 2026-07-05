@@ -1,8 +1,8 @@
 namespace Renova.Domain.Entities;
 
-public class Student
+public class Student : BaseTenantEntity
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid? PersonId { get; set; }
 
     public string FullName { get; set; } = string.Empty;
 
@@ -20,11 +20,31 @@ public class Student
 
     public DateTime AdmissionDate { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public AdmissionType? AdmissionType { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public StudentStatus? StudentStatus { get; set; }
+
+    public BloodType? BloodType { get; set; }
+
+    public bool HasAllergy { get; set; }
+
+    public string? AllergyDescription { get; set; }
+
+    public bool UsesMedication { get; set; }
+
+    public string? MedicationDescription { get; set; }
+
+    public bool HasDisability { get; set; }
+
+    public string? DisabilityDescription { get; set; }
+
+    public string? Observation { get; set; }
+
+    public Person? Person { get; set; }
 
     public ICollection<FamilyMember> FamilyMembers { get; set; } = [];
+
+    public ICollection<Admission> Admissions { get; set; } = [];
 
     public MedicalRecord? MedicalRecord { get; set; }
 

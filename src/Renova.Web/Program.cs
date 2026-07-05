@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Renova.Application.Security;
 using Renova.Infrastructure.Data;
 using Renova.Infrastructure.Identity;
+using Renova.Infrastructure.Security;
 using Renova.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,9 +41,11 @@ builder.Services
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequiredLength = 8;
     })
-    .AddRoles<IdentityRole>()
+    .AddRoles<ApplicationRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddSignInManager();
+
+builder.Services.AddScoped<IPermissionService, PermissionService>();
 
 var app = builder.Build();
 
