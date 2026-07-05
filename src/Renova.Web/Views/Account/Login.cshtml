@@ -1,17 +1,12 @@
 @{
     ViewData["Title"] = "Login | Renova";
     ViewData["MetaDescription"] = "Acesso seguro ao painel Renova.";
-    ViewData["MetaKeywords"] = "Renova, login, gestao clinica";
+    ViewData["MetaKeywords"] = "Renova, login, plataforma de acolhimento";
     var returnUrl = ViewBag.ReturnUrl as string ?? "/Admin";
     var hasError = ViewBag.HasError is true;
 }
 
-<main id="conteudo" class="login-premium-page">
-    <div class="login-theme-toggle" aria-label="Alternar tema visual">
-        <button type="button" class="is-active" data-login-theme="light">Claro</button>
-        <button type="button" data-login-theme="dark">Escuro</button>
-    </div>
-
+<main id="conteudo" class="login-premium-page is-dark">
     <section class="login-premium-shell" aria-label="Acesso ao sistema Renova">
         <aside class="login-brand-panel">
             <div class="login-care-visual" aria-hidden="true"></div>
@@ -20,44 +15,75 @@
                 <a class="login-brand-logo" asp-controller="Home" asp-action="Index" aria-label="Renova">
                     <span aria-hidden="true">R</span>
                     <strong>Renova</strong>
-                    <small>Plataforma Cl&iacute;nica</small>
+                    <small>Plataforma de Acolhimento</small>
                 </a>
 
                 <div class="login-brand-copy">
-                    <span class="login-brand-title"><i aria-hidden="true">+</i> Gest&atilde;o que transforma vidas</span>
-                    <h1>Cuidado que <em>transforma.</em><br />Gest&atilde;o que evolui.</h1>
-                    <p>
-                        Uma plataforma completa para acolhimento, acompanhamento e transforma&ccedil;&atilde;o de vidas.
-                        Tecnologia, empatia e seguran&ccedil;a em cada etapa do cuidado.
-                    </p>
+                    <span class="login-brand-title">Tecnologia que acolhe.</span>
+                    <h1>Gestão que transforma.</h1>
+                    <p>Uma plataforma completa para acolhimento, acompanhamento e desenvolvimento humano.</p>
                 </div>
 
                 <div class="login-feature-grid" aria-label="Recursos principais">
                     <article class="login-feature-card">
-                        <span aria-hidden="true">P</span>
+                        <span aria-hidden="true">🤝</span>
                         <strong>Acolhimento</strong>
-                        <p>Gest&atilde;o completa de acolhidos e fam&iacute;lias</p>
+                        <p>Gestão de acolhidos e famílias.</p>
                     </article>
+
                     <article class="login-feature-card">
-                        <span aria-hidden="true">C</span>
-                        <strong>Cl&iacute;nico</strong>
-                        <p>Prontu&aacute;rios, evolu&ccedil;&otilde;es e agenda integrada</p>
+                        <span aria-hidden="true">📋</span>
+                        <strong>Prontuário</strong>
+                        <p>Evoluções e acompanhamento.</p>
                     </article>
+
                     <article class="login-feature-card">
-                        <span aria-hidden="true">E</span>
+                        <span aria-hidden="true">🎓</span>
                         <strong>EAD</strong>
-                        <p>Cursos, trilhas e acompanhamento</p>
+                        <p>Cursos e desenvolvimento.</p>
                     </article>
                 </div>
 
                 <div class="login-stats-grid" aria-label="Indicadores do Renova">
-                    <article class="login-stats-card"><i aria-hidden="true">S</i><strong>100%</strong><span>Seguran&ccedil;a de dados e LGPD</span></article>
-                    <article class="login-stats-card"><i aria-hidden="true">M</i><strong>+10</strong><span>M&oacute;dulos integrados</span></article>
-                    <article class="login-stats-card"><i aria-hidden="true">D</i><strong>Dados</strong><span>Relat&oacute;rios e dashboards em tempo real</span></article>
-                    <article class="login-stats-card"><i aria-hidden="true">C</i><strong>Confi&aacute;vel</strong><span>Para institui&ccedil;&otilde;es e profissionais</span></article>
+                    <article class="login-stats-card">
+                        <strong>LGPD</strong>
+                        <span>Segurança de dados</span>
+                    </article>
+
+                    <article class="login-stats-card">
+                        <strong>+10</strong>
+                        <span>Módulos integrados</span>
+                    </article>
+
+                    <article class="login-stats-card">
+                        <strong>100%</strong>
+                        <span>Web responsivo</span>
+                    </article>
+
+                    <article class="login-stats-card">
+                        <strong>24h</strong>
+                        <span>Acesso seguro</span>
+                    </article>
                 </div>
 
-                <p class="login-brand-footer"><span aria-hidden="true">&ldquo;</span>A tecnologia &eacute; o nosso meio. O <strong>cuidado</strong> &eacute; o nosso prop&oacute;sito.<i aria-hidden="true">♡</i></p>
+                <div class="login-dashboard-preview" aria-hidden="true">
+                    <div>
+                        <span>Dashboard</span>
+                        <strong>Operação ativa</strong>
+                    </div>
+
+                    <div class="login-preview-grid">
+                        <span><strong>126</strong>Acolhidos</span>
+                        <span><strong>32</strong>Atendimentos</span>
+                        <span><strong>18</strong>Cursos</span>
+                        <span><strong>94</strong>Alunos</span>
+                    </div>
+                </div>
+
+                <p class="login-brand-footer">
+                    Tecnologia que acolhe. <strong>Gestão que transforma.</strong>
+                </p>
+
                 <p class="login-copyright">&copy; 2026 Renova. Todos os direitos reservados.</p>
             </div>
         </aside>
@@ -65,15 +91,15 @@
         <section class="login-auth-panel">
             <div class="login-auth-card">
                 <div class="login-auth-heading">
-                    <span><i aria-hidden="true">S</i> Acesso restrito</span>
-                    <h2>Entrar no Renova</h2>
-                    <p>Use seu email institucional para acessar o painel administrativo com seguran&ccedil;a.</p>
+                    <span>Painel Administrativo</span>
+                    <h2>Bem-vindo</h2>
+                    <p>Entre com suas credenciais para continuar.</p>
                 </div>
 
                 @if (hasError)
                 {
                     <div class="login-alert" role="alert">
-                        N&atilde;o foi poss&iacute;vel entrar. Confira seu email, senha ou status do usu&aacute;rio.
+                        Não foi possível entrar. Confira seu email, senha ou status do usuário.
                     </div>
                 }
 
@@ -81,9 +107,9 @@
                     <input type="hidden" name="returnUrl" value="@returnUrl" />
 
                     <label class="login-input-group">
-                        <span>Email institucional</span>
+                        <span>Email</span>
                         <div>
-                            <i aria-hidden="true">&#64;</i>
+                            <i aria-hidden="true">@@</i>
                             <input name="email" type="email" autocomplete="username" placeholder="seu@email.com.br" required />
                         </div>
                     </label>
@@ -91,27 +117,31 @@
                     <label class="login-input-group">
                         <span>Senha</span>
                         <div>
-                            <i aria-hidden="true">#</i>
+                            <i aria-hidden="true">🔒</i>
                             <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Digite sua senha" required />
-                            <button class="login-password-toggle" type="button" aria-label="Mostrar ou ocultar senha" aria-controls="login-password">Olho</button>
+                            <button class="login-password-toggle" type="button" aria-label="Mostrar ou ocultar senha" aria-controls="login-password">
+                                Mostrar
+                            </button>
                         </div>
                     </label>
 
                     <div class="login-form-row">
                         <label class="login-remember">
                             <input name="rememberMe" type="checkbox" value="true" />
-                            <span>Lembrar de mim</span>
+                            <span>Permanecer conectado</span>
                         </label>
+
                         <a href="/login">Esqueci minha senha</a>
                     </div>
 
-                    <button class="login-submit-button" type="submit">Entrar no sistema</button>
+                    <button class="login-submit-button" type="submit">
+                        Entrar no Renova
+                    </button>
                 </form>
 
-                <div class="login-divider"><span>ou</span></div>
-                <button class="login-google-button" type="button"><span aria-hidden="true">G</span>Entrar com Google</button>
-
-                <p class="login-auth-footer"><span aria-hidden="true">S</span>Tecnologia com prop&oacute;sito. Pessoas no centro.</p>
+                <p class="login-auth-footer">
+                    Plataforma de Acolhimento · Versão 1.0
+                </p>
             </div>
         </section>
     </section>
@@ -119,23 +149,13 @@
 
 <script>
     (() => {
-        const page = document.querySelector(".login-premium-page");
         const password = document.querySelector("#login-password");
         const passwordToggle = document.querySelector(".login-password-toggle");
-        const themeButtons = document.querySelectorAll("[data-login-theme]");
 
         passwordToggle?.addEventListener("click", () => {
             const isPassword = password.type === "password";
             password.type = isPassword ? "text" : "password";
-            passwordToggle.textContent = isPassword ? "Ocultar" : "Olho";
-        });
-
-        themeButtons.forEach((button) => {
-            button.addEventListener("click", () => {
-                const theme = button.dataset.loginTheme;
-                page.classList.toggle("is-dark", theme === "dark");
-                themeButtons.forEach((item) => item.classList.toggle("is-active", item === button));
-            });
+            passwordToggle.textContent = isPassword ? "Ocultar" : "Mostrar";
         });
     })();
 </script>
