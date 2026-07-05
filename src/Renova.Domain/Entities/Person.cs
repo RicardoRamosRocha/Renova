@@ -4,6 +4,8 @@ public class Person : BaseTenantEntity
 {
     public string? RegistrationNumber { get; set; }
 
+    public string? ExternalCode { get; set; }
+
     public string FullName { get; set; } = string.Empty;
 
     public string? SocialName { get; set; }
@@ -21,6 +23,10 @@ public class Person : BaseTenantEntity
     public string? Nationality { get; set; }
 
     public string? BirthPlace { get; set; }
+
+    public string? MotherName { get; set; }
+
+public string? FatherName { get; set; }
 
     public string? Occupation { get; set; }
 
@@ -48,7 +54,7 @@ public class Person : BaseTenantEntity
 
     public Volunteer? Volunteer { get; set; }
 
-    public ICollection<FamilyMember> FamilyProfiles { get; set; } = [];
+    public ICollection<FamilyMember> FamilyMembers { get; set; } = [];
 
     public ICollection<EmergencyContact> EmergencyContacts { get; set; } = [];
 

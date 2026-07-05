@@ -6,75 +6,30 @@ namespace Renova.Infrastructure.Data.Configurations;
 
 public class StudentConfiguration : IEntityTypeConfiguration<Student>
 {
-    public void Configure(EntityTypeBuilder<Student> entity)
+    public void Configure(EntityTypeBuilder<Student> builder)
     {
-        entity.ToTable("Students");
+        builder.HasKey(x => x.Id);
 
-        entity.HasKey(student => student.Id);
-
-        entity.Property(student => student.TenantId)
-            .IsRequired();
-
-        entity.Ignore(student => student.Tenant);
-
-        entity.Property(student => student.PersonId);
-
-        entity.Property(student => student.FullName)
-            .HasMaxLength(200)
-            .IsRequired();
-
-        entity.Property(student => student.CPF)
-            .HasMaxLength(14)
-            .IsRequired();
-
-        entity.Property(student => student.Phone)
-            .HasMaxLength(20)
-            .IsRequired();
-
-        entity.Property(student => student.Email)
-            .HasMaxLength(200);
-
-        entity.Property(student => student.Address)
+        builder.Property(x => x.AllergyDescription)
             .HasMaxLength(500);
 
-        entity.Property(student => student.Status)
-            .IsRequired();
+        builder.Property(x => x.MedicationDescription)
+            .HasMaxLength(500);
 
-        entity.Property(student => student.BirthDate)
-            .IsRequired();
+        builder.Property(x => x.DisabilityDescription)
+            .HasMaxLength(500);
 
-        entity.Property(student => student.AdmissionDate)
-            .IsRequired();
-
-        entity.Property(student => student.AllergyDescription)
+        builder.Property(x => x.Observation)
             .HasMaxLength(1000);
 
-        entity.Property(student => student.MedicationDescription)
-            .HasMaxLength(1000);
-
-        entity.Property(student => student.DisabilityDescription)
-            .HasMaxLength(1000);
-
-        entity.Property(student => student.Observation)
-            .HasMaxLength(2000);
-
-        entity.Property(student => student.CreatedAt)
-            .IsRequired();
-
-        entity.Property(student => student.IsDeleted)
-            .IsRequired();
-
-        entity.HasOne(student => student.Person)
-            .WithOne(person => person.Student)
-            .HasForeignKey<Student>(student => student.PersonId)
+        builder.HasOne(x => x.Person)
+            .WithOne(x => x.Student)
+            .HasForeignKey<Student>(x => x.PersonId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        entity.HasIndex(student => new { student.TenantId, student.CPF })
-            .IsUnique()
-            .HasFilter("\"CPF\" IS NOT NULL AND \"IsDeleted\" = false");
+        builder.HasIndex(x => new { x.TenantId, x.PersonId })
+            .IsUnique();
 
-        entity.HasIndex(student => student.PersonId)
-            .IsUnique()
-            .HasFilter("\"PersonId\" IS NOT NULL");
+        builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

@@ -52,7 +52,7 @@ public class FamilyMemberConfiguration : IEntityTypeConfiguration<FamilyMember>
             .OnDelete(DeleteBehavior.Restrict);
 
         entity.HasOne(familyMember => familyMember.Person)
-            .WithMany(person => person.FamilyProfiles)
+            .WithMany(person => person.FamilyMembers)
             .HasForeignKey(familyMember => familyMember.PersonId)
             .OnDelete(DeleteBehavior.Restrict);
 
