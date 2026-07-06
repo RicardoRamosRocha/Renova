@@ -47,6 +47,11 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
         entity.Property(professional => professional.IsDeleted)
             .IsRequired();
 
+        entity.Ignore(professional => professional.DisplayName);
+        entity.Ignore(professional => professional.DisplayEmail);
+        entity.Ignore(professional => professional.DisplayPhone);
+        entity.Ignore(professional => professional.DisplayPhotoUrl);
+
         entity.HasOne(professional => professional.Person)
             .WithOne(person => person.Professional)
             .HasForeignKey<Professional>(professional => professional.PersonId)

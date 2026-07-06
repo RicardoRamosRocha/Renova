@@ -1,8 +1,24 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Renova.Domain.Entities;
 
 public class Professional : BaseTenantEntity
 {
     public Guid? PersonId { get; set; }
+
+    public Person? Person { get; set; }
+
+    [NotMapped]
+    public string DisplayName => Prefer(Person?.FullName, FullName);
+
+    [NotMapped]
+    public string? DisplayEmail => PreferNullable(Person?.Email, Email);
+
+    [NotMapped]
+    public string DisplayPhone => Prefer(Person?.Phone, Phone);
+
+    [NotMapped]
+    public string? DisplayPhotoUrl => PreferNullable(Person?.PhotoUrl, PhotoPath);
 
     /// <summary>
     /// LEGACY: personal data kept for compatibility. Prefer Person.FullName for new flows.
@@ -32,9 +48,17 @@ public class Professional : BaseTenantEntity
     /// </summary>
     public string? PhotoPath { get; set; }
 
-    public Person? Person { get; set; }
-
     public ICollection<MedicalEvolution> MedicalEvolutions { get; set; } = [];
 
     public ICollection<Appointment> Appointments { get; set; } = [];
+
+    private static string Prefer(string? primary, string fallback)
+    {
+        return string.IsNullOrWhiteSpace(primary) ? fallback : primary;
+    }
+
+    private static string? PreferNullable(string? primary, string? fallback)
+    {
+        return string.IsNullOrWhiteSpace(primary) ? fallback : primary;
+    }
 }

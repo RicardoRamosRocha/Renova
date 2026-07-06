@@ -73,6 +73,7 @@ public sealed class StudentsController(
             .AsNoTracking()
             .Include(item => item.Person)
             .Include(item => item.FamilyMembers)
+                .ThenInclude(member => member.Person)
             .Include(item => item.Appointments)
                 .ThenInclude(appointment => appointment.Professional)
             .Include(item => item.Subscriptions)

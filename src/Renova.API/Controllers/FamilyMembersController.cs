@@ -28,8 +28,9 @@ public class FamilyMembersController : ControllerBase
         }
 
         var familyMembers = await _dbContext.FamilyMembers
+            .Include(familyMember => familyMember.Person)
             .Where(familyMember => familyMember.StudentId == studentId)
-            .OrderBy(familyMember => familyMember.FullName)
+            .OrderBy(familyMember => familyMember.Person != null ? familyMember.Person.FullName : familyMember.FullName)
             .ToListAsync();
 
         return Ok(familyMembers.Select(ToResponse));
@@ -39,6 +40,7 @@ public class FamilyMembersController : ControllerBase
     public async Task<IActionResult> GetById(Guid studentId, Guid id)
     {
         var familyMember = await _dbContext.FamilyMembers
+            .Include(member => member.Person)
             .FirstOrDefaultAsync(member => member.StudentId == studentId && member.Id == id);
 
         if (familyMember is null)
@@ -126,10 +128,10 @@ public class FamilyMembersController : ControllerBase
         return new FamilyMemberResponse(
             familyMember.Id,
             familyMember.StudentId,
-            familyMember.FullName,
+            familyMember.DisplayName,
             familyMember.Relationship,
-            familyMember.Phone,
-            familyMember.Email,
+            familyMember.DisplayPhone,
+            familyMember.DisplayEmail,
             familyMember.CanAccessPortal,
             familyMember.CreatedAt,
             familyMember.UpdatedAt);

@@ -190,8 +190,8 @@
                     @foreach (var member in Model.FamilyMembers.Take(3))
                     {
                         <article>
-                            <strong>@member.FullName</strong>
-                            <span>@member.Relationship - @member.Phone</span>
+                            <strong>@member.DisplayName</strong>
+                            <span>@member.Relationship - @member.DisplayPhone</span>
                         </article>
                     }
                 }

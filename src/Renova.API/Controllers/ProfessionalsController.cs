@@ -22,7 +22,9 @@ public class ProfessionalsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll(bool includeInactive = false)
     {
-        var query = _dbContext.Professionals.AsQueryable();
+        var query = _dbContext.Professionals
+            .Include(professional => professional.Person)
+            .AsQueryable();
 
         if (!includeInactive)
         {
@@ -30,7 +32,7 @@ public class ProfessionalsController : ControllerBase
         }
 
         var professionals = await query
-            .OrderBy(professional => professional.FullName)
+            .OrderBy(professional => professional.Person != null ? professional.Person.FullName : professional.FullName)
             .ToListAsync();
 
         return Ok(professionals.Select(ToResponse));
@@ -39,7 +41,9 @@ public class ProfessionalsController : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var professional = await _dbContext.Professionals.FindAsync(id);
+        var professional = await _dbContext.Professionals
+            .Include(item => item.Person)
+            .FirstOrDefaultAsync(item => item.Id == id);
 
         if (professional is null)
         {
@@ -96,11 +100,11 @@ public class ProfessionalsController : ControllerBase
     {
         return new ProfessionalResponse(
             professional.Id,
-            professional.FullName,
+            professional.DisplayName,
             professional.Specialty,
             professional.RegistrationNumber,
-            professional.Email,
-            professional.Phone,
+            professional.DisplayEmail,
+            professional.DisplayPhone,
             professional.IsActive,
             professional.CreatedAt,
             professional.UpdatedAt);

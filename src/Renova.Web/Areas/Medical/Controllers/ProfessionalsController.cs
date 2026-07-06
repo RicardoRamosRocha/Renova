@@ -13,13 +13,17 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
     public async Task<IActionResult> Index(string? search, bool? active, int page = 1)
     {
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var query = db.Professionals.AsNoTracking();
+        IQueryable<Professional> query = db.Professionals
+            .AsNoTracking()
+            .Include(item => item.Person);
 
         if (!string.IsNullOrWhiteSpace(search))
         {
             var term = search.Trim().ToLower();
             query = query.Where(item =>
                 item.FullName.ToLower().Contains(term) ||
+                (item.Person != null && item.Person.FullName.ToLower().Contains(term)) ||
+                (item.Person != null && item.Person.Email != null && item.Person.Email.ToLower().Contains(term)) ||
                 item.Specialty.ToLower().Contains(term) ||
                 item.RegistrationNumber.ToLower().Contains(term));
         }
@@ -40,7 +44,7 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
         page = Math.Max(1, page);
         var totalItems = await query.CountAsync();
         var professionals = await query
-            .OrderBy(item => item.FullName)
+            .OrderBy(item => item.Person != null ? item.Person.FullName : item.FullName)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -57,7 +61,10 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
     public async Task<IActionResult> Details(Guid id)
     {
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var professional = await db.Professionals.AsNoTracking().FirstOrDefaultAsync(item => item.Id == id);
+        var professional = await db.Professionals
+            .AsNoTracking()
+            .Include(item => item.Person)
+            .FirstOrDefaultAsync(item => item.Id == id);
         return professional is null ? NotFound() : View(professional);
     }
 

@@ -46,6 +46,11 @@ public class FamilyMemberConfiguration : IEntityTypeConfiguration<FamilyMember>
         entity.Property(familyMember => familyMember.IsDeleted)
             .IsRequired();
 
+        entity.Ignore(familyMember => familyMember.DisplayName);
+        entity.Ignore(familyMember => familyMember.DisplayEmail);
+        entity.Ignore(familyMember => familyMember.DisplayPhone);
+        entity.Ignore(familyMember => familyMember.DisplayPhotoUrl);
+
         entity.HasOne(familyMember => familyMember.Student)
             .WithMany(student => student.FamilyMembers)
             .HasForeignKey(familyMember => familyMember.StudentId)

@@ -38,11 +38,13 @@
                     <tbody>
                     @foreach (var professional in Model.Items)
                     {
+                        var displayName = professional.DisplayName;
+                        var initial = string.IsNullOrWhiteSpace(displayName) ? "?" : displayName[..1];
                         <tr>
-                            <td><div class="demo-person"><span class="demo-avatar">@professional.FullName[..1]</span><strong>@professional.FullName</strong></div></td>
+                            <td><div class="demo-person"><span class="demo-avatar">@initial</span><strong>@displayName</strong></div></td>
                             <td>@professional.Specialty</td>
                             <td>@professional.RegistrationNumber</td>
-                            <td>@professional.Phone</td>
+                            <td>@professional.DisplayPhone</td>
                             <td><span class="demo-pill @(professional.IsActive ? "ok" : "danger")">@(professional.IsActive ? "Ativo" : "Inativo")</span></td>
                             <td><div class="admin-table-actions"><a class="admin-action-button details" asp-action="Details" asp-route-id="@professional.Id">Detalhes</a><a class="admin-action-button edit" asp-action="Edit" asp-route-id="@professional.Id">Editar</a><a class="admin-action-button danger" href="#delete-professional-@professional.Id">Excluir</a></div></td>
                         </tr>
