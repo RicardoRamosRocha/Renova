@@ -65,6 +65,7 @@ public class StudentsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateStudentRequest request)
     {
+        var timestamp = DateTime.UtcNow;
         var student = new Student
         {
             FullName = request.FullName.Trim(),
@@ -75,8 +76,10 @@ public class StudentsController : ControllerBase
             Address = string.IsNullOrWhiteSpace(request.Address) ? null : request.Address.Trim(),
             Status = request.Status,
             AdmissionDate = ToUtc(request.AdmissionDate),
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = timestamp
         };
+
+        student.SyncPersonFromLegacyFields(timestamp);
 
         _dbContext.Students.Add(student);
         await _dbContext.SaveChangesAsync();
@@ -87,13 +90,16 @@ public class StudentsController : ControllerBase
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, UpdateStudentRequest request)
     {
-        var student = await _dbContext.Students.FindAsync(id);
+        var student = await _dbContext.Students
+            .Include(item => item.Person)
+            .FirstOrDefaultAsync(item => item.Id == id);
 
         if (student is null)
         {
             return NotFound();
         }
 
+        var timestamp = DateTime.UtcNow;
         student.FullName = request.FullName.Trim();
         student.BirthDate = ToUtc(request.BirthDate);
         student.CPF = request.CPF.Trim();
@@ -102,7 +108,8 @@ public class StudentsController : ControllerBase
         student.Address = string.IsNullOrWhiteSpace(request.Address) ? null : request.Address.Trim();
         student.Status = request.Status;
         student.AdmissionDate = ToUtc(request.AdmissionDate);
-        student.UpdatedAt = DateTime.UtcNow;
+        student.UpdatedAt = timestamp;
+        student.SyncPersonFromLegacyFields(timestamp, markPersonAsUpdated: true);
 
         await _dbContext.SaveChangesAsync();
 

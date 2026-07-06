@@ -119,6 +119,7 @@ public sealed class StudentsController(
             return View(model);
         }
 
+        var timestamp = DateTime.UtcNow;
         var student = new Student
         {
             FullName = model.FullName.Trim(),
@@ -130,8 +131,10 @@ public sealed class StudentsController(
             Status = model.Status,
             AdmissionDate = DateTime.SpecifyKind(model.AdmissionDate.Date, DateTimeKind.Utc),
             PhotoPath = photoPath,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = timestamp
         };
+
+        student.SyncPersonFromLegacyFields(timestamp);
 
         db.Students.Add(student);
 
@@ -147,7 +150,9 @@ public sealed class StudentsController(
     public async Task<IActionResult> Edit(Guid id)
     {
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var student = await db.Students.FindAsync(id);
+        var student = await db.Students
+            .Include(item => item.Person)
+            .FirstOrDefaultAsync(item => item.Id == id);
 
         return student is null ? NotFound() : View(ToForm(student));
     }
@@ -162,18 +167,20 @@ public sealed class StudentsController(
         }
 
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var student = await db.Students.FindAsync(id);
+        var student = await db.Students
+            .Include(item => item.Person)
+            .FirstOrDefaultAsync(item => item.Id == id);
 
         if (student is null)
         {
             return NotFound();
         }
 
-        var oldPhotoPath = student.PhotoPath;
+        var oldPhotoPath = student.DisplayPhotoUrl;
 
         try
         {
-            student.PhotoPath = await photoService.SavePhotoAsync(model.Photo, "students", student.PhotoPath);
+            student.PhotoPath = await photoService.SavePhotoAsync(model.Photo, "students", oldPhotoPath);
         }
         catch (InvalidOperationException ex)
         {
@@ -182,6 +189,7 @@ public sealed class StudentsController(
             return View(model);
         }
 
+        var timestamp = DateTime.UtcNow;
         student.FullName = model.FullName.Trim();
         student.CPF = model.CPF.Trim();
         student.BirthDate = DateTime.SpecifyKind(model.BirthDate.Date, DateTimeKind.Utc);
@@ -190,7 +198,8 @@ public sealed class StudentsController(
         student.Address = string.IsNullOrWhiteSpace(model.Address) ? null : model.Address.Trim();
         student.Status = model.Status;
         student.AdmissionDate = DateTime.SpecifyKind(model.AdmissionDate.Date, DateTimeKind.Utc);
-        student.UpdatedAt = DateTime.UtcNow;
+        student.UpdatedAt = timestamp;
+        student.SyncPersonFromLegacyFields(timestamp, markPersonAsUpdated: true);
 
         if (!await TrySaveAsync(db, "Acolhido atualizado com sucesso."))
         {
@@ -281,15 +290,15 @@ public sealed class StudentsController(
         return new StudentFormViewModel
         {
             Id = student.Id,
-            FullName = student.FullName,
-            CPF = student.CPF,
-            BirthDate = student.BirthDate,
-            Phone = student.Phone,
-            Email = student.Email,
+            FullName = student.DisplayName,
+            CPF = student.DisplayCpf,
+            BirthDate = student.DisplayBirthDate,
+            Phone = student.DisplayPhone,
+            Email = student.DisplayEmail,
             Address = student.Address,
             Status = student.Status,
             AdmissionDate = student.AdmissionDate,
-            PhotoPath = student.PhotoPath
+            PhotoPath = student.DisplayPhotoUrl
         };
     }
 }
