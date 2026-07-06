@@ -56,6 +56,7 @@ public class ProfessionalsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateProfessionalRequest request)
     {
+        var timestamp = DateTime.UtcNow;
         var professional = new Professional
         {
             FullName = request.FullName.Trim(),
@@ -64,8 +65,10 @@ public class ProfessionalsController : ControllerBase
             Email = string.IsNullOrWhiteSpace(request.Email) ? null : request.Email.Trim(),
             Phone = request.Phone.Trim(),
             IsActive = request.IsActive,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = timestamp
         };
+
+        professional.SyncPersonFromLegacyFields(timestamp);
 
         _dbContext.Professionals.Add(professional);
         await _dbContext.SaveChangesAsync();
@@ -76,20 +79,24 @@ public class ProfessionalsController : ControllerBase
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, UpdateProfessionalRequest request)
     {
-        var professional = await _dbContext.Professionals.FindAsync(id);
+        var professional = await _dbContext.Professionals
+            .Include(item => item.Person)
+            .FirstOrDefaultAsync(item => item.Id == id);
 
         if (professional is null)
         {
             return NotFound();
         }
 
+        var timestamp = DateTime.UtcNow;
         professional.FullName = request.FullName.Trim();
         professional.Specialty = request.Specialty.Trim();
         professional.RegistrationNumber = request.RegistrationNumber.Trim();
         professional.Email = string.IsNullOrWhiteSpace(request.Email) ? null : request.Email.Trim();
         professional.Phone = request.Phone.Trim();
         professional.IsActive = request.IsActive;
-        professional.UpdatedAt = DateTime.UtcNow;
+        professional.UpdatedAt = timestamp;
+        professional.SyncPersonFromLegacyFields(timestamp, markPersonAsUpdated: true);
 
         await _dbContext.SaveChangesAsync();
 

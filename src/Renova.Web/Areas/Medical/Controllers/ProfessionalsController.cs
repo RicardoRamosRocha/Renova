@@ -80,15 +80,21 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
         }
 
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        db.Professionals.Add(new Professional
+        var timestamp = DateTime.UtcNow;
+        var professional = new Professional
         {
             FullName = model.FullName.Trim(),
             Specialty = model.Specialty.Trim(),
             RegistrationNumber = model.RegistrationNumber.Trim(),
             Phone = model.Phone.Trim(),
             Email = model.Email?.Trim(),
-            IsActive = model.IsActive
-        });
+            IsActive = model.IsActive,
+            CreatedAt = timestamp
+        };
+
+        professional.SyncPersonFromLegacyFields(timestamp);
+
+        db.Professionals.Add(professional);
 
         if (!await TrySaveAsync(db, "Profissional cadastrado com sucesso."))
         {
@@ -101,7 +107,9 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
     public async Task<IActionResult> Edit(Guid id)
     {
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var professional = await db.Professionals.FindAsync(id);
+        var professional = await db.Professionals
+            .Include(item => item.Person)
+            .FirstOrDefaultAsync(item => item.Id == id);
         return professional is null ? NotFound() : View(ToForm(professional));
     }
 
@@ -115,19 +123,23 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
         }
 
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var professional = await db.Professionals.FindAsync(id);
+        var professional = await db.Professionals
+            .Include(item => item.Person)
+            .FirstOrDefaultAsync(item => item.Id == id);
         if (professional is null)
         {
             return NotFound();
         }
 
+        var timestamp = DateTime.UtcNow;
         professional.FullName = model.FullName.Trim();
         professional.Specialty = model.Specialty.Trim();
         professional.RegistrationNumber = model.RegistrationNumber.Trim();
         professional.Phone = model.Phone.Trim();
         professional.Email = model.Email?.Trim();
         professional.IsActive = model.IsActive;
-        professional.UpdatedAt = DateTime.UtcNow;
+        professional.UpdatedAt = timestamp;
+        professional.SyncPersonFromLegacyFields(timestamp, markPersonAsUpdated: true);
 
         if (!await TrySaveAsync(db, "Profissional atualizado com sucesso."))
         {
@@ -200,11 +212,11 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
     private static ProfessionalFormViewModel ToForm(Professional professional) => new()
     {
         Id = professional.Id,
-        FullName = professional.FullName,
+        FullName = professional.DisplayName,
         Specialty = professional.Specialty,
         RegistrationNumber = professional.RegistrationNumber,
-        Phone = professional.Phone,
-        Email = professional.Email,
+        Phone = professional.DisplayPhone,
+        Email = professional.DisplayEmail,
         IsActive = professional.IsActive
     };
 }

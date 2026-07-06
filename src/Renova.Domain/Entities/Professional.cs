@@ -52,6 +52,27 @@ public class Professional : BaseTenantEntity
 
     public ICollection<Appointment> Appointments { get; set; } = [];
 
+    public void SyncPersonFromLegacyFields(DateTime timestamp, bool markPersonAsUpdated = false)
+    {
+        Person ??= new Person
+        {
+            CreatedAt = timestamp
+        };
+
+        PersonId = Person.Id;
+        Person.TenantId = TenantId;
+        Person.FullName = FullName;
+        Person.Email = Email;
+        Person.Phone = Phone;
+        Person.PhotoUrl = PhotoPath;
+        Person.IsActive = IsActive && !IsDeleted;
+
+        if (markPersonAsUpdated)
+        {
+            Person.UpdatedAt = timestamp;
+        }
+    }
+
     private static string Prefer(string? primary, string fallback)
     {
         return string.IsNullOrWhiteSpace(primary) ? fallback : primary;

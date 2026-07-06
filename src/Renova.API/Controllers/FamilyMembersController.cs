@@ -54,21 +54,29 @@ public class FamilyMembersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(Guid studentId, CreateFamilyMemberRequest request)
     {
-        if (!await StudentExists(studentId))
+        var student = await _dbContext.Students
+            .AsNoTracking()
+            .FirstOrDefaultAsync(item => item.Id == studentId);
+
+        if (student is null)
         {
             return NotFound();
         }
 
+        var timestamp = DateTime.UtcNow;
         var familyMember = new FamilyMember
         {
             StudentId = studentId,
+            TenantId = student.TenantId,
             FullName = request.FullName.Trim(),
             Relationship = request.Relationship.Trim(),
             Phone = request.Phone.Trim(),
             Email = string.IsNullOrWhiteSpace(request.Email) ? null : request.Email.Trim(),
             CanAccessPortal = request.CanAccessPortal,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = timestamp
         };
+
+        familyMember.SyncPersonFromLegacyFields(timestamp);
 
         _dbContext.FamilyMembers.Add(familyMember);
         await _dbContext.SaveChangesAsync();
@@ -82,6 +90,7 @@ public class FamilyMembersController : ControllerBase
     public async Task<IActionResult> Update(Guid studentId, Guid id, UpdateFamilyMemberRequest request)
     {
         var familyMember = await _dbContext.FamilyMembers
+            .Include(member => member.Person)
             .FirstOrDefaultAsync(member => member.StudentId == studentId && member.Id == id);
 
         if (familyMember is null)
@@ -89,12 +98,14 @@ public class FamilyMembersController : ControllerBase
             return NotFound();
         }
 
+        var timestamp = DateTime.UtcNow;
         familyMember.FullName = request.FullName.Trim();
         familyMember.Relationship = request.Relationship.Trim();
         familyMember.Phone = request.Phone.Trim();
         familyMember.Email = string.IsNullOrWhiteSpace(request.Email) ? null : request.Email.Trim();
         familyMember.CanAccessPortal = request.CanAccessPortal;
-        familyMember.UpdatedAt = DateTime.UtcNow;
+        familyMember.UpdatedAt = timestamp;
+        familyMember.SyncPersonFromLegacyFields(timestamp, markPersonAsUpdated: true);
 
         await _dbContext.SaveChangesAsync();
 
