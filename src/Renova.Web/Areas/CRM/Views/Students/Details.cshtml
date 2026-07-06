@@ -3,9 +3,9 @@
 @model Student
 @{
     ViewData["Title"] = "Prontuario do Acolhido";
-    var photo = string.IsNullOrWhiteSpace(Model.PhotoPath) ? "/images/avatar-default.svg" : Model.PhotoPath;
+    var photo = string.IsNullOrWhiteSpace(Model.DisplayPhotoUrl) ? "/images/avatar-default.svg" : Model.DisplayPhotoUrl;
     var today = DateTime.Today;
-    var birthDate = Model.BirthDate.Date;
+    var birthDate = Model.DisplayBirthDate.Date;
     var admissionDate = Model.AdmissionDate.Date;
     var age = today.Year - birthDate.Year;
     if (birthDate > today.AddYears(-age))
@@ -40,10 +40,10 @@
 <section class="demo-page patient-profile">
     <div class="patient-hero">
         <div class="patient-identity">
-            <img src="@photo" alt="Foto de @Model.FullName" class="patient-photo" />
+            <img src="@photo" alt="Foto de @Model.DisplayName" class="patient-photo" />
             <div>
                 <span class="demo-kicker">Prontuario clinico</span>
-                <h1>@Model.FullName</h1>
+                <h1>@Model.DisplayName</h1>
                 <p>
                     <span class="demo-pill @statusClass">@StudentStatuses.Label(Model.Status)</span>
                     <span>Entrada em @Model.AdmissionDate.ToString("dd/MM/yyyy")</span>
@@ -61,8 +61,8 @@
     <div class="patient-kpi-grid">
         <article><small>Idade</small><strong>@age anos</strong></article>
         <article><small>Dias em tratamento</small><strong>@treatmentDays</strong></article>
-        <article><small>CPF</small><strong>@Model.CPF</strong></article>
-        <article><small>Telefone</small><strong>@Model.Phone</strong></article>
+        <article><small>CPF</small><strong>@Model.DisplayCpf</strong></article>
+        <article><small>Telefone</small><strong>@Model.DisplayPhone</strong></article>
     </div>
 
     <div class="patient-profile-grid">
@@ -72,9 +72,9 @@
                 <div><h2>Dados pessoais</h2><p>Identificacao principal do acolhido.</p></div>
             </div>
             <dl class="patient-data-list">
-                <div><dt>Nome completo</dt><dd>@Model.FullName</dd></div>
-                <div><dt>CPF</dt><dd>@Model.CPF</dd></div>
-                <div><dt>Nascimento</dt><dd>@Model.BirthDate.ToString("dd/MM/yyyy")</dd></div>
+                <div><dt>Nome completo</dt><dd>@Model.DisplayName</dd></div>
+                <div><dt>CPF</dt><dd>@Model.DisplayCpf</dd></div>
+                <div><dt>Nascimento</dt><dd>@Model.DisplayBirthDate.ToString("dd/MM/yyyy")</dd></div>
                 <div><dt>Idade</dt><dd>@age anos</dd></div>
             </dl>
         </section>
@@ -85,8 +85,8 @@
                 <div><h2>Contato</h2><p>Canais para comunicacao da equipe.</p></div>
             </div>
             <dl class="patient-data-list">
-                <div><dt>Telefone</dt><dd>@Model.Phone</dd></div>
-                <div><dt>Email</dt><dd>@(Model.Email ?? "Nao informado")</dd></div>
+                <div><dt>Telefone</dt><dd>@Model.DisplayPhone</dd></div>
+                <div><dt>Email</dt><dd>@(Model.DisplayEmail ?? "Nao informado")</dd></div>
                 <div><dt>Endereco</dt><dd>@(Model.Address ?? "Nao informado")</dd></div>
             </dl>
         </section>

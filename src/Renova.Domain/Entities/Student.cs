@@ -1,8 +1,30 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Renova.Domain.Entities;
 
 public class Student : BaseTenantEntity
 {
     public Guid? PersonId { get; set; }
+
+    public Person? Person { get; set; }
+
+    [NotMapped]
+    public string DisplayName => Prefer(Person?.FullName, FullName);
+
+    [NotMapped]
+    public string DisplayCpf => Prefer(Person?.Cpf, CPF);
+
+    [NotMapped]
+    public string? DisplayEmail => PreferNullable(Person?.Email, Email);
+
+    [NotMapped]
+    public string DisplayPhone => Prefer(Person?.Phone, Phone);
+
+    [NotMapped]
+    public DateTime DisplayBirthDate => Person?.BirthDate ?? BirthDate;
+
+    [NotMapped]
+    public string? DisplayPhotoUrl => PreferNullable(Person?.PhotoUrl, PhotoPath);
 
     /// <summary>
     /// LEGACY: personal data kept for compatibility. Prefer Person.FullName for new flows.
@@ -61,8 +83,6 @@ public class Student : BaseTenantEntity
 
     public string? Observation { get; set; }
 
-    public Person? Person { get; set; }
-
     public ICollection<FamilyMember> FamilyMembers { get; set; } = [];
 
     public ICollection<Admission> Admissions { get; set; } = [];
@@ -85,4 +105,14 @@ public class Student : BaseTenantEntity
     public ICollection<Payment> Payments { get; set; } = [];
 
     public ICollection<Subscription> Subscriptions { get; set; } = [];
+
+    private static string Prefer(string? primary, string fallback)
+    {
+        return string.IsNullOrWhiteSpace(primary) ? fallback : primary;
+    }
+
+    private static string? PreferNullable(string? primary, string? fallback)
+    {
+        return string.IsNullOrWhiteSpace(primary) ? fallback : primary;
+    }
 }

@@ -22,6 +22,13 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
         builder.Property(x => x.Observation)
             .HasMaxLength(1000);
 
+        builder.Ignore(x => x.DisplayName);
+        builder.Ignore(x => x.DisplayCpf);
+        builder.Ignore(x => x.DisplayEmail);
+        builder.Ignore(x => x.DisplayPhone);
+        builder.Ignore(x => x.DisplayBirthDate);
+        builder.Ignore(x => x.DisplayPhotoUrl);
+
         builder.HasOne(x => x.Person)
             .WithOne(x => x.Student)
             .HasForeignKey<Student>(x => x.PersonId)

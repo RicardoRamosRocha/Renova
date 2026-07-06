@@ -18,15 +18,20 @@ public sealed class StudentsController(
     public async Task<IActionResult> Index(string? search, int? status, int page = 1)
     {
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var query = db.Students.AsNoTracking();
+        IQueryable<Student> query = db.Students
+            .AsNoTracking()
+            .Include(student => student.Person);
 
         if (!string.IsNullOrWhiteSpace(search))
         {
             var term = search.Trim().ToLower();
             query = query.Where(student =>
                 student.FullName.ToLower().Contains(term) ||
+                (student.Person != null && student.Person.FullName.ToLower().Contains(term)) ||
                 student.CPF.ToLower().Contains(term) ||
-                (student.Email != null && student.Email.ToLower().Contains(term)));
+                (student.Person != null && student.Person.Cpf != null && student.Person.Cpf.ToLower().Contains(term)) ||
+                (student.Email != null && student.Email.ToLower().Contains(term)) ||
+                (student.Person != null && student.Person.Email != null && student.Person.Email.ToLower().Contains(term)));
         }
 
         if (status.HasValue)
@@ -47,7 +52,7 @@ public sealed class StudentsController(
         var totalItems = await query.CountAsync();
 
         var students = await query
-            .OrderBy(student => student.FullName)
+            .OrderBy(student => student.Person != null ? student.Person.FullName : student.FullName)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -66,6 +71,7 @@ public sealed class StudentsController(
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var student = await db.Students
             .AsNoTracking()
+            .Include(item => item.Person)
             .Include(item => item.FamilyMembers)
             .Include(item => item.Appointments)
                 .ThenInclude(appointment => appointment.Professional)

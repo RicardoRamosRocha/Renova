@@ -38,7 +38,8 @@ public class StudentsController : ControllerBase
         }
 
         var students = await _dbContext.Students
-            .OrderBy(student => student.FullName)
+            .Include(student => student.Person)
+            .OrderBy(student => student.Person != null ? student.Person.FullName : student.FullName)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -49,7 +50,9 @@ public class StudentsController : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var student = await _dbContext.Students.FindAsync(id);
+        var student = await _dbContext.Students
+            .Include(item => item.Person)
+            .FirstOrDefaultAsync(item => item.Id == id);
 
         if (student is null)
         {
@@ -126,11 +129,11 @@ public class StudentsController : ControllerBase
     {
         return new StudentResponse(
             student.Id,
-            student.FullName,
-            student.BirthDate,
-            student.CPF,
-            student.Phone,
-            student.Email,
+            student.DisplayName,
+            student.DisplayBirthDate,
+            student.DisplayCpf,
+            student.DisplayPhone,
+            student.DisplayEmail,
             student.Address,
             student.Status,
             student.AdmissionDate,

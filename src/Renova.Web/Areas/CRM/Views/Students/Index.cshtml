@@ -73,7 +73,7 @@
                     <tbody>
                     @foreach (var student in Model.Items)
                     {
-                        var photo = string.IsNullOrWhiteSpace(student.PhotoPath) ? "/images/avatar-default.svg" : student.PhotoPath;
+                        var photo = string.IsNullOrWhiteSpace(student.DisplayPhotoUrl) ? "/images/avatar-default.svg" : student.DisplayPhotoUrl;
                         var statusClass = student.Status == StudentStatuses.Inactive
                             ? "danger"
                             : student.Status == StudentStatuses.InTreatment
@@ -85,15 +85,15 @@
                         <tr>
                             <td>
                                 <a class="student-person" asp-action="Details" asp-route-id="@student.Id">
-                                    <img src="@photo" alt="Foto de @student.FullName" class="student-avatar" />
+                                    <img src="@photo" alt="Foto de @student.DisplayName" class="student-avatar" />
                                     <span>
-                                        <strong>@student.FullName</strong>
+                                        <strong>@student.DisplayName</strong>
                                         <small>@StudentStatuses.Label(student.Status)</small>
                                     </span>
                                 </a>
                             </td>
-                            <td>@student.CPF</td>
-                            <td>@student.Phone</td>
+                            <td>@student.DisplayCpf</td>
+                            <td>@student.DisplayPhone</td>
                             <td>@student.AdmissionDate.ToString("dd/MM/yyyy")</td>
                             <td><span class="demo-pill @statusClass">@StudentStatuses.Label(student.Status)</span></td>
                             <td>
