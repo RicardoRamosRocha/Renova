@@ -59,5 +59,7 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
         entity.HasIndex(professional => professional.PersonId)
             .IsUnique()
             .HasFilter("\"PersonId\" IS NOT NULL");
+
+        entity.HasQueryFilter(professional => !professional.IsDeleted);
     }
 }

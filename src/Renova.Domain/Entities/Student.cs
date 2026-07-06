@@ -4,18 +4,39 @@ public class Student : BaseTenantEntity
 {
     public Guid? PersonId { get; set; }
 
+    /// <summary>
+    /// LEGACY: personal data kept for compatibility. Prefer Person.FullName for new flows.
+    /// </summary>
     public string FullName { get; set; } = string.Empty;
 
+    /// <summary>
+    /// LEGACY: personal data kept for compatibility. Prefer Person.BirthDate for new flows.
+    /// </summary>
     public DateTime BirthDate { get; set; }
 
+    /// <summary>
+    /// LEGACY: personal data kept for compatibility. Prefer Person.Cpf for new flows.
+    /// </summary>
     public string CPF { get; set; } = string.Empty;
 
+    /// <summary>
+    /// LEGACY: personal data kept for compatibility. Prefer Person.Phone, Person.Mobile, or contacts for new flows.
+    /// </summary>
     public string Phone { get; set; } = string.Empty;
 
+    /// <summary>
+    /// LEGACY: personal data kept for compatibility. Prefer Person.Email for new flows.
+    /// </summary>
     public string? Email { get; set; }
 
+    /// <summary>
+    /// LEGACY: personal data kept for compatibility. Prefer Person.Address for new flows.
+    /// </summary>
     public string? Address { get; set; }
 
+    /// <summary>
+    /// LEGACY: numeric status kept for compatibility. Prefer StudentStatus for new flows.
+    /// </summary>
     public int Status { get; set; }
 
     public DateTime AdmissionDate { get; set; }
@@ -48,6 +69,9 @@ public class Student : BaseTenantEntity
 
     public MedicalRecord? MedicalRecord { get; set; }
 
+    /// <summary>
+    /// LEGACY: personal profile photo kept for compatibility. Prefer Person.PhotoUrl for new flows.
+    /// </summary>
     public string? PhotoPath { get; set; }
 
     public ICollection<MedicalEvolution> MedicalEvolutions { get; set; } = [];

@@ -60,5 +60,7 @@ public class FamilyMemberConfiguration : IEntityTypeConfiguration<FamilyMember>
 
         entity.HasIndex(familyMember => familyMember.PersonId)
             .HasFilter("\"PersonId\" IS NOT NULL");
+
+        entity.HasQueryFilter(familyMember => !familyMember.IsDeleted);
     }
 }
