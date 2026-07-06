@@ -18,6 +18,14 @@ public class Admission : BaseTenantEntity
 
     public string? ReferredBy { get; set; }
 
+    public string? ResponsibleProfessional { get; set; }
+
+    public string? DischargeApprovedBy { get; set; }
+
+    public string? Origin { get; set; }
+
+    public string? DestinationAfterDischarge { get; set; }
+
     public string? Notes { get; set; }
 
     public Student Student { get; set; } = null!;
