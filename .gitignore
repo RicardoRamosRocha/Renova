@@ -1,17 +1,24 @@
-.vs/
-.vscode/
-
+# Build
 bin/
 obj/
 
-**/bin/
-**/obj/
+# Visual Studio
+.vs/
 
-*.user
-*.suo
+# VS Code
+.vscode/
 
-*.db
-*.sqlite
-*.sqlite3
+# Temporary
+.tmp/
 
-appsettings.Development.json
+# Build artifacts
+artifacts/
+
+# ASP.NET Core
+**/appsettings.Development.json
+
+# User uploads (ajuste conforme sua estratégia)
+# wwwroot/uploads/
+
+# Logs
+*.log
