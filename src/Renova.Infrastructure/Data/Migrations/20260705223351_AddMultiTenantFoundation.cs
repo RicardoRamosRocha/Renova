@@ -61,6 +61,43 @@ namespace Renova.Infrastructure.Data.Migrations
                     table.PrimaryKey("PK_Tenants", x => x.Id);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Tenants",
+                columns: new[]
+                {
+                    "Id",
+                    "Name",
+                    "LegalName",
+                    "Cnpj",
+                    "Email",
+                    "Phone",
+                    "Address",
+                    "City",
+                    "State",
+                    "ZipCode",
+                    "IsActive",
+                    "CreatedAt",
+                    "UpdatedAt",
+                    "IsDeleted"
+                },
+                values: new object[]
+                {
+                    Guid.Empty,
+                    "Tenant Padrão",
+                    "Tenant Padrão",
+                    "00.000.000/0000-00",
+                    "admin@renova.local",
+                    "(00) 00000-0000",
+                    null,
+                    null,
+                    null,
+                    null,
+                    true,
+                    new DateTime(2026, 7, 5, 0, 0, 0, DateTimeKind.Utc),
+                    null,
+                    false
+                });
+
             migrationBuilder.CreateTable(
                 name: "TenantSettings",
                 columns: table => new
@@ -87,6 +124,39 @@ namespace Renova.Infrastructure.Data.Migrations
                         principalTable: "Tenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "TenantSettings",
+                columns: new[]
+                {
+                    "Id",
+                    "LogoUrl",
+                    "PrimaryColor",
+                    "SecondaryColor",
+                    "AllowFamilyPortal",
+                    "AllowEad",
+                    "AllowInventory",
+                    "AllowTherapeuticPlans",
+                    "CreatedAt",
+                    "UpdatedAt",
+                    "IsDeleted",
+                    "TenantId"
+                },
+                values: new object[]
+                {
+                    new Guid("00000000-0000-0000-0000-000000000001"),
+                    null,
+                    "#0f766e",
+                    "#134e4a",
+                    true,
+                    true,
+                    true,
+                    true,
+                    new DateTime(2026, 7, 5, 0, 0, 0, DateTimeKind.Utc),
+                    null,
+                    false,
+                    Guid.Empty
                 });
 
             migrationBuilder.CreateTable(
