@@ -35,5 +35,7 @@ public class MedicalEvolutionConfiguration : IEntityTypeConfiguration<MedicalEvo
         entity.HasIndex(medicalEvolution => medicalEvolution.StudentId);
 
         entity.HasIndex(medicalEvolution => medicalEvolution.ProfessionalId);
+
+        entity.HasQueryFilter(medicalEvolution => !medicalEvolution.IsDeleted);
     }
 }

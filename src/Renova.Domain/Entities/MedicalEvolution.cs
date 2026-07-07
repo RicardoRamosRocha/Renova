@@ -2,6 +2,7 @@ namespace Renova.Domain.Entities;
 
 public class MedicalEvolution
 {
+    // TODO Sprint 4.5: evaluate BaseTenantEntity adoption after a migration plan adds TenantId.
     public Guid Id { get; set; } = Guid.NewGuid();
 
     public Guid StudentId { get; set; }

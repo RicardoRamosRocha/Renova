@@ -2,6 +2,7 @@ namespace Renova.Domain.Entities;
 
 public class Course
 {
+    // TODO Sprint 4.5: decide whether EAD catalog remains global or becomes tenant-scoped before adding migrations.
     public Guid Id { get; set; } = Guid.NewGuid();
 
     public string Title { get; set; } = string.Empty;

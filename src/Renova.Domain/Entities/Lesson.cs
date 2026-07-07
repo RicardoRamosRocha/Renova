@@ -2,6 +2,7 @@ namespace Renova.Domain.Entities;
 
 public class Lesson
 {
+    // TODO Sprint 4.5: follow Course tenancy decision; changing inheritance requires a migration plan.
     public Guid Id { get; set; } = Guid.NewGuid();
 
     public Guid CourseModuleId { get; set; }
