@@ -6,23 +6,23 @@
     var initial = string.IsNullOrWhiteSpace(displayName) ? "?" : displayName[..1];
 }
 
-<section class="demo-page">
+<section class="admin-page">
     <div class="demo-profile-hero">
         <span class="demo-photo">@initial</span>
         <div>
-            <span class="demo-kicker">Profissional</span>
+            <span class="rn-eyebrow">Profissional</span>
             <h1>@displayName</h1>
             <p>
-                <span class="demo-pill @(Model.IsActive ? "ok" : "danger")">@(Model.IsActive ? "Ativo" : "Inativo")</span>
+                <span class="renova-status-badge @(Model.IsActive ? "ok" : "danger")">@(Model.IsActive ? "Ativo" : "Inativo")</span>
                 @Model.Specialty
             </p>
         </div>
-        <a class="demo-button" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
+        <a class="rn-btn-primary" asp-action="Edit" asp-route-id="@Model.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>
     </div>
     <div class="demo-profile-meta">
         <article><small>Registro</small><strong>@Model.RegistrationNumber</strong></article>
         <article><small>Telefone</small><strong>@Model.DisplayPhone</strong></article>
-        <article><small>Email</small><strong>@(Model.DisplayEmail ?? "Nao informado")</strong></article>
+        <article><small>Email</small><strong>@(Model.DisplayEmail ?? "Não informado")</strong></article>
         <article><small>Criado em</small><strong>@Model.CreatedAt.ToString("dd/MM/yyyy")</strong></article>
     </div>
 </section>

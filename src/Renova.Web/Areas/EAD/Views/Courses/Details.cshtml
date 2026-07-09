@@ -1,7 +1,22 @@
 @using Renova.Domain.Entities
 @model Course
-@{ ViewData["Title"] = "Detalhes do Curso"; }
-<section class="demo-page">
-    <div class="demo-hero"><div><span class="demo-kicker">Curso</span><h1>@Model.Title</h1><p>@Model.Description</p></div><a class="demo-button" asp-action="Edit" asp-route-id="@Model.Id">Editar</a></div>
-    <div class="demo-grid-3"><article class="demo-card"><span>Status</span><strong>@(Model.IsActive ? "Publicado" : "Arquivado")</strong><small>EAD</small></article><article class="demo-card"><span>Criado em</span><strong>@Model.CreatedAt.ToString("dd/MM")</strong><small>@Model.CreatedAt.Year</small></article><article class="demo-card"><span>Módulos</span><strong>@Model.Modules.Count</strong><small>Estrutura</small></article></div>
+@{
+    ViewData["Title"] = "Detalhes do Curso";
+}
+
+<section class="admin-page">
+    <div class="admin-page-header">
+        <div>
+            <span>Curso</span>
+            <h1>@Model.Title</h1>
+            <p>@Model.Description</p>
+        </div>
+        <a class="rn-btn-primary" asp-action="Edit" asp-route-id="@Model.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>
+    </div>
+
+    <div class="demo-grid-3">
+        <article class="rn-metric-card"><span>Status</span><strong>@(Model.IsActive ? "Publicado" : "Arquivado")</strong><small>EAD</small></article>
+        <article class="rn-metric-card"><span>Criado em</span><strong>@Model.CreatedAt.ToString("dd/MM")</strong><small>@Model.CreatedAt.Year</small></article>
+        <article class="rn-metric-card"><span>Módulos</span><strong>@Model.Modules.Count</strong><small>Estrutura</small></article>
+    </div>
 </section>

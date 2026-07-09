@@ -1,1 +1,51 @@
 @import url("./css/admin-premium.css");
+.admin-brand a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.admin-brand-mark {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #2563eb, #22c55e);
+    color: #fff;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.admin-brand-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.1;
+}
+
+.admin-brand-text strong {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.admin-brand-text small {
+    margin-top: 3px;
+    color: rgba(255,255,255,.55);
+    font-size: .68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    white-space: nowrap;
+}
+
+.admin-brand-text::before,
+.admin-brand-text::after,
+.admin-brand a::before,
+.admin-brand a::after {
+    content: none !important;
+}

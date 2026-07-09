@@ -8,11 +8,11 @@
     <header class="admin-form-header">
         <div>
             <nav class="admin-form-breadcrumb"><a asp-action="Index">Acolhidos</a><span>/</span><span>Novo cadastro</span></nav>
-            <span class="demo-kicker">Acolhidos</span>
+            <span class="rn-eyebrow">Acolhidos</span>
             <h1>Novo Acolhido</h1>
             <p>Organize os dados pessoais, contato e informações de acolhimento em uma tela clara e segura.</p>
         </div>
-        <a class="admin-button-secondary" asp-action="Index">Voltar</a>
+        <a class="rn-btn-secondary" asp-action="Index"><i class="ph ph-arrow-left" aria-hidden="true"></i>Voltar</a>
     </header>
     <form asp-action="Create" method="post" enctype="multipart/form-data">
         @await Html.PartialAsync("_Form", Model)

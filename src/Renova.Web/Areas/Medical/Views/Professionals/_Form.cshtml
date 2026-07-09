@@ -10,7 +10,7 @@
 <div class="admin-form-card">
     <section class="admin-form-section">
         <div class="admin-form-section-title">
-            <div><span class="demo-kicker">Dados pessoais</span><h2>Identificação profissional</h2><p>Dados usados para agenda, prontuário e gestão da equipe.</p></div>
+            <div><span class="rn-eyebrow">Dados pessoais</span><h2>Identificação profissional</h2><p>Dados usados para agenda, prontuário e gestão da equipe.</p></div>
         </div>
         <div class="admin-form-grid three">
             <div class="admin-form-group"><label class="admin-label required" asp-for="FullName">Nome completo</label><input class="admin-input" asp-for="FullName" autocomplete="name" /><span class="admin-validation" asp-validation-for="FullName"></span></div>
@@ -23,7 +23,7 @@
 
     <section class="admin-form-section">
         <div class="admin-form-section-title">
-            <div><span class="demo-kicker">Contato</span><h2>Canais de comunicação</h2><p>Informações para notificações, agenda e contatos da operação.</p></div>
+            <div><span class="rn-eyebrow">Contato</span><h2>Canais de comunicação</h2><p>Informações para notificações, agenda e contatos da operação.</p></div>
         </div>
         <div class="admin-form-grid three">
             <div class="admin-form-group"><label class="admin-label required" asp-for="Phone">Telefone</label><input class="admin-input" asp-for="Phone" inputmode="tel" autocomplete="tel" /><span class="admin-validation" asp-validation-for="Phone"></span></div>
@@ -34,7 +34,7 @@
 
     <section class="admin-form-section">
         <div class="admin-form-section-title">
-            <div><span class="demo-kicker">Observações</span><h2>Notas internas</h2><p>Use para informações complementares durante a demonstração.</p></div>
+            <div><span class="rn-eyebrow">Observações</span><h2>Notas internas</h2><p>Use para informações complementares durante a demonstração.</p></div>
         </div>
         <div class="admin-form-group-full">
             <label class="admin-label" asp-for="Notes">Observações</label>
@@ -45,7 +45,7 @@
     </section>
 
     <div class="admin-form-actions">
-        <a class="admin-button-secondary" asp-action="Index">Cancelar</a>
-        <button class="admin-button-primary" type="submit">Salvar profissional</button>
+        <a class="rn-btn-secondary" asp-action="Index">Cancelar</a>
+        <button class="rn-btn-primary" type="submit"><i class="ph ph-check-circle" aria-hidden="true"></i>Salvar profissional</button>
     </div>
 </div>

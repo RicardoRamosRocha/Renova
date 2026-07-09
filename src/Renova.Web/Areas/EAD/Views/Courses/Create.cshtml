@@ -8,11 +8,11 @@
     <header class="admin-form-header">
         <div>
             <nav class="admin-form-breadcrumb"><a asp-action="Index">Cursos</a><span>/</span><span>Novo curso</span></nav>
-            <span class="demo-kicker">EAD</span>
+            <span class="rn-eyebrow">EAD</span>
             <h1>Novo Curso</h1>
             <p>Estruture conteúdo, categoria, responsável e publicação para a biblioteca EAD.</p>
         </div>
-        <a class="admin-button-secondary" asp-action="Index">Voltar</a>
+        <a class="rn-btn-secondary" asp-action="Index"><i class="ph ph-arrow-left" aria-hidden="true"></i>Voltar</a>
     </header>
     <form asp-action="Create" method="post">
         @await Html.PartialAsync("_Form", Model)

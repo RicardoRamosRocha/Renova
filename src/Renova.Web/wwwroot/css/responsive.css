@@ -81,7 +81,32 @@
 
     .crm-filter-form,
     .crm-search-box,
-    .ead-filter-bar > * {
+    .ead-filter-bar > *,
+    .demo-filter-row,
+    .demo-filter-row input,
+    .demo-filter-row select {
         width: 100%;
+    }
+
+    .admin-form-header,
+    .demo-profile-hero,
+    .patient-hero,
+    .premium-form-footer,
+    .admin-form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .admin-form-grid,
+    .demo-profile-meta,
+    .patient-kpi-grid,
+    .patient-profile-grid,
+    .demo-profile-grid,
+    .patient-metric-row {
+        grid-template-columns: 1fr;
+    }
+
+    .demo-schedule-card {
+        grid-template-columns: 1fr;
     }
 }

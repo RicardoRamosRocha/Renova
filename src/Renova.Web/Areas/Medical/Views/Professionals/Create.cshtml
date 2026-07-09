@@ -8,11 +8,11 @@
     <header class="admin-form-header">
         <div>
             <nav class="admin-form-breadcrumb"><a asp-action="Index">Profissionais</a><span>/</span><span>Novo cadastro</span></nav>
-            <span class="demo-kicker">Equipe</span>
+            <span class="rn-eyebrow">Equipe</span>
             <h1>Novo Profissional</h1>
             <p>Cadastre dados técnicos, contato e status para agenda, prontuário e operação clínica.</p>
         </div>
-        <a class="admin-button-secondary" asp-action="Index">Voltar</a>
+        <a class="rn-btn-secondary" asp-action="Index"><i class="ph ph-arrow-left" aria-hidden="true"></i>Voltar</a>
     </header>
     <form asp-action="Create" method="post">
         @await Html.PartialAsync("_Form", Model)

@@ -73,3 +73,31 @@
     justify-content: space-between;
     padding: 10px 0;
 }
+
+.demo-schedule-card {
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #eef2f7;
+    border-left: 4px solid var(--rn-primary);
+    border-radius: var(--rn-radius-lg);
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 72px minmax(0, 1fr) auto;
+    padding: 14px;
+}
+
+.demo-schedule-card.is-green {
+    border-left-color: var(--rn-success);
+}
+
+.demo-schedule-card.is-blue {
+    border-left-color: var(--rn-primary);
+}
+
+.demo-schedule-card.is-yellow {
+    border-left-color: var(--rn-warning);
+}
+
+.demo-schedule-card.is-red {
+    border-left-color: var(--rn-danger);
+}

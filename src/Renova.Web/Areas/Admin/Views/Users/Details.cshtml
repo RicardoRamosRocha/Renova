@@ -1,7 +1,26 @@
 @using Renova.Infrastructure.Identity
 @model ApplicationUser
-@{ ViewData["Title"] = "Detalhes do Usuário"; var roles = (IEnumerable<string>)(ViewBag.Roles ?? Array.Empty<string>()); }
-<section class="demo-page">
-    <div class="demo-profile-hero"><span class="demo-photo">@Model.FullName[..1]</span><div><span class="demo-kicker">Usuário</span><h1>@Model.FullName</h1><p><span class="demo-pill @(Model.IsActive ? "ok" : "danger")">@(Model.IsActive ? "Ativo" : "Inativo")</span> @Model.Email</p></div><a class="demo-button" asp-action="Edit" asp-route-id="@Model.Id">Editar</a></div>
-    <div class="demo-profile-meta"><article><small>Email</small><strong>@Model.Email</strong></article><article><small>Telefone</small><strong>@(Model.PhoneNumber ?? "Não informado")</strong></article><article><small>Perfil</small><strong>@(roles.Any() ? string.Join(", ", roles) : "Sem perfil")</strong></article><article><small>Status</small><strong>@(Model.IsActive ? "Ativo" : "Inativo")</strong></article></div>
+@{
+    ViewData["Title"] = "Detalhes do Usuário";
+    var roles = (IEnumerable<string>)(ViewBag.Roles ?? Array.Empty<string>());
+    var initial = string.IsNullOrWhiteSpace(Model.FullName) ? "?" : Model.FullName[..1];
+}
+
+<section class="admin-page">
+    <div class="demo-profile-hero">
+        <span class="demo-photo">@initial</span>
+        <div>
+            <span class="rn-eyebrow">Usuário</span>
+            <h1>@Model.FullName</h1>
+            <p><span class="renova-status-badge @(Model.IsActive ? "ok" : "danger")">@(Model.IsActive ? "Ativo" : "Inativo")</span> @Model.Email</p>
+        </div>
+        <a class="rn-btn-primary" asp-action="Edit" asp-route-id="@Model.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>
+    </div>
+
+    <div class="demo-profile-meta">
+        <article><small>Email</small><strong>@Model.Email</strong></article>
+        <article><small>Telefone</small><strong>@(Model.PhoneNumber ?? "Não informado")</strong></article>
+        <article><small>Perfil</small><strong>@(roles.Any() ? string.Join(", ", roles) : "Sem perfil")</strong></article>
+        <article><small>Status</small><strong>@(Model.IsActive ? "Ativo" : "Inativo")</strong></article>
+    </div>
 </section>

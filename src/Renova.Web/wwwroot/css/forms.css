@@ -127,3 +127,218 @@
 .rn-switch input:checked::after {
     transform: translateX(20px);
 }
+
+.admin-form-page {
+    display: grid;
+    gap: 24px;
+}
+
+.admin-form-header {
+    align-items: flex-start;
+    background: rgba(255, 255, 255, .95);
+    border: 1px solid var(--rn-border);
+    border-radius: var(--rn-radius-xl);
+    box-shadow: var(--rn-shadow-sm);
+    display: flex;
+    gap: 24px;
+    justify-content: space-between;
+    padding: 28px;
+}
+
+.admin-form-header h1 {
+    color: var(--rn-text);
+    font-size: clamp(2rem, 3vw, 2.65rem);
+    line-height: 1.08;
+    margin: 8px 0 0;
+}
+
+.admin-form-header p {
+    color: var(--rn-muted);
+    line-height: 1.65;
+    margin: 10px 0 0;
+    max-width: 760px;
+}
+
+.admin-form-breadcrumb {
+    align-items: center;
+    color: var(--rn-muted);
+    display: flex;
+    font-size: .82rem;
+    font-weight: 800;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.admin-form-breadcrumb a {
+    color: var(--rn-primary);
+    text-decoration: none;
+}
+
+.admin-form-card,
+.premium-form-card {
+    background: rgba(255, 255, 255, .96);
+    border: 1px solid var(--rn-border);
+    border-radius: var(--rn-radius-xl);
+    box-shadow: var(--rn-shadow-sm);
+    overflow: hidden;
+}
+
+.premium-form-header {
+    background: linear-gradient(180deg, #fff, #f8fafc);
+    border-bottom: 1px solid #eef2f7;
+    padding: 24px 28px;
+}
+
+.premium-form-header h2 {
+    color: var(--rn-text);
+    font-size: 1.22rem;
+    font-weight: 900;
+    margin: 0;
+}
+
+.premium-form-header p {
+    color: var(--rn-muted);
+    margin: 6px 0 0;
+}
+
+.premium-form-body {
+    padding: 28px;
+}
+
+.admin-form-section {
+    border-bottom: 1px solid #eef2f7;
+    padding: 26px 28px;
+}
+
+.admin-form-section:last-of-type {
+    border-bottom: 0;
+}
+
+.admin-form-section-title,
+.form-section-title {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.admin-form-section-title h2,
+.form-section-title span {
+    color: var(--rn-text);
+    font-size: 1.05rem;
+    font-weight: 900;
+    margin: 0;
+}
+
+.admin-form-section-title p {
+    color: var(--rn-muted);
+    margin: 4px 0 0;
+}
+
+.form-section-title i {
+    align-items: center;
+    background: #eff6ff;
+    border-radius: var(--rn-radius-md);
+    color: var(--rn-primary);
+    display: inline-flex;
+    height: 40px;
+    justify-content: center;
+    width: 40px;
+}
+
+.admin-form-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-form-group {
+    min-width: 0;
+}
+
+.admin-label,
+.form-label {
+    color: var(--rn-text);
+    font-size: .84rem;
+    font-weight: 900;
+    margin-bottom: 8px;
+}
+
+.admin-input,
+.admin-select,
+.admin-textarea,
+.form-control,
+.form-select {
+    border: 1px solid var(--rn-border);
+    border-radius: var(--rn-radius-md);
+    color: var(--rn-text);
+    font-weight: 700;
+    min-height: 44px;
+}
+
+.admin-validation,
+.admin-validation-summary,
+.text-danger {
+    color: var(--rn-danger) !important;
+    font-size: .8rem;
+    font-weight: 800;
+}
+
+.admin-help-text,
+.form-hint {
+    color: var(--rn-muted);
+    display: block;
+    font-size: .8rem;
+    font-weight: 700;
+    margin-top: 6px;
+}
+
+.admin-form-actions,
+.premium-form-footer {
+    align-items: center;
+    background: #f8fafc;
+    border-top: 1px solid #eef2f7;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 22px 28px;
+}
+
+.premium-btn {
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--rn-border);
+    border-radius: var(--rn-radius-md);
+    color: #334155;
+    display: inline-flex;
+    font-weight: 900;
+    gap: 8px;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 16px;
+    text-decoration: none;
+}
+
+.premium-btn-primary {
+    background: var(--rn-primary);
+    border-color: var(--rn-primary);
+    color: #fff;
+}
+
+.demo-filter-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.demo-filter-row input,
+.demo-filter-row select {
+    background: #fff;
+    border: 1px solid var(--rn-border);
+    border-radius: var(--rn-radius-md);
+    color: var(--rn-text);
+    font-weight: 700;
+    min-height: 44px;
+    padding: 0 14px;
+}

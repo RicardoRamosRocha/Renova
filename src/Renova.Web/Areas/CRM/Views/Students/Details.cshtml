@@ -2,7 +2,7 @@
 @using Renova.Web.Areas.CRM.ViewModels.Students
 @model Student
 @{
-    ViewData["Title"] = "Prontuario do Acolhido";
+    ViewData["Title"] = "Prontuário do Acolhido";
     var photo = string.IsNullOrWhiteSpace(Model.DisplayPhotoUrl) ? "/images/avatar-default.svg" : Model.DisplayPhotoUrl;
     var today = DateTime.Today;
     var birthDate = Model.DisplayBirthDate.Date;
@@ -21,6 +21,7 @@
             : Model.Status == StudentStatuses.DischargePlanned
                 ? "warn"
                 : "ok";
+    var statusBadgeClass = statusClass == "ok" ? "rn-badge-success" : statusClass == "warn" ? "rn-badge-warning" : statusClass == "danger" ? "rn-badge-danger" : "rn-badge-info";
     var nextAppointments = Model.Appointments
         .Where(item => item.ScheduledAt.Date >= today)
         .OrderBy(item => item.ScheduledAt)
@@ -37,24 +38,24 @@
         .ToList();
 }
 
-<section class="demo-page patient-profile">
+<section class="admin-page patient-profile">
     <div class="patient-hero">
         <div class="patient-identity">
             <img src="@photo" alt="Foto de @Model.DisplayName" class="patient-photo" />
             <div>
-                <span class="demo-kicker">Prontuario clinico</span>
+                <span class="rn-eyebrow">Prontuário clínico</span>
                 <h1>@Model.DisplayName</h1>
                 <p>
-                    <span class="demo-pill @statusClass">@StudentStatuses.Label(Model.Status)</span>
+                    <span class="rn-badge @statusBadgeClass">@StudentStatuses.Label(Model.Status)</span>
                     <span>Entrada em @Model.AdmissionDate.ToString("dd/MM/yyyy")</span>
                 </p>
             </div>
         </div>
         <div class="patient-actions">
-            <a class="demo-button" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
-            <button class="demo-button-secondary" type="button" onclick="window.print()">Imprimir</button>
-            <button class="demo-button-secondary" type="button" onclick="window.print()">Gerar PDF</button>
-            <a class="demo-button-secondary" asp-action="Index">Voltar</a>
+            <a class="rn-btn-primary" asp-action="Edit" asp-route-id="@Model.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>
+            <button class="rn-btn-secondary" type="button" onclick="window.print()"><i class="ph ph-printer" aria-hidden="true"></i>Imprimir</button>
+            <button class="rn-btn-secondary" type="button" onclick="window.print()"><i class="ph ph-file-pdf" aria-hidden="true"></i>Gerar PDF</button>
+            <a class="rn-btn-secondary" asp-action="Index"><i class="ph ph-arrow-left" aria-hidden="true"></i>Voltar</a>
         </div>
     </div>
 
@@ -69,7 +70,7 @@
         <section class="patient-card">
             <div class="patient-card-title">
                 <span>01</span>
-                <div><h2>Dados pessoais</h2><p>Identificacao principal do acolhido.</p></div>
+                <div><h2>Dados pessoais</h2><p>Identificação principal do acolhido.</p></div>
             </div>
             <dl class="patient-data-list">
                 <div><dt>Nome completo</dt><dd>@Model.DisplayName</dd></div>
@@ -82,12 +83,12 @@
         <section class="patient-card">
             <div class="patient-card-title">
                 <span>02</span>
-                <div><h2>Contato</h2><p>Canais para comunicacao da equipe.</p></div>
+                <div><h2>Contato</h2><p>Canais para comunicação da equipe.</p></div>
             </div>
             <dl class="patient-data-list">
                 <div><dt>Telefone</dt><dd>@Model.DisplayPhone</dd></div>
-                <div><dt>Email</dt><dd>@(Model.DisplayEmail ?? "Nao informado")</dd></div>
-                <div><dt>Endereco</dt><dd>@(Model.Address ?? "Nao informado")</dd></div>
+                <div><dt>Email</dt><dd>@(Model.DisplayEmail ?? "Não informado")</dd></div>
+                <div><dt>Endereço</dt><dd>@(Model.Address ?? "Não informado")</dd></div>
             </dl>
         </section>
 
@@ -106,13 +107,13 @@
         <section class="patient-card">
             <div class="patient-card-title">
                 <span>04</span>
-                <div><h2>Historico</h2><p>Evolucoes recentes do prontuario.</p></div>
+                <div><h2>Histórico</h2><p>Evoluções recentes do prontuário.</p></div>
             </div>
             <div class="patient-timeline">
                 @if (evolutions.Count == 0)
                 {
-                    <article><strong>Acolhimento inicial</strong><p>Plano terapeutico estruturado, rotina acompanhada e evolucao clinica monitorada pela equipe.</p></article>
-                    <article><strong>Revisao multiprofissional</strong><p>Participacao regular em atendimentos, grupos e atividades de reinsercao.</p></article>
+                    <article><strong>Acolhimento inicial</strong><p>Plano terapêutico estruturado, rotina acompanhada e evolução clínica monitorada pela equipe.</p></article>
+                    <article><strong>Revisão multiprofissional</strong><p>Participação regular em atendimentos, grupos e atividades de reinserção.</p></article>
                 }
                 else
                 {
@@ -130,12 +131,12 @@
         <section class="patient-card">
             <div class="patient-card-title">
                 <span>05</span>
-                <div><h2>Proximos atendimentos</h2><p>Agenda clinica vinculada ao acolhido.</p></div>
+                <div><h2>Próximos atendimentos</h2><p>Agenda clínica vinculada ao acolhido.</p></div>
             </div>
             <div class="patient-list">
                 @if (nextAppointments.Count == 0)
                 {
-                    <article><strong>Psicoterapia individual</strong><span>Agendamento demonstrativo - proxima semana</span></article>
+                    <article><strong>Psicoterapia individual</strong><span>Agendamento demonstrativo - próxima semana</span></article>
                     <article><strong>Atendimento familiar</strong><span>Agenda sugerida para acompanhamento da rede de apoio</span></article>
                 }
                 else
@@ -159,8 +160,8 @@
             <div class="patient-list">
                 @if (courses.Count == 0)
                 {
-                    <article><strong>Prevencao de recaidas</strong><span>92% concluido</span></article>
-                    <article><strong>Projeto de vida</strong><span>84% concluido</span></article>
+                    <article><strong>Prevenção de recaídas</strong><span>92% concluído</span></article>
+                    <article><strong>Projeto de vida</strong><span>84% concluído</span></article>
                 }
                 else
                 {
@@ -178,12 +179,12 @@
         <section class="patient-card">
             <div class="patient-card-title">
                 <span>07</span>
-                <div><h2>Familia</h2><p>Rede de apoio cadastrada.</p></div>
+                <div><h2>Família</h2><p>Rede de apoio cadastrada.</p></div>
             </div>
             <div class="patient-list">
                 @if (Model.FamilyMembers.Count == 0)
                 {
-                    <article><strong>Responsavel principal</strong><span>Cadastro familiar pendente para demonstracao</span></article>
+                    <article><strong>Responsável principal</strong><span>Cadastro familiar pendente para demonstração</span></article>
                 }
                 else
                 {
@@ -201,13 +202,13 @@
         <section class="patient-card">
             <div class="patient-card-title">
                 <span>08</span>
-                <div><h2>Documentos</h2><p>Checklist visual do prontuario.</p></div>
+                <div><h2>Documentos</h2><p>Checklist visual do prontuário.</p></div>
             </div>
             <div class="document-grid">
                 <span class="is-ready">Documento pessoal</span>
                 <span class="is-ready">Termo de acolhimento</span>
-                <span>Plano terapeutico</span>
-                <span>Autorizacao familiar</span>
+                <span>Plano terapêutico</span>
+                <span>Autorização familiar</span>
             </div>
         </section>
     </div>

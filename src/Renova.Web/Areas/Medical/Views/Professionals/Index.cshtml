@@ -5,48 +5,78 @@
     ViewData["Title"] = "Profissionais";
 }
 
-<section class="demo-page">
-    <div class="demo-hero">
-        <div><span class="demo-kicker">Medical / Profissionais</span><h1>Profissionais</h1><p>Gerencie equipe técnica, especialidades e status de atendimento.</p></div>
-        <a class="demo-button" asp-action="Create">Novo Profissional</a>
+<section class="admin-page">
+    <div class="admin-page-header">
+        <div>
+            <span>Medical / Profissionais</span>
+            <h1>Profissionais</h1>
+            <p>Gerencie equipe técnica, especialidades e status de atendimento.</p>
+        </div>
+        <a class="rn-btn-primary" asp-action="Create"><i class="ph ph-stethoscope" aria-hidden="true"></i>Novo profissional</a>
     </div>
-    @if (TempData["Success"] is string success) { <div class="admin-alert">@success</div> }
+
+    @if (TempData["Success"] is string success)
+    {
+        <div class="rn-alert rn-alert-success"><i class="ph ph-check-circle" aria-hidden="true"></i>@success</div>
+    }
+
     <div class="demo-grid-4">
-        <article class="demo-card"><span>Profissionais</span><strong>@ViewBag.Total</strong><small>Total</small></article>
-        <article class="demo-card"><span>Ativos</span><strong>@ViewBag.ActiveCount</strong><small>Disponíveis</small></article>
-        <article class="demo-card"><span>Inativos</span><strong>@ViewBag.InactiveCount</strong><small>Arquivados</small></article>
-        <article class="demo-card"><span>Especialidades</span><strong>@ViewBag.Specialties</strong><small>Áreas técnicas</small></article>
+        <article class="rn-metric-card"><span>Profissionais</span><strong>@ViewBag.Total</strong><small>Total</small></article>
+        <article class="rn-metric-card"><span>Ativos</span><strong>@ViewBag.ActiveCount</strong><small>Disponíveis</small></article>
+        <article class="rn-metric-card"><span>Inativos</span><strong>@ViewBag.InactiveCount</strong><small>Arquivados</small></article>
+        <article class="rn-metric-card"><span>Especialidades</span><strong>@ViewBag.Specialties</strong><small>Áreas técnicas</small></article>
     </div>
-    <section class="demo-panel">
-        <div class="demo-section-title">
-            <div><span class="demo-kicker">Busca e filtros</span><h2>Lista de profissionais</h2></div>
+
+    <section class="renova-table-card">
+        <div class="renova-table-header">
+            <div>
+                <span class="rn-eyebrow">Busca e filtros</span>
+                <h2>Lista de profissionais</h2>
+                <p>Visualize especialidade, registro, status e ações principais.</p>
+            </div>
             <form class="demo-filter-row" method="get">
                 <input name="search" value="@ViewBag.Search" type="search" placeholder="Pesquisar por nome, email, especialidade ou registro" />
-                <select name="active"><option value="">Todos os status</option><option value="true" selected="@(ViewBag.Active == true)">Ativo</option><option value="false" selected="@(ViewBag.Active == false)">Inativo</option></select>
-                <button class="demo-button-secondary" type="submit">Filtrar</button>
+                <select name="active">
+                    <option value="">Todos os status</option>
+                    <option value="true" selected="@(ViewBag.Active == true)">Ativo</option>
+                    <option value="false" selected="@(ViewBag.Active == false)">Inativo</option>
+                </select>
+                <button class="rn-btn-secondary" type="submit"><i class="ph ph-funnel" aria-hidden="true"></i>Filtrar</button>
             </form>
         </div>
+
         @if (Model.Items.Count == 0)
         {
-            <div class="admin-empty-state"><strong>Nenhum registro encontrado.</strong><p>Cadastre a equipe técnica para iniciar a operação.</p><a class="demo-button" asp-action="Create">Criar primeiro cadastro</a></div>
+            <div class="crm-empty-state">
+                <div class="crm-empty-icon"><i class="ph ph-stethoscope" aria-hidden="true"></i></div>
+                <strong>Nenhum registro encontrado</strong>
+                <p>Cadastre a equipe técnica para iniciar a operação.</p>
+                <a class="rn-btn-primary" asp-action="Create"><i class="ph ph-plus" aria-hidden="true"></i>Criar primeiro cadastro</a>
+            </div>
         }
         else
         {
-            <div class="demo-table-wrap">
-                <table class="demo-table">
-                    <thead><tr><th>Nome</th><th>Especialidade</th><th>Registro</th><th>Telefone</th><th>Situação</th><th>Ações</th></tr></thead>
+            <div class="renova-table-wrap">
+                <table class="renova-table">
+                    <thead><tr><th>Nome</th><th>Especialidade</th><th>Registro</th><th>Telefone</th><th>Situação</th><th class="text-end">Ações</th></tr></thead>
                     <tbody>
                     @foreach (var professional in Model.Items)
                     {
                         var displayName = professional.DisplayName;
                         var initial = string.IsNullOrWhiteSpace(displayName) ? "?" : displayName[..1];
                         <tr>
-                            <td><div class="demo-person"><span class="demo-avatar">@initial</span><strong>@displayName</strong></div></td>
-                            <td>@professional.Specialty</td>
-                            <td>@professional.RegistrationNumber</td>
-                            <td>@professional.DisplayPhone</td>
-                            <td><span class="demo-pill @(professional.IsActive ? "ok" : "danger")">@(professional.IsActive ? "Ativo" : "Inativo")</span></td>
-                            <td><div class="admin-table-actions"><a class="admin-action-button details" asp-action="Details" asp-route-id="@professional.Id">Detalhes</a><a class="admin-action-button edit" asp-action="Edit" asp-route-id="@professional.Id">Editar</a><a class="admin-action-button danger" href="#delete-professional-@professional.Id">Excluir</a></div></td>
+                            <td><div class="renova-person-cell"><span class="renova-avatar">@initial</span><span><strong class="renova-row-title">@displayName</strong><small class="renova-row-subtitle">Equipe técnica</small></span></div></td>
+                            <td><span class="renova-muted">@professional.Specialty</span></td>
+                            <td><span class="renova-muted">@professional.RegistrationNumber</span></td>
+                            <td><span class="renova-muted">@professional.DisplayPhone</span></td>
+                            <td><span class="renova-status-badge @(professional.IsActive ? "ok" : "danger")">@(professional.IsActive ? "Ativo" : "Inativo")</span></td>
+                            <td>
+                                <div class="renova-action-buttons">
+                                    <a class="renova-action-btn" title="Detalhes" asp-action="Details" asp-route-id="@professional.Id"><i class="ph ph-eye" aria-hidden="true"></i></a>
+                                    <a class="renova-action-btn" title="Editar" asp-action="Edit" asp-route-id="@professional.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i></a>
+                                    <a class="renova-action-btn danger" title="Excluir" href="#delete-professional-@professional.Id"><i class="ph ph-trash" aria-hidden="true"></i></a>
+                                </div>
+                            </td>
                         </tr>
                     }
                     </tbody>
@@ -60,8 +90,8 @@
                         <h2>Excluir profissional</h2>
                         <p>Deseja realmente excluir este registro? Se houver vínculos, o profissional será inativado com segurança.</p>
                         <div class="admin-delete-actions">
-                            <a class="admin-button-secondary" href="#">Cancelar</a>
-                            <form asp-action="Delete" asp-route-id="@professional.Id" method="post"><button class="admin-action-button danger" type="submit">Excluir</button></form>
+                            <a class="rn-btn-secondary" href="#">Cancelar</a>
+                            <form asp-action="Delete" asp-route-id="@professional.Id" method="post"><button class="rn-btn-danger" type="submit">Excluir</button></form>
                         </div>
                     </div>
                 </div>
