@@ -1,103 +1,155 @@
-.demo-dashboard-grid,
-.admin-dashboard-grid {
-    display: grid;
-    gap: 20px;
-    grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr);
+/* ===========================
+   DASHBOARD CARDS PREMIUM
+=========================== */
+
+.demo-grid-6{
+    display:grid;
+    grid-template-columns:repeat(6,minmax(0,1fr));
+    gap:22px;
+    margin:28px 0;
 }
 
-.demo-side-stack {
-    display: grid;
-    gap: 20px;
+.demo-card{
+    position:relative;
+    overflow:hidden;
+    background:#fff;
+    border:1px solid #e7edf5;
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 15px 45px rgba(15,23,42,.06);
+    transition:.25s;
 }
 
-.demo-alert-grid,
-.demo-grid-2 {
-    display: grid;
-    gap: 16px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.demo-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 25px 60px rgba(15,23,42,.10);
 }
 
-.demo-alert-card,
-.demo-list-item {
-    align-items: center;
-    background: #f8fafc;
-    border: 1px solid #edf2f7;
-    border-radius: var(--rn-radius-lg);
-    display: flex;
-    gap: 12px;
-    justify-content: space-between;
-    padding: 14px;
+.demo-card::after{
+    content:"";
+    position:absolute;
+    right:-35px;
+    top:-35px;
+    width:120px;
+    height:120px;
+    border-radius:999px;
+    background:rgba(37,99,235,.05);
 }
 
-.demo-alert-card {
-    justify-content: flex-start;
+.demo-card-icon{
+    width:62px;
+    height:62px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:18px;
+
+    background:linear-gradient(
+        135deg,
+        #eef5ff,
+        #dbeafe);
+
+    color:#2563eb;
+
+    margin-bottom:24px;
 }
 
-.demo-alert-icon {
-    align-items: center;
-    background: #eff6ff;
-    border-radius: var(--rn-radius-md);
-    color: var(--rn-primary);
-    display: inline-flex;
-    flex: 0 0 42px;
-    font-size: 22px;
-    height: 42px;
-    justify-content: center;
-    width: 42px;
+.demo-card-icon i{
+
+    font-size:30px;
+
+    line-height:1;
 }
 
-.demo-list,
-.demo-mini-list {
-    display: grid;
-    gap: 10px;
+.demo-card span:not(.demo-card-icon){
+
+    display:block;
+
+    color:#64748b;
+
+    font-size:.92rem;
+
+    font-weight:700;
+
+    line-height:1.3;
 }
 
-.demo-list-item strong,
-.demo-list-item span,
-.demo-mini-list span {
-    color: var(--rn-text);
-    font-weight: 800;
+.demo-card strong{
+
+    display:block;
+
+    margin-top:12px;
+
+    font-size:3rem;
+
+    line-height:1;
+
+    letter-spacing:-2px;
+
+    color:#0f172a;
+
+    font-weight:900;
 }
 
-.demo-list-item small,
-.demo-alert-card span,
-.demo-muted {
-    color: var(--rn-muted);
-    font-weight: 700;
+.demo-card small{
+
+    display:block;
+
+    margin-top:14px;
+
+    color:#64748b;
+
+    font-size:.85rem;
+
+    font-weight:700;
 }
 
-.demo-mini-list span {
-    align-items: center;
-    border-bottom: 1px solid #eef2f7;
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
+@media(max-width:1500px){
+
+.demo-grid-6{
+
+grid-template-columns:repeat(3,1fr);
+
 }
 
-.demo-schedule-card {
-    align-items: center;
-    background: #f8fafc;
-    border: 1px solid #eef2f7;
-    border-left: 4px solid var(--rn-primary);
-    border-radius: var(--rn-radius-lg);
-    display: grid;
-    gap: 12px;
-    grid-template-columns: 72px minmax(0, 1fr) auto;
-    padding: 14px;
 }
 
-.demo-schedule-card.is-green {
-    border-left-color: var(--rn-success);
+@media(max-width:900px){
+
+.demo-grid-6{
+
+grid-template-columns:1fr;
+
 }
 
-.demo-schedule-card.is-blue {
-    border-left-color: var(--rn-primary);
 }
 
-.demo-schedule-card.is-yellow {
-    border-left-color: var(--rn-warning);
+.demo-card.blue .demo-card-icon{
+background:#eef5ff;
+color:#2563eb;
 }
 
-.demo-schedule-card.is-red {
-    border-left-color: var(--rn-danger);
+.demo-card.green .demo-card-icon{
+background:#ecfdf5;
+color:#16a34a;
+}
+
+.demo-card.purple .demo-card-icon{
+background:#f5f3ff;
+color:#7c3aed;
+}
+
+.demo-card.orange .demo-card-icon{
+background:#fff7ed;
+color:#ea580c;
+}
+
+.demo-card.red .demo-card-icon{
+background:#fef2f2;
+color:#dc2626;
+}
+
+.demo-card.blue-light .demo-card-icon{ 
+    background:#e0f2fe;
+    color:#0284c7;
 }
