@@ -1,0 +1,111 @@
+.admin-topbar {
+    align-items: center;
+    backdrop-filter: blur(18px);
+    background: rgba(255, 255, 255, .86);
+    border-bottom: 1px solid rgba(226, 232, 240, .92);
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    min-height: 76px;
+    padding: 0 28px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.admin-topbar-title {
+    display: grid;
+    gap: 2px;
+}
+
+.admin-topbar-title span {
+    color: var(--rn-muted);
+    font-size: .78rem;
+    font-weight: 800;
+}
+
+.admin-topbar-title strong {
+    color: var(--rn-text);
+    font-size: 1.05rem;
+    font-weight: 900;
+}
+
+.admin-topbar-actions {
+    align-items: center;
+    display: flex;
+    gap: 14px;
+}
+
+.admin-search {
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--rn-border);
+    border-radius: var(--rn-radius-md);
+    color: var(--rn-muted);
+    display: flex;
+    gap: 10px;
+    min-height: 44px;
+    min-width: 320px;
+    padding: 0 14px;
+}
+
+.admin-search i {
+    font-size: 21px;
+}
+
+.admin-search input {
+    background: transparent;
+    border: 0;
+    color: var(--rn-text);
+    font-weight: 700;
+    min-height: 40px;
+    min-width: 0;
+    outline: 0;
+    width: 100%;
+}
+
+.admin-user {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+}
+
+.admin-user > span {
+    align-items: center;
+    background: var(--rn-gradient);
+    border-radius: 999px;
+    color: #fff;
+    display: inline-flex;
+    font-weight: 900;
+    height: 42px;
+    justify-content: center;
+    width: 42px;
+}
+
+.admin-user div {
+    display: grid;
+    gap: 1px;
+}
+
+.admin-user strong {
+    color: var(--rn-text);
+    font-size: .9rem;
+    font-weight: 900;
+}
+
+.admin-user small {
+    align-items: center;
+    color: var(--rn-success);
+    display: inline-flex;
+    font-size: .76rem;
+    font-weight: 800;
+    gap: 5px;
+}
+
+.admin-user small::before {
+    background: var(--rn-secondary);
+    border-radius: 999px;
+    content: "";
+    height: 7px;
+    width: 7px;
+}

@@ -1,0 +1,35 @@
+.renova-avatar,
+.rn-avatar {
+    align-items: center;
+    background: var(--rn-gradient);
+    border-radius: 14px;
+    color: #fff;
+    display: inline-flex;
+    flex: 0 0 42px;
+    font-weight: 900;
+    height: 42px;
+    justify-content: center;
+    overflow: hidden;
+    width: 42px;
+}
+
+.renova-avatar img,
+.rn-avatar img {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+
+.rn-profile-card {
+    align-items: center;
+    display: flex;
+    gap: 16px;
+}
+
+.rn-profile-avatar {
+    border-radius: 22px;
+    box-shadow: var(--rn-shadow-sm);
+    height: 74px;
+    overflow: hidden;
+    width: 74px;
+}

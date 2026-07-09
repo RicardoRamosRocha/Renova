@@ -1,0 +1,69 @@
+.crm-index-page {
+    background: transparent;
+    min-height: auto;
+    padding: 0;
+}
+
+.crm-page-header {
+    background:
+        radial-gradient(circle at 86% 20%, rgba(37, 99, 235, .13), transparent 16rem),
+        rgba(255, 255, 255, .94);
+}
+
+.crm-metric-card {
+    overflow: hidden;
+    position: relative;
+}
+
+.crm-metric-card::after {
+    background: rgba(37, 99, 235, .07);
+    border-radius: 999px;
+    content: "";
+    height: 108px;
+    position: absolute;
+    right: -40px;
+    top: -42px;
+    width: 108px;
+}
+
+.crm-empty-state,
+.admin-empty-state {
+    padding: 64px 24px;
+    text-align: center;
+}
+
+.crm-empty-icon,
+.admin-empty-state::before {
+    align-items: center;
+    background: #eff6ff;
+    border-radius: var(--rn-radius-xl);
+    color: var(--rn-primary);
+    display: inline-flex;
+    font-size: 28px;
+    height: 68px;
+    justify-content: center;
+    margin-bottom: 18px;
+    width: 68px;
+}
+
+.crm-empty-state strong,
+.admin-empty-state strong {
+    color: var(--rn-text);
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 900;
+}
+
+.crm-empty-state p,
+.admin-empty-state p {
+    color: var(--rn-muted);
+    margin: 8px auto 22px;
+    max-width: 520px;
+}
+
+.student-card,
+.profile-header,
+.avatar-upload,
+.treatment-badge {
+    border-radius: var(--rn-radius-xl);
+}

@@ -1,0 +1,125 @@
+.admin-kpi-grid,
+.demo-grid-3,
+.demo-grid-4,
+.demo-grid-6,
+.crm-metrics-grid,
+.ead-metrics-grid {
+    display: grid;
+    gap: 18px;
+}
+
+.admin-kpi-grid,
+.demo-grid-4,
+.crm-metrics-grid,
+.ead-metrics-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.demo-grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.demo-grid-6 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.admin-kpi-card,
+.demo-card,
+.crm-metric-card,
+.ead-metric-card,
+.rn-card,
+.rn-metric-card {
+    background: rgba(255, 255, 255, .95);
+    border: 1px solid rgba(226, 232, 240, .95);
+    border-radius: var(--rn-radius-xl);
+    box-shadow: var(--rn-shadow-sm);
+    padding: 22px;
+}
+
+.admin-kpi-card span,
+.demo-card span,
+.crm-metric-card span,
+.ead-metric-card span,
+.rn-metric-card span {
+    color: var(--rn-muted);
+    display: block;
+    font-size: .82rem;
+    font-weight: 800;
+}
+
+.admin-kpi-card strong,
+.demo-card strong,
+.crm-metric-card strong,
+.ead-metric-card strong,
+.rn-metric-card strong {
+    color: var(--rn-text);
+    display: block;
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-top: 10px;
+}
+
+.admin-kpi-card small,
+.demo-card small,
+.crm-metric-card small,
+.ead-metric-card small,
+.rn-metric-card small {
+    color: var(--rn-muted);
+    display: block;
+    font-size: .78rem;
+    font-weight: 700;
+    margin-top: 9px;
+}
+
+.demo-card-icon,
+.metric-icon,
+.rn-card-icon {
+    align-items: center;
+    background: #eff6ff;
+    border-radius: var(--rn-radius-md);
+    color: var(--rn-primary);
+    display: inline-flex;
+    font-size: 24px;
+    height: 44px;
+    justify-content: center;
+    margin-bottom: 16px;
+    width: 44px;
+}
+
+.admin-panel,
+.demo-panel,
+.renova-table-card,
+.ead-course-card,
+.medical-note,
+.evolution-card,
+.appointment-card {
+    background: rgba(255, 255, 255, .95);
+    border: 1px solid rgba(226, 232, 240, .95);
+    border-radius: var(--rn-radius-xl);
+    box-shadow: var(--rn-shadow-sm);
+}
+
+.admin-panel,
+.demo-panel {
+    padding: 22px;
+}
+
+.demo-section-title,
+.admin-panel-heading,
+.rn-section-title {
+    align-items: flex-start;
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.demo-section-title h2,
+.admin-panel-heading h2,
+.rn-section-title h2 {
+    color: var(--rn-text);
+    font-size: 1.1rem;
+    font-weight: 900;
+    margin: 0;
+}

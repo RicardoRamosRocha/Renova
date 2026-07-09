@@ -11,41 +11,63 @@
 <div class="admin-sidebar">
     <div class="admin-brand">
         <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" aria-label="Renova Admin">
-            <span aria-hidden="true">R</span>
-            <strong>Renova</strong>
+            <span class="admin-brand-mark" aria-hidden="true">R</span>
+            <span class="admin-brand-text">
+                <strong>Renova</strong>
+                <small>Admin</small>
+            </span>
         </a>
         <button class="sidebar-toggle" type="button" aria-label="Recolher menu" title="Recolher menu">
-            <span></span>
-            <span></span>
+            <i class="ph ph-sidebar-simple" aria-hidden="true"></i>
         </button>
     </div>
 
     <nav class="admin-nav" aria-label="Navegação administrativa">
-        <a data-icon="⌂" class="@Active("Admin", "Dashboard")" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-        <a data-icon="👥" class="@Active("CRM", "Students")" asp-area="CRM" asp-controller="Students" asp-action="Index">Acolhidos</a>
-        <a data-icon="♡" class="@Active("CRM", "Families")" asp-area="CRM" asp-controller="Families" asp-action="Index">Famílias</a>
-        <a data-icon="✦" class="@Active("Medical", "Professionals")" asp-area="Medical" asp-controller="Professionals" asp-action="Index">Profissionais</a>
-        <a data-icon="📅" class="@Active("CRM", "Appointments")" asp-area="CRM" asp-controller="Appointments" asp-action="Index">Agenda</a>
-        <a data-icon="✚" class="@Active("Medical", "MedicalRecords")" asp-area="Medical" asp-controller="MedicalRecords" asp-action="Index">Prontuário</a>
-        <a data-icon="📚" class="@Active("EAD", "Courses")" asp-area="EAD" asp-controller="Courses" asp-action="Index">Cursos</a>
-        <a data-icon="$" class="@Active("Finance", "Finance")" asp-area="Finance" asp-controller="Finance" asp-action="Index">Financeiro</a>
-        <a data-icon="▣" class="@Active("Reports", "Reports")" asp-area="Reports" asp-controller="Reports" asp-action="Index">Relatórios</a>
-        <a data-icon="👤" class="@Active("Admin", "Users")" asp-area="Admin" asp-controller="Users" asp-action="Index">Usuários</a>
-        <a data-icon="◆" class="@Active("Admin", "Roles")" asp-area="Admin" asp-controller="Roles" asp-action="Index">Perfis</a>
-        <a data-icon="⚙" class="@Active("Settings", "Settings")" asp-area="Settings" asp-controller="Settings" asp-action="Index">Configurações</a>
-        <a data-icon="◇" class="@Active("Admin", "DesignSystem")" asp-area="Admin" asp-controller="DesignSystem" asp-action="Index">Design System</a>
+        <div class="admin-nav-group">
+            <span class="admin-nav-title">Geral</span>
+            <a class="@Active("Admin", "Dashboard")" asp-area="Admin" asp-controller="Dashboard" asp-action="Index"><i class="ph ph-squares-four" aria-hidden="true"></i><span>Dashboard</span></a>
+            <a class="@Active("CRM", "Students")" asp-area="CRM" asp-controller="Students" asp-action="Index"><i class="ph ph-hand-heart" aria-hidden="true"></i><span>CRM</span></a>
+            <a class="@Active("CRM", "Students")" asp-area="CRM" asp-controller="Students" asp-action="Index"><i class="ph ph-users-three" aria-hidden="true"></i><span>Acolhidos</span></a>
+            <a class="@Active("CRM", "Families")" asp-area="CRM" asp-controller="Families" asp-action="Index"><i class="ph ph-house-line" aria-hidden="true"></i><span>Famílias</span></a>
+            <a class="@Active("Medical", "Professionals")" asp-area="Medical" asp-controller="Professionals" asp-action="Index"><i class="ph ph-stethoscope" aria-hidden="true"></i><span>Profissionais</span></a>
+            <a class="@Active("CRM", "Appointments")" asp-area="CRM" asp-controller="Appointments" asp-action="Index"><i class="ph ph-calendar-check" aria-hidden="true"></i><span>Agenda</span></a>
+            <a class="@Active("Medical", "MedicalRecords")" asp-area="Medical" asp-controller="MedicalRecords" asp-action="Index"><i class="ph ph-notebook" aria-hidden="true"></i><span>Prontuário</span></a>
+        </div>
+
+        <div class="admin-nav-group">
+            <span class="admin-nav-title">Ensino</span>
+            <a class="@Active("EAD", "Courses")" asp-area="EAD" asp-controller="Courses" asp-action="Index"><i class="ph ph-graduation-cap" aria-hidden="true"></i><span>Cursos</span></a>
+            <a href="#" aria-disabled="true"><i class="ph ph-books" aria-hidden="true"></i><span>Biblioteca</span></a>
+        </div>
+
+        <div class="admin-nav-group">
+            <span class="admin-nav-title">Gestão</span>
+            <a class="@Active("Finance", "Finance")" asp-area="Finance" asp-controller="Finance" asp-action="Index"><i class="ph ph-currency-circle-dollar" aria-hidden="true"></i><span>Financeiro</span></a>
+            <a href="#" aria-disabled="true"><i class="ph ph-package" aria-hidden="true"></i><span>Estoque</span></a>
+            <a class="@Active("Reports", "Reports")" asp-area="Reports" asp-controller="Reports" asp-action="Index"><i class="ph ph-chart-line-up" aria-hidden="true"></i><span>Relatórios</span></a>
+        </div>
+
+        <div class="admin-nav-group">
+            <span class="admin-nav-title">Admin</span>
+            <a class="@Active("Admin", "Users")" asp-area="Admin" asp-controller="Users" asp-action="Index"><i class="ph ph-user-circle" aria-hidden="true"></i><span>Usuários</span></a>
+            <a class="@Active("Admin", "Roles")" asp-area="Admin" asp-controller="Roles" asp-action="Index"><i class="ph ph-shield-check" aria-hidden="true"></i><span>Perfis</span></a>
+            <a class="@Active("Settings", "Settings")" asp-area="Settings" asp-controller="Settings" asp-action="Index"><i class="ph ph-gear-six" aria-hidden="true"></i><span>Configurações</span></a>
+            <a class="@Active("Admin", "DesignSystem")" asp-area="Admin" asp-controller="DesignSystem" asp-action="Index"><i class="ph ph-palette" aria-hidden="true"></i><span>Design System</span></a>
+        </div>
     </nav>
 
-    <div class="admin-sidebar-user">
-        <span>R</span>
-        <div>
-            <strong>Ricardo</strong>
-            <small>Diretor executivo</small>
+    <div class="admin-sidebar-footer">
+        <div class="admin-sidebar-user">
+            <span>R</span>
+            <div>
+                <strong>Ricardo</strong>
+                <small>Diretor executivo</small>
+            </div>
         </div>
-    </div>
-    <div class="admin-sidebar-version">Renova v1.0</div>
+        <div class="admin-sidebar-version">Renova Design System v1.0</div>
 
-    <form class="admin-logout" action="/auth/web-logout" method="post">
-        <button data-icon="↗" type="submit">Sair</button>
-    </form>
+        <form class="admin-logout" action="/auth/web-logout" method="post">
+            <button type="submit"><i class="ph ph-sign-out" aria-hidden="true"></i><span>Sair</span></button>
+        </form>
+    </div>
 </div>

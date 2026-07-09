@@ -1,0 +1,129 @@
+.crm-filter-form,
+.ead-filter-bar {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.crm-search-box,
+.ead-search-box,
+.rn-input-wrap {
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--rn-border);
+    border-radius: var(--rn-radius-md);
+    color: var(--rn-muted);
+    display: flex;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 14px;
+}
+
+.crm-search-box {
+    min-width: 310px;
+}
+
+.crm-search-box input,
+.ead-search-box input,
+.rn-input-wrap input {
+    background: transparent;
+    border: 0;
+    color: var(--rn-text);
+    font-weight: 700;
+    min-width: 0;
+    outline: 0;
+    width: 100%;
+}
+
+.crm-filter-form select,
+.ead-filter-bar select,
+.rn-select,
+.admin-input,
+.admin-select,
+.admin-textarea,
+.crm-field input,
+.crm-field select,
+.crm-field textarea {
+    background: #fff;
+    border: 1px solid var(--rn-border);
+    border-radius: var(--rn-radius-md);
+    color: var(--rn-text);
+    font-weight: 700;
+    min-height: 44px;
+    padding: 0 14px;
+    width: 100%;
+}
+
+.admin-textarea,
+.crm-field textarea {
+    min-height: 120px;
+    padding-top: 12px;
+}
+
+.crm-field label,
+.admin-form-label,
+.rn-label {
+    color: var(--rn-text);
+    display: block;
+    font-size: .84rem;
+    font-weight: 900;
+    margin-bottom: 8px;
+}
+
+.crm-field span[data-valmsg-for],
+.field-validation-error,
+.rn-validation {
+    color: var(--rn-danger);
+    display: block;
+    font-size: .78rem;
+    font-weight: 800;
+    margin-top: 6px;
+}
+
+.rn-help-text {
+    color: var(--rn-muted);
+    display: block;
+    font-size: .8rem;
+    font-weight: 700;
+    margin-top: 6px;
+}
+
+.rn-check,
+.rn-radio,
+.rn-switch {
+    align-items: center;
+    color: var(--rn-text);
+    display: inline-flex;
+    font-weight: 800;
+    gap: 8px;
+}
+
+.rn-switch input {
+    appearance: none;
+    background: #cbd5e1;
+    border-radius: 999px;
+    height: 24px;
+    position: relative;
+    width: 44px;
+}
+
+.rn-switch input::after {
+    background: #fff;
+    border-radius: 999px;
+    content: "";
+    height: 18px;
+    left: 3px;
+    position: absolute;
+    top: 3px;
+    transition: transform .18s ease;
+    width: 18px;
+}
+
+.rn-switch input:checked {
+    background: var(--rn-primary);
+}
+
+.rn-switch input:checked::after {
+    transform: translateX(20px);
+}

@@ -1,20 +1,160 @@
 @{
     ViewData["Title"] = "Design System";
     ViewData["PageEyebrow"] = "Fundação visual";
-    ViewData["PageDescription"] = "Biblioteca base de componentes reutilizáveis do BackOffice Renova.";
+    ViewData["PageDescription"] = "Biblioteca oficial de componentes reutilizáveis do BackOffice Renova.";
 }
 
 <section class="admin-page ds-page">
     @await Html.PartialAsync("Components/_PageHeader")
 
-    <div class="ds-section">
-        <h2>Tokens oficiais</h2>
-        <div class="ds-token-grid">
-            <article><span class="ds-token ds-token-blue"></span><strong>Azul</strong><small>#2563EB</small></article>
-            <article><span class="ds-token ds-token-green"></span><strong>Verde</strong><small>#10B981</small></article>
-            <article><span class="ds-token ds-token-white"></span><strong>Branco</strong><small>#FFFFFF</small></article>
-            <article><span class="ds-token ds-token-soft"></span><strong>Cinza claro</strong><small>#F3F4F6</small></article>
-            <article><span class="ds-token ds-token-dark"></span><strong>Cinza escuro</strong><small>#374151</small></article>
+    <section class="rn-surface rn-stack" style="padding: 22px;">
+        <div class="rn-section-title">
+            <div>
+                <span class="rn-eyebrow">Tokens</span>
+                <h2>Cores oficiais</h2>
+            </div>
         </div>
-    </div>
+
+        <div class="rn-token-grid">
+            <article class="rn-token"><span class="rn-token-swatch" style="background:#2563EB;"></span><strong>Primary</strong><small>#2563EB</small></article>
+            <article class="rn-token"><span class="rn-token-swatch" style="background:#1D4ED8;"></span><strong>Primary Dark</strong><small>#1D4ED8</small></article>
+            <article class="rn-token"><span class="rn-token-swatch" style="background:#22C55E;"></span><strong>Secondary</strong><small>#22C55E</small></article>
+            <article class="rn-token"><span class="rn-token-swatch" style="background:#7C3AED;"></span><strong>Accent</strong><small>#7C3AED</small></article>
+            <article class="rn-token"><span class="rn-token-swatch" style="background:#F8FAFC;"></span><strong>Background</strong><small>#F8FAFC</small></article>
+            <article class="rn-token"><span class="rn-token-swatch" style="background:#0F172A;"></span><strong>Text</strong><small>#0F172A</small></article>
+            <article class="rn-token"><span class="rn-token-swatch" style="background:#64748B;"></span><strong>Muted</strong><small>#64748B</small></article>
+            <article class="rn-token"><span class="rn-token-swatch" style="background:#DC2626;"></span><strong>Danger</strong><small>#DC2626</small></article>
+        </div>
+    </section>
+
+    <section class="rn-surface rn-stack" style="padding: 22px;">
+        <div class="rn-section-title">
+            <div>
+                <span class="rn-eyebrow">Ações</span>
+                <h2>Buttons</h2>
+            </div>
+        </div>
+
+        <div class="rn-inline">
+            <a class="rn-btn-primary" href="#"><i class="ph ph-plus" aria-hidden="true"></i>Primary</a>
+            <a class="rn-btn-secondary" href="#"><i class="ph ph-download-simple" aria-hidden="true"></i>Secondary</a>
+            <a class="rn-btn-ghost" href="#"><i class="ph ph-arrow-clockwise" aria-hidden="true"></i>Ghost</a>
+            <button class="rn-btn-danger" type="button"><i class="ph ph-trash" aria-hidden="true"></i>Danger</button>
+            <button class="rn-icon-button" type="button" title="Editar"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button>
+        </div>
+    </section>
+
+    <section class="rn-surface rn-stack" style="padding: 22px;">
+        <div class="rn-section-title">
+            <div>
+                <span class="rn-eyebrow">Status</span>
+                <h2>Badges e alerts</h2>
+            </div>
+        </div>
+
+        <div class="rn-inline">
+            <span class="rn-badge rn-badge-success">Success</span>
+            <span class="rn-badge rn-badge-danger">Danger</span>
+            <span class="rn-badge rn-badge-warning">Warning</span>
+            <span class="rn-badge rn-badge-info">Info</span>
+            <span class="rn-badge rn-badge-neutral">Neutral</span>
+        </div>
+
+        <div class="demo-grid-4">
+            <div class="rn-alert rn-alert-success"><i class="ph ph-check-circle" aria-hidden="true"></i>Operação concluída com sucesso.</div>
+            <div class="rn-alert rn-alert-info"><i class="ph ph-info" aria-hidden="true"></i>Nova atualização disponível.</div>
+            <div class="rn-alert rn-alert-warning"><i class="ph ph-warning" aria-hidden="true"></i>Revise pendências antes de continuar.</div>
+            <div class="rn-alert rn-alert-danger"><i class="ph ph-x-circle" aria-hidden="true"></i>Não foi possível concluir a ação.</div>
+        </div>
+    </section>
+
+    <section class="rn-surface rn-stack" style="padding: 22px;">
+        <div class="rn-section-title">
+            <div>
+                <span class="rn-eyebrow">Cards</span>
+                <h2>Métricas e conteúdo</h2>
+            </div>
+        </div>
+
+        <div class="demo-grid-4">
+            <article class="rn-metric-card"><span>Total de acolhidos</span><strong>126</strong><small>+8% neste mês</small></article>
+            <article class="rn-metric-card"><span>Cursos ativos</span><strong>18</strong><small>4 trilhas novas</small></article>
+            <article class="rn-metric-card"><span>Certificados</span><strong>197</strong><small>34 este mês</small></article>
+            <article class="rn-metric-card"><span>Agenda hoje</span><strong>32</strong><small>91% confirmados</small></article>
+        </div>
+    </section>
+
+    <section class="rn-surface rn-stack" style="padding: 22px;">
+        <div class="rn-section-title">
+            <div>
+                <span class="rn-eyebrow">Forms</span>
+                <h2>Campos e validação</h2>
+            </div>
+        </div>
+
+        <div class="demo-grid-3">
+            <label class="rn-stack">
+                <span class="rn-label">Nome completo</span>
+                <input class="admin-input" placeholder="Digite o nome" />
+                <small class="rn-help-text">Use o nome civil ou social cadastrado.</small>
+            </label>
+            <label class="rn-stack">
+                <span class="rn-label">Status</span>
+                <select class="rn-select">
+                    <option>Em tratamento</option>
+                    <option>Ativo</option>
+                    <option>Alta prevista</option>
+                </select>
+            </label>
+            <label class="rn-stack">
+                <span class="rn-label">Observação</span>
+                <textarea class="admin-textarea" placeholder="Notas internas"></textarea>
+                <small class="rn-validation">Mensagem de validação</small>
+            </label>
+        </div>
+
+        <div class="rn-inline">
+            <label class="rn-check"><input type="checkbox" checked /> Checkbox</label>
+            <label class="rn-radio"><input type="radio" checked /> Radio</label>
+            <label class="rn-switch"><input type="checkbox" checked /> Switch</label>
+        </div>
+    </section>
+
+    <section class="renova-table-card">
+        <div class="renova-table-header">
+            <div>
+                <span class="rn-eyebrow">Tables</span>
+                <h2>Premium table</h2>
+                <p>Avatar, status, hover e ações compactas.</p>
+            </div>
+        </div>
+        <div class="renova-table-wrap">
+            <table class="renova-table">
+                <thead>
+                    <tr><th>Acolhido</th><th>Plano</th><th>Status</th><th class="text-end">Ações</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="renova-person-cell"><span class="renova-avatar">JS</span><span><strong class="renova-row-title">João Silva</strong><small class="renova-row-subtitle">Centro</small></span></span></td>
+                        <td><span class="renova-muted">Integral Premium</span></td>
+                        <td><span class="renova-status-badge ok">Ativo</span></td>
+                        <td><div class="renova-action-buttons"><a class="renova-action-btn" href="#"><i class="ph ph-eye" aria-hidden="true"></i></a><a class="renova-action-btn" href="#"><i class="ph ph-pencil-simple" aria-hidden="true"></i></a></div></td>
+                    </tr>
+                    <tr>
+                        <td><span class="renova-person-cell"><span class="renova-avatar">MO</span><span><strong class="renova-row-title">Maria Oliveira</strong><small class="renova-row-subtitle">Norte</small></span></span></td>
+                        <td><span class="renova-muted">Clínico Plus</span></td>
+                        <td><span class="renova-status-badge warn">Aguardando</span></td>
+                        <td><div class="renova-action-buttons"><a class="renova-action-btn" href="#"><i class="ph ph-eye" aria-hidden="true"></i></a><a class="renova-action-btn danger" href="#"><i class="ph ph-archive" aria-hidden="true"></i></a></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="rn-surface crm-empty-state">
+        <div class="crm-empty-icon"><i class="ph ph-folder-open" aria-hidden="true"></i></div>
+        <strong>Empty state</strong>
+        <p>Use quando uma lista ainda não possui dados ou quando filtros não retornam resultados.</p>
+        <a class="rn-btn-primary" href="#"><i class="ph ph-plus" aria-hidden="true"></i>Criar registro</a>
+    </section>
 </section>

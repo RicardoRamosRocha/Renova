@@ -1,0 +1,43 @@
+.medical-page {
+    padding: 0;
+}
+
+.medical-summary-grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.medical-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.medical-tabs span {
+    background: #f1f5f9;
+    border-radius: 999px;
+    color: #475569;
+    font-size: .82rem;
+    font-weight: 900;
+    padding: 8px 12px;
+}
+
+.medical-note,
+.evolution-card,
+.appointment-card {
+    padding: 18px;
+}
+
+.professional-badge {
+    align-items: center;
+    background: #eef2ff;
+    border-radius: 999px;
+    color: #3730a3;
+    display: inline-flex;
+    font-size: .8rem;
+    font-weight: 900;
+    gap: 6px;
+    padding: 6px 10px;
+}

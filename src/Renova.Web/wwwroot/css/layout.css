@@ -1,0 +1,104 @@
+.admin-shell {
+    display: grid;
+    grid-template-columns: 292px minmax(0, 1fr);
+    min-height: 100vh;
+}
+
+.admin-sidebar-shell {
+    background: var(--rn-sidebar);
+    min-height: 100vh;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+.admin-main-shell {
+    background:
+        radial-gradient(circle at top right, rgba(37, 99, 235, .08), transparent 26rem),
+        linear-gradient(180deg, #f8fafc 0%, #f4f7fb 100%);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.admin-content {
+    flex: 1;
+    padding: 24px 28px 32px;
+}
+
+.admin-content:focus {
+    outline: none;
+}
+
+.admin-footer {
+    border-top: 1px solid rgba(226, 232, 240, .9);
+    color: var(--rn-muted);
+    font-size: .86rem;
+    font-weight: 700;
+    padding: 16px 28px;
+}
+
+.admin-page,
+.demo-page,
+.crm-index-page,
+.ead-page,
+.medical-page {
+    display: grid;
+    gap: 24px;
+}
+
+.admin-page {
+    padding: 8px 0;
+}
+
+.admin-page-header,
+.demo-hero,
+.crm-page-header,
+.ead-page-header,
+.medical-page-header {
+    align-items: flex-start;
+    background: rgba(255, 255, 255, .94);
+    border: 1px solid rgba(226, 232, 240, .95);
+    border-radius: var(--rn-radius-xl);
+    box-shadow: var(--rn-shadow-sm);
+    display: flex;
+    gap: 24px;
+    justify-content: space-between;
+    padding: 28px;
+}
+
+.admin-page-header span,
+.demo-kicker,
+.crm-eyebrow,
+.ead-eyebrow,
+.medical-eyebrow,
+.rn-eyebrow {
+    color: var(--rn-primary);
+    display: inline-flex;
+    font-size: .74rem;
+    font-weight: 900;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.admin-page-header h1,
+.demo-hero h1,
+.crm-page-header h1,
+.ead-page-header h1,
+.medical-page-header h1 {
+    color: var(--rn-text);
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    line-height: 1.06;
+    margin: 8px 0 0;
+}
+
+.admin-page-header p,
+.demo-hero p,
+.crm-page-header p,
+.ead-page-header p,
+.medical-page-header p {
+    color: var(--rn-muted);
+    line-height: 1.65;
+    margin: 10px 0 0;
+    max-width: 760px;
+}

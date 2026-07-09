@@ -2,19 +2,19 @@
     ViewData["Title"] = "Prontuário";
 }
 
-<section class="demo-page">
-    <div class="demo-hero">
+<section class="medical-page">
+    <div class="medical-page-header">
         <div>
-            <span class="demo-kicker">Prontuário eletrônico</span>
+            <span class="medical-eyebrow">Prontuário eletrônico</span>
             <h1>João Silva</h1>
             <p>Registro clínico consolidado com dados gerais, evoluções, medicações, atendimentos, documentos e anexos.</p>
         </div>
         <span class="demo-pill ok">Plano ativo</span>
     </div>
 
-    <section class="demo-panel demo-tabs">
-        <div class="demo-tab-list" aria-label="Abas do prontuário">
-            <span>Dados Gerais</span>
+    <section class="demo-panel">
+        <div class="medical-tabs" aria-label="Abas do prontuário">
+            <span>Dados gerais</span>
             <span>Evoluções</span>
             <span>Medicações</span>
             <span>Atendimentos</span>
@@ -22,30 +22,63 @@
             <span>Anexos</span>
         </div>
 
-        <div class="demo-grid-3">
+        <div class="medical-summary-grid">
             <article class="demo-card"><span>Tempo em tratamento</span><strong>128 dias</strong><small>Fase intermediária</small></article>
             <article class="demo-card"><span>Última evolução</span><strong>02/07</strong><small>Psicologia</small></article>
             <article class="demo-card"><span>Risco clínico</span><strong>Baixo</strong><small>Monitorado</small></article>
         </div>
-
-        <div class="demo-grid-2">
-            <section class="demo-panel">
-                <div class="demo-section-title"><h2>Dados Gerais</h2></div>
-                <div class="demo-mini-list">
-                    <span>Nascimento <strong>14/09/1991</strong></span>
-                    <span>Responsável <strong>Helena Silva</strong></span>
-                    <span>Unidade <strong>Centro</strong></span>
-                    <span>Plano terapêutico <strong>Integral</strong></span>
-                </div>
-            </section>
-            <section class="demo-panel">
-                <div class="demo-section-title"><h2>Evoluções recentes</h2></div>
-                <div class="demo-list">
-                    <article class="demo-list-item"><strong>Psicologia</strong><span>Adesão consistente e participação ativa.</span></article>
-                    <article class="demo-list-item"><strong>Enfermagem</strong><span>Rotina medicamentosa sem intercorrências.</span></article>
-                    <article class="demo-list-item"><strong>Serviço social</strong><span>Família orientada para plano de reintegração.</span></article>
-                </div>
-            </section>
-        </div>
     </section>
+
+    <div class="demo-grid-2">
+        <section class="demo-panel">
+            <div class="demo-section-title">
+                <div>
+                    <span class="medical-eyebrow">Linha do tempo</span>
+                    <h2>Evoluções recentes</h2>
+                </div>
+            </div>
+
+            <div class="medical-timeline">
+                <article class="medical-timeline-item">
+                    <strong>Psicologia</strong>
+                    <span class="rn-muted">Adesão consistente e participação ativa nas rodas terapêuticas.</span>
+                    <span class="professional-badge"><i class="ph ph-user-focus" aria-hidden="true"></i>Dra. Helena</span>
+                </article>
+                <article class="medical-timeline-item">
+                    <strong>Enfermagem</strong>
+                    <span class="rn-muted">Rotina medicamentosa sem intercorrências, sono preservado.</span>
+                    <span class="professional-badge"><i class="ph ph-first-aid-kit" aria-hidden="true"></i>Enf. Marcos</span>
+                </article>
+                <article class="medical-timeline-item">
+                    <strong>Serviço social</strong>
+                    <span class="rn-muted">Família orientada para plano de reintegração gradual.</span>
+                    <span class="professional-badge"><i class="ph ph-hand-heart" aria-hidden="true"></i>Ana Paula</span>
+                </article>
+            </div>
+        </section>
+
+        <section class="demo-panel rn-stack">
+            <div class="demo-section-title">
+                <div>
+                    <span class="medical-eyebrow">Resumo clínico</span>
+                    <h2>Dados gerais</h2>
+                </div>
+            </div>
+
+            <article class="medical-note">
+                <span class="professional-badge"><i class="ph ph-notebook" aria-hidden="true"></i>Nota médica</span>
+                <p class="rn-muted">Paciente orientado, colaborativo e com boa resposta ao plano terapêutico. Mantém acompanhamento psicológico semanal.</p>
+            </article>
+
+            <article class="evolution-card">
+                <strong>Plano terapêutico</strong>
+                <p class="rn-muted">Integral, com foco em prevenção à recaída, reinserção familiar e fortalecimento de rotina saudável.</p>
+            </article>
+
+            <article class="appointment-card">
+                <strong>Próximo atendimento</strong>
+                <p class="rn-muted">Avaliação psicológica em 12/07 às 14h, sala 2.</p>
+            </article>
+        </section>
+    </div>
 </section>
