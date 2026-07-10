@@ -1,14 +1,25 @@
 @using Renova.Web.Areas.CRM.ViewModels.Students
+@using Renova.Web.ViewModels
 @model StudentFormViewModel
 
 @{
     var isEdit = Model.Id.HasValue;
+    var statusText = StudentStatuses.Label(Model.Status);
 }
 
 <input type="hidden" asp-for="Id" />
 <input type="hidden" asp-for="PhotoPath" />
 
 <div asp-validation-summary="ModelOnly" class="admin-validation-summary"></div>
+
+@await Html.PartialAsync("~/Views/Shared/_ProfileHeader.cshtml", new ProfileHeaderViewModel
+{
+    Name = Model.FullName,
+    Subtitle = "Acolhido",
+    Status = statusText,
+    SupportingText = Model.AdmissionDate == default ? "Cadastro em andamento" : $"Entrada em {Model.AdmissionDate:dd/MM/yyyy}",
+    PhotoUrl = Model.PhotoPath
+})
 
 <div class="admin-form-card">
     <section class="admin-form-section">

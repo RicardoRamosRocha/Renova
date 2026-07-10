@@ -1,9 +1,9 @@
 @using Renova.Domain.Entities
 @using Renova.Web.Areas.CRM.ViewModels.Students
+@using Renova.Web.ViewModels
 @model Student
 @{
     ViewData["Title"] = "Prontuário do Acolhido";
-    var photo = string.IsNullOrWhiteSpace(Model.DisplayPhotoUrl) ? "/images/avatar-default.svg" : Model.DisplayPhotoUrl;
     var today = DateTime.Today;
     var birthDate = Model.DisplayBirthDate.Date;
     var admissionDate = Model.AdmissionDate.Date;
@@ -41,7 +41,12 @@
 <section class="admin-page patient-profile">
     <div class="patient-hero">
         <div class="patient-identity">
-            <img src="@photo" alt="Foto de @Model.DisplayName" class="patient-photo" />
+            @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
+            {
+                Name = Model.DisplayName,
+                PhotoUrl = Model.DisplayPhotoUrl,
+                Size = "lg"
+            })
             <div>
                 <span class="rn-eyebrow">Prontuário clínico</span>
                 <h1>@Model.DisplayName</h1>

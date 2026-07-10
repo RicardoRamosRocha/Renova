@@ -1,11 +1,22 @@
 @using Renova.Web.Areas.Medical.ViewModels.Professionals
+@using Renova.Web.ViewModels
 @model ProfessionalFormViewModel
 @{
     var specialties = new[] { "Psicólogo", "Terapeuta", "Assistente Social", "Coordenador", "Médico", "Educador", "Administrativo" };
 }
 
 <input type="hidden" asp-for="Id" />
+<input type="hidden" asp-for="PhotoPath" />
 <div asp-validation-summary="ModelOnly" class="admin-validation-summary"></div>
+
+@await Html.PartialAsync("~/Views/Shared/_ProfileHeader.cshtml", new ProfileHeaderViewModel
+{
+    Name = Model.FullName,
+    Subtitle = "Profissional",
+    Status = Model.IsActive ? "Ativo" : "Inativo",
+    SupportingText = Model.Specialty,
+    PhotoUrl = Model.PhotoPath
+})
 
 <div class="admin-form-card">
     <section class="admin-form-section">

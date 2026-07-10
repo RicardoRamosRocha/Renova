@@ -1,14 +1,19 @@
 @using Renova.Domain.Entities
+@using Renova.Web.ViewModels
 @model Professional
 @{
     ViewData["Title"] = "Detalhes do Profissional";
     var displayName = Model.DisplayName;
-    var initial = string.IsNullOrWhiteSpace(displayName) ? "?" : displayName[..1];
 }
 
 <section class="admin-page">
     <div class="demo-profile-hero">
-        <span class="demo-photo">@initial</span>
+        @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
+        {
+            Name = displayName,
+            PhotoUrl = Model.DisplayPhotoUrl,
+            Size = "lg"
+        })
         <div>
             <span class="rn-eyebrow">Profissional</span>
             <h1>@displayName</h1>

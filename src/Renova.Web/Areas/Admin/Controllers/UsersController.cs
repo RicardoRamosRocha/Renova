@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Renova.Infrastructure.Identity;
 using Renova.Web.Areas.Admin.ViewModels.Users;
+using Renova.Web.Services;
 using Renova.Web.ViewModels;
 
 namespace Renova.Web.Areas.Admin.Controllers;
 
 public sealed class UsersController(
     UserManager<ApplicationUser> userManager,
-    RoleManager<ApplicationRole> roleManager) : AdminControllerBase
+    RoleManager<ApplicationRole> roleManager,
+    IPhotoService photoService) : AdminControllerBase
 {
     public async Task<IActionResult> Index(string? search, bool? active, int page = 1)
     {
@@ -81,6 +83,19 @@ public sealed class UsersController(
             return View(model);
         }
 
+        string? photoPath;
+
+        try
+        {
+            photoPath = model.RemovePhoto ? null : await photoService.SavePhotoAsync(model.Photo, "users");
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(nameof(model.Photo), ex.Message);
+            await LoadRolesAsync();
+            return View(model);
+        }
+
         var user = new ApplicationUser
         {
             UserName = model.Email.Trim(),
@@ -88,12 +103,14 @@ public sealed class UsersController(
             FullName = model.FullName.Trim(),
             PhoneNumber = model.Phone?.Trim(),
             IsActive = model.IsActive,
+            PhotoPath = photoPath,
             EmailConfirmed = true
         };
 
         var result = await userManager.CreateAsync(user, string.IsNullOrWhiteSpace(model.TemporaryPassword) ? "Renova@123" : model.TemporaryPassword);
         if (!result.Succeeded)
         {
+            photoService.DeletePhoto(photoPath);
             AddIdentityErrors(result);
             await LoadRolesAsync();
             return View(model);
@@ -125,7 +142,8 @@ public sealed class UsersController(
             Email = user.Email ?? string.Empty,
             Phone = user.PhoneNumber,
             IsActive = user.IsActive,
-            Role = roles.FirstOrDefault()
+            Role = roles.FirstOrDefault(),
+            PhotoPath = user.PhotoPath
         });
     }
 
@@ -151,6 +169,26 @@ public sealed class UsersController(
         user.PhoneNumber = model.Phone?.Trim();
         user.IsActive = model.IsActive;
         user.UpdatedAt = DateTime.UtcNow;
+
+        try
+        {
+            if (model.RemovePhoto)
+            {
+                photoService.DeletePhoto(user.PhotoPath);
+                user.PhotoPath = null;
+            }
+            else
+            {
+                user.PhotoPath = await photoService.SavePhotoAsync(model.Photo, "users", user.PhotoPath);
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(nameof(model.Photo), ex.Message);
+            model.PhotoPath = user.PhotoPath;
+            await LoadRolesAsync();
+            return View(model);
+        }
 
         var result = await userManager.UpdateAsync(user);
         if (!result.Succeeded)
@@ -217,6 +255,7 @@ public sealed class UsersController(
         var result = await userManager.DeleteAsync(user);
         if (result.Succeeded)
         {
+            photoService.DeletePhoto(user.PhotoPath);
             TempData["Success"] = "Usuário excluído com sucesso.";
             return RedirectToAction(nameof(Index));
         }

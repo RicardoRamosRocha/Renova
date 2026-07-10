@@ -1,14 +1,19 @@
 @using Renova.Infrastructure.Identity
+@using Renova.Web.ViewModels
 @model ApplicationUser
 @{
     ViewData["Title"] = "Detalhes do Usuário";
     var roles = (IEnumerable<string>)(ViewBag.Roles ?? Array.Empty<string>());
-    var initial = string.IsNullOrWhiteSpace(Model.FullName) ? "?" : Model.FullName[..1];
 }
 
 <section class="admin-page">
     <div class="demo-profile-hero">
-        <span class="demo-photo">@initial</span>
+        @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
+        {
+            Name = Model.FullName,
+            PhotoUrl = Model.PhotoPath,
+            Size = "lg"
+        })
         <div>
             <span class="rn-eyebrow">Usuário</span>
             <h1>@Model.FullName</h1>

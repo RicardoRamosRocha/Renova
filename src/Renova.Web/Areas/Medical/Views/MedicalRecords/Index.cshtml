@@ -1,16 +1,17 @@
+@using Renova.Web.ViewModels
 @{
     ViewData["Title"] = "Prontuário";
 }
 
 <section class="medical-page">
-    <div class="medical-page-header">
-        <div>
-            <span class="medical-eyebrow">Prontuário eletrônico</span>
-            <h1>João Silva</h1>
-            <p>Registro clínico consolidado com dados gerais, evoluções, medicações, atendimentos, documentos e anexos.</p>
-        </div>
-        <span class="demo-pill ok">Plano ativo</span>
-    </div>
+    @await Html.PartialAsync("~/Views/Shared/_ProfileHeader.cshtml", new ProfileHeaderViewModel
+    {
+        Name = "João Silva",
+        Subtitle = "Prontuário eletrônico",
+        Status = "Plano ativo",
+        SupportingText = "Entrada em 03/03/2026",
+        ShowPhotoActions = false
+    })
 
     <section class="demo-panel">
         <div class="medical-tabs" aria-label="Abas do prontuário">

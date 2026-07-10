@@ -1,11 +1,22 @@
 @using Renova.Web.Areas.Admin.ViewModels.Users
+@using Renova.Web.ViewModels
 @model UserFormViewModel
 @{
     var roles = (IReadOnlyList<string>)(ViewBag.Roles ?? new List<string>());
 }
 
 <input type="hidden" asp-for="Id" />
+<input type="hidden" asp-for="PhotoPath" />
 <div asp-validation-summary="ModelOnly" class="admin-validation-summary"></div>
+
+@await Html.PartialAsync("~/Views/Shared/_ProfileHeader.cshtml", new ProfileHeaderViewModel
+{
+    Name = Model.FullName,
+    Subtitle = "Usuário",
+    Status = Model.IsActive ? "Ativo" : "Inativo",
+    SupportingText = string.IsNullOrWhiteSpace(Model.Role) ? "Sem perfil definido" : Model.Role,
+    PhotoUrl = Model.PhotoPath
+})
 
 <div class="admin-form-card">
     <section class="admin-form-section">

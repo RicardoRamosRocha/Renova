@@ -17,7 +17,7 @@
         </div>
 
         <a class="crm-primary-button" asp-action="Create">
-            <i class="bi bi-person-plus"></i>
+            <i class="ph ph-user-plus" aria-hidden="true"></i>
             Novo acolhido
         </a>
     </div>
@@ -25,7 +25,7 @@
     @if (TempData["Success"] is string success)
     {
         <div class="crm-alert-success">
-            <i class="bi bi-check-circle"></i>
+            <i class="ph ph-check-circle" aria-hidden="true"></i>
             <span>@success</span>
         </div>
     }
@@ -33,7 +33,7 @@
     <div class="crm-metrics-grid">
         <article class="crm-metric-card">
             <div class="metric-icon">
-                <i class="bi bi-people"></i>
+                <i class="ph ph-users" aria-hidden="true"></i>
             </div>
             <span>Total</span>
             <strong>@ViewBag.Total</strong>
@@ -42,7 +42,7 @@
 
         <article class="crm-metric-card">
             <div class="metric-icon">
-                <i class="bi bi-check2-circle"></i>
+                <i class="ph ph-check-circle" aria-hidden="true"></i>
             </div>
             <span>Ativos</span>
             <strong>@ViewBag.Active</strong>
@@ -51,7 +51,7 @@
 
         <article class="crm-metric-card">
             <div class="metric-icon">
-                <i class="bi bi-heart-pulse"></i>
+                <i class="ph ph-heartbeat" aria-hidden="true"></i>
             </div>
             <span>Em tratamento</span>
             <strong>@ViewBag.InTreatment</strong>
@@ -60,7 +60,7 @@
 
         <article class="crm-metric-card">
             <div class="metric-icon">
-                <i class="bi bi-calendar2-check"></i>
+                <i class="ph ph-calendar-check" aria-hidden="true"></i>
             </div>
             <span>Altas previstas</span>
             <strong>@ViewBag.DischargePlanned</strong>
@@ -78,7 +78,7 @@
 
             <form class="crm-filter-form" method="get">
                 <div class="crm-search-box">
-                    <i class="bi bi-search"></i>
+                    <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
                     <input name="search"
                            value="@ViewBag.Search"
                            type="search"
@@ -96,7 +96,7 @@
                 </select>
 
                 <button class="crm-secondary-button" type="submit">
-                    <i class="bi bi-funnel"></i>
+                    <i class="ph ph-funnel" aria-hidden="true"></i>
                     Filtrar
                 </button>
             </form>
@@ -106,14 +106,14 @@
         {
             <div class="crm-empty-state">
                 <div class="crm-empty-icon">
-                    <i class="bi bi-people"></i>
+                    <i class="ph ph-users" aria-hidden="true"></i>
                 </div>
 
                 <strong>Nenhum acolhido encontrado</strong>
                 <p>Cadastre o primeiro acolhido ou ajuste os filtros de busca.</p>
 
                 <a class="crm-primary-button" asp-action="Create">
-                    <i class="bi bi-person-plus"></i>
+                    <i class="ph ph-user-plus" aria-hidden="true"></i>
                     Criar primeiro cadastro
                 </a>
             </div>
@@ -136,10 +136,6 @@
                     <tbody>
                         @foreach (var student in Model.Items)
                         {
-                            var photo = string.IsNullOrWhiteSpace(student.DisplayPhotoUrl)
-                                ? "/images/avatar-default.svg"
-                                : student.DisplayPhotoUrl;
-
                             var statusClass = student.Status == StudentStatuses.Inactive
                                 ? "danger"
                                 : student.Status == StudentStatuses.InTreatment
@@ -151,9 +147,11 @@
                             <tr>
                                 <td>
                                     <a class="renova-person-cell" asp-action="Details" asp-route-id="@student.Id">
-                                        <span class="renova-avatar">
-                                            <img src="@photo" alt="Foto de @student.DisplayName" />
-                                        </span>
+                                        @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
+                                        {
+                                            Name = student.DisplayName,
+                                            PhotoUrl = student.DisplayPhotoUrl
+                                        })
 
                                         <span>
                                             <strong class="renova-row-title">@student.DisplayName</strong>
@@ -186,20 +184,20 @@
                                            title="Detalhes"
                                            asp-action="Details"
                                            asp-route-id="@student.Id">
-                                            <i class="bi bi-eye"></i>
+                                            <i class="ph ph-eye" aria-hidden="true"></i>
                                         </a>
 
                                         <a class="renova-action-btn"
                                            title="Editar"
                                            asp-action="Edit"
                                            asp-route-id="@student.Id">
-                                            <i class="bi bi-pencil-square"></i>
+                                            <i class="ph ph-pencil-simple" aria-hidden="true"></i>
                                         </a>
 
                                         <a class="renova-action-btn danger"
                                            title="Arquivar"
                                            href="#delete-student-@student.Id">
-                                            <i class="bi bi-archive"></i>
+                                            <i class="ph ph-archive" aria-hidden="true"></i>
                                         </a>
                                     </div>
                                 </td>

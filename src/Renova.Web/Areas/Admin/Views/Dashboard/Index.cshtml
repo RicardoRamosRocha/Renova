@@ -1,3 +1,4 @@
+@using Renova.Web.ViewModels
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
@@ -161,9 +162,9 @@
             <section class="demo-panel">
                 <div class="demo-section-title"><h2>Próximos aniversariantes</h2></div>
                 <div class="demo-mini-list">
-                    <span>Ana Paula <strong>05/07</strong></span>
-                    <span>Renato Lima <strong>08/07</strong></span>
-                    <span>Clara Nunes <strong>11/07</strong></span>
+                    <span>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Ana Paula" })Ana Paula <strong>05/07</strong></span>
+                    <span>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Renato Lima" })Renato Lima <strong>08/07</strong></span>
+                    <span>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Clara Nunes" })Clara Nunes <strong>11/07</strong></span>
                 </div>
             </section>
 

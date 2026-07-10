@@ -1,0 +1,99 @@
+@model Renova.Web.ViewModels.ProfileHeaderViewModel
+@{
+    static string Initials(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return "?";
+        }
+
+        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 1)
+        {
+            return parts[0][..1].ToUpperInvariant();
+        }
+
+        return string.Concat(parts[0][..1], parts[^1][..1]).ToUpperInvariant();
+    }
+
+    var initials = Initials(Model.Name);
+    var inputId = $"profile-photo-{Guid.NewGuid():N}";
+}
+
+<section class="profile-header" data-profile-header>
+    <div class="profile-card">
+        <div class="profile-avatar-wrap">
+            <span class="profile-avatar profile-avatar-lg">
+                @if (!string.IsNullOrWhiteSpace(Model.PhotoUrl))
+                {
+                    <img class="profile-avatar-image" src="@Model.PhotoUrl" alt="Foto de @Model.Name" data-profile-preview />
+                    <span class="profile-avatar-placeholder is-hidden" data-profile-placeholder>@initials</span>
+                }
+                else
+                {
+                    <img class="profile-avatar-image is-hidden" alt="" data-profile-preview />
+                    <span class="profile-avatar-placeholder" data-profile-placeholder>@initials</span>
+                }
+            </span>
+
+            @if (Model.ShowPhotoActions)
+            {
+                <div class="profile-avatar-upload">
+                    <input id="@inputId"
+                           class="profile-avatar-input"
+                           type="file"
+                           name="@Model.PhotoInputName"
+                           accept="image/jpeg,image/png,image/webp"
+                           data-profile-input />
+
+                    <label class="profile-upload-button" for="@inputId">
+                        <i class="ph ph-camera" aria-hidden="true"></i>
+                        Alterar foto
+                    </label>
+
+                    <input type="hidden" name="@Model.RemovePhotoInputName" value="false" data-profile-remove-input />
+
+                    <button class="profile-remove-button" type="button" data-profile-remove>
+                        <i class="ph ph-trash" aria-hidden="true"></i>
+                        Remover foto
+                    </button>
+                </div>
+
+                <span class="profile-upload-error" data-profile-error aria-live="polite"></span>
+                @Html.ValidationMessage(Model.PhotoInputName, null, new { @class = "admin-validation" })
+            }
+        </div>
+
+        <div class="profile-header-content">
+            <span class="profile-chip">
+                <i class="ph ph-sparkle" aria-hidden="true"></i>
+                Perfil Renova
+            </span>
+
+            <h2 class="profile-name">@(string.IsNullOrWhiteSpace(Model.Name) ? "Novo perfil" : Model.Name)</h2>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Subtitle))
+            {
+                <p class="profile-subtitle">@Model.Subtitle</p>
+            }
+
+            <div class="profile-status-row">
+                @if (!string.IsNullOrWhiteSpace(Model.Status))
+                {
+                    <span class="profile-status">@Model.Status</span>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.SupportingText))
+                {
+                    <span class="profile-chip muted">@Model.SupportingText</span>
+                }
+            </div>
+        </div>
+
+        <div class="profile-actions" aria-hidden="true">
+            <span class="profile-action-dot"></span>
+            <span class="profile-action-dot"></span>
+            <span class="profile-action-dot"></span>
+        </div>
+    </div>
+</section>

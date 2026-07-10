@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace Renova.Web.Areas.Admin.ViewModels.Users;
 
@@ -23,4 +24,10 @@ public sealed class UserFormViewModel
 
     [DataType(DataType.Password)]
     public string? TemporaryPassword { get; set; }
+
+    public IFormFile? Photo { get; set; }
+
+    public string? PhotoPath { get; set; }
+
+    public bool RemovePhoto { get; set; }
 }

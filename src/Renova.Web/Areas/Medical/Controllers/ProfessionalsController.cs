@@ -11,7 +11,8 @@ namespace Renova.Web.Areas.Medical.Controllers;
 [Area("Medical")]
 public sealed class ProfessionalsController(
     IDbContextFactory<AppDbContext> dbContextFactory,
-    ICurrentTenantService currentTenantService) : Controller
+    ICurrentTenantService currentTenantService,
+    IPhotoService photoService) : Controller
 {
     private const string MissingTenantMessage = "Não foi possível identificar a instituição atual. Entre novamente ou contate o administrador.";
 
@@ -118,6 +119,18 @@ public sealed class ProfessionalsController(
         }
 
         var timestamp = DateTime.UtcNow;
+        string? photoPath;
+
+        try
+        {
+            photoPath = model.RemovePhoto ? null : await photoService.SavePhotoAsync(model.Photo, "professionals");
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(nameof(model.Photo), ex.Message);
+            return View(model);
+        }
+
         var professional = new Professional
         {
             FullName = model.FullName.Trim(),
@@ -127,6 +140,7 @@ public sealed class ProfessionalsController(
             Email = model.Email?.Trim(),
             IsActive = model.IsActive,
             TenantId = tenantId.Value,
+            PhotoPath = photoPath,
             CreatedAt = timestamp
         };
 
@@ -136,6 +150,7 @@ public sealed class ProfessionalsController(
 
         if (!await TrySaveAsync(db, "Profissional cadastrado com sucesso."))
         {
+            photoService.DeletePhoto(photoPath);
             return View(model);
         }
 
@@ -184,6 +199,27 @@ public sealed class ProfessionalsController(
         }
 
         var timestamp = DateTime.UtcNow;
+        var oldPhotoPath = professional.DisplayPhotoUrl;
+
+        try
+        {
+            if (model.RemovePhoto)
+            {
+                photoService.DeletePhoto(oldPhotoPath);
+                professional.PhotoPath = null;
+            }
+            else
+            {
+                professional.PhotoPath = await photoService.SavePhotoAsync(model.Photo, "professionals", oldPhotoPath);
+            }
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(nameof(model.Photo), ex.Message);
+            model.PhotoPath = oldPhotoPath;
+            return View(model);
+        }
+
         professional.FullName = model.FullName.Trim();
         professional.Specialty = model.Specialty.Trim();
         professional.RegistrationNumber = model.RegistrationNumber.Trim();
@@ -245,8 +281,10 @@ public sealed class ProfessionalsController(
 
         try
         {
+            var photoPath = professional.PhotoPath;
             db.Professionals.Remove(professional);
             await db.SaveChangesAsync();
+            photoService.DeletePhoto(photoPath);
             TempData["Success"] = "Profissional excluído com sucesso.";
         }
         catch (DbUpdateException)
@@ -283,6 +321,7 @@ public sealed class ProfessionalsController(
         RegistrationNumber = professional.RegistrationNumber,
         Phone = professional.DisplayPhone,
         Email = professional.DisplayEmail,
-        IsActive = professional.IsActive
+        IsActive = professional.IsActive,
+        PhotoPath = professional.DisplayPhotoUrl
     };
 }

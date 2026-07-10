@@ -14,7 +14,7 @@
         </div>
         <a class="rn-btn-secondary" asp-action="Index"><i class="ph ph-arrow-left" aria-hidden="true"></i>Voltar</a>
     </header>
-    <form asp-action="Create" method="post">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
         @await Html.PartialAsync("_Form", Model)
     </form>
 </section>

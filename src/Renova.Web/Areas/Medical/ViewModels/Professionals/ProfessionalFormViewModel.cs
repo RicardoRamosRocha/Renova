@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace Renova.Web.Areas.Medical.ViewModels.Professionals;
 
@@ -36,4 +37,10 @@ public sealed class ProfessionalFormViewModel
 
     [StringLength(1000)]
     public string? Notes { get; set; }
+
+    public IFormFile? Photo { get; set; }
+
+    public string? PhotoPath { get; set; }
+
+    public bool RemovePhoto { get; set; }
 }

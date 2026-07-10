@@ -58,14 +58,34 @@
         {
             <div class="renova-table-wrap">
                 <table class="renova-table">
-                    <thead><tr><th>Nome</th><th>Especialidade</th><th>Registro</th><th>Telefone</th><th>Situação</th><th class="text-end">Ações</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Especialidade</th>
+                            <th>Registro</th>
+                            <th>Telefone</th>
+                            <th>Situação</th>
+                            <th class="text-end">Ações</th>
+                        </tr>
+                    </thead>
                     <tbody>
                     @foreach (var professional in Model.Items)
                     {
                         var displayName = professional.DisplayName;
-                        var initial = string.IsNullOrWhiteSpace(displayName) ? "?" : displayName[..1];
                         <tr>
-                            <td><div class="renova-person-cell"><span class="renova-avatar">@initial</span><span><strong class="renova-row-title">@displayName</strong><small class="renova-row-subtitle">Equipe técnica</small></span></div></td>
+                            <td>
+                                <div class="renova-person-cell">
+                                    @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
+                                    {
+                                        Name = displayName,
+                                        PhotoUrl = professional.DisplayPhotoUrl
+                                    })
+                                    <span>
+                                        <strong class="renova-row-title">@displayName</strong>
+                                        <small class="renova-row-subtitle">Equipe técnica</small>
+                                    </span>
+                                </div>
+                            </td>
                             <td><span class="renova-muted">@professional.Specialty</span></td>
                             <td><span class="renova-muted">@professional.RegistrationNumber</span></td>
                             <td><span class="renova-muted">@professional.DisplayPhone</span></td>
@@ -82,7 +102,9 @@
                     </tbody>
                 </table>
             </div>
+
             @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model)
+
             @foreach (var professional in Model.Items)
             {
                 <div id="delete-professional-@professional.Id" class="admin-delete-modal" role="dialog" aria-modal="true">

@@ -49,6 +49,8 @@ public sealed class StudentFormViewModel
     public IFormFile? Photo { get; set; }
 
     public string? PhotoPath { get; set; }
+
+    public bool RemovePhoto { get; set; }
 }
 
 public static class StudentStatuses

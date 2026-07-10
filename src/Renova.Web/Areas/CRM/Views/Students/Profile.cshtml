@@ -1,10 +1,15 @@
+@using Renova.Web.ViewModels
 @{
     ViewData["Title"] = "Perfil do Acolhido";
 }
 
 <section class="demo-page">
     <div class="demo-profile-hero">
-        <span class="demo-photo">JS</span>
+        @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
+        {
+            Name = "João Silva",
+            Size = "lg"
+        })
         <div>
             <span class="demo-kicker">Perfil do acolhido</span>
             <h1>João Silva</h1>

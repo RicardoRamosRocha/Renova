@@ -141,7 +141,7 @@ public sealed class StudentsController(
 
         try
         {
-            photoPath = await photoService.SavePhotoAsync(model.Photo, "students");
+            photoPath = model.RemovePhoto ? null : await photoService.SavePhotoAsync(model.Photo, "students");
         }
         catch (InvalidOperationException ex)
         {
@@ -225,7 +225,15 @@ public sealed class StudentsController(
 
         try
         {
-            student.PhotoPath = await photoService.SavePhotoAsync(model.Photo, "students", oldPhotoPath);
+            if (model.RemovePhoto)
+            {
+                photoService.DeletePhoto(oldPhotoPath);
+                student.PhotoPath = null;
+            }
+            else
+            {
+                student.PhotoPath = await photoService.SavePhotoAsync(model.Photo, "students", oldPhotoPath);
+            }
         }
         catch (InvalidOperationException ex)
         {

@@ -1,3 +1,4 @@
+@using Renova.Web.ViewModels
 @{
     ViewData["Title"] = "Agenda";
 }
@@ -28,12 +29,12 @@
             <span class="rn-badge rn-badge-info">Equipe completa</span>
         </div>
         <div class="demo-list">
-            <article class="demo-schedule-card is-green"><strong>08:00</strong><div><strong>João Silva</strong><p class="rn-muted">Psicoterapia individual · Sala 1 · Dra. Camila Torres</p></div><span class="rn-badge rn-badge-success">Confirmado</span></article>
-            <article class="demo-schedule-card is-blue"><strong>09:30</strong><div><strong>Maria Oliveira</strong><p class="rn-muted">Avaliação clínica · Consultório 2 · Dr. André Moreira</p></div><span class="rn-badge rn-badge-info">Em preparo</span></article>
-            <article class="demo-schedule-card is-yellow"><strong>11:00</strong><div><strong>Atendimento Familiar</strong><p class="rn-muted">Família Silva · Serviço social · Sala de reunião</p></div><span class="rn-badge rn-badge-warning">Aguardando</span></article>
-            <article class="demo-schedule-card is-green"><strong>14:00</strong><div><strong>Avaliação Psicológica</strong><p class="rn-muted">Rafael Andrade · Triagem de alta · Psicologia</p></div><span class="rn-badge rn-badge-success">Confirmado</span></article>
-            <article class="demo-schedule-card is-blue"><strong>16:00</strong><div><strong>Grupo Terapêutico</strong><p class="rn-muted">12 acolhidos · Tema: prevenção de recaídas</p></div><span class="rn-badge rn-badge-info">Coletivo</span></article>
-            <article class="demo-schedule-card is-red"><strong>17:30</strong><div><strong>Revisão de plano</strong><p class="rn-muted">Equipe multidisciplinar · Sala diretoria clínica</p></div><span class="rn-badge rn-badge-danger">Prioridade</span></article>
+            <article class="demo-schedule-card is-green"><strong>08:00</strong>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "João Silva" })<div><strong>João Silva</strong><p class="rn-muted">Psicoterapia individual · Sala 1 · Dra. Camila Torres</p></div><span class="rn-badge rn-badge-success">Confirmado</span></article>
+            <article class="demo-schedule-card is-blue"><strong>09:30</strong>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Maria Oliveira" })<div><strong>Maria Oliveira</strong><p class="rn-muted">Avaliação clínica · Consultório 2 · Dr. André Moreira</p></div><span class="rn-badge rn-badge-info">Em preparo</span></article>
+            <article class="demo-schedule-card is-yellow"><strong>11:00</strong>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Família Silva" })<div><strong>Atendimento Familiar</strong><p class="rn-muted">Família Silva · Serviço social · Sala de reunião</p></div><span class="rn-badge rn-badge-warning">Aguardando</span></article>
+            <article class="demo-schedule-card is-green"><strong>14:00</strong>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Rafael Andrade" })<div><strong>Avaliação Psicológica</strong><p class="rn-muted">Rafael Andrade · Triagem de alta · Psicologia</p></div><span class="rn-badge rn-badge-success">Confirmado</span></article>
+            <article class="demo-schedule-card is-blue"><strong>16:00</strong>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Grupo Terapêutico" })<div><strong>Grupo Terapêutico</strong><p class="rn-muted">12 acolhidos · Tema: prevenção de recaídas</p></div><span class="rn-badge rn-badge-info">Coletivo</span></article>
+            <article class="demo-schedule-card is-red"><strong>17:30</strong>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Equipe Multidisciplinar" })<div><strong>Revisão de plano</strong><p class="rn-muted">Equipe multidisciplinar · Sala diretoria clínica</p></div><span class="rn-badge rn-badge-danger">Prioridade</span></article>
         </div>
     </section>
 </section>

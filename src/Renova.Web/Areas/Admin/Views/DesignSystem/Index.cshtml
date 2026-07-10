@@ -1,3 +1,4 @@
+@using Renova.Web.ViewModels
 @{
     ViewData["Title"] = "Design System";
     ViewData["PageEyebrow"] = "Fundação visual";
@@ -135,13 +136,13 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><span class="renova-person-cell"><span class="renova-avatar">JS</span><span><strong class="renova-row-title">João Silva</strong><small class="renova-row-subtitle">Centro</small></span></span></td>
+                        <td><span class="renova-person-cell">@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "João Silva" })<span><strong class="renova-row-title">João Silva</strong><small class="renova-row-subtitle">Centro</small></span></span></td>
                         <td><span class="renova-muted">Integral Premium</span></td>
                         <td><span class="renova-status-badge ok">Ativo</span></td>
                         <td><div class="renova-action-buttons"><a class="renova-action-btn" href="#"><i class="ph ph-eye" aria-hidden="true"></i></a><a class="renova-action-btn" href="#"><i class="ph ph-pencil-simple" aria-hidden="true"></i></a></div></td>
                     </tr>
                     <tr>
-                        <td><span class="renova-person-cell"><span class="renova-avatar">MO</span><span><strong class="renova-row-title">Maria Oliveira</strong><small class="renova-row-subtitle">Norte</small></span></span></td>
+                        <td><span class="renova-person-cell">@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Maria Oliveira" })<span><strong class="renova-row-title">Maria Oliveira</strong><small class="renova-row-subtitle">Norte</small></span></span></td>
                         <td><span class="renova-muted">Clínico Plus</span></td>
                         <td><span class="renova-status-badge warn">Aguardando</span></td>
                         <td><div class="renova-action-buttons"><a class="renova-action-btn" href="#"><i class="ph ph-eye" aria-hidden="true"></i></a><a class="renova-action-btn danger" href="#"><i class="ph ph-archive" aria-hidden="true"></i></a></div></td>
