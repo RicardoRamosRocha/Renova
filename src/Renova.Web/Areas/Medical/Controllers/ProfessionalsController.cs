@@ -3,19 +3,38 @@ using Microsoft.EntityFrameworkCore;
 using Renova.Domain.Entities;
 using Renova.Infrastructure.Data;
 using Renova.Web.Areas.Medical.ViewModels.Professionals;
+using Renova.Web.Services;
 using Renova.Web.ViewModels;
 
 namespace Renova.Web.Areas.Medical.Controllers;
 
 [Area("Medical")]
-public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbContextFactory) : Controller
+public sealed class ProfessionalsController(
+    IDbContextFactory<AppDbContext> dbContextFactory,
+    ICurrentTenantService currentTenantService) : Controller
 {
+    private const string MissingTenantMessage = "Não foi possível identificar a instituição atual. Entre novamente ou contate o administrador.";
+
     public async Task<IActionResult> Index(string? search, bool? active, int page = 1)
     {
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            TempData["Error"] = MissingTenantMessage;
+            return View(new PagedResult<Professional>
+            {
+                Items = [],
+                Page = 1,
+                PageSize = 10,
+                TotalItems = 0
+            });
+        }
+
         await using var db = await dbContextFactory.CreateDbContextAsync();
         IQueryable<Professional> query = db.Professionals
             .AsNoTracking()
-            .Include(item => item.Person);
+            .Include(item => item.Person)
+            .Where(item => item.TenantId == tenantId.Value);
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -35,10 +54,14 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
 
         ViewBag.Search = search;
         ViewBag.Active = active;
-        ViewBag.Total = await db.Professionals.CountAsync();
-        ViewBag.ActiveCount = await db.Professionals.CountAsync(item => item.IsActive);
-        ViewBag.InactiveCount = await db.Professionals.CountAsync(item => !item.IsActive);
-        ViewBag.Specialties = await db.Professionals.Select(item => item.Specialty).Distinct().CountAsync();
+        ViewBag.Total = await db.Professionals.CountAsync(item => item.TenantId == tenantId.Value);
+        ViewBag.ActiveCount = await db.Professionals.CountAsync(item => item.TenantId == tenantId.Value && item.IsActive);
+        ViewBag.InactiveCount = await db.Professionals.CountAsync(item => item.TenantId == tenantId.Value && !item.IsActive);
+        ViewBag.Specialties = await db.Professionals
+            .Where(item => item.TenantId == tenantId.Value)
+            .Select(item => item.Specialty)
+            .Distinct()
+            .CountAsync();
 
         const int pageSize = 10;
         page = Math.Max(1, page);
@@ -60,11 +83,18 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
 
     public async Task<IActionResult> Details(Guid id)
     {
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            TempData["Error"] = MissingTenantMessage;
+            return RedirectToAction(nameof(Index));
+        }
+
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var professional = await db.Professionals
             .AsNoTracking()
             .Include(item => item.Person)
-            .FirstOrDefaultAsync(item => item.Id == id);
+            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
         return professional is null ? NotFound() : View(professional);
     }
 
@@ -80,6 +110,13 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
         }
 
         await using var db = await dbContextFactory.CreateDbContextAsync();
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            ModelState.AddModelError(string.Empty, MissingTenantMessage);
+            return View(model);
+        }
+
         var timestamp = DateTime.UtcNow;
         var professional = new Professional
         {
@@ -89,6 +126,7 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
             Phone = model.Phone.Trim(),
             Email = model.Email?.Trim(),
             IsActive = model.IsActive,
+            TenantId = tenantId.Value,
             CreatedAt = timestamp
         };
 
@@ -106,10 +144,17 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
 
     public async Task<IActionResult> Edit(Guid id)
     {
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            TempData["Error"] = MissingTenantMessage;
+            return RedirectToAction(nameof(Index));
+        }
+
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var professional = await db.Professionals
             .Include(item => item.Person)
-            .FirstOrDefaultAsync(item => item.Id == id);
+            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
         return professional is null ? NotFound() : View(ToForm(professional));
     }
 
@@ -123,9 +168,16 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
         }
 
         await using var db = await dbContextFactory.CreateDbContextAsync();
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            ModelState.AddModelError(string.Empty, MissingTenantMessage);
+            return View(model);
+        }
+
         var professional = await db.Professionals
             .Include(item => item.Person)
-            .FirstOrDefaultAsync(item => item.Id == id);
+            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
         if (professional is null)
         {
             return NotFound();
@@ -153,8 +205,15 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Inactivate(Guid id)
     {
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            TempData["Error"] = MissingTenantMessage;
+            return RedirectToAction(nameof(Index));
+        }
+
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var professional = await db.Professionals.FindAsync(id);
+        var professional = await db.Professionals.FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
         if (professional is null)
         {
             return NotFound();
@@ -170,8 +229,15 @@ public sealed class ProfessionalsController(IDbContextFactory<AppDbContext> dbCo
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(Guid id)
     {
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            TempData["Error"] = MissingTenantMessage;
+            return RedirectToAction(nameof(Index));
+        }
+
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var professional = await db.Professionals.FindAsync(id);
+        var professional = await db.Professionals.FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
         if (professional is null)
         {
             return NotFound();

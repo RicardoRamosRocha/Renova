@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Renova.Application.Security;
 using Renova.Infrastructure.Data;
+using Renova.Infrastructure.Data.Seed;
 using Renova.Infrastructure.Identity;
 using Renova.Infrastructure.Security;
 using Renova.Web.Services;
@@ -17,7 +18,9 @@ builder.Services.AddDbContextFactory<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.AddScoped<ICurrentTenantService, CurrentTenantService>();
 
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -50,7 +53,9 @@ builder.Services.AddScoped<IPermissionService, PermissionService>();
 var app = builder.Build();
 
 await app.MigrateDatabaseAsync();
+await app.SeedTenantBootstrapAsync();
 await app.SeedIdentityAsync();
+await app.SeedTenantUserClaimsAsync();
 
 if (!app.Environment.IsDevelopment())
 {
@@ -68,6 +73,8 @@ app.UseAuthorization();
 app.MapPost("/auth/web-login", async (
     HttpContext httpContext,
     UserManager<ApplicationUser> userManager,
+    IDbContextFactory<AppDbContext> dbContextFactory,
+    IWebHostEnvironment environment,
     [FromForm] string email,
     [FromForm] string password,
     [FromForm] string? returnUrl) =>
@@ -92,6 +99,16 @@ app.MapPost("/auth/web-login", async (
     };
 
     claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+    claims.AddRange(await userManager.GetClaimsAsync(user));
+
+    if (!claims.Any(claim => claim.Type == CurrentTenantService.TenantIdClaimType))
+    {
+        var tenantId = await ResolveLoginTenantIdAsync(dbContextFactory, environment);
+        if (tenantId.HasValue)
+        {
+            claims.Add(new Claim(CurrentTenantService.TenantIdClaimType, tenantId.Value.ToString()));
+        }
+    }
 
     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
     var principal = new ClaimsPrincipal(identity);
@@ -175,4 +192,26 @@ static string GetLoginErrorUrl(string? returnUrl)
 {
     var safeReturnUrl = GetSafeReturnUrl(returnUrl);
     return $"/login?error=1&returnUrl={Uri.EscapeDataString(safeReturnUrl)}";
+}
+
+static async Task<Guid?> ResolveLoginTenantIdAsync(
+    IDbContextFactory<AppDbContext> dbContextFactory,
+    IWebHostEnvironment environment)
+{
+    await using var db = await dbContextFactory.CreateDbContextAsync();
+
+    if (!environment.IsDevelopment())
+    {
+        return null;
+    }
+
+    var activeTenants = await db.Tenants
+        .AsNoTracking()
+        .Where(tenant => tenant.IsActive)
+        .OrderBy(tenant => tenant.CreatedAt)
+        .Select(tenant => tenant.Id)
+        .Take(2)
+        .ToListAsync();
+
+    return activeTenants.Count == 1 ? activeTenants[0] : null;
 }

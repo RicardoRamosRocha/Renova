@@ -13,14 +13,31 @@ namespace Renova.Web.Areas.CRM.Controllers;
 [Area("CRM")]
 public sealed class StudentsController(
     IDbContextFactory<AppDbContext> dbContextFactory,
-    IPhotoService photoService) : Controller
+    IPhotoService photoService,
+    ICurrentTenantService currentTenantService) : Controller
 {
+    private const string MissingTenantMessage = "Não foi possível identificar a instituição atual. Entre novamente ou contate o administrador.";
+
     public async Task<IActionResult> Index(string? search, int? status, int page = 1)
     {
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            TempData["Error"] = MissingTenantMessage;
+            return View(new PagedResult<Student>
+            {
+                Items = [],
+                Page = 1,
+                PageSize = 10,
+                TotalItems = 0
+            });
+        }
+
         await using var db = await dbContextFactory.CreateDbContextAsync();
         IQueryable<Student> query = db.Students
             .AsNoTracking()
-            .Include(student => student.Person);
+            .Include(student => student.Person)
+            .Where(student => student.TenantId == tenantId.Value);
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -42,10 +59,10 @@ public sealed class StudentsController(
         ViewBag.Search = search;
         ViewBag.Status = status;
         ViewBag.Statuses = StudentStatuses.Labels;
-        ViewBag.Total = await db.Students.CountAsync();
-        ViewBag.Active = await db.Students.CountAsync(student => student.Status != StudentStatuses.Inactive);
-        ViewBag.InTreatment = await db.Students.CountAsync(student => student.Status == StudentStatuses.InTreatment);
-        ViewBag.DischargePlanned = await db.Students.CountAsync(student => student.Status == StudentStatuses.DischargePlanned);
+        ViewBag.Total = await db.Students.CountAsync(student => student.TenantId == tenantId.Value);
+        ViewBag.Active = await db.Students.CountAsync(student => student.TenantId == tenantId.Value && student.Status != StudentStatuses.Inactive);
+        ViewBag.InTreatment = await db.Students.CountAsync(student => student.TenantId == tenantId.Value && student.Status == StudentStatuses.InTreatment);
+        ViewBag.DischargePlanned = await db.Students.CountAsync(student => student.TenantId == tenantId.Value && student.Status == StudentStatuses.DischargePlanned);
 
         const int pageSize = 10;
         page = Math.Max(1, page);
@@ -68,6 +85,13 @@ public sealed class StudentsController(
 
     public async Task<IActionResult> Details(Guid id)
     {
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            TempData["Error"] = MissingTenantMessage;
+            return RedirectToAction(nameof(Index));
+        }
+
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var student = await db.Students
             .AsNoTracking()
@@ -81,7 +105,7 @@ public sealed class StudentsController(
                 .ThenInclude(progress => progress.Lesson)
             .Include(item => item.MedicalEvolutions)
                 .ThenInclude(evolution => evolution.Professional)
-            .FirstOrDefaultAsync(item => item.Id == id);
+            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
 
         return student is null ? NotFound() : View(student);
     }
@@ -106,6 +130,12 @@ public sealed class StudentsController(
         }
 
         await using var db = await dbContextFactory.CreateDbContextAsync();
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            ModelState.AddModelError(string.Empty, MissingTenantMessage);
+            return View(model);
+        }
 
         string? photoPath;
 
@@ -131,6 +161,7 @@ public sealed class StudentsController(
             Status = model.Status,
             AdmissionDate = DateTime.SpecifyKind(model.AdmissionDate.Date, DateTimeKind.Utc),
             PhotoPath = photoPath,
+            TenantId = tenantId.Value,
             CreatedAt = timestamp
         };
 
@@ -149,10 +180,17 @@ public sealed class StudentsController(
 
     public async Task<IActionResult> Edit(Guid id)
     {
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            TempData["Error"] = MissingTenantMessage;
+            return RedirectToAction(nameof(Index));
+        }
+
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var student = await db.Students
             .Include(item => item.Person)
-            .FirstOrDefaultAsync(item => item.Id == id);
+            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
 
         return student is null ? NotFound() : View(ToForm(student));
     }
@@ -167,9 +205,16 @@ public sealed class StudentsController(
         }
 
         await using var db = await dbContextFactory.CreateDbContextAsync();
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            ModelState.AddModelError(string.Empty, MissingTenantMessage);
+            return View(model);
+        }
+
         var student = await db.Students
             .Include(item => item.Person)
-            .FirstOrDefaultAsync(item => item.Id == id);
+            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
 
         if (student is null)
         {
@@ -213,8 +258,15 @@ public sealed class StudentsController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Inactivate(Guid id)
     {
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            TempData["Error"] = MissingTenantMessage;
+            return RedirectToAction(nameof(Index));
+        }
+
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var student = await db.Students.FindAsync(id);
+        var student = await db.Students.FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
 
         if (student is null)
         {
@@ -233,8 +285,15 @@ public sealed class StudentsController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(Guid id)
     {
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            TempData["Error"] = MissingTenantMessage;
+            return RedirectToAction(nameof(Index));
+        }
+
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var student = await db.Students.FindAsync(id);
+        var student = await db.Students.FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
 
         if (student is null)
         {
