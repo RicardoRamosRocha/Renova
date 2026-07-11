@@ -1,0 +1,19 @@
+@using Renova.Web.Areas.CRM.ViewModels.Families
+@model FamilyMemberFormViewModel
+@{
+    ViewData["Title"] = "Novo Familiar";
+}
+
+<section class="admin-form-page">
+    <header class="admin-form-header">
+        <div>
+            <nav class="admin-form-breadcrumb"><a asp-controller="Students" asp-action="Details" asp-route-id="@Model.StudentId">Perfil</a><span>/</span><span>Novo familiar</span></nav>
+            <span class="rn-eyebrow">CRM</span>
+            <h1>Novo Familiar</h1>
+            <p>Vincule um familiar ao acolhido atual com tenant seguro e foto opcional.</p>
+        </div>
+    </header>
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        @await Html.PartialAsync("_Form", Model)
+    </form>
+</section>

@@ -1,0 +1,78 @@
+@using Renova.Domain.Entities
+@using Renova.Web.Areas.CRM.ViewModels.Families
+@using Renova.Web.ViewModels
+@model FamilyMemberFormViewModel
+
+<input type="hidden" asp-for="Id" />
+<input type="hidden" asp-for="StudentId" />
+<input type="hidden" asp-for="StudentName" />
+<input type="hidden" asp-for="PhotoPath" />
+
+<div asp-validation-summary="ModelOnly" class="admin-validation-summary"></div>
+
+@await Html.PartialAsync("~/Views/Shared/_ProfileHeader.cshtml", new ProfileHeaderViewModel
+{
+    Name = Model.FullName,
+    Subtitle = $"Familiar de {Model.StudentName}",
+    Status = Model.IsResponsible ? "Responsável principal" : "Rede de apoio",
+    SupportingText = Model.CanAccessPortal ? "Acesso ao portal familiar" : "Sem acesso ao portal",
+    PhotoUrl = Model.PhotoPath
+})
+
+<div class="admin-form-card">
+    <section class="admin-form-section">
+        <div class="admin-form-section-title">
+            <div>
+                <span class="rn-eyebrow">Família</span>
+                <h2>Vínculo familiar</h2>
+                <p>Cadastre contatos autorizados e responsáveis pela rede de apoio.</p>
+            </div>
+        </div>
+
+        <div class="admin-form-grid three">
+            <div class="admin-form-group">
+                <label class="admin-label required" asp-for="FullName">Nome completo</label>
+                <input class="admin-input" asp-for="FullName" />
+                <span class="admin-validation" asp-validation-for="FullName"></span>
+            </div>
+            <div class="admin-form-group">
+                <label class="admin-label required" asp-for="Relationship">Parentesco</label>
+                <input class="admin-input" asp-for="Relationship" placeholder="Mãe, pai, cônjuge..." />
+                <span class="admin-validation" asp-validation-for="Relationship"></span>
+            </div>
+            <div class="admin-form-group">
+                <label class="admin-label" asp-for="RelationshipType">Tipo</label>
+                <select class="admin-select" asp-for="RelationshipType" asp-items="Html.GetEnumSelectList<RelationshipType>()">
+                    <option value="">Não classificado</option>
+                </select>
+                <span class="admin-validation" asp-validation-for="RelationshipType"></span>
+            </div>
+            <div class="admin-form-group">
+                <label class="admin-label required" asp-for="Phone">Telefone</label>
+                <input class="admin-input" asp-for="Phone" inputmode="tel" />
+                <span class="admin-validation" asp-validation-for="Phone"></span>
+            </div>
+            <div class="admin-form-group">
+                <label class="admin-label" asp-for="Email">Email</label>
+                <input class="admin-input" asp-for="Email" />
+                <span class="admin-validation" asp-validation-for="Email"></span>
+            </div>
+        </div>
+
+        <div class="admin-form-grid two mt-3">
+            <label class="admin-check">
+                <input asp-for="IsResponsible" />
+                <span>Responsável principal</span>
+            </label>
+            <label class="admin-check">
+                <input asp-for="CanAccessPortal" />
+                <span>Pode acessar portal familiar</span>
+            </label>
+        </div>
+    </section>
+
+    <div class="admin-form-actions">
+        <a class="rn-btn-secondary" asp-controller="Students" asp-action="Details" asp-route-id="@Model.StudentId">Cancelar</a>
+        <button class="rn-btn-primary" type="submit"><i class="ph ph-check-circle" aria-hidden="true"></i>Salvar familiar</button>
+    </div>
+</div>

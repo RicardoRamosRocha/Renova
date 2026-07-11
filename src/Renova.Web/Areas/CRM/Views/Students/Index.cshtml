@@ -1,11 +1,11 @@
 @using Renova.Domain.Entities
 @using Renova.Web.Areas.CRM.ViewModels.Students
 @using Renova.Web.ViewModels
-@model PagedResult<Student>
+@model StudentIndexViewModel
 
 @{
     ViewData["Title"] = "Acolhidos";
-    var statuses = (IReadOnlyDictionary<int, string>)ViewBag.Statuses;
+    var statuses = Model.Statuses;
 }
 
 <section class="crm-index-page">
@@ -13,7 +13,7 @@
         <div>
             <span class="crm-eyebrow">CRM / Acolhidos</span>
             <h1>Acolhidos</h1>
-            <p>Gerencie cadastros, status e acesso rápido ao perfil dos acolhidos.</p>
+            <p>Gerencie cadastros, admissões, vínculos familiares e acesso rápido ao perfil dos acolhidos.</p>
         </div>
 
         <a class="crm-primary-button" asp-action="Create">
@@ -36,7 +36,7 @@
                 <i class="ph ph-users" aria-hidden="true"></i>
             </div>
             <span>Total</span>
-            <strong>@ViewBag.Total</strong>
+            <strong>@Model.Total</strong>
             <small>Acolhidos cadastrados</small>
         </article>
 
@@ -45,7 +45,7 @@
                 <i class="ph ph-check-circle" aria-hidden="true"></i>
             </div>
             <span>Ativos</span>
-            <strong>@ViewBag.Active</strong>
+            <strong>@Model.Active</strong>
             <small>Em operação</small>
         </article>
 
@@ -54,7 +54,7 @@
                 <i class="ph ph-heartbeat" aria-hidden="true"></i>
             </div>
             <span>Em tratamento</span>
-            <strong>@ViewBag.InTreatment</strong>
+            <strong>@Model.InTreatment</strong>
             <small>Planos ativos</small>
         </article>
 
@@ -63,8 +63,8 @@
                 <i class="ph ph-calendar-check" aria-hidden="true"></i>
             </div>
             <span>Altas previstas</span>
-            <strong>@ViewBag.DischargePlanned</strong>
-            <small>Próximas altas</small>
+            <strong>@Model.DischargePlanned</strong>
+            <small>Planejadas no CRM</small>
         </article>
     </div>
 
@@ -80,20 +80,23 @@
                 <div class="crm-search-box">
                     <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
                     <input name="search"
-                           value="@ViewBag.Search"
+                           value="@Model.Search"
                            type="search"
-                           placeholder="Buscar por nome, CPF ou email" />
+                           placeholder="Buscar por nome, CPF, telefone ou email" />
                 </div>
 
                 <select name="status">
                     <option value="">Todos os status</option>
                     @foreach (var status in statuses)
                     {
-                        <option value="@status.Key" selected="@(ViewBag.Status == status.Key)">
+                        <option value="@status.Key" selected="@(Model.Status == status.Key)">
                             @status.Value
                         </option>
                     }
                 </select>
+
+                <input class="admin-input" name="admissionFrom" value="@Model.AdmissionFrom?.ToString("yyyy-MM-dd")" type="date" />
+                <input class="admin-input" name="admissionTo" value="@Model.AdmissionTo?.ToString("yyyy-MM-dd")" type="date" />
 
                 <button class="crm-secondary-button" type="submit">
                     <i class="ph ph-funnel" aria-hidden="true"></i>
@@ -102,7 +105,7 @@
             </form>
         </div>
 
-        @if (Model.Items.Count == 0)
+        @if (Model.Students.Items.Count == 0)
         {
             <div class="crm-empty-state">
                 <div class="crm-empty-icon">
@@ -134,7 +137,7 @@
                     </thead>
 
                     <tbody>
-                        @foreach (var student in Model.Items)
+                        @foreach (var student in Model.Students.Items)
                         {
                             var statusClass = student.Status == StudentStatuses.Inactive
                                 ? "danger"
@@ -149,27 +152,31 @@
                                     <a class="renova-person-cell" asp-action="Details" asp-route-id="@student.Id">
                                         @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
                                         {
-                                            Name = student.DisplayName,
-                                            PhotoUrl = student.DisplayPhotoUrl
+                                            Name = student.Name,
+                                            PhotoUrl = student.PhotoUrl
                                         })
 
                                         <span>
-                                            <strong class="renova-row-title">@student.DisplayName</strong>
+                                            <strong class="renova-row-title">@student.Name</strong>
                                             <small class="renova-row-subtitle">@StudentStatuses.Label(student.Status)</small>
                                         </span>
                                     </a>
                                 </td>
 
                                 <td>
-                                    <span class="renova-muted">@student.DisplayCpf</span>
+                                    <span class="renova-muted">@student.Cpf</span>
                                 </td>
 
                                 <td>
-                                    <span class="renova-muted">@student.DisplayPhone</span>
+                                    <span class="renova-muted">@student.Phone</span>
                                 </td>
 
                                 <td>
                                     <span class="renova-muted">@student.AdmissionDate.ToString("dd/MM/yyyy")</span>
+                                    @if (!string.IsNullOrWhiteSpace(student.ResponsibleProfessional))
+                                    {
+                                        <small class="renova-row-subtitle">Resp. @student.ResponsibleProfessional</small>
+                                    }
                                 </td>
 
                                 <td>
@@ -207,9 +214,9 @@
                 </table>
             </div>
 
-            @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model)
+            @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model.Students)
 
-            @foreach (var student in Model.Items)
+            @foreach (var student in Model.Students.Items)
             {
                 <div id="delete-student-@student.Id" class="admin-delete-modal" role="dialog" aria-modal="true">
                     <div class="admin-delete-dialog">

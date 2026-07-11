@@ -99,11 +99,13 @@ app.MapPost("/auth/web-login", async (
     };
 
     claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-    claims.AddRange(await userManager.GetClaimsAsync(user));
+
+    var userClaims = await userManager.GetClaimsAsync(user);
+    claims.AddRange(userClaims.Where(claim => claim.Type != CurrentTenantService.TenantIdClaimType));
 
     if (!claims.Any(claim => claim.Type == CurrentTenantService.TenantIdClaimType))
     {
-        var tenantId = await ResolveLoginTenantIdAsync(dbContextFactory, environment);
+        var tenantId = await ResolveLoginTenantIdAsync(dbContextFactory, environment, userClaims);
         if (tenantId.HasValue)
         {
             claims.Add(new Claim(CurrentTenantService.TenantIdClaimType, tenantId.Value.ToString()));
@@ -196,9 +198,23 @@ static string GetLoginErrorUrl(string? returnUrl)
 
 static async Task<Guid?> ResolveLoginTenantIdAsync(
     IDbContextFactory<AppDbContext> dbContextFactory,
-    IWebHostEnvironment environment)
+    IWebHostEnvironment environment,
+    IEnumerable<Claim> userClaims)
 {
     await using var db = await dbContextFactory.CreateDbContextAsync();
+
+    foreach (var claim in userClaims.Where(item => item.Type == CurrentTenantService.TenantIdClaimType))
+    {
+        if (!Guid.TryParse(claim.Value, out var claimTenantId) || claimTenantId == Guid.Empty)
+        {
+            continue;
+        }
+
+        if (await db.Tenants.AnyAsync(tenant => tenant.Id == claimTenantId && tenant.IsActive))
+        {
+            return claimTenantId;
+        }
+    }
 
     if (!environment.IsDevelopment())
     {

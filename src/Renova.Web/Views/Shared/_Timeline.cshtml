@@ -1,0 +1,41 @@
+@using Renova.Web.Areas.CRM.ViewModels.Students
+@model IReadOnlyList<TimelineItemViewModel>
+
+<div class="rn-timeline">
+    @if (Model.Count == 0)
+    {
+        <article class="rn-timeline-empty">
+            <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
+            <strong>Nenhum evento registrado</strong>
+            <span>Os eventos aparecerão conforme admissões, agenda e prontuário forem movimentados.</span>
+        </article>
+    }
+    else
+    {
+        @foreach (var item in Model)
+        {
+            <article class="rn-timeline-item">
+                <span class="rn-timeline-icon">
+                    <i class="ph @item.Icon" aria-hidden="true"></i>
+                </span>
+                <div>
+                    <header>
+                        <strong>@item.Title</strong>
+                        <time datetime="@item.OccurredAt.ToString("O")">@item.OccurredAt.ToString("dd/MM/yyyy HH:mm")</time>
+                    </header>
+                    @if (!string.IsNullOrWhiteSpace(item.Description))
+                    {
+                        <p>@item.Description</p>
+                    }
+                    <footer>
+                        <span>@item.Category</span>
+                        @if (!string.IsNullOrWhiteSpace(item.Responsible))
+                        {
+                            <span>@item.Responsible</span>
+                        }
+                    </footer>
+                </div>
+            </article>
+        }
+    }
+</div>

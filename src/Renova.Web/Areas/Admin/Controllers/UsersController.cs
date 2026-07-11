@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +12,11 @@ namespace Renova.Web.Areas.Admin.Controllers;
 public sealed class UsersController(
     UserManager<ApplicationUser> userManager,
     RoleManager<ApplicationRole> roleManager,
-    IPhotoService photoService) : AdminControllerBase
+    IPhotoService photoService,
+    ICurrentTenantService currentTenantService) : AdminControllerBase
 {
+    private const string MissingTenantMessage = "Não foi possível identificar a instituição atual. Entre novamente ou contate o administrador.";
+
     public async Task<IActionResult> Index(string? search, bool? active, int page = 1)
     {
         var query = userManager.Users.AsNoTracking();
@@ -83,6 +87,14 @@ public sealed class UsersController(
             return View(model);
         }
 
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            ModelState.AddModelError(string.Empty, MissingTenantMessage);
+            await LoadRolesAsync();
+            return View(model);
+        }
+
         string? photoPath;
 
         try
@@ -119,6 +131,14 @@ public sealed class UsersController(
         if (!string.IsNullOrWhiteSpace(model.Role))
         {
             await userManager.AddToRoleAsync(user, model.Role);
+        }
+
+        var tenantClaimResult = await EnsureTenantClaimAsync(user);
+        if (!tenantClaimResult.Succeeded)
+        {
+            AddIdentityErrors(tenantClaimResult);
+            await LoadRolesAsync();
+            return View(model);
         }
 
         TempData["Success"] = "Usuário cadastrado com sucesso.";
@@ -221,6 +241,14 @@ public sealed class UsersController(
             }
         }
 
+        var tenantClaimResult = await EnsureTenantClaimAsync(user);
+        if (!tenantClaimResult.Succeeded)
+        {
+            AddIdentityErrors(tenantClaimResult);
+            await LoadRolesAsync();
+            return View(model);
+        }
+
         TempData["Success"] = "Usuário atualizado com sucesso.";
         return RedirectToAction(nameof(Index));
     }
@@ -273,6 +301,42 @@ public sealed class UsersController(
             .OrderBy(role => role.Name)
             .Select(role => role.Name!)
             .ToListAsync();
+    }
+
+    private async Task<IdentityResult> EnsureTenantClaimAsync(ApplicationUser user)
+    {
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            return IdentityResult.Failed(new IdentityError
+            {
+                Code = "TenantNotResolved",
+                Description = MissingTenantMessage
+            });
+        }
+
+        var claims = await userManager.GetClaimsAsync(user);
+        var tenantClaims = claims
+            .Where(claim => claim.Type == CurrentTenantService.TenantIdClaimType)
+            .ToList();
+
+        if (tenantClaims.Count == 1 && tenantClaims[0].Value == tenantId.Value.ToString())
+        {
+            return IdentityResult.Success;
+        }
+
+        foreach (var tenantClaim in tenantClaims)
+        {
+            var removeResult = await userManager.RemoveClaimAsync(user, tenantClaim);
+            if (!removeResult.Succeeded)
+            {
+                return removeResult;
+            }
+        }
+
+        return await userManager.AddClaimAsync(
+            user,
+            new Claim(CurrentTenantService.TenantIdClaimType, tenantId.Value.ToString()));
     }
 
     private void AddIdentityErrors(IdentityResult result)

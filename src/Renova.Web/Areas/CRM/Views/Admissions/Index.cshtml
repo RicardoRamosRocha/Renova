@@ -1,0 +1,53 @@
+@using Renova.Domain.Entities
+@model IReadOnlyList<Admission>
+@{
+    ViewData["Title"] = "Admissões";
+}
+
+<section class="admin-page">
+    <header class="admin-form-header">
+        <div>
+            <nav class="admin-form-breadcrumb"><a asp-controller="Students" asp-action="Details" asp-route-id="@ViewBag.StudentId">Perfil</a><span>/</span><span>Admissões</span></nav>
+            <span class="rn-eyebrow">CRM</span>
+            <h1>Admissões de @ViewBag.StudentName</h1>
+        </div>
+        <a class="rn-btn-primary" asp-action="Create" asp-route-studentId="@ViewBag.StudentId"><i class="ph ph-plus" aria-hidden="true"></i>Nova admissão</a>
+    </header>
+
+    <section class="renova-table-card">
+        @if (Model.Count == 0)
+        {
+            <div class="crm-empty-state">
+                <div class="crm-empty-icon"><i class="ph ph-door-open" aria-hidden="true"></i></div>
+                <strong>Nenhuma admissão registrada</strong>
+                <p>Crie a primeira admissão para iniciar o histórico do acolhido.</p>
+            </div>
+        }
+        else
+        {
+            <div class="renova-table-wrap">
+                <table class="renova-table">
+                    <thead><tr><th>Entrada</th><th>Status</th><th>Responsável</th><th>Previsão</th><th class="text-end">Ações</th></tr></thead>
+                    <tbody>
+                    @foreach (var admission in Model)
+                    {
+                        <tr>
+                            <td>@admission.AdmissionDate.ToString("dd/MM/yyyy")</td>
+                            <td><span class="renova-status-badge info">@admission.AdmissionStatus</span></td>
+                            <td>@(admission.ResponsibleProfessional ?? "Não informado")</td>
+                            <td>@(admission.ExpectedDischargeDate?.ToString("dd/MM/yyyy") ?? "Sem previsão")</td>
+                            <td>
+                                <div class="renova-action-buttons">
+                                    <a class="renova-action-btn" asp-action="Edit" asp-route-id="@admission.Id" title="Editar"><i class="ph ph-pencil-simple" aria-hidden="true"></i></a>
+                                    <form asp-action="Discharge" asp-route-id="@admission.Id" method="post"><button class="renova-action-btn" type="submit" title="Alta"><i class="ph ph-check-circle" aria-hidden="true"></i></button></form>
+                                    <form asp-action="Transfer" asp-route-id="@admission.Id" method="post"><button class="renova-action-btn" type="submit" title="Transferir"><i class="ph ph-arrows-left-right" aria-hidden="true"></i></button></form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+</section>

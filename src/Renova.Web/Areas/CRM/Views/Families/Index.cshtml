@@ -1,10 +1,101 @@
+@using Renova.Domain.Entities
+@using Renova.Web.ViewModels
+@model IReadOnlyList<FamilyMember>
 @{
     ViewData["Title"] = "Famílias";
-    ViewData["PageEyebrow"] = "Relacionamento";
-    ViewData["PageDescription"] = "Estrutura para contatos familiares e vínculos com acolhidos.";
 }
 
 <section class="admin-page">
-    @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Components/_PageHeader.cshtml")
-    @await Html.PartialAsync("~/Areas/Admin/Views/Shared/Components/_EmptyState.cshtml")
+    <header class="admin-form-header">
+        <div>
+            <span class="rn-eyebrow">CRM / Famílias</span>
+            <h1>Vínculos familiares</h1>
+            <p>Contatos familiares vinculados aos acolhidos do tenant atual.</p>
+        </div>
+    </header>
+
+    @if (TempData["Success"] is string success)
+    {
+        <div class="crm-alert-success">
+            <i class="ph ph-check-circle" aria-hidden="true"></i>
+            <span>@success</span>
+        </div>
+    }
+
+    <section class="renova-table-card">
+        @if (Model.Count == 0)
+        {
+            <div class="crm-empty-state">
+                <div class="crm-empty-icon"><i class="ph ph-users-three" aria-hidden="true"></i></div>
+                <strong>Nenhum familiar encontrado</strong>
+                <p>Cadastre familiares a partir do perfil de um acolhido.</p>
+                <a class="crm-secondary-button" asp-controller="Students" asp-action="Index">
+                    <i class="ph ph-arrow-left" aria-hidden="true"></i>
+                    Ver acolhidos
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="renova-table-wrap">
+                <table class="renova-table">
+                    <thead>
+                        <tr>
+                            <th>Familiar</th>
+                            <th>Acolhido</th>
+                            <th>Parentesco</th>
+                            <th>Contato</th>
+                            <th>Permissões</th>
+                            <th class="text-end">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var member in Model)
+                    {
+                        <tr>
+                            <td>
+                                <span class="renova-person-cell">
+                                    @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
+                                    {
+                                        Name = member.DisplayName,
+                                        PhotoUrl = member.DisplayPhotoUrl
+                                    })
+                                    <span>
+                                        <strong class="renova-row-title">@member.DisplayName</strong>
+                                        <small class="renova-row-subtitle">@(member.DisplayEmail ?? "Sem email")</small>
+                                    </span>
+                                </span>
+                            </td>
+                            <td><a asp-controller="Students" asp-action="Details" asp-route-id="@member.StudentId">@member.Student.DisplayName</a></td>
+                            <td>@member.Relationship</td>
+                            <td>@member.DisplayPhone</td>
+                            <td>
+                                @if (member.IsResponsible)
+                                {
+                                    <span class="rn-badge rn-badge-info">Responsável</span>
+                                }
+                                @if (member.CanAccessPortal)
+                                {
+                                    <span class="rn-badge rn-badge-success">Portal</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="renova-action-buttons">
+                                    <a class="renova-action-btn" asp-action="Edit" asp-route-id="@member.Id" title="Editar">
+                                        <i class="ph ph-pencil-simple" aria-hidden="true"></i>
+                                    </a>
+                                    <form asp-action="Archive" asp-route-id="@member.Id" method="post">
+                                        <button class="renova-action-btn danger" type="submit" title="Arquivar">
+                                            <i class="ph ph-archive" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
 </section>

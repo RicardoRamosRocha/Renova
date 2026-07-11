@@ -1,4 +1,6 @@
+@using Renova.Web.Areas.CRM.ViewModels.Appointments
 @using Renova.Web.ViewModels
+@model AppointmentIndexViewModel
 @{
     ViewData["Title"] = "Agenda";
 }
@@ -8,33 +10,58 @@
         <div>
             <span>Calendário diário</span>
             <h1>Agenda de atendimentos</h1>
-            <p>Organização por horário, equipe responsável, sala e status operacional.</p>
+            <p>Atendimentos reais filtrados pelo tenant atual via acolhido vinculado.</p>
         </div>
-        <div class="rn-inline">
-            <a class="rn-btn-primary" href="#"><i class="ph ph-calendar-plus" aria-hidden="true"></i>Novo atendimento</a>
-            <a class="rn-btn-secondary" href="#"><i class="ph ph-calendar" aria-hidden="true"></i>Ver semana</a>
-        </div>
+        <form class="rn-inline" method="get">
+            <input class="admin-input" name="date" value="@Model.Date.ToString("yyyy-MM-dd")" type="date" />
+            <button class="rn-btn-secondary" type="submit"><i class="ph ph-calendar" aria-hidden="true"></i>Ver data</button>
+        </form>
     </div>
 
-    <div class="demo-grid-4">
-        <article class="rn-metric-card"><span>Hoje</span><strong>32</strong><small>Atendimentos</small></article>
-        <article class="rn-metric-card"><span>Confirmados</span><strong>29</strong><small>91%</small></article>
-        <article class="rn-metric-card"><span>Em andamento</span><strong>4</strong><small>Agora</small></article>
-        <article class="rn-metric-card"><span>Remarcações</span><strong>2</strong><small>Baixo impacto</small></article>
+    <div class="crm-metrics-grid">
+        <article class="rn-metric-card"><span>Total</span><strong>@Model.Total</strong><small>@Model.Date.ToString("dd/MM/yyyy")</small></article>
+        <article class="rn-metric-card"><span>Agendados</span><strong>@Model.Scheduled</strong><small>Status 1</small></article>
+        <article class="rn-metric-card"><span>Concluídos</span><strong>@Model.Completed</strong><small>Status 2</small></article>
+        <article class="rn-metric-card"><span>Cancelados</span><strong>@Model.Cancelled</strong><small>Status 3</small></article>
     </div>
 
-    <section class="demo-panel">
-        <div class="demo-section-title">
-            <div><span class="rn-eyebrow">Quinta-feira</span><h2>03 de Julho</h2></div>
-            <span class="rn-badge rn-badge-info">Equipe completa</span>
-        </div>
-        <div class="demo-list">
-            <article class="demo-schedule-card is-green"><strong>08:00</strong>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "João Silva" })<div><strong>João Silva</strong><p class="rn-muted">Psicoterapia individual · Sala 1 · Dra. Camila Torres</p></div><span class="rn-badge rn-badge-success">Confirmado</span></article>
-            <article class="demo-schedule-card is-blue"><strong>09:30</strong>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Maria Oliveira" })<div><strong>Maria Oliveira</strong><p class="rn-muted">Avaliação clínica · Consultório 2 · Dr. André Moreira</p></div><span class="rn-badge rn-badge-info">Em preparo</span></article>
-            <article class="demo-schedule-card is-yellow"><strong>11:00</strong>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Família Silva" })<div><strong>Atendimento Familiar</strong><p class="rn-muted">Família Silva · Serviço social · Sala de reunião</p></div><span class="rn-badge rn-badge-warning">Aguardando</span></article>
-            <article class="demo-schedule-card is-green"><strong>14:00</strong>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Rafael Andrade" })<div><strong>Avaliação Psicológica</strong><p class="rn-muted">Rafael Andrade · Triagem de alta · Psicologia</p></div><span class="rn-badge rn-badge-success">Confirmado</span></article>
-            <article class="demo-schedule-card is-blue"><strong>16:00</strong>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Grupo Terapêutico" })<div><strong>Grupo Terapêutico</strong><p class="rn-muted">12 acolhidos · Tema: prevenção de recaídas</p></div><span class="rn-badge rn-badge-info">Coletivo</span></article>
-            <article class="demo-schedule-card is-red"><strong>17:30</strong>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Equipe Multidisciplinar" })<div><strong>Revisão de plano</strong><p class="rn-muted">Equipe multidisciplinar · Sala diretoria clínica</p></div><span class="rn-badge rn-badge-danger">Prioridade</span></article>
-        </div>
+    <section class="renova-table-card">
+        @if (Model.Appointments.Count == 0)
+        {
+            <div class="crm-empty-state">
+                <div class="crm-empty-icon"><i class="ph ph-calendar-check" aria-hidden="true"></i></div>
+                <strong>Nenhum atendimento encontrado</strong>
+                <p>Não há atendimentos registrados para a data selecionada.</p>
+            </div>
+        }
+        else
+        {
+            <div class="renova-table-wrap">
+                <table class="renova-table">
+                    <thead><tr><th>Horário</th><th>Acolhido</th><th>Profissional</th><th>Status</th><th>Notas</th></tr></thead>
+                    <tbody>
+                    @foreach (var appointment in Model.Appointments)
+                    {
+                        <tr>
+                            <td>@appointment.ScheduledAt.ToString("HH:mm")</td>
+                            <td>
+                                <a class="renova-person-cell" asp-controller="Students" asp-action="Details" asp-route-id="@appointment.StudentId">
+                                    @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
+                                    {
+                                        Name = appointment.StudentName,
+                                        PhotoUrl = appointment.StudentPhotoUrl
+                                    })
+                                    <span><strong class="renova-row-title">@appointment.StudentName</strong></span>
+                                </a>
+                            </td>
+                            <td>@(appointment.ProfessionalName ?? "Não definido")</td>
+                            <td><span class="renova-status-badge info">@appointment.Status</span></td>
+                            <td>@(appointment.Notes ?? "Sem notas")</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
     </section>
 </section>

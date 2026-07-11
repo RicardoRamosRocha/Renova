@@ -1,0 +1,19 @@
+@using Renova.Web.Areas.CRM.ViewModels.Admissions
+@model AdmissionFormViewModel
+@{
+    ViewData["Title"] = "Editar Admissão";
+}
+
+<section class="admin-form-page">
+    <header class="admin-form-header">
+        <div>
+            <nav class="admin-form-breadcrumb"><a asp-controller="Students" asp-action="Details" asp-route-id="@Model.StudentId">Perfil</a><span>/</span><span>Editar admissão</span></nav>
+            <span class="rn-eyebrow">CRM</span>
+            <h1>Editar Admissão</h1>
+            <p>Atualize histórico, alta, transferência e responsável sem alterar o tenant.</p>
+        </div>
+    </header>
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        @await Html.PartialAsync("_Form", Model)
+    </form>
+</section>

@@ -1,0 +1,19 @@
+@using Renova.Web.Areas.CRM.ViewModels.Admissions
+@model AdmissionFormViewModel
+@{
+    ViewData["Title"] = "Nova Admissão";
+}
+
+<section class="admin-form-page">
+    <header class="admin-form-header">
+        <div>
+            <nav class="admin-form-breadcrumb"><a asp-controller="Students" asp-action="Details" asp-route-id="@Model.StudentId">Perfil</a><span>/</span><span>Nova admissão</span></nav>
+            <span class="rn-eyebrow">CRM</span>
+            <h1>Nova Admissão</h1>
+            <p>Crie uma admissão real vinculada ao acolhido e ao tenant atual.</p>
+        </div>
+    </header>
+    <form asp-action="Create" method="post">
+        @await Html.PartialAsync("_Form", Model)
+    </form>
+</section>

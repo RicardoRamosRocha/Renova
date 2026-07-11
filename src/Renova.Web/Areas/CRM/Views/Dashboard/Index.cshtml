@@ -1,0 +1,93 @@
+@using Renova.Web.Areas.CRM.ViewModels.Dashboard
+@using Renova.Web.ViewModels
+@model CrmDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard CRM";
+}
+
+<section class="crm-index-page">
+    <div class="crm-page-header">
+        <div>
+            <span class="crm-eyebrow">CRM / Operação</span>
+            <h1>Dashboard CRM</h1>
+            <p>Indicadores reais de acolhidos, admissões, altas e agenda do tenant atual.</p>
+        </div>
+        <a class="crm-primary-button" asp-controller="Students" asp-action="Create">
+            <i class="ph ph-user-plus" aria-hidden="true"></i>
+            Novo acolhido
+        </a>
+    </div>
+
+    <div class="crm-metrics-grid">
+        <article class="crm-metric-card"><div class="metric-icon"><i class="ph ph-users-three" aria-hidden="true"></i></div><span>Acolhidos ativos</span><strong>@Model.ActiveStudents</strong><small>Tenant atual</small></article>
+        <article class="crm-metric-card"><div class="metric-icon"><i class="ph ph-door-open" aria-hidden="true"></i></div><span>Admissões no mês</span><strong>@Model.AdmissionsThisMonth</strong><small>Entradas registradas</small></article>
+        <article class="crm-metric-card"><div class="metric-icon"><i class="ph ph-calendar-check" aria-hidden="true"></i></div><span>Altas previstas</span><strong>@Model.ExpectedDischarges</strong><small>A partir de hoje</small></article>
+        <article class="crm-metric-card"><div class="metric-icon"><i class="ph ph-flag-checkered" aria-hidden="true"></i></div><span>Altas realizadas</span><strong>@Model.CompletedDischarges</strong><small>No mês atual</small></article>
+    </div>
+
+    <div class="patient-profile-grid">
+        <section class="patient-card">
+            <div class="patient-card-title"><span>01</span><div><h2>Últimos acolhidos</h2><p>Cadastros recentes.</p></div></div>
+            <div class="patient-list">
+                @if (Model.LatestStudents.Count == 0)
+                {
+                    <article><strong>Nenhum acolhido cadastrado</strong><span>Crie o primeiro cadastro para movimentar o CRM.</span></article>
+                }
+                else
+                {
+                    @foreach (var student in Model.LatestStudents)
+                    {
+                        <article>
+                            <span class="renova-person-cell">
+                                @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = student.Name, PhotoUrl = student.PhotoUrl })
+                                <span><strong>@student.Name</strong><small>@student.CreatedAt.ToString("dd/MM/yyyy")</small></span>
+                            </span>
+                        </article>
+                    }
+                }
+            </div>
+        </section>
+
+        <section class="patient-card">
+            <div class="patient-card-title"><span>02</span><div><h2>Próximas altas</h2><p>Admissões com previsão registrada.</p></div></div>
+            <div class="patient-list">
+                @if (Model.UpcomingDischarges.Count == 0)
+                {
+                    <article><strong>Sem altas previstas</strong><span>Nenhuma previsão futura encontrada.</span></article>
+                }
+                else
+                {
+                    @foreach (var admission in Model.UpcomingDischarges)
+                    {
+                        <article><strong>@admission.StudentName</strong><span>@admission.ExpectedDischargeDate.ToString("dd/MM/yyyy") · @(admission.ResponsibleProfessional ?? "Sem responsável")</span></article>
+                    }
+                }
+            </div>
+        </section>
+
+        <section class="patient-card">
+            <div class="patient-card-title"><span>03</span><div><h2>Agenda de hoje</h2><p>Atendimentos encontrados para hoje.</p></div></div>
+            <div class="patient-list">
+                @if (Model.TodayAppointments.Count == 0)
+                {
+                    <article><strong>Nenhum atendimento hoje</strong><span>A agenda não possui registros para esta data.</span></article>
+                }
+                else
+                {
+                    @foreach (var appointment in Model.TodayAppointments)
+                    {
+                        <article><strong>@appointment.ScheduledAt.ToString("HH:mm") · @appointment.StudentName</strong><span>@(appointment.ProfessionalName ?? "Profissional não definido")</span></article>
+                    }
+                }
+            </div>
+        </section>
+
+        <section class="patient-card">
+            <div class="patient-card-title"><span>04</span><div><h2>Alertas</h2><p>Sinais operacionais sem números fictícios.</p></div></div>
+            <div class="patient-metric-row">
+                <article><strong>@Model.Transfers</strong><small>Transferências no mês</small></article>
+                <article><strong>@Model.BirthdaysThisMonth</strong><small>Aniversariantes</small></article>
+            </div>
+        </section>
+    </div>
+</section>

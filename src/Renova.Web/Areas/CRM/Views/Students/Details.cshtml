@@ -1,41 +1,15 @@
-@using Renova.Domain.Entities
 @using Renova.Web.Areas.CRM.ViewModels.Students
 @using Renova.Web.ViewModels
-@model Student
+@model StudentDetailsViewModel
 @{
-    ViewData["Title"] = "Prontuário do Acolhido";
-    var today = DateTime.Today;
-    var birthDate = Model.DisplayBirthDate.Date;
-    var admissionDate = Model.AdmissionDate.Date;
-    var age = today.Year - birthDate.Year;
-    if (birthDate > today.AddYears(-age))
-    {
-        age--;
-    }
-
-    var treatmentDays = Math.Max(0, (today - admissionDate).Days);
-    var statusClass = Model.Status == StudentStatuses.Inactive
-        ? "danger"
-        : Model.Status == StudentStatuses.InTreatment
-            ? "info"
-            : Model.Status == StudentStatuses.DischargePlanned
-                ? "warn"
-                : "ok";
-    var statusBadgeClass = statusClass == "ok" ? "rn-badge-success" : statusClass == "warn" ? "rn-badge-warning" : statusClass == "danger" ? "rn-badge-danger" : "rn-badge-info";
-    var nextAppointments = Model.Appointments
-        .Where(item => item.ScheduledAt.Date >= today)
-        .OrderBy(item => item.ScheduledAt)
-        .Take(3)
-        .ToList();
-    var evolutions = Model.MedicalEvolutions
-        .Where(item => !item.IsDeleted)
-        .OrderByDescending(item => item.CreatedAt)
-        .Take(3)
-        .ToList();
-    var courses = Model.ProgressEntries
-        .OrderByDescending(item => item.UpdatedAt ?? item.CreatedAt)
-        .Take(3)
-        .ToList();
+    ViewData["Title"] = "Perfil do Acolhido";
+    var statusBadgeClass = Model.Status == StudentStatuses.Inactive
+        ? "rn-badge-danger"
+        : Model.Status == StudentStatuses.DischargePlanned
+            ? "rn-badge-warning"
+            : Model.Status == StudentStatuses.InTreatment
+                ? "rn-badge-info"
+                : "rn-badge-success";
 }
 
 <section class="admin-page patient-profile">
@@ -43,178 +17,163 @@
         <div class="patient-identity">
             @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
             {
-                Name = Model.DisplayName,
-                PhotoUrl = Model.DisplayPhotoUrl,
+                Name = Model.Name,
+                PhotoUrl = Model.PhotoUrl,
                 Size = "lg"
             })
             <div>
-                <span class="rn-eyebrow">Prontuário clínico</span>
-                <h1>@Model.DisplayName</h1>
+                <span class="rn-eyebrow">CRM / Perfil do acolhido</span>
+                <h1>@Model.Name</h1>
                 <p>
                     <span class="rn-badge @statusBadgeClass">@StudentStatuses.Label(Model.Status)</span>
-                    <span>Entrada em @Model.AdmissionDate.ToString("dd/MM/yyyy")</span>
+                    <span>@Model.TenantName</span>
+                    @if (!string.IsNullOrWhiteSpace(Model.ResponsibleProfessional))
+                    {
+                        <span>Resp. @Model.ResponsibleProfessional</span>
+                    }
                 </p>
             </div>
         </div>
         <div class="patient-actions">
             <a class="rn-btn-primary" asp-action="Edit" asp-route-id="@Model.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>
-            <button class="rn-btn-secondary" type="button" onclick="window.print()"><i class="ph ph-printer" aria-hidden="true"></i>Imprimir</button>
-            <button class="rn-btn-secondary" type="button" onclick="window.print()"><i class="ph ph-file-pdf" aria-hidden="true"></i>Gerar PDF</button>
+            <a class="rn-btn-secondary" asp-controller="Admissions" asp-action="Create" asp-route-studentId="@Model.Id"><i class="ph ph-door-open" aria-hidden="true"></i>Admissão</a>
+            <a class="rn-btn-secondary" asp-controller="Families" asp-action="Create" asp-route-studentId="@Model.Id"><i class="ph ph-users-three" aria-hidden="true"></i>Familiar</a>
             <a class="rn-btn-secondary" asp-action="Index"><i class="ph ph-arrow-left" aria-hidden="true"></i>Voltar</a>
         </div>
     </div>
 
     <div class="patient-kpi-grid">
-        <article><small>Idade</small><strong>@age anos</strong></article>
-        <article><small>Dias em tratamento</small><strong>@treatmentDays</strong></article>
-        <article><small>CPF</small><strong>@Model.DisplayCpf</strong></article>
-        <article><small>Telefone</small><strong>@Model.DisplayPhone</strong></article>
+        <article><small>Idade</small><strong>@Model.Age anos</strong></article>
+        <article><small>Dias de permanência</small><strong>@Model.TreatmentDays</strong></article>
+        <article><small>CPF</small><strong>@Model.Cpf</strong></article>
+        <article><small>Entrada</small><strong>@Model.AdmissionDate.ToString("dd/MM/yyyy")</strong></article>
     </div>
 
-    <div class="patient-profile-grid">
+    <nav class="crm-profile-tabs" aria-label="Seções do perfil">
+        <a href="#overview">Visão geral</a>
+        <a href="#admissions">Admissões</a>
+        <a href="#family">Família</a>
+        <a href="#agenda">Agenda</a>
+        <a href="#timeline">Timeline</a>
+    </nav>
+
+    <div class="patient-profile-grid" id="overview">
         <section class="patient-card">
             <div class="patient-card-title">
                 <span>01</span>
                 <div><h2>Dados pessoais</h2><p>Identificação principal do acolhido.</p></div>
             </div>
             <dl class="patient-data-list">
-                <div><dt>Nome completo</dt><dd>@Model.DisplayName</dd></div>
-                <div><dt>CPF</dt><dd>@Model.DisplayCpf</dd></div>
-                <div><dt>Nascimento</dt><dd>@Model.DisplayBirthDate.ToString("dd/MM/yyyy")</dd></div>
-                <div><dt>Idade</dt><dd>@age anos</dd></div>
+                <div><dt>Nome completo</dt><dd>@Model.Name</dd></div>
+                <div><dt>CPF</dt><dd>@Model.Cpf</dd></div>
+                <div><dt>Nascimento</dt><dd>@Model.BirthDate.ToString("dd/MM/yyyy")</dd></div>
+                <div><dt>Idade</dt><dd>@Model.Age anos</dd></div>
             </dl>
         </section>
 
         <section class="patient-card">
             <div class="patient-card-title">
                 <span>02</span>
-                <div><h2>Contato</h2><p>Canais para comunicação da equipe.</p></div>
+                <div><h2>Contato</h2><p>Canais usados pela equipe.</p></div>
             </div>
             <dl class="patient-data-list">
-                <div><dt>Telefone</dt><dd>@Model.DisplayPhone</dd></div>
-                <div><dt>Email</dt><dd>@(Model.DisplayEmail ?? "Não informado")</dd></div>
+                <div><dt>Telefone</dt><dd>@Model.Phone</dd></div>
+                <div><dt>Email</dt><dd>@(Model.Email ?? "Não informado")</dd></div>
                 <div><dt>Endereço</dt><dd>@(Model.Address ?? "Não informado")</dd></div>
             </dl>
         </section>
 
-        <section class="patient-card">
+        <section class="patient-card" id="admissions">
             <div class="patient-card-title">
                 <span>03</span>
-                <div><h2>Acolhimento</h2><p>Status e tempo de acompanhamento.</p></div>
+                <div><h2>Admissões</h2><p>Histórico de acolhimentos e altas.</p></div>
             </div>
-            <div class="patient-metric-row">
-                <article><strong>@StudentStatuses.Label(Model.Status)</strong><small>Status atual</small></article>
-                <article><strong>@treatmentDays dias</strong><small>Em tratamento</small></article>
-                <article><strong>@Model.AdmissionDate.ToString("dd/MM/yyyy")</strong><small>Data de entrada</small></article>
+            <div class="patient-list">
+                @if (Model.Admissions.Count == 0)
+                {
+                    <article><strong>Nenhuma admissão registrada</strong><span>Crie uma admissão para iniciar o histórico operacional.</span></article>
+                }
+                else
+                {
+                    @foreach (var admission in Model.Admissions)
+                    {
+                        <article>
+                            <strong>@admission.Status - @admission.AdmissionDate.ToString("dd/MM/yyyy")</strong>
+                            <span>
+                                @(admission.ResponsibleProfessional ?? "Profissional não informado")
+                                @if (admission.ExpectedDischargeDate.HasValue)
+                                {
+                                    <text> · previsão @admission.ExpectedDischargeDate.Value.ToString("dd/MM/yyyy")</text>
+                                }
+                            </span>
+                        </article>
+                    }
+                }
             </div>
         </section>
 
-        <section class="patient-card">
+        <section class="patient-card" id="family">
             <div class="patient-card-title">
                 <span>04</span>
-                <div><h2>Histórico</h2><p>Evoluções recentes do prontuário.</p></div>
-            </div>
-            <div class="patient-timeline">
-                @if (evolutions.Count == 0)
-                {
-                    <article><strong>Acolhimento inicial</strong><p>Plano terapêutico estruturado, rotina acompanhada e evolução clínica monitorada pela equipe.</p></article>
-                    <article><strong>Revisão multiprofissional</strong><p>Participação regular em atendimentos, grupos e atividades de reinserção.</p></article>
-                }
-                else
-                {
-                    @foreach (var evolution in evolutions)
-                    {
-                        <article>
-                            <strong>@evolution.CreatedAt.ToString("dd/MM/yyyy") - @evolution.Professional.FullName</strong>
-                            <p>@evolution.Description</p>
-                        </article>
-                    }
-                }
-            </div>
-        </section>
-
-        <section class="patient-card">
-            <div class="patient-card-title">
-                <span>05</span>
-                <div><h2>Próximos atendimentos</h2><p>Agenda clínica vinculada ao acolhido.</p></div>
-            </div>
-            <div class="patient-list">
-                @if (nextAppointments.Count == 0)
-                {
-                    <article><strong>Psicoterapia individual</strong><span>Agendamento demonstrativo - próxima semana</span></article>
-                    <article><strong>Atendimento familiar</strong><span>Agenda sugerida para acompanhamento da rede de apoio</span></article>
-                }
-                else
-                {
-                    @foreach (var appointment in nextAppointments)
-                    {
-                        <article>
-                            <strong>@appointment.ScheduledAt.ToString("dd/MM/yyyy HH:mm")</strong>
-                            <span>@(appointment.Professional?.FullName ?? "Profissional a definir")</span>
-                        </article>
-                    }
-                }
-            </div>
-        </section>
-
-        <section class="patient-card">
-            <div class="patient-card-title">
-                <span>06</span>
-                <div><h2>Cursos vinculados</h2><p>Engajamento nas trilhas EAD.</p></div>
-            </div>
-            <div class="patient-list">
-                @if (courses.Count == 0)
-                {
-                    <article><strong>Prevenção de recaídas</strong><span>92% concluído</span></article>
-                    <article><strong>Projeto de vida</strong><span>84% concluído</span></article>
-                }
-                else
-                {
-                    @foreach (var progress in courses)
-                    {
-                        <article>
-                            <strong>@progress.Lesson.Title</strong>
-                            <span>@progress.WatchedPercentage% assistido</span>
-                        </article>
-                    }
-                }
-            </div>
-        </section>
-
-        <section class="patient-card">
-            <div class="patient-card-title">
-                <span>07</span>
-                <div><h2>Família</h2><p>Rede de apoio cadastrada.</p></div>
+                <div><h2>Família</h2><p>Rede de apoio vinculada.</p></div>
             </div>
             <div class="patient-list">
                 @if (Model.FamilyMembers.Count == 0)
                 {
-                    <article><strong>Responsável principal</strong><span>Cadastro familiar pendente para demonstração</span></article>
+                    <article><strong>Nenhum familiar cadastrado</strong><span>Inclua contatos autorizados para acompanhamento.</span></article>
                 }
                 else
                 {
-                    @foreach (var member in Model.FamilyMembers.Take(3))
+                    @foreach (var member in Model.FamilyMembers)
                     {
                         <article>
-                            <strong>@member.DisplayName</strong>
-                            <span>@member.Relationship - @member.DisplayPhone</span>
+                            <strong>@member.Name</strong>
+                            <span>@member.Relationship · @member.Phone</span>
+                            <span>
+                                @if (member.IsResponsible)
+                                {
+                                    <span class="rn-badge rn-badge-info">Responsável</span>
+                                }
+                                @if (member.CanAccessPortal)
+                                {
+                                    <span class="rn-badge rn-badge-success">Portal</span>
+                                }
+                            </span>
                         </article>
                     }
                 }
             </div>
         </section>
 
-        <section class="patient-card">
+        <section class="patient-card" id="agenda">
             <div class="patient-card-title">
-                <span>08</span>
-                <div><h2>Documentos</h2><p>Checklist visual do prontuário.</p></div>
+                <span>05</span>
+                <div><h2>Agenda</h2><p>Próximos atendimentos reais.</p></div>
             </div>
-            <div class="document-grid">
-                <span class="is-ready">Documento pessoal</span>
-                <span class="is-ready">Termo de acolhimento</span>
-                <span>Plano terapêutico</span>
-                <span>Autorização familiar</span>
+            <div class="patient-list">
+                @if (Model.Appointments.Count == 0)
+                {
+                    <article><strong>Sem atendimentos futuros</strong><span>Nenhum agendamento encontrado para este acolhido.</span></article>
+                }
+                else
+                {
+                    @foreach (var appointment in Model.Appointments)
+                    {
+                        <article>
+                            <strong>@appointment.ScheduledAt.ToString("dd/MM/yyyy HH:mm")</strong>
+                            <span>@appointment.ProfessionalName</span>
+                        </article>
+                    }
+                }
             </div>
+        </section>
+
+        <section class="patient-card" id="timeline">
+            <div class="patient-card-title">
+                <span>06</span>
+                <div><h2>Timeline</h2><p>Eventos reais consolidados do acolhido.</p></div>
+            </div>
+            @await Html.PartialAsync("~/Views/Shared/_Timeline.cshtml", Model.Timeline)
         </section>
     </div>
 </section>
