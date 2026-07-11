@@ -7,10 +7,10 @@ namespace Renova.Infrastructure.Data.Seed;
 
 public sealed class TenantBootstrapSeeder
 {
-    private const string DefaultTenantName = "Comunidade Renova Demo";
-    private const string DefaultTenantCnpj = "00.000.000/0001-00";
-    private const string DefaultTenantEmail = "demo@renova.com.br";
-    private const string DefaultPlanName = "Plano Demonstração";
+    public const string DefaultTenantName = "Comunidade Renova Demo";
+    public const string DefaultTenantCnpj = "00.000.000/0001-00";
+    public const string DefaultTenantEmail = "demo@renova.com.br";
+    public const string DefaultPlanName = "Plano Demonstração";
 
     public static async Task SeedAsync(IServiceProvider services)
     {

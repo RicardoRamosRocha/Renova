@@ -27,11 +27,13 @@ public sealed class TenantUserClaimSeeder
                 return;
             }
 
-            var administrators = await userManager.GetUsersInRoleAsync(ApplicationRoles.Administrator);
+            var users = await userManager.Users
+                .Where(user => user.IsActive)
+                .ToListAsync();
 
-            foreach (var administrator in administrators)
+            foreach (var user in users)
             {
-                var claims = await userManager.GetClaimsAsync(administrator);
+                var claims = await userManager.GetClaimsAsync(user);
                 var tenantClaims = claims
                     .Where(claim => claim.Type == TenantIdClaimType)
                     .ToList();
@@ -43,15 +45,15 @@ public sealed class TenantUserClaimSeeder
 
                 foreach (var tenantClaim in tenantClaims)
                 {
-                    var removeResult = await userManager.RemoveClaimAsync(administrator, tenantClaim);
-                    ThrowIfFailed(removeResult, $"Could not remove invalid tenant claim from user {administrator.Email}.");
+                    var removeResult = await userManager.RemoveClaimAsync(user, tenantClaim);
+                    ThrowIfFailed(removeResult, $"Could not remove invalid tenant claim from user {user.Email}.");
                 }
 
                 var addResult = await userManager.AddClaimAsync(
-                    administrator,
+                    user,
                     new Claim(TenantIdClaimType, tenantId.Value.ToString()));
 
-                ThrowIfFailed(addResult, $"Could not add tenant claim to user {administrator.Email}.");
+                ThrowIfFailed(addResult, $"Could not add tenant claim to user {user.Email}.");
             }
 
             logger.LogInformation("Tenant user claim seed finished.");
@@ -67,7 +69,7 @@ public sealed class TenantUserClaimSeeder
     {
         var demoTenantId = await db.Tenants
             .AsNoTracking()
-            .Where(tenant => tenant.Name == "Comunidade Renova Demo" && tenant.IsActive)
+            .Where(tenant => tenant.Name == TenantBootstrapSeeder.DefaultTenantName && tenant.IsActive)
             .Select(tenant => (Guid?)tenant.Id)
             .FirstOrDefaultAsync();
 
