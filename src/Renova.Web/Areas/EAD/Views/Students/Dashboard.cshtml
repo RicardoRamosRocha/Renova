@@ -1,0 +1,108 @@
+@using Renova.Web.Areas.EAD.ViewModels.Students
+@using Renova.Web.ViewModels
+@model StudentLearningDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard do Aluno";
+}
+
+<section class="ead-page">
+    @if (Model.StudentId == Guid.Empty)
+    {
+        <section class="crm-empty-state">
+            <div class="crm-empty-icon"><i class="ph ph-student" aria-hidden="true"></i></div>
+            <strong>Nenhum acolhido disponível</strong>
+            <p>Cadastre acolhidos para acompanhar desenvolvimento pessoal, trilhas e certificados.</p>
+        </section>
+    }
+    else
+    {
+        <div class="ead-student-hero">
+            <div class="patient-identity">
+                @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = Model.StudentName, PhotoUrl = Model.PhotoUrl, Size = "lg" })
+                <div>
+                    <span class="ead-eyebrow">Aluno / Plano terapêutico digital</span>
+                    <h1>@Model.StudentName</h1>
+                    <p>@Model.OverallProgress% de progresso geral · @Model.CompletedLessons aulas concluídas · @Model.Certificates certificados</p>
+                </div>
+            </div>
+            <form method="get">
+                <select class="admin-select" name="studentId" onchange="this.form.submit()">
+                    @foreach (var student in Model.Students)
+                    {
+                        <option value="@student.Id" selected="@(student.Id == Model.StudentId)">@student.Name</option>
+                    }
+                </select>
+            </form>
+        </div>
+
+        <div class="ead-metrics-grid">
+            <article class="ead-metric-card"><span>Progresso</span><strong>@Model.OverallProgress%</strong><small>Plano atual</small></article>
+            <article class="ead-metric-card"><span>Cursos</span><strong>@Model.Courses.Count</strong><small>Iniciados</small></article>
+            <article class="ead-metric-card"><span>Trilhas</span><strong>@Model.Trails.Count</strong><small>Em andamento</small></article>
+            <article class="ead-metric-card"><span>Próxima atividade</span><strong>@(Model.NextActivity ?? "Sem pendência")</strong><small>Prioridade</small></article>
+        </div>
+
+        <div class="patient-profile-grid">
+            <section class="medical-panel">
+                <div class="medical-panel-title"><span class="rn-eyebrow">Cursos</span><h2>Progresso por curso</h2></div>
+                <div class="ead-student-course-list">
+                    @if (Model.Courses.Count == 0)
+                    {
+                        <article class="medical-empty-line">Nenhum curso iniciado.</article>
+                    }
+                    else
+                    {
+                        @foreach (var course in Model.Courses)
+                        {
+                            <article>
+                                <div><strong>@course.Title</strong><span>@course.Trail · @course.CompletedLessons/@course.TotalLessons aulas</span></div>
+                                <strong>@course.Progress%</strong>
+                                <div class="ead-progress-track"><div class="ead-progress-fill" style="width:@course.Progress%;"></div></div>
+                            </article>
+                        }
+                    }
+                </div>
+            </section>
+
+            <section class="medical-panel">
+                <div class="medical-panel-title"><span class="rn-eyebrow">Plano terapêutico</span><h2>Metas EAD</h2></div>
+                <div class="renova-table-wrap">
+                    <table class="renova-table">
+                        <thead><tr><th>Objetivo</th><th>Atividade</th><th>Responsável</th><th>Status</th><th>Conclusão</th></tr></thead>
+                        <tbody>
+                        @foreach (var goal in Model.Goals)
+                        {
+                            <tr><td>@goal.Objective</td><td>@goal.Activity</td><td>@goal.Responsible</td><td>@goal.Status</td><td>@goal.Progress%</td></tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="medical-panel">
+                <div class="medical-panel-title"><span class="rn-eyebrow">Gamificação</span><h2>Conquistas profissionais</h2></div>
+                <div class="ead-achievement-grid">
+                    @foreach (var achievement in Model.Achievements)
+                    {
+                        <article class="@(achievement.Achieved ? "is-achieved" : string.Empty)">
+                            <i class="ph @achievement.Icon" aria-hidden="true"></i>
+                            <strong>@achievement.Title</strong>
+                            <span>@achievement.Description</span>
+                        </article>
+                    }
+                </div>
+            </section>
+
+            <section class="medical-panel">
+                <div class="medical-panel-title"><span class="rn-eyebrow">Certificados</span><h2>Validação</h2></div>
+                <article class="ead-certificate-preview">
+                    <i class="ph ph-qr-code" aria-hidden="true"></i>
+                    <div>
+                        <strong>@Model.Certificates certificado(s) emitido(s)</strong>
+                        <span>Estrutura premium preparada para QRCode, número, carga horária, professor, data e validação pública.</span>
+                    </div>
+                </article>
+            </section>
+        </div>
+    }
+</section>

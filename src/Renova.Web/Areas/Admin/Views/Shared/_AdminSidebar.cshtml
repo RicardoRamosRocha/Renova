@@ -36,7 +36,9 @@
 
         <div class="admin-nav-group">
             <span class="admin-nav-title">Ensino</span>
+            <a class="@Active("EAD", "Dashboard")" asp-area="EAD" asp-controller="Dashboard" asp-action="Index"><i class="ph ph-chart-bar" aria-hidden="true"></i><span>Dashboard EAD</span></a>
             <a class="@Active("EAD", "Courses")" asp-area="EAD" asp-controller="Courses" asp-action="Index"><i class="ph ph-graduation-cap" aria-hidden="true"></i><span>Cursos</span></a>
+            <a class="@Active("EAD", "Students")" asp-area="EAD" asp-controller="Students" asp-action="Dashboard"><i class="ph ph-student" aria-hidden="true"></i><span>Aluno</span></a>
             <a href="#" aria-disabled="true"><i class="ph ph-books" aria-hidden="true"></i><span>Biblioteca</span></a>
         </div>
 

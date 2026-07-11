@@ -1,18 +1,8 @@
+@using Renova.Web.Areas.EAD.ViewModels.Courses
+@model CourseIndexViewModel
 @{
     ViewData["Title"] = "Cursos";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
-
-    var courses = new[]
-    {
-        new { Icon = "ph-brain", Title = "Prevenção à Recaída", Category = "Psicoeducação", Teacher = "Equipe Terapêutica", Hours = "24h", Lessons = 18, Students = 86, Certificates = 31, Progress = 84, Status = "Publicado" },
-        new { Icon = "ph-users-four", Title = "Família e Reinserção Social", Category = "Família", Teacher = "Serviço Social", Hours = "16h", Lessons = 12, Students = 43, Certificates = 17, Progress = 62, Status = "Publicado" },
-        new { Icon = "ph-heart", Title = "Inteligência Emocional", Category = "Desenvolvimento", Teacher = "Psicologia", Hours = "20h", Lessons = 15, Students = 72, Certificates = 24, Progress = 76, Status = "Publicado" },
-        new { Icon = "ph-sparkle", Title = "Espiritualidade e Propósito", Category = "Valores", Teacher = "Coordenação", Hours = "12h", Lessons = 10, Students = 58, Certificates = 19, Progress = 68, Status = "Publicado" },
-        new { Icon = "ph-person-simple-run", Title = "Rotina Saudável", Category = "Saúde", Teacher = "Educador Físico", Hours = "10h", Lessons = 8, Students = 91, Certificates = 44, Progress = 89, Status = "Publicado" },
-        new { Icon = "ph-target", Title = "Projeto de Vida", Category = "Planejamento", Teacher = "Equipe Pedagógica", Hours = "18h", Lessons = 14, Students = 64, Certificates = 22, Progress = 71, Status = "Publicado" },
-        new { Icon = "ph-chat-circle-text", Title = "Comunicação Não Violenta", Category = "Relacionamentos", Teacher = "Terapia de Grupo", Hours = "14h", Lessons = 9, Students = 39, Certificates = 12, Progress = 55, Status = "Rascunho" },
-        new { Icon = "ph-plant", Title = "Autoconhecimento e Responsabilidade", Category = "Recuperação", Teacher = "Equipe Clínica", Hours = "22h", Lessons = 16, Students = 78, Certificates = 28, Progress = 80, Status = "Publicado" }
-    };
 }
 
 <section class="ead-page">
@@ -20,7 +10,7 @@
         <div>
             <span class="ead-eyebrow">Plataforma EAD</span>
             <h1>Biblioteca de Cursos</h1>
-            <p>Cursos preparados para apoiar o processo de recuperação, desenvolvimento pessoal e reinserção social dos acolhidos.</p>
+            <p>Cursos ligados a trilhas terapêuticas, progresso real dos acolhidos e certificados emitidos.</p>
         </div>
 
         <a class="ead-primary-button" asp-area="EAD" asp-controller="Courses" asp-action="Create">
@@ -30,79 +20,90 @@
     </div>
 
     <div class="ead-metrics-grid">
-        <article class="ead-metric-card"><span>Cursos publicados</span><strong>18</strong><small>+4 este mês</small></article>
-        <article class="ead-metric-card"><span>Alunos estudando</span><strong>94</strong><small>72% engajados</small></article>
-        <article class="ead-metric-card"><span>Certificados emitidos</span><strong>197</strong><small>34 este mês</small></article>
-        <article class="ead-metric-card"><span>Progresso médio</span><strong>78%</strong><small>acima da meta</small></article>
+        <article class="ead-metric-card"><span>Cursos ativos</span><strong>@Model.ActiveCourses</strong><small>@Model.TotalCourses cadastrados</small></article>
+        <article class="ead-metric-card"><span>Alunos estudando</span><strong>@Model.StudyingStudents</strong><small>Tenant atual</small></article>
+        <article class="ead-metric-card"><span>Certificados</span><strong>@Model.Certificates</strong><small>Emitidos</small></article>
+        <article class="ead-metric-card"><span>Engajamento</span><strong>@Model.AverageProgress%</strong><small>Progresso médio</small></article>
     </div>
 
-    <div class="ead-filter-bar">
+    <form class="ead-filter-bar" method="get">
         <label class="ead-search-box">
             <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
-            <input type="text" placeholder="Pesquisar curso, categoria ou professor..." />
+            <input name="search" value="@Model.Search" type="search" placeholder="Pesquisar curso, trilha ou descrição..." />
         </label>
-        <select>
-            <option>Todos os status</option>
-            <option>Publicado</option>
-            <option>Rascunho</option>
-            <option>Arquivado</option>
+        <select name="active">
+            <option value="">Todos os status</option>
+            <option value="true" selected="@(Model.Active == true)">Publicado</option>
+            <option value="false" selected="@(Model.Active == false)">Arquivado</option>
         </select>
-    </div>
+        <select name="trail">
+            <option value="">Todas as trilhas</option>
+            @foreach (var trail in Model.Trails)
+            {
+                <option value="@trail" selected="@(Model.Trail == trail)">@trail</option>
+            }
+        </select>
+        <button class="ead-secondary-button" type="submit"><i class="ph ph-funnel" aria-hidden="true"></i>Filtrar</button>
+    </form>
 
-    <div class="ead-course-grid">
-        @foreach (var course in courses)
-        {
-            var statusClass = course.Status == "Publicado" ? "rn-badge-success" : "rn-badge-warning";
+    @if (Model.Courses.Items.Count == 0)
+    {
+        <section class="crm-empty-state">
+            <div class="crm-empty-icon"><i class="ph ph-graduation-cap" aria-hidden="true"></i></div>
+            <strong>Nenhum curso encontrado</strong>
+            <p>Crie cursos ou ajuste os filtros da biblioteca EAD.</p>
+        </section>
+    }
+    else
+    {
+        <div class="ead-course-grid">
+            @foreach (var course in Model.Courses.Items)
+            {
+                var statusClass = course.IsActive ? "rn-badge-success" : "rn-badge-warning";
 
-            <article class="ead-course-card">
-                <div class="ead-course-visual">
-                    <i class="ph @course.Icon" aria-hidden="true"></i>
-                </div>
-
-                <div class="ead-course-body">
-                    <div class="ead-course-meta">
-                        <span class="rn-badge rn-badge-info">@course.Category</span>
-                        <span class="rn-badge @statusClass">@course.Status</span>
+                <article class="ead-course-card">
+                    <div class="ead-course-visual">
+                        <i class="ph @course.Icon" aria-hidden="true"></i>
                     </div>
 
-                    <div>
-                        <h2>@course.Title</h2>
-                        <p>Curso com abordagem prática para fortalecer recuperação, disciplina, autonomia e desenvolvimento pessoal.</p>
-                    </div>
+                    <div class="ead-course-body">
+                        <div class="ead-course-meta">
+                            <span class="rn-badge rn-badge-info">@course.Trail</span>
+                            <span class="rn-badge @statusClass">@(course.IsActive ? "Publicado" : "Arquivado")</span>
+                        </div>
 
-                    <div class="ead-info-grid">
                         <div>
-                            <small>Professor</small>
-                            <strong>@course.Teacher</strong>
+                            <h2>@course.Title</h2>
+                            <p>@course.Description</p>
                         </div>
-                        <div>
-                            <small>Carga horária</small>
-                            <strong>@course.Hours</strong>
-                        </div>
-                    </div>
 
-                    <div class="rn-stack">
-                        <div class="ead-progress-label">
-                            <span>Progresso médio</span>
-                            <strong>@course.Progress%</strong>
+                        <div class="ead-info-grid">
+                            <div><small>Professor</small><strong>@course.Teacher</strong></div>
+                            <div><small>Carga horária</small><strong>@course.WorkloadHours h</strong></div>
+                            <div><small>Nível</small><strong>@course.Level</strong></div>
+                            <div><small>Duração</small><strong>@course.DurationInMinutes min</strong></div>
                         </div>
-                        <div class="ead-progress-track">
-                            <div class="ead-progress-fill" style="width:@course.Progress%;"></div>
+
+                        <div class="rn-stack">
+                            <div class="ead-progress-label"><span>Progresso médio</span><strong>@course.AverageProgress%</strong></div>
+                            <div class="ead-progress-track"><div class="ead-progress-fill" style="width:@course.AverageProgress%;"></div></div>
+                        </div>
+
+                        <div class="ead-course-stats">
+                            <span><i class="ph ph-play-circle" aria-hidden="true"></i> @course.Lessons aulas</span>
+                            <span><i class="ph ph-users-three" aria-hidden="true"></i> @course.Students alunos</span>
+                            <span><i class="ph ph-certificate" aria-hidden="true"></i> @course.Certificates certificados</span>
+                        </div>
+
+                        <div class="ead-card-actions">
+                            <a class="ead-primary-button" asp-area="EAD" asp-controller="Courses" asp-action="Details" asp-route-id="@course.Id">Abrir</a>
+                            <a class="ead-secondary-button" asp-area="EAD" asp-controller="Courses" asp-action="Edit" asp-route-id="@course.Id">Editar</a>
                         </div>
                     </div>
+                </article>
+            }
+        </div>
 
-                    <div class="ead-course-stats">
-                        <span><i class="ph ph-play-circle" aria-hidden="true"></i> @course.Lessons aulas</span>
-                        <span><i class="ph ph-users-three" aria-hidden="true"></i> @course.Students alunos</span>
-                        <span><i class="ph ph-certificate" aria-hidden="true"></i> @course.Certificates certificados</span>
-                    </div>
-
-                    <div class="ead-card-actions">
-                        <a class="ead-primary-button" asp-area="EAD" asp-controller="Courses" asp-action="Details">Abrir</a>
-                        <a class="ead-secondary-button" asp-area="EAD" asp-controller="Courses" asp-action="Edit">Editar</a>
-                    </div>
-                </div>
-            </article>
-        }
-    </div>
+        @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model.Courses)
+    }
 </section>

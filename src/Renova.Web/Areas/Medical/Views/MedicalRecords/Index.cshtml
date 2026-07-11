@@ -1,85 +1,289 @@
+@using Renova.Web.Areas.Medical.ViewModels.MedicalRecords
 @using Renova.Web.ViewModels
+@model MedicalRecordViewModel
 @{
     ViewData["Title"] = "Prontuário";
 }
 
 <section class="medical-page">
-    @await Html.PartialAsync("~/Views/Shared/_ProfileHeader.cshtml", new ProfileHeaderViewModel
+    @if (TempData["Success"] is string success)
     {
-        Name = "João Silva",
-        Subtitle = "Prontuário eletrônico",
-        Status = "Plano ativo",
-        SupportingText = "Entrada em 03/03/2026",
-        ShowPhotoActions = false
-    })
-
-    <section class="demo-panel">
-        <div class="medical-tabs" aria-label="Abas do prontuário">
-            <span>Dados gerais</span>
-            <span>Evoluções</span>
-            <span>Medicações</span>
-            <span>Atendimentos</span>
-            <span>Documentos</span>
-            <span>Anexos</span>
+        <div class="crm-alert-success">
+            <i class="ph ph-check-circle" aria-hidden="true"></i>
+            <span>@success</span>
         </div>
+    }
+    @if (TempData["Error"] is string error)
+    {
+        <div class="admin-validation-summary">@error</div>
+    }
 
-        <div class="medical-summary-grid">
-            <article class="demo-card"><span>Tempo em tratamento</span><strong>128 dias</strong><small>Fase intermediária</small></article>
-            <article class="demo-card"><span>Última evolução</span><strong>02/07</strong><small>Psicologia</small></article>
-            <article class="demo-card"><span>Risco clínico</span><strong>Baixo</strong><small>Monitorado</small></article>
+    @if (Model.StudentId == Guid.Empty)
+    {
+        <section class="crm-empty-state">
+            <div class="crm-empty-icon"><i class="ph ph-notebook" aria-hidden="true"></i></div>
+            <strong>Nenhum acolhido disponível</strong>
+            <p>Cadastre um acolhido para abrir o prontuário eletrônico.</p>
+            <a class="rn-btn-primary" asp-area="CRM" asp-controller="Students" asp-action="Create">Novo acolhido</a>
+        </section>
+    }
+    else
+    {
+        <div class="medical-record-shell">
+            <aside class="medical-record-sidebar">
+                <form method="get" class="medical-student-picker">
+                    <label class="admin-label" for="studentId">Acolhido</label>
+                    <select class="admin-select" id="studentId" name="studentId" onchange="this.form.submit()">
+                        @foreach (var student in Model.Students)
+                        {
+                            <option value="@student.Id" selected="@(student.Id == Model.StudentId)">@student.Name · @student.Status</option>
+                        }
+                    </select>
+                </form>
+
+                <nav class="medical-side-menu" aria-label="Menu do prontuário">
+                    <a href="#resumo"><i class="ph ph-clipboard-text" aria-hidden="true"></i>Resumo</a>
+                    <a href="#avaliacao"><i class="ph ph-first-aid-kit" aria-hidden="true"></i>Avaliação inicial</a>
+                    <a href="#evolucoes"><i class="ph ph-pulse" aria-hidden="true"></i>Evoluções</a>
+                    <a href="#medicamentos"><i class="ph ph-pill" aria-hidden="true"></i>Medicamentos</a>
+                    <a href="#plano"><i class="ph ph-target" aria-hidden="true"></i>Plano terapêutico</a>
+                    <a href="#agenda"><i class="ph ph-calendar-check" aria-hidden="true"></i>Agenda</a>
+                    <a href="#documentos"><i class="ph ph-file-text" aria-hidden="true"></i>Documentos</a>
+                    <a href="#historico"><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>Histórico</a>
+                </nav>
+            </aside>
+
+            <div class="medical-record-main">
+                <header class="medical-record-hero">
+                    <div class="patient-identity">
+                        @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
+                        {
+                            Name = Model.StudentName,
+                            PhotoUrl = Model.PhotoUrl,
+                            Size = "lg"
+                        })
+                        <div>
+                            <span class="rn-eyebrow">Prontuário eletrônico inteligente</span>
+                            <h1>@Model.StudentName</h1>
+                            <p>
+                                <span class="rn-badge rn-badge-info">@Model.Status</span>
+                                <span>@Model.CareDays dias de acolhimento</span>
+                                <span>@Model.Age anos</span>
+                                @if (!string.IsNullOrWhiteSpace(Model.ResponsibleProfessional))
+                                {
+                                    <span>Resp. @Model.ResponsibleProfessional</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                    <div class="patient-actions">
+                        <a class="rn-btn-primary" href="#nova-evolucao"><i class="ph ph-plus-circle" aria-hidden="true"></i>Evolução</a>
+                        <a class="rn-btn-secondary" href="#documentos"><i class="ph ph-upload-simple" aria-hidden="true"></i>Documento</a>
+                        <a class="rn-btn-secondary" asp-area="CRM" asp-controller="Students" asp-action="Details" asp-route-id="@Model.StudentId"><i class="ph ph-user" aria-hidden="true"></i>Perfil CRM</a>
+                    </div>
+                </header>
+
+                <div class="patient-kpi-grid" id="resumo">
+                    <article><small>Evoluções</small><strong>@Model.Evolutions.Count</strong></article>
+                    <article><small>Documentos</small><strong>@Model.Documents.Count</strong></article>
+                    <article><small>Plano</small><strong>@(Model.TherapeuticPlan.Count == 0 ? "Pendente" : "Ativo")</strong></article>
+                    <article><small>Medicações</small><strong>@(Model.Medications.Count == 0 ? "Sem registros" : Model.Medications.Count)</strong></article>
+                </div>
+
+                <section class="medical-panel" id="avaliacao">
+                    <div class="medical-panel-title">
+                        <span class="rn-eyebrow">Avaliação inicial</span>
+                        <h2>Anamnese e notas clínicas</h2>
+                    </div>
+                    <div class="medical-note-grid">
+                        <article>
+                            <strong>Anamnese</strong>
+                            <p>@(string.IsNullOrWhiteSpace(Model.Anamnesis) ? "Anamnese ainda não registrada no prontuário." : Model.Anamnesis)</p>
+                        </article>
+                        <article>
+                            <strong>Notas clínicas</strong>
+                            <p>@(string.IsNullOrWhiteSpace(Model.ClinicalNotes) ? "Notas clínicas ainda não registradas." : Model.ClinicalNotes)</p>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="medical-panel" id="evolucoes">
+                    <div class="medical-panel-title">
+                        <span class="rn-eyebrow">Evoluções</span>
+                        <h2>Timeline profissional</h2>
+                    </div>
+                    <div class="medical-evolution-list">
+                        @if (Model.Evolutions.Count == 0)
+                        {
+                            <article class="medical-empty-line">Nenhuma evolução registrada.</article>
+                        }
+                        else
+                        {
+                            @foreach (var evolution in Model.Evolutions)
+                            {
+                                <article class="medical-evolution-item">
+                                    <div>
+                                        <span class="medical-evolution-type">@evolution.EvolutionType</span>
+                                        <time datetime="@evolution.CreatedAt.ToString("O")">@evolution.CreatedAt.ToString("dd/MM/yyyy HH:mm")</time>
+                                    </div>
+                                    <p>@evolution.Description</p>
+                                    <footer>
+                                        <span><i class="ph ph-user-focus" aria-hidden="true"></i>@evolution.ProfessionalName</span>
+                                        <span><i class="ph ph-signature" aria-hidden="true"></i>@evolution.Signature</span>
+                                    </footer>
+                                </article>
+                            }
+                        }
+                    </div>
+                </section>
+
+                <section class="medical-panel" id="nova-evolucao">
+                    <div class="medical-panel-title">
+                        <span class="rn-eyebrow">Registro profissional</span>
+                        <h2>Nova evolução</h2>
+                    </div>
+                    <form asp-action="CreateEvolution" method="post" class="medical-inline-form">
+                        <input type="hidden" asp-for="EvolutionForm.StudentId" name="StudentId" />
+                        <div class="admin-form-grid two">
+                            <div class="admin-form-group">
+                                <label class="admin-label required" for="ProfessionalId">Profissional</label>
+                                <select class="admin-select" id="ProfessionalId" name="ProfessionalId" asp-items="Model.Professionals">
+                                    <option value="">Selecione</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-label">Tipo</label>
+                                <input class="admin-input" value="Inferido pelo tipo do profissional" disabled />
+                            </div>
+                        </div>
+                        <div class="admin-form-group-full">
+                            <label class="admin-label required" for="Description">Descrição</label>
+                            <textarea class="admin-textarea" id="Description" name="Description" placeholder="Registre a evolução clínica, social, pedagógica ou administrativa."></textarea>
+                        </div>
+                        <div class="admin-form-actions compact">
+                            <button class="rn-btn-primary" type="submit"><i class="ph ph-check-circle" aria-hidden="true"></i>Assinar evolução</button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="medical-panel" id="medicamentos">
+                    <div class="medical-panel-title">
+                        <span class="rn-eyebrow">Medicamentos</span>
+                        <h2>Estrutura pronta</h2>
+                    </div>
+                    <div class="medical-structure-grid">
+                        <article><strong>Prescrição</strong><span>Medicamento, dose, via, frequência e período.</span></article>
+                        <article><strong>Administração</strong><span>Registro de horários, responsável e intercorrências.</span></article>
+                        <article><strong>Segurança</strong><span>Preparado para restrições legais e auditoria futura.</span></article>
+                    </div>
+                </section>
+
+                <section class="medical-panel" id="plano">
+                    <div class="medical-panel-title">
+                        <span class="rn-eyebrow">Plano terapêutico</span>
+                        <h2>Objetivos, metas e intervenções</h2>
+                    </div>
+                    @if (Model.TherapeuticPlan.Count == 0)
+                    {
+                        <article class="medical-empty-line">Plano terapêutico será estruturado após admissão ativa ou primeira evolução.</article>
+                    }
+                    else
+                    {
+                        <div class="renova-table-wrap">
+                            <table class="renova-table">
+                                <thead><tr><th>Objetivo</th><th>Meta</th><th>Intervenção</th><th>Periodicidade</th><th>Responsável</th><th>Situação</th></tr></thead>
+                                <tbody>
+                                @foreach (var item in Model.TherapeuticPlan)
+                                {
+                                    <tr>
+                                        <td>@item.Objective</td>
+                                        <td>@item.Goal</td>
+                                        <td>@item.Intervention</td>
+                                        <td>@item.Periodicity</td>
+                                        <td>@item.Responsible</td>
+                                        <td><span class="renova-status-badge info">@item.Status</span></td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </section>
+
+                <section class="medical-panel" id="agenda">
+                    <div class="medical-panel-title">
+                        <span class="rn-eyebrow">Agenda</span>
+                        <h2>Consultas e atendimentos</h2>
+                    </div>
+                    <a class="rn-btn-secondary" asp-area="CRM" asp-controller="Appointments" asp-action="Index"><i class="ph ph-calendar" aria-hidden="true"></i>Abrir agenda operacional</a>
+                </section>
+
+                <section class="medical-panel" id="documentos">
+                    <div class="medical-panel-title">
+                        <span class="rn-eyebrow">Documentos</span>
+                        <h2>Uploads, termos e LGPD</h2>
+                    </div>
+                    <form asp-action="UploadDocument" method="post" enctype="multipart/form-data" class="medical-document-form">
+                        <input type="hidden" asp-for="DocumentUpload.StudentId" name="StudentId" />
+                        <input class="admin-input" asp-for="DocumentUpload.Title" name="Title" placeholder="Título do documento" />
+                        <input class="admin-input" asp-for="DocumentUpload.File" name="File" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx" />
+                        <button class="rn-btn-primary" type="submit"><i class="ph ph-upload-simple" aria-hidden="true"></i>Anexar</button>
+                    </form>
+                    <div class="medical-document-list">
+                        @if (Model.Documents.Count == 0)
+                        {
+                            <article class="medical-empty-line">Nenhum documento anexado.</article>
+                        }
+                        else
+                        {
+                            @foreach (var document in Model.Documents)
+                            {
+                                <article>
+                                    <i class="ph ph-file-text" aria-hidden="true"></i>
+                                    <div>
+                                        <strong>@document.Title</strong>
+                                        <span>@document.ContentType · @((document.Size / 1024m).ToString("N1")) KB · @document.UploadDate.ToString("dd/MM/yyyy HH:mm")</span>
+                                    </div>
+                                </article>
+                            }
+                        }
+                    </div>
+                </section>
+
+                <section class="medical-panel" id="historico">
+                    <div class="medical-panel-title">
+                        <span class="rn-eyebrow">Histórico integrado</span>
+                        <h2>Timeline completa</h2>
+                    </div>
+                    <div class="rn-timeline">
+                        @if (Model.Timeline.Count == 0)
+                        {
+                            <article class="rn-timeline-empty">
+                                <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
+                                <strong>Nenhum evento registrado</strong>
+                                <span>Admissões, consultas, evoluções, cursos e financeiro aparecerão aqui.</span>
+                            </article>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model.Timeline)
+                            {
+                                <article class="rn-timeline-item">
+                                    <span class="rn-timeline-icon"><i class="ph @item.Icon" aria-hidden="true"></i></span>
+                                    <div>
+                                        <header><strong>@item.Title</strong><time datetime="@item.OccurredAt.ToString("O")">@item.OccurredAt.ToString("dd/MM/yyyy HH:mm")</time></header>
+                                        @if (!string.IsNullOrWhiteSpace(item.Description))
+                                        {
+                                            <p>@item.Description</p>
+                                        }
+                                        <footer><span>@item.Category</span><span>@item.Responsible</span></footer>
+                                    </div>
+                                </article>
+                            }
+                        }
+                    </div>
+                </section>
+            </div>
         </div>
-    </section>
-
-    <div class="demo-grid-2">
-        <section class="demo-panel">
-            <div class="demo-section-title">
-                <div>
-                    <span class="medical-eyebrow">Linha do tempo</span>
-                    <h2>Evoluções recentes</h2>
-                </div>
-            </div>
-
-            <div class="medical-timeline">
-                <article class="medical-timeline-item">
-                    <strong>Psicologia</strong>
-                    <span class="rn-muted">Adesão consistente e participação ativa nas rodas terapêuticas.</span>
-                    <span class="professional-badge"><i class="ph ph-user-focus" aria-hidden="true"></i>Dra. Helena</span>
-                </article>
-                <article class="medical-timeline-item">
-                    <strong>Enfermagem</strong>
-                    <span class="rn-muted">Rotina medicamentosa sem intercorrências, sono preservado.</span>
-                    <span class="professional-badge"><i class="ph ph-first-aid-kit" aria-hidden="true"></i>Enf. Marcos</span>
-                </article>
-                <article class="medical-timeline-item">
-                    <strong>Serviço social</strong>
-                    <span class="rn-muted">Família orientada para plano de reintegração gradual.</span>
-                    <span class="professional-badge"><i class="ph ph-hand-heart" aria-hidden="true"></i>Ana Paula</span>
-                </article>
-            </div>
-        </section>
-
-        <section class="demo-panel rn-stack">
-            <div class="demo-section-title">
-                <div>
-                    <span class="medical-eyebrow">Resumo clínico</span>
-                    <h2>Dados gerais</h2>
-                </div>
-            </div>
-
-            <article class="medical-note">
-                <span class="professional-badge"><i class="ph ph-notebook" aria-hidden="true"></i>Nota médica</span>
-                <p class="rn-muted">Paciente orientado, colaborativo e com boa resposta ao plano terapêutico. Mantém acompanhamento psicológico semanal.</p>
-            </article>
-
-            <article class="evolution-card">
-                <strong>Plano terapêutico</strong>
-                <p class="rn-muted">Integral, com foco em prevenção à recaída, reinserção familiar e fortalecimento de rotina saudável.</p>
-            </article>
-
-            <article class="appointment-card">
-                <strong>Próximo atendimento</strong>
-                <p class="rn-muted">Avaliação psicológica em 12/07 às 14h, sala 2.</p>
-            </article>
-        </section>
-    </div>
+    }
 </section>

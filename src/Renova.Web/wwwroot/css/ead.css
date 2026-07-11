@@ -106,3 +106,142 @@
     gap: 10px;
     grid-template-columns: 1fr 1fr;
 }
+
+.ead-module-list,
+.ead-student-course-list {
+    display: grid;
+    gap: 14px;
+}
+
+.ead-module-card,
+.ead-student-course-list article,
+.ead-trail-card,
+.ead-certificate-preview,
+.ead-student-hero {
+    background: var(--rn-card);
+    border: 1px solid var(--rn-border);
+    border-radius: var(--rn-radius-lg);
+    box-shadow: var(--rn-shadow-sm);
+}
+
+.ead-module-card {
+    display: grid;
+    gap: 14px;
+    padding: 16px;
+}
+
+.ead-module-card header {
+    align-items: flex-start;
+    display: flex;
+    gap: 12px;
+}
+
+.ead-module-card header > span {
+    align-items: center;
+    background: color-mix(in srgb, var(--rn-primary) 10%, var(--rn-card));
+    border-radius: var(--rn-radius-sm);
+    color: var(--rn-primary);
+    display: inline-flex;
+    font-weight: 900;
+    height: 34px;
+    justify-content: center;
+    width: 34px;
+}
+
+.ead-module-card strong,
+.ead-student-course-list strong,
+.ead-trail-card strong,
+.ead-certificate-preview strong {
+    color: var(--rn-text);
+}
+
+.ead-module-card p,
+.ead-student-course-list span,
+.ead-trail-card span,
+.ead-trail-card small,
+.ead-certificate-preview span {
+    color: var(--rn-muted);
+    margin: 4px 0 0;
+}
+
+.ead-trail-grid,
+.ead-achievement-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.ead-trail-card,
+.ead-achievement-grid article {
+    display: grid;
+    gap: 10px;
+    padding: 16px;
+}
+
+.ead-trail-card i,
+.ead-achievement-grid i,
+.ead-certificate-preview i {
+    color: var(--rn-primary);
+    font-size: 2rem;
+}
+
+.ead-student-hero {
+    align-items: center;
+    display: flex;
+    gap: 18px;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding: 20px;
+}
+
+.ead-student-hero h1 {
+    color: var(--rn-text);
+    margin: 4px 0;
+}
+
+.ead-student-hero p {
+    color: var(--rn-muted);
+    margin: 0;
+}
+
+.ead-student-course-list article {
+    display: grid;
+    gap: 9px;
+    grid-template-columns: 1fr auto;
+    padding: 14px;
+}
+
+.ead-student-course-list .ead-progress-track {
+    grid-column: 1 / -1;
+}
+
+.ead-achievement-grid article {
+    background: var(--rn-bg);
+    border: 1px solid var(--rn-border);
+    border-radius: var(--rn-radius-md);
+    opacity: .62;
+}
+
+.ead-achievement-grid article.is-achieved {
+    background: color-mix(in srgb, var(--rn-success) 9%, var(--rn-card));
+    border-color: color-mix(in srgb, var(--rn-success) 24%, var(--rn-border));
+    opacity: 1;
+}
+
+.ead-certificate-preview {
+    align-items: center;
+    display: flex;
+    gap: 14px;
+    padding: 16px;
+}
+
+@media (max-width: 760px) {
+    .ead-student-hero {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .ead-card-actions {
+        grid-template-columns: 1fr;
+    }
+}

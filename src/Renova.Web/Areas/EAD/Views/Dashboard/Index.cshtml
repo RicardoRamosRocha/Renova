@@ -1,0 +1,72 @@
+@using Renova.Web.Areas.EAD.ViewModels.Dashboard
+@model EadDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard EAD";
+}
+
+<section class="ead-page">
+    <div class="ead-page-header">
+        <div>
+            <span class="ead-eyebrow">EAD / Gestão</span>
+            <h1>Dashboard EAD</h1>
+            <p>Indicadores reais de cursos, trilhas, engajamento, conclusões e certificados do tenant atual.</p>
+        </div>
+        <a class="ead-primary-button" asp-controller="Courses" asp-action="Create"><i class="ph ph-plus" aria-hidden="true"></i>Novo curso</a>
+    </div>
+
+    <div class="ead-metrics-grid">
+        <article class="ead-metric-card"><span>Cursos ativos</span><strong>@Model.ActiveCourses</strong><small>Catálogo</small></article>
+        <article class="ead-metric-card"><span>Alunos estudando</span><strong>@Model.StudyingStudents</strong><small>Com progresso</small></article>
+        <article class="ead-metric-card"><span>Conclusões</span><strong>@Model.CompletedLessons</strong><small>Aulas concluídas</small></article>
+        <article class="ead-metric-card"><span>Certificados</span><strong>@Model.Certificates</strong><small>Emitidos</small></article>
+    </div>
+
+    <div class="patient-profile-grid">
+        <section class="medical-panel">
+            <div class="medical-panel-title"><span class="rn-eyebrow">Trilhas terapêuticas</span><h2>Engajamento por trilha</h2></div>
+            @if (Model.Trails.Count == 0)
+            {
+                <article class="medical-empty-line">Nenhuma trilha com progresso registrado.</article>
+            }
+            else
+            {
+                <div class="ead-trail-grid">
+                    @foreach (var trail in Model.Trails)
+                    {
+                        <article class="ead-trail-card">
+                            <i class="ph @trail.Icon" aria-hidden="true"></i>
+                            <strong>@trail.Name</strong>
+                            <span>@trail.Courses cursos · @trail.Students alunos</span>
+                            <div class="ead-progress-track"><div class="ead-progress-fill" style="width:@trail.AverageProgress%;"></div></div>
+                            <small>@trail.AverageProgress% de progresso médio</small>
+                        </article>
+                    }
+                </div>
+            }
+        </section>
+
+        <section class="medical-panel">
+            <div class="medical-panel-title"><span class="rn-eyebrow">Timeline EAD</span><h2>Atividades recentes</h2></div>
+            <div class="rn-timeline">
+                @if (Model.RecentActivities.Count == 0)
+                {
+                    <article class="rn-timeline-empty"><i class="ph ph-clock" aria-hidden="true"></i><strong>Nenhuma atividade recente</strong><span>O progresso dos acolhidos aparecerá aqui.</span></article>
+                }
+                else
+                {
+                    @foreach (var activity in Model.RecentActivities)
+                    {
+                        <article class="rn-timeline-item">
+                            <span class="rn-timeline-icon"><i class="ph ph-graduation-cap" aria-hidden="true"></i></span>
+                            <div>
+                                <header><strong>@activity.StudentName</strong><time>@activity.OccurredAt.ToString("dd/MM/yyyy HH:mm")</time></header>
+                                <p>@activity.CourseTitle · @activity.LessonTitle</p>
+                                <footer><span>@activity.Progress% concluído</span></footer>
+                            </div>
+                        </article>
+                    }
+                }
+            </div>
+        </section>
+    </div>
+</section>

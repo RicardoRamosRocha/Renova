@@ -1,5 +1,5 @@
-@using Renova.Domain.Entities
-@model Course
+@using Renova.Web.Areas.EAD.ViewModels.Courses
+@model CourseDetailsViewModel
 @{
     ViewData["Title"] = "Detalhes do Curso";
 }
@@ -7,16 +7,63 @@
 <section class="admin-page">
     <div class="admin-page-header">
         <div>
-            <span>Curso</span>
+            <span>Curso / @Model.Trail</span>
             <h1>@Model.Title</h1>
             <p>@Model.Description</p>
         </div>
         <a class="rn-btn-primary" asp-action="Edit" asp-route-id="@Model.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>
     </div>
 
-    <div class="demo-grid-3">
-        <article class="rn-metric-card"><span>Status</span><strong>@(Model.IsActive ? "Publicado" : "Arquivado")</strong><small>EAD</small></article>
-        <article class="rn-metric-card"><span>Criado em</span><strong>@Model.CreatedAt.ToString("dd/MM")</strong><small>@Model.CreatedAt.Year</small></article>
-        <article class="rn-metric-card"><span>Módulos</span><strong>@Model.Modules.Count</strong><small>Estrutura</small></article>
+    <div class="patient-kpi-grid">
+        <article><small>Status</small><strong>@(Model.IsActive ? "Publicado" : "Arquivado")</strong></article>
+        <article><small>Aulas</small><strong>@Model.Lessons</strong></article>
+        <article><small>Alunos</small><strong>@Model.Students</strong></article>
+        <article><small>Progresso</small><strong>@Model.AverageProgress%</strong></article>
     </div>
+
+    <section class="medical-panel">
+        <div class="medical-panel-title">
+            <span class="rn-eyebrow">Estrutura</span>
+            <h2>Módulos e aulas</h2>
+        </div>
+
+        @if (Model.Modules.Count == 0)
+        {
+            <article class="medical-empty-line">Este curso ainda não possui módulos cadastrados.</article>
+        }
+        else
+        {
+            <div class="ead-module-list">
+                @foreach (var module in Model.Modules)
+                {
+                    <article class="ead-module-card">
+                        <header>
+                            <span>@module.Order</span>
+                            <div>
+                                <strong>@module.Title</strong>
+                                <p>@module.Description</p>
+                            </div>
+                        </header>
+                        <div class="renova-table-wrap">
+                            <table class="renova-table">
+                                <thead><tr><th>Aula</th><th>Vídeo</th><th>Duração</th><th>Alunos</th><th>Progresso</th></tr></thead>
+                                <tbody>
+                                @foreach (var lesson in module.Lessons)
+                                {
+                                    <tr>
+                                        <td>@lesson.Title</td>
+                                        <td>@lesson.VideoProvider</td>
+                                        <td>@lesson.DurationInMinutes min</td>
+                                        <td>@lesson.Students</td>
+                                        <td>@lesson.AverageProgress%</td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                }
+            </div>
+        }
+    </section>
 </section>
