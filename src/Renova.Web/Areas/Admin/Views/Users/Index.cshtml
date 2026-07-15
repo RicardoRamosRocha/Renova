@@ -28,20 +28,20 @@
     </div>
 
     <section class="renova-table-card">
-        <div class="renova-table-header">
+        <div class="rn-premium-toolbar">
             <div>
                 <span class="rn-eyebrow">Busca e filtros</span>
                 <h2>Lista de usuários</h2>
                 <p>Visualize contas, status e ações administrativas.</p>
             </div>
-            <form class="demo-filter-row" method="get">
+            <form class="demo-filter-row rn-premium-actions" method="get">
                 <input name="search" value="@ViewBag.Search" type="search" placeholder="Pesquisar por nome ou email" />
                 <select name="active">
                     <option value="">Todos os status</option>
                     <option value="true" selected="@(ViewBag.Active == true)">Ativo</option>
                     <option value="false" selected="@(ViewBag.Active == false)">Inativo</option>
                 </select>
-                <button class="rn-btn-secondary" type="submit"><i class="ph ph-funnel" aria-hidden="true"></i>Filtrar</button>
+                <button class="rn-btn-secondary" type="submit" data-tooltip="Aplicar filtros"><i class="ph ph-funnel" aria-hidden="true"></i>Filtrar</button>
             </form>
         </div>
 
@@ -91,9 +91,9 @@
                             <td><span class="renova-status-badge @(user.IsActive ? "ok" : "danger")">@(user.IsActive ? "Ativo" : "Inativo")</span></td>
                             <td>
                                 <div class="renova-action-buttons">
-                                    <a class="renova-action-btn" title="Detalhes" asp-action="Details" asp-route-id="@user.Id"><i class="ph ph-eye" aria-hidden="true"></i></a>
-                                    <a class="renova-action-btn" title="Editar" asp-action="Edit" asp-route-id="@user.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i></a>
-                                    <a class="renova-action-btn danger" title="Excluir" href="#delete-user-@user.Id"><i class="ph ph-trash" aria-hidden="true"></i></a>
+                                    <a class="renova-action-btn" data-tooltip="Detalhes" asp-action="Details" asp-route-id="@user.Id"><i class="ph ph-eye" aria-hidden="true"></i></a>
+                                    <a class="renova-action-btn" data-tooltip="Editar" asp-action="Edit" asp-route-id="@user.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i></a>
+                                    <a class="renova-action-btn danger" data-tooltip="Excluir" href="#delete-user-@user.Id"><i class="ph ph-trash" aria-hidden="true"></i></a>
                                 </div>
                             </td>
                         </tr>

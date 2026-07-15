@@ -122,11 +122,19 @@
     </section>
 
     <section class="renova-table-card">
-        <div class="renova-table-header">
+        <div class="rn-premium-toolbar">
             <div>
                 <span class="rn-eyebrow">Tables</span>
                 <h2>Premium table</h2>
                 <p>Avatar, status, hover e ações compactas.</p>
+            </div>
+            <div class="rn-premium-actions">
+                <nav class="rn-premium-tabs" aria-label="Modos">
+                    <a class="is-active" href="#"><i class="ph ph-list" aria-hidden="true"></i>Lista</a>
+                    <a href="#"><i class="ph ph-kanban" aria-hidden="true"></i>Kanban</a>
+                    <a href="#"><i class="ph ph-calendar" aria-hidden="true"></i>Agenda</a>
+                </nav>
+                <button class="rn-icon-button" type="button" data-tooltip="Atualizar dados"><i class="ph ph-arrow-clockwise" aria-hidden="true"></i></button>
             </div>
         </div>
         <div class="renova-table-wrap">
@@ -158,4 +166,12 @@
         <p>Use quando uma lista ainda não possui dados ou quando filtros não retornam resultados.</p>
         <a class="rn-btn-primary" href="#"><i class="ph ph-plus" aria-hidden="true"></i>Criar registro</a>
     </section>
+
+    @await Html.PartialAsync("~/Views/Shared/_PremiumEmptyState.cshtml", new PremiumEmptyStateViewModel
+    {
+        Title = "Empty state reutilizavel",
+        Description = "Componente compartilhado para listas vazias, resultados filtrados e primeiras configuracoes.",
+        ActionText = "Criar registro",
+        ActionUrl = "#"
+    })
 </section>

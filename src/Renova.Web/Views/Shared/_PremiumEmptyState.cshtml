@@ -1,0 +1,19 @@
+@model Renova.Web.ViewModels.PremiumEmptyStateViewModel
+
+<section class="rn-premium-empty">
+    <div class="rn-premium-empty-icon">
+        <i class="@Model.Icon" aria-hidden="true"></i>
+    </div>
+    <strong>@Model.Title</strong>
+    <p>@Model.Description</p>
+    @if (!string.IsNullOrWhiteSpace(Model.ActionText) && !string.IsNullOrWhiteSpace(Model.ActionUrl))
+    {
+        <a class="rn-btn-primary" href="@Model.ActionUrl">
+            @if (!string.IsNullOrWhiteSpace(Model.ActionIcon))
+            {
+                <i class="@Model.ActionIcon" aria-hidden="true"></i>
+            }
+            @Model.ActionText
+        </a>
+    }
+</section>

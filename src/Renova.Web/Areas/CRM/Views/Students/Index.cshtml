@@ -69,14 +69,14 @@
     </div>
 
     <section class="renova-table-card">
-        <div class="renova-table-header">
+        <div class="rn-premium-toolbar">
             <div>
                 <span class="crm-eyebrow">Lista</span>
                 <h2>Cadastros de acolhidos</h2>
                 <p>Visualize os acolhidos, status e ações principais.</p>
             </div>
 
-            <form class="crm-filter-form" method="get">
+            <form class="crm-filter-form rn-premium-actions" method="get">
                 <div class="crm-search-box">
                     <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
                     <input name="search"
@@ -98,7 +98,7 @@
                 <input class="admin-input" name="admissionFrom" value="@Model.AdmissionFrom?.ToString("yyyy-MM-dd")" type="date" />
                 <input class="admin-input" name="admissionTo" value="@Model.AdmissionTo?.ToString("yyyy-MM-dd")" type="date" />
 
-                <button class="crm-secondary-button" type="submit">
+                <button class="crm-secondary-button" type="submit" data-tooltip="Aplicar filtros">
                     <i class="ph ph-funnel" aria-hidden="true"></i>
                     Filtrar
                 </button>
@@ -188,21 +188,21 @@
                                 <td>
                                     <div class="renova-action-buttons">
                                         <a class="renova-action-btn"
-                                           title="Detalhes"
+                                           data-tooltip="Detalhes"
                                            asp-action="Details"
                                            asp-route-id="@student.Id">
                                             <i class="ph ph-eye" aria-hidden="true"></i>
                                         </a>
 
                                         <a class="renova-action-btn"
-                                           title="Editar"
+                                           data-tooltip="Editar"
                                            asp-action="Edit"
                                            asp-route-id="@student.Id">
                                             <i class="ph ph-pencil-simple" aria-hidden="true"></i>
                                         </a>
 
                                         <a class="renova-action-btn danger"
-                                           title="Arquivar"
+                                           data-tooltip="Arquivar"
                                            href="#delete-student-@student.Id">
                                             <i class="ph ph-archive" aria-hidden="true"></i>
                                         </a>
