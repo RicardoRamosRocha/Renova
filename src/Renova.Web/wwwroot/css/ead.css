@@ -90,16 +90,46 @@
 
 .ead-course-card {
     overflow: hidden;
+    position: relative;
+    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.ead-course-card:hover {
+    border-color: color-mix(in srgb, var(--rn-primary) 26%, var(--rn-border));
+    box-shadow: var(--rn-shadow-md);
+    transform: translateY(-2px);
 }
 
 .ead-course-visual {
     align-items: center;
-    background: var(--rn-gradient);
+    background:
+        radial-gradient(circle at 78% 18%, rgba(20, 184, 166, .28), transparent 34%),
+        linear-gradient(135deg, #f8fafc, #dbeafe 52%, #ecfeff);
     color: #fff;
     display: flex;
     font-size: 42px;
     height: 128px;
     justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.ead-course-visual::after {
+    background: rgba(255, 255, 255, .54);
+    border: 1px solid rgba(255, 255, 255, .7);
+    border-radius: 999px;
+    content: "";
+    height: 90px;
+    position: absolute;
+    right: -24px;
+    top: -20px;
+    width: 90px;
+}
+
+.ead-course-visual i {
+    color: var(--rn-primary);
+    position: relative;
+    z-index: 1;
 }
 
 .ead-course-body {
@@ -172,11 +202,12 @@
 .ead-card-actions {
     display: grid;
     gap: 10px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(126px, 1fr));
 }
 
 .ead-card-actions form,
-.ead-card-actions button {
+.ead-card-actions button,
+.ead-card-actions a {
     width: 100%;
 }
 
@@ -200,13 +231,18 @@
 .ead-module-card {
     display: grid;
     gap: 14px;
+    overflow: hidden;
     padding: 16px;
 }
 
 .ead-module-card header {
     align-items: flex-start;
+    background: linear-gradient(180deg, #fff, #f8fafc);
+    border: 1px solid var(--rn-border);
+    border-radius: var(--rn-radius-md);
     display: flex;
     gap: 12px;
+    padding: 12px;
 }
 
 .ead-module-card header > span {
@@ -235,6 +271,36 @@
 .ead-certificate-preview span {
     color: var(--rn-muted);
     margin: 4px 0 0;
+}
+
+.ead-module-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.ead-module-summary small {
+    align-items: center;
+    background: #f1f5f9;
+    border: 1px solid var(--rn-border);
+    border-radius: 999px;
+    color: var(--rn-muted);
+    display: inline-flex;
+    font-weight: 800;
+    gap: 6px;
+    padding: 5px 9px;
+}
+
+.ead-builder-progress {
+    display: grid;
+    gap: 6px;
+    min-width: 112px;
+}
+
+.ead-builder-progress strong {
+    color: var(--rn-text);
+    font-size: .84rem;
 }
 
 .ead-trail-grid,
@@ -306,6 +372,11 @@
     display: flex;
     gap: 14px;
     padding: 16px;
+}
+
+.ead-certificate-list {
+    display: grid;
+    gap: 10px;
 }
 
 .ead-performance-list {
@@ -405,6 +476,15 @@
     color: var(--rn-primary);
 }
 
+.ead-lesson-module a.is-completed {
+    background: color-mix(in srgb, var(--rn-success) 9%, #fff);
+    color: color-mix(in srgb, var(--rn-success) 84%, #0f172a);
+}
+
+.ead-lesson-module a.is-active.is-completed {
+    border: 1px solid color-mix(in srgb, var(--rn-success) 28%, var(--rn-border));
+}
+
 .ead-lesson-main {
     display: grid;
     gap: 18px;
@@ -439,12 +519,66 @@
     overflow-wrap: anywhere;
 }
 
+.ead-player-meta {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+}
+
+.ead-player-meta span {
+    color: var(--rn-muted);
+    display: block;
+    font-size: .82rem;
+    font-weight: 800;
+}
+
+.ead-player-meta strong {
+    color: var(--rn-text);
+}
+
+.ead-course-progress-pill,
+.ead-lesson-status {
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid var(--rn-border);
+    border-radius: 999px;
+    color: var(--rn-muted);
+    display: inline-flex;
+    font-weight: 900;
+    gap: 8px;
+    padding: 8px 12px;
+}
+
+.ead-course-progress-pill {
+    flex-direction: column;
+    gap: 0;
+    line-height: 1.1;
+}
+
+.ead-course-progress-pill strong {
+    color: var(--rn-primary);
+    font-size: 1.05rem;
+}
+
+.ead-lesson-status.is-completed {
+    background: color-mix(in srgb, var(--rn-success) 10%, #fff);
+    border-color: color-mix(in srgb, var(--rn-success) 26%, var(--rn-border));
+    color: color-mix(in srgb, var(--rn-success) 84%, #0f172a);
+}
+
 .ead-lesson-actions {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     justify-content: flex-end;
+}
+
+.ead-lesson-actions button[disabled] {
+    cursor: default;
+    opacity: .72;
 }
 
 @media (max-width: 760px) {

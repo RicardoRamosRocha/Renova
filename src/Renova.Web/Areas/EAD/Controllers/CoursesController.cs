@@ -541,12 +541,26 @@ public sealed class CoursesController(
                 item.LessonId == id &&
                 item.Student.TenantId == tenantId.Value)
             : null;
+        var completedLessons = selectedStudentId.HasValue
+            ? await db.StudentProgress
+                .AsNoTracking()
+                .Where(item =>
+                    item.StudentId == selectedStudentId.Value &&
+                    item.Student.TenantId == tenantId.Value &&
+                    (item.CompletedAt.HasValue || item.WatchedPercentage >= 100))
+                .Select(item => item.LessonId)
+                .ToListAsync()
+            : [];
+        var completedLessonIds = completedLessons.ToHashSet();
 
         var orderedLessons = lesson.CourseModule.Course.Modules
             .OrderBy(module => module.Order)
             .SelectMany(module => module.Lessons.OrderBy(item => item.Order))
             .ToList();
         var currentIndex = orderedLessons.FindIndex(item => item.Id == lesson.Id);
+        var courseProgress = orderedLessons.Count == 0
+            ? 0
+            : ClampPercent((int)Math.Round(orderedLessons.Count(item => completedLessonIds.Contains(item.Id)) * 100m / orderedLessons.Count));
 
         return View(new LessonPlayerViewModel
         {
@@ -562,8 +576,10 @@ public sealed class CoursesController(
             StudentName = students.FirstOrDefault(item => item.Id == selectedStudentId)?.Name,
             Progress = progress?.WatchedPercentage ?? 0,
             IsCompleted = progress?.CompletedAt.HasValue == true || progress?.WatchedPercentage >= 100,
+            CourseProgress = courseProgress,
             PreviousLessonId = currentIndex > 0 ? orderedLessons[currentIndex - 1].Id : null,
             NextLessonId = currentIndex >= 0 && currentIndex < orderedLessons.Count - 1 ? orderedLessons[currentIndex + 1].Id : null,
+            CompletedLessonIds = completedLessonIds,
             Students = students,
             Modules = ToDetails(lesson.CourseModule.Course, tenantId.Value).Modules
         });

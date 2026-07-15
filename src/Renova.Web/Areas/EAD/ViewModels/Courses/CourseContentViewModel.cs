@@ -86,9 +86,13 @@ public sealed class LessonPlayerViewModel
 
     public bool IsCompleted { get; set; }
 
+    public int CourseProgress { get; set; }
+
     public Guid? PreviousLessonId { get; set; }
 
     public Guid? NextLessonId { get; set; }
+
+    public IReadOnlySet<Guid> CompletedLessonIds { get; set; } = new HashSet<Guid>();
 
     public IReadOnlyList<StudentOptionViewModel> Students { get; set; } = [];
 

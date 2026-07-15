@@ -14,8 +14,10 @@
                 <strong>@module.Order. @module.Title</strong>
                 @foreach (var lesson in module.Lessons)
                 {
-                    <a class="@(lesson.Id == Model.LessonId ? "is-active" : string.Empty)" asp-action="Lesson" asp-route-id="@lesson.Id" asp-route-studentId="@Model.StudentId">
-                        <i class="ph ph-play-circle" aria-hidden="true"></i>@lesson.Title
+                    var isActive = lesson.Id == Model.LessonId;
+                    var isCompleted = Model.CompletedLessonIds.Contains(lesson.Id);
+                    <a class="@(isActive ? "is-active" : string.Empty) @(isCompleted ? "is-completed" : string.Empty)" asp-action="Lesson" asp-route-id="@lesson.Id" asp-route-studentId="@Model.StudentId">
+                        <i class="ph @(isCompleted ? "ph-check-circle" : "ph-play-circle")" aria-hidden="true"></i>@lesson.Title
                     </a>
                 }
             </div>
@@ -28,6 +30,10 @@
                 <span>EAD / Aula</span>
                 <h1>@Model.LessonTitle</h1>
                 <p>@Model.LessonDescription</p>
+            </div>
+            <div class="ead-course-progress-pill">
+                <span>Curso</span>
+                <strong>@Model.CourseProgress%</strong>
             </div>
             <form method="get">
                 <input type="hidden" name="id" value="@Model.LessonId" />
@@ -44,12 +50,26 @@
         {
             <div class="rn-alert rn-alert-success"><i class="ph ph-check-circle" aria-hidden="true"></i>@success</div>
         }
+        @if (TempData["Error"] is string error)
+        {
+            <div class="rn-alert rn-alert-warning"><i class="ph ph-warning" aria-hidden="true"></i>@error</div>
+        }
 
         <section class="ead-player-card">
             <div class="ead-player-placeholder">
                 <i class="ph ph-video" aria-hidden="true"></i>
                 <strong>@Model.VideoProvider</strong>
                 <span>@(string.IsNullOrWhiteSpace(Model.VideoExternalId) ? "Conteudo textual ou video externo ainda nao informado." : Model.VideoExternalId)</span>
+            </div>
+            <div class="ead-player-meta">
+                <div>
+                    <span>@(Model.DurationInMinutes == 1 ? "1 minuto" : $"{Model.DurationInMinutes} minutos")</span>
+                    <strong>@(Model.IsCompleted ? "Aula concluida" : "Aula em andamento")</strong>
+                </div>
+                <div class="ead-lesson-status @(Model.IsCompleted ? "is-completed" : string.Empty)">
+                    <i class="ph @(Model.IsCompleted ? "ph-check-circle" : "ph-clock")" aria-hidden="true"></i>
+                    @(Model.IsCompleted ? "Concluida" : "Pendente")
+                </div>
             </div>
             <div class="ead-progress-label"><span>Progresso de @(Model.StudentName ?? "aluno")</span><strong>@Model.Progress%</strong></div>
             <div class="ead-progress-track"><div class="ead-progress-fill" style="width:@Model.Progress%;"></div></div>
@@ -62,10 +82,17 @@
             }
             @if (Model.StudentId.HasValue)
             {
-                <form asp-action="CompleteLesson" asp-route-id="@Model.LessonId" method="post">
-                    <input type="hidden" name="studentId" value="@Model.StudentId" />
-                    <button class="rn-btn-primary" type="submit"><i class="ph ph-check-circle" aria-hidden="true"></i>@(Model.IsCompleted ? "Concluida" : "Concluir aula")</button>
-                </form>
+                @if (Model.IsCompleted)
+                {
+                    <button class="rn-btn-primary" type="button" disabled><i class="ph ph-check-circle" aria-hidden="true"></i>Aula concluida</button>
+                }
+                else
+                {
+                    <form asp-action="CompleteLesson" asp-route-id="@Model.LessonId" method="post">
+                        <input type="hidden" name="studentId" value="@Model.StudentId" />
+                        <button class="rn-btn-primary" type="submit"><i class="ph ph-check-circle" aria-hidden="true"></i>Marcar como concluida</button>
+                    </form>
+                }
             }
             @if (Model.NextLessonId.HasValue)
             {
