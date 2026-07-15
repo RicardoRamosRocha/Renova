@@ -44,8 +44,8 @@
             {
                 var moduleDuration = module.Lessons.Sum(lesson => lesson.DurationInMinutes);
                 var moduleAverage = module.Lessons.Count == 0 ? 0 : (int)Math.Round(module.Lessons.Average(lesson => lesson.AverageProgress));
-                <article class="ead-module-card">
-                    <header>
+                <details class="ead-module-card" open>
+                    <summary>
                         <span>@module.Order</span>
                         <div>
                             <strong>@module.Title</strong>
@@ -63,7 +63,7 @@
                             <a class="renova-action-btn" asp-action="CreateLesson" asp-route-courseId="@Model.CourseId" asp-route-moduleId="@module.Id" data-tooltip="Nova aula"><i class="ph ph-plus" aria-hidden="true"></i></a>
                             <form asp-action="DeleteModule" asp-route-id="@module.Id" method="post" onsubmit="return confirm('Remover este modulo? A operacao sera bloqueada se houver progresso de alunos.');"><button class="renova-action-btn danger" type="submit" data-tooltip="Remover modulo"><i class="ph ph-trash" aria-hidden="true"></i></button></form>
                         </div>
-                    </header>
+                    </summary>
 
                     @if (module.Lessons.Count == 0)
                     {
@@ -105,7 +105,7 @@
                             </table>
                         </div>
                     }
-                </article>
+                </details>
             }
         </div>
     }

@@ -66,11 +66,21 @@ public sealed class LessonPlayerViewModel
 
     public string CourseTitle { get; set; } = string.Empty;
 
+    public string CourseCategory { get; set; } = string.Empty;
+
+    public string CourseLevel { get; set; } = string.Empty;
+
+    public string CourseTeacher { get; set; } = string.Empty;
+
+    public int CourseWorkloadHours { get; set; }
+
     public Guid LessonId { get; set; }
 
     public string LessonTitle { get; set; } = string.Empty;
 
     public string LessonDescription { get; set; } = string.Empty;
+
+    public string ModuleTitle { get; set; } = string.Empty;
 
     public string VideoProvider { get; set; } = string.Empty;
 
@@ -97,4 +107,83 @@ public sealed class LessonPlayerViewModel
     public IReadOnlyList<StudentOptionViewModel> Students { get; set; } = [];
 
     public IReadOnlyList<CourseModuleDetailsViewModel> Modules { get; set; } = [];
+
+    public IReadOnlyList<string> Objectives { get; set; } = [];
+
+    public IReadOnlyList<LessonMaterialViewModel> Materials { get; set; } = [];
+
+    public IReadOnlyList<LessonDownloadViewModel> Downloads { get; set; } = [];
+
+    public LessonQuizViewModel Quiz { get; set; } = new();
+
+    public IReadOnlyList<LessonDiscussionViewModel> Discussions { get; set; } = [];
+
+    public IReadOnlyList<string> Notes { get; set; } = [];
+
+    public LessonTeacherViewModel Teacher { get; set; } = new();
+}
+
+public sealed class LessonMaterialViewModel
+{
+    public string Name { get; set; } = string.Empty;
+
+    public string Type { get; set; } = string.Empty;
+
+    public string Size { get; set; } = string.Empty;
+
+    public string Icon { get; set; } = "ph-file";
+}
+
+public sealed class LessonDownloadViewModel
+{
+    public string Name { get; set; } = string.Empty;
+
+    public string Format { get; set; } = string.Empty;
+
+    public string Size { get; set; } = string.Empty;
+
+    public string Icon { get; set; } = "ph-download-simple";
+}
+
+public sealed class LessonQuizViewModel
+{
+    public string Title { get; set; } = string.Empty;
+
+    public int PassingScore { get; set; } = 70;
+
+    public IReadOnlyList<LessonQuizQuestionViewModel> Questions { get; set; } = [];
+}
+
+public sealed class LessonQuizQuestionViewModel
+{
+    public string Text { get; set; } = string.Empty;
+
+    public IReadOnlyList<LessonQuizAnswerViewModel> Answers { get; set; } = [];
+}
+
+public sealed class LessonQuizAnswerViewModel
+{
+    public string Text { get; set; } = string.Empty;
+
+    public bool IsCorrect { get; set; }
+}
+
+public sealed class LessonDiscussionViewModel
+{
+    public string Author { get; set; } = string.Empty;
+
+    public string Text { get; set; } = string.Empty;
+
+    public int Likes { get; set; }
+}
+
+public sealed class LessonTeacherViewModel
+{
+    public string Name { get; set; } = string.Empty;
+
+    public string Specialty { get; set; } = string.Empty;
+
+    public string Bio { get; set; } = string.Empty;
+
+    public int Courses { get; set; }
 }

@@ -521,67 +521,178 @@ public sealed class CoursesController(
         }
 
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var lesson = await db.Lessons
+        var lessonData = await db.Lessons
             .AsNoTracking()
-            .Include(item => item.CourseModule)
-                .ThenInclude(module => module.Course)
-                    .ThenInclude(course => course.Modules)
-                        .ThenInclude(module => module.Lessons)
-            .FirstOrDefaultAsync(item => item.Id == id);
-        if (lesson is null)
+            .Where(item => item.Id == id)
+            .Select(item => new LessonPlayerData
+            {
+                LessonId = item.Id,
+                LessonTitle = item.Title,
+                LessonDescription = item.Description,
+                LessonOrder = item.Order,
+                LessonDurationInMinutes = item.DurationInMinutes,
+                VideoProvider = item.VideoProvider,
+                VideoExternalId = item.VideoExternalId,
+                ModuleId = item.CourseModule.Id,
+                ModuleTitle = item.CourseModule.Title,
+                ModuleDescription = item.CourseModule.Description,
+                ModuleOrder = item.CourseModule.Order,
+                CourseId = item.CourseModule.Course.Id,
+                CourseTitle = item.CourseModule.Course.Title,
+                CourseDescription = item.CourseModule.Course.Description,
+                CourseIsActive = item.CourseModule.Course.IsActive,
+                Modules = item.CourseModule.Course.Modules
+                    .OrderBy(module => module.Order)
+                    .Select(module => new LessonPlayerModuleData
+                    {
+                        Id = module.Id,
+                        Title = module.Title,
+                        Description = module.Description,
+                        Order = module.Order,
+                        Lessons = module.Lessons
+                            .OrderBy(lesson => lesson.Order)
+                            .Select(lesson => new LessonPlayerLessonData
+                            {
+                                Id = lesson.Id,
+                                ModuleId = lesson.CourseModuleId,
+                                Title = lesson.Title,
+                                Description = lesson.Description,
+                                VideoProvider = lesson.VideoProvider,
+                                VideoExternalId = lesson.VideoExternalId,
+                                DurationInMinutes = lesson.DurationInMinutes,
+                                Order = lesson.Order
+                            })
+                            .ToList()
+                    })
+                    .ToList()
+            })
+            .FirstOrDefaultAsync();
+        if (lessonData is null)
         {
             return NotFound();
         }
 
         var students = await GetTenantStudentsAsync(db, tenantId.Value);
-        var selectedStudentId = studentId ?? students.FirstOrDefault()?.Id;
-        var progress = selectedStudentId.HasValue
-            ? await db.StudentProgress.AsNoTracking().FirstOrDefaultAsync(item =>
-                item.StudentId == selectedStudentId.Value &&
-                item.LessonId == id &&
-                item.Student.TenantId == tenantId.Value)
-            : null;
-        var completedLessons = selectedStudentId.HasValue
-            ? await db.StudentProgress
-                .AsNoTracking()
-                .Where(item =>
-                    item.StudentId == selectedStudentId.Value &&
-                    item.Student.TenantId == tenantId.Value &&
-                    (item.CompletedAt.HasValue || item.WatchedPercentage >= 100))
-                .Select(item => item.LessonId)
-                .ToListAsync()
-            : [];
-        var completedLessonIds = completedLessons.ToHashSet();
+        var selectedStudentId = studentId.HasValue && students.Any(student => student.Id == studentId.Value)
+            ? studentId
+            : students.FirstOrDefault()?.Id;
 
-        var orderedLessons = lesson.CourseModule.Course.Modules
+        var orderedLessons = lessonData.Modules
             .OrderBy(module => module.Order)
             .SelectMany(module => module.Lessons.OrderBy(item => item.Order))
             .ToList();
-        var currentIndex = orderedLessons.FindIndex(item => item.Id == lesson.Id);
+        var lessonIds = orderedLessons.Select(item => item.Id).ToList();
+
+        var progressItems = await db.StudentProgress
+            .AsNoTracking()
+            .Where(item =>
+                lessonIds.Contains(item.LessonId) &&
+                item.Student.TenantId == tenantId.Value)
+            .Select(item => new LessonProgressData
+            {
+                LessonId = item.LessonId,
+                StudentId = item.StudentId,
+                WatchedPercentage = item.WatchedPercentage,
+                CompletedAt = item.CompletedAt
+            })
+            .ToListAsync();
+
+        var progressByLessonId = progressItems
+            .GroupBy(item => item.LessonId)
+            .ToDictionary(group => group.Key, group => new
+            {
+                Students = group.Select(item => item.StudentId).Distinct().Count(),
+                AverageProgress = ClampPercent((int)Math.Round(group.Average(item => item.WatchedPercentage))),
+                CompletionRate = ClampPercent((int)Math.Round(group.Count(item => item.CompletedAt.HasValue || item.WatchedPercentage >= 100) * 100m / group.Count()))
+            });
+
+        var selectedProgress = selectedStudentId.HasValue
+            ? progressItems.FirstOrDefault(item => item.StudentId == selectedStudentId.Value && item.LessonId == id)
+            : null;
+        var completedLessonIds = selectedStudentId.HasValue
+            ? progressItems
+                .Where(item =>
+                    item.StudentId == selectedStudentId.Value &&
+                    (item.CompletedAt.HasValue || item.WatchedPercentage >= 100))
+                .Select(item => item.LessonId)
+                .ToHashSet()
+            : [];
+
+        var modules = lessonData.Modules
+            .OrderBy(module => module.Order)
+            .Select(module => new CourseModuleDetailsViewModel
+            {
+                Id = module.Id,
+                Title = module.Title,
+                Description = module.Description,
+                Order = module.Order,
+                Lessons = module.Lessons
+                    .OrderBy(lesson => lesson.Order)
+                    .Select(lesson =>
+                    {
+                        progressByLessonId.TryGetValue(lesson.Id, out var stats);
+                        return new CourseLessonDetailsViewModel
+                        {
+                            Id = lesson.Id,
+                            ModuleId = lesson.ModuleId,
+                            Title = lesson.Title,
+                            Description = lesson.Description,
+                            VideoProvider = string.IsNullOrWhiteSpace(lesson.VideoProvider) ? "Estrutura pronta" : lesson.VideoProvider,
+                            VideoExternalId = lesson.VideoExternalId,
+                            DurationInMinutes = lesson.DurationInMinutes,
+                            Order = lesson.Order,
+                            Students = stats?.Students ?? 0,
+                            AverageProgress = stats?.AverageProgress ?? 0,
+                            CompletionRate = stats?.CompletionRate ?? 0
+                        };
+                    })
+                    .ToList()
+            })
+            .ToList();
+
+        var currentIndex = orderedLessons.FindIndex(item => item.Id == lessonData.LessonId);
+        var duration = orderedLessons.Sum(item => item.DurationInMinutes);
+        var remainingMinutes = orderedLessons
+            .Where(item => !completedLessonIds.Contains(item.Id))
+            .Sum(item => item.DurationInMinutes);
         var courseProgress = orderedLessons.Count == 0
             ? 0
             : ClampPercent((int)Math.Round(orderedLessons.Count(item => completedLessonIds.Contains(item.Id)) * 100m / orderedLessons.Count));
+        var category = InferCategory(lessonData.CourseTitle);
+        var teacher = InferTeacher(lessonData.CourseTitle);
 
         return View(new LessonPlayerViewModel
         {
-            CourseId = lesson.CourseModule.CourseId,
-            CourseTitle = lesson.CourseModule.Course.Title,
-            LessonId = lesson.Id,
-            LessonTitle = lesson.Title,
-            LessonDescription = lesson.Description,
-            VideoProvider = lesson.VideoProvider,
-            VideoExternalId = lesson.VideoExternalId,
-            DurationInMinutes = lesson.DurationInMinutes,
+            CourseId = lessonData.CourseId,
+            CourseTitle = lessonData.CourseTitle,
+            CourseCategory = category,
+            CourseLevel = InferLevel(lessonData.Modules.Count),
+            CourseTeacher = teacher,
+            CourseWorkloadHours = Math.Max(1, (int)Math.Ceiling(duration / 60m)),
+            LessonId = lessonData.LessonId,
+            LessonTitle = lessonData.LessonTitle,
+            LessonDescription = lessonData.LessonDescription,
+            ModuleTitle = lessonData.ModuleTitle,
+            VideoProvider = lessonData.VideoProvider,
+            VideoExternalId = lessonData.VideoExternalId,
+            DurationInMinutes = lessonData.LessonDurationInMinutes,
             StudentId = selectedStudentId,
             StudentName = students.FirstOrDefault(item => item.Id == selectedStudentId)?.Name,
-            Progress = progress?.WatchedPercentage ?? 0,
-            IsCompleted = progress?.CompletedAt.HasValue == true || progress?.WatchedPercentage >= 100,
+            Progress = selectedProgress?.WatchedPercentage ?? 0,
+            IsCompleted = selectedProgress?.CompletedAt.HasValue == true || selectedProgress?.WatchedPercentage >= 100,
             CourseProgress = courseProgress,
             PreviousLessonId = currentIndex > 0 ? orderedLessons[currentIndex - 1].Id : null,
             NextLessonId = currentIndex >= 0 && currentIndex < orderedLessons.Count - 1 ? orderedLessons[currentIndex + 1].Id : null,
             CompletedLessonIds = completedLessonIds,
             Students = students,
-            Modules = ToDetails(lesson.CourseModule.Course, tenantId.Value).Modules
+            Modules = modules,
+            Objectives = BuildLessonObjectives(lessonData.LessonTitle),
+            Materials = BuildLessonMaterials(lessonData.LessonTitle),
+            Downloads = BuildLessonDownloads(),
+            Quiz = BuildLessonQuiz(lessonData.LessonTitle),
+            Discussions = BuildLessonDiscussions(lessonData.LessonTitle),
+            Notes = BuildLessonNotes(lessonData.LessonDescription, remainingMinutes),
+            Teacher = BuildLessonTeacher(teacher, category, lessonData.Modules.Count)
         });
     }
 
@@ -800,6 +911,182 @@ public sealed class CoursesController(
         "Autoconhecimento" => "ph-brain",
         _ => "ph-seedling"
     };
+
+    private static IReadOnlyList<string> BuildLessonObjectives(string lessonTitle)
+    {
+        return
+        [
+            $"Compreender o tema central de {lessonTitle}.",
+            "Relacionar o conteudo com metas terapeuticas reais.",
+            "Registrar uma acao pratica para aplicar antes da proxima aula."
+        ];
+    }
+
+    private static IReadOnlyList<LessonMaterialViewModel> BuildLessonMaterials(string lessonTitle)
+    {
+        var code = NormalizeCode(lessonTitle);
+        return
+        [
+            new() { Name = $"Guia pratico - {lessonTitle}", Type = "PDF", Size = "1.8 MB", Icon = "ph-file-pdf" },
+            new() { Name = $"Mapa visual {code}", Type = "Slides", Size = "4.2 MB", Icon = "ph-presentation-chart" },
+            new() { Name = "Checklist de aplicacao", Type = "Planilha", Size = "620 KB", Icon = "ph-table" }
+        ];
+    }
+
+    private static IReadOnlyList<LessonDownloadViewModel> BuildLessonDownloads()
+    {
+        return
+        [
+            new() { Name = "Resumo executivo da aula", Format = "PDF", Size = "980 KB", Icon = "ph-file-pdf" },
+            new() { Name = "Atividade orientada", Format = "DOCX", Size = "410 KB", Icon = "ph-file-doc" },
+            new() { Name = "Pacote de apoio", Format = "ZIP", Size = "6.4 MB", Icon = "ph-file-zip" }
+        ];
+    }
+
+    private static LessonQuizViewModel BuildLessonQuiz(string lessonTitle)
+    {
+        return new LessonQuizViewModel
+        {
+            Title = $"Verificacao rapida - {lessonTitle}",
+            PassingScore = 70,
+            Questions =
+            [
+                new()
+                {
+                    Text = "Qual e o primeiro passo recomendado apos assistir esta aula?",
+                    Answers =
+                    [
+                        new() { Text = "Registrar uma acao pratica no plano pessoal.", IsCorrect = true },
+                        new() { Text = "Pular para o certificado sem revisar o conteudo." },
+                        new() { Text = "Ignorar as orientacoes do modulo." }
+                    ]
+                },
+                new()
+                {
+                    Text = "Como o aluno deve usar os materiais complementares?",
+                    Answers =
+                    [
+                        new() { Text = "Como apoio para aplicar o conteudo na rotina.", IsCorrect = true },
+                        new() { Text = "Apenas como arquivo administrativo." },
+                        new() { Text = "Somente depois do encerramento do curso." }
+                    ]
+                }
+            ]
+        };
+    }
+
+    private static IReadOnlyList<LessonDiscussionViewModel> BuildLessonDiscussions(string lessonTitle)
+    {
+        return
+        [
+            new() { Author = "Equipe terapeutica", Text = $"Quais situacoes reais voce conecta com {lessonTitle.ToLowerInvariant()}?", Likes = 12 },
+            new() { Author = "Coordenacao pedagogica", Text = "Use este espaco para registrar duvidas que podem ser retomadas no grupo.", Likes = 8 }
+        ];
+    }
+
+    private static IReadOnlyList<string> BuildLessonNotes(string lessonDescription, int remainingMinutes)
+    {
+        return
+        [
+            $"Ideia-chave: {lessonDescription}",
+            $"Tempo estimado restante no curso: {remainingMinutes} minutos.",
+            "Nota pessoal demonstrativa: transformar aprendizado em uma pequena acao observavel."
+        ];
+    }
+
+    private static LessonTeacherViewModel BuildLessonTeacher(string teacher, string category, int courses)
+    {
+        return new LessonTeacherViewModel
+        {
+            Name = teacher,
+            Specialty = category,
+            Bio = "Profissional responsavel por conectar conteudo educacional, rotina terapeutica e plano de desenvolvimento individual.",
+            Courses = Math.Max(1, courses)
+        };
+    }
+
+    private static string NormalizeCode(string value)
+    {
+        return new string(value.ToLowerInvariant().Where(char.IsLetterOrDigit).Take(18).ToArray());
+    }
+
+    private sealed class LessonPlayerData
+    {
+        public Guid LessonId { get; set; }
+
+        public string LessonTitle { get; set; } = string.Empty;
+
+        public string LessonDescription { get; set; } = string.Empty;
+
+        public int LessonOrder { get; set; }
+
+        public int LessonDurationInMinutes { get; set; }
+
+        public string VideoProvider { get; set; } = string.Empty;
+
+        public string VideoExternalId { get; set; } = string.Empty;
+
+        public Guid ModuleId { get; set; }
+
+        public string ModuleTitle { get; set; } = string.Empty;
+
+        public string ModuleDescription { get; set; } = string.Empty;
+
+        public int ModuleOrder { get; set; }
+
+        public Guid CourseId { get; set; }
+
+        public string CourseTitle { get; set; } = string.Empty;
+
+        public string CourseDescription { get; set; } = string.Empty;
+
+        public bool CourseIsActive { get; set; }
+
+        public List<LessonPlayerModuleData> Modules { get; set; } = [];
+    }
+
+    private sealed class LessonPlayerModuleData
+    {
+        public Guid Id { get; set; }
+
+        public string Title { get; set; } = string.Empty;
+
+        public string Description { get; set; } = string.Empty;
+
+        public int Order { get; set; }
+
+        public List<LessonPlayerLessonData> Lessons { get; set; } = [];
+    }
+
+    private sealed class LessonPlayerLessonData
+    {
+        public Guid Id { get; set; }
+
+        public Guid ModuleId { get; set; }
+
+        public string Title { get; set; } = string.Empty;
+
+        public string Description { get; set; } = string.Empty;
+
+        public string VideoProvider { get; set; } = string.Empty;
+
+        public string VideoExternalId { get; set; } = string.Empty;
+
+        public int DurationInMinutes { get; set; }
+
+        public int Order { get; set; }
+    }
+
+    private sealed class LessonProgressData
+    {
+        public Guid LessonId { get; set; }
+
+        public Guid StudentId { get; set; }
+
+        public int WatchedPercentage { get; set; }
+
+        public DateTime? CompletedAt { get; set; }
+    }
 
     private static string InferLevel(int modules) => modules switch
     {
