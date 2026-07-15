@@ -16,6 +16,10 @@
             <div class="admin-form-group"><label class="admin-label" asp-for="WorkloadHours">Carga horária</label><input class="admin-input" asp-for="WorkloadHours" type="number" min="1" /><span class="admin-validation" asp-validation-for="WorkloadHours"></span></div>
             <div class="admin-form-group"><label class="admin-label" asp-for="Status">Status</label><select class="admin-select" asp-for="Status"><option>Rascunho</option><option>Publicado</option><option>Arquivado</option></select><span class="admin-validation" asp-validation-for="Status"></span></div>
         </div>
+        <div class="rn-alert rn-alert-info" style="margin-top: 16px;">
+            <i class="ph ph-info" aria-hidden="true"></i>
+            Categoria, professor e carga horaria estao preparados na UX; a persistencia definitiva depende de migration futura porque o dominio atual de Course possui apenas titulo, descricao e ativo.
+        </div>
     </section>
 
     <section class="admin-form-section">

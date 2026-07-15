@@ -12,6 +12,13 @@ public static class ApplicationPermissions
     public const string MedicalRecordsView = "MedicalRecords.View";
     public const string MedicalRecordsManage = "MedicalRecords.Manage";
     public const string EadAccess = "Ead.Access";
+    public const string EadView = "EAD.View";
+    public const string EadManageCourses = "EAD.ManageCourses";
+    public const string EadManageContent = "EAD.ManageContent";
+    public const string EadManageEnrollments = "EAD.ManageEnrollments";
+    public const string EadManageLibrary = "EAD.ManageLibrary";
+    public const string EadViewReports = "EAD.ViewReports";
+    public const string EadStudy = "EAD.Study";
     public const string FinanceAccess = "Finance.Access";
     public const string InventoryAccess = "Inventory.Access";
     public const string TherapeuticPlansAccess = "TherapeuticPlans.Access";
@@ -31,6 +38,13 @@ public static class ApplicationPermissions
         MedicalRecordsView,
         MedicalRecordsManage,
         EadAccess,
+        EadView,
+        EadManageCourses,
+        EadManageContent,
+        EadManageEnrollments,
+        EadManageLibrary,
+        EadViewReports,
+        EadStudy,
         FinanceAccess,
         InventoryAccess,
         TherapeuticPlansAccess,

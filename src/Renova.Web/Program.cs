@@ -56,6 +56,7 @@ await app.MigrateDatabaseAsync();
 await app.SeedTenantBootstrapAsync();
 await app.SeedIdentityAsync();
 await app.SeedTenantUserClaimsAsync();
+await app.SeedEadDemoAsync();
 
 if (!app.Environment.IsDevelopment())
 {

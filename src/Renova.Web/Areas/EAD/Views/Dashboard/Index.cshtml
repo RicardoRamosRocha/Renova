@@ -5,25 +5,70 @@
 }
 
 <section class="ead-page">
-    <div class="ead-page-header">
+    <div class="ead-executive-hero">
         <div>
-            <span class="ead-eyebrow">EAD / Gestão</span>
-            <h1>Dashboard EAD</h1>
-            <p>Indicadores reais de cursos, trilhas, engajamento, conclusões e certificados do tenant atual.</p>
+            <span class="ead-eyebrow">EAD / Gestao executiva</span>
+            <h1>Educacao terapeutica conectada ao acompanhamento do acolhido</h1>
+            <p>Monitore engajamento, conclusoes, certificados e trilhas de aprendizagem com indicadores reais do tenant atual.</p>
+            <div class="rn-premium-actions">
+                <a class="ead-primary-button" asp-controller="Courses" asp-action="Index"><i class="ph ph-books" aria-hidden="true"></i>Biblioteca</a>
+                <a class="ead-secondary-button" asp-controller="Courses" asp-action="Create"><i class="ph ph-plus" aria-hidden="true"></i>Novo curso</a>
+                <a class="ead-secondary-button" asp-controller="Students" asp-action="Dashboard"><i class="ph ph-student" aria-hidden="true"></i>Jornada do aluno</a>
+            </div>
         </div>
-        <a class="ead-primary-button" asp-controller="Courses" asp-action="Create"><i class="ph ph-plus" aria-hidden="true"></i>Novo curso</a>
+        <div class="ead-engagement-ring" style="--value:@Model.AverageEngagement;">
+            <strong>@Model.AverageEngagement%</strong>
+            <span>engajamento medio</span>
+        </div>
     </div>
 
-    <div class="ead-metrics-grid">
-        <article class="ead-metric-card"><span>Cursos ativos</span><strong>@Model.ActiveCourses</strong><small>Catálogo</small></article>
-        <article class="ead-metric-card"><span>Alunos estudando</span><strong>@Model.StudyingStudents</strong><small>Com progresso</small></article>
-        <article class="ead-metric-card"><span>Conclusões</span><strong>@Model.CompletedLessons</strong><small>Aulas concluídas</small></article>
-        <article class="ead-metric-card"><span>Certificados</span><strong>@Model.Certificates</strong><small>Emitidos</small></article>
+    <div class="ead-metrics-grid ead-metrics-grid-wide">
+        <article class="ead-metric-card"><span>Cursos publicados</span><strong>@Model.ActiveCourses</strong><small>@Model.TotalCourses cursos totais</small></article>
+        <article class="ead-metric-card"><span>Aulas disponiveis</span><strong>@Model.AvailableLessons</strong><small>Conteudo estruturado</small></article>
+        <article class="ead-metric-card"><span>Alunos estudando</span><strong>@Model.StudyingStudents</strong><small>Com progresso registrado</small></article>
+        <article class="ead-metric-card"><span>Aulas concluidas</span><strong>@Model.CompletedLessons</strong><small>@Model.CompletionRate% de taxa de conclusao</small></article>
+        <article class="ead-metric-card"><span>Horas aprendidas</span><strong>@Model.LearningHours</strong><small>Proporcionais ao progresso</small></article>
+        <article class="ead-metric-card"><span>Certificados</span><strong>@Model.Certificates</strong><small>Emitidos no tenant</small></article>
+        <article class="ead-metric-card"><span>Precisam de atencao</span><strong>@Model.StudentsNeedingAttention</strong><small>Baixo progresso ou inatividade</small></article>
     </div>
 
     <div class="patient-profile-grid">
         <section class="medical-panel">
-            <div class="medical-panel-title"><span class="rn-eyebrow">Trilhas terapêuticas</span><h2>Engajamento por trilha</h2></div>
+            <div class="medical-panel-title"><span class="rn-eyebrow">Cursos em destaque</span><h2>Melhor desempenho</h2></div>
+            @if (Model.TopCourses.Count == 0)
+            {
+                @await Html.PartialAsync("~/Views/Shared/_PremiumEmptyState.cshtml", new Renova.Web.ViewModels.PremiumEmptyStateViewModel
+                {
+                    Icon = "ph ph-chart-line-up",
+                    Title = "Sem desempenho registrado",
+                    Description = "Os cursos com melhor engajamento aparecerao quando houver progresso de alunos.",
+                    ActionText = "Abrir biblioteca",
+                    ActionUrl = Url.Action("Index", "Courses")
+                })
+            }
+            else
+            {
+                <div class="ead-performance-list">
+                    @foreach (var course in Model.TopCourses)
+                    {
+                        <a class="ead-performance-card" asp-controller="Courses" asp-action="Details" asp-route-id="@course.Id">
+                            <div>
+                                <strong>@course.Title</strong>
+                                <span>@course.Trail - @course.Students alunos</span>
+                            </div>
+                            <div>
+                                <strong>@course.AverageProgress%</strong>
+                                <small>@course.CompletionRate% concl.</small>
+                            </div>
+                            <div class="ead-progress-track"><div class="ead-progress-fill" style="width:@course.AverageProgress%;"></div></div>
+                        </a>
+                    }
+                </div>
+            }
+        </section>
+
+        <section class="medical-panel">
+            <div class="medical-panel-title"><span class="rn-eyebrow">Trilhas terapeuticas</span><h2>Engajamento por trilha</h2></div>
             @if (Model.Trails.Count == 0)
             {
                 <article class="medical-empty-line">Nenhuma trilha com progresso registrado.</article>
@@ -36,9 +81,9 @@
                         <article class="ead-trail-card">
                             <i class="ph @trail.Icon" aria-hidden="true"></i>
                             <strong>@trail.Name</strong>
-                            <span>@trail.Courses cursos · @trail.Students alunos</span>
+                            <span>@trail.Courses cursos - @trail.Students alunos</span>
                             <div class="ead-progress-track"><div class="ead-progress-fill" style="width:@trail.AverageProgress%;"></div></div>
-                            <small>@trail.AverageProgress% de progresso médio</small>
+                            <small>@trail.AverageProgress% de progresso medio</small>
                         </article>
                     }
                 </div>
@@ -50,7 +95,7 @@
             <div class="rn-timeline">
                 @if (Model.RecentActivities.Count == 0)
                 {
-                    <article class="rn-timeline-empty"><i class="ph ph-clock" aria-hidden="true"></i><strong>Nenhuma atividade recente</strong><span>O progresso dos acolhidos aparecerá aqui.</span></article>
+                    <article class="rn-timeline-empty"><i class="ph ph-clock" aria-hidden="true"></i><strong>Nenhuma atividade recente</strong><span>O progresso dos acolhidos aparecera aqui.</span></article>
                 }
                 else
                 {
@@ -60,8 +105,8 @@
                             <span class="rn-timeline-icon"><i class="ph ph-graduation-cap" aria-hidden="true"></i></span>
                             <div>
                                 <header><strong>@activity.StudentName</strong><time>@activity.OccurredAt.ToString("dd/MM/yyyy HH:mm")</time></header>
-                                <p>@activity.CourseTitle · @activity.LessonTitle</p>
-                                <footer><span>@activity.Progress% concluído</span></footer>
+                                <p>@activity.CourseTitle - @activity.LessonTitle</p>
+                                <footer><span>@activity.Progress% concluido</span></footer>
                             </div>
                         </article>
                     }

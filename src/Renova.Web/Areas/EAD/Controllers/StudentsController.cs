@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Renova.Infrastructure.Data;
 using Renova.Web.Areas.EAD.ViewModels.Students;
@@ -7,6 +8,7 @@ using Renova.Web.Services;
 namespace Renova.Web.Areas.EAD.Controllers;
 
 [Area("EAD")]
+[Authorize]
 public sealed class StudentsController(
     IDbContextFactory<AppDbContext> dbContextFactory,
     ICurrentTenantService currentTenantService) : Controller
@@ -97,6 +99,15 @@ public sealed class StudentsController(
             Students = students,
             OverallProgress = overall,
             Certificates = student.Certificates.Count,
+            CertificateItems = student.Certificates
+                .OrderByDescending(item => item.IssuedAt)
+                .Select(item => new StudentCertificateSummaryViewModel
+                {
+                    CourseTitle = item.Course.Title,
+                    VerificationCode = item.VerificationCode,
+                    IssuedAt = item.IssuedAt
+                })
+                .ToList(),
             CompletedLessons = completedLessons,
             NextActivity = courses.OrderBy(item => item.Progress).FirstOrDefault(item => item.Progress < 100)?.Title,
             Courses = courses,

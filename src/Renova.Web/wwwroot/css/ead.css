@@ -2,6 +2,74 @@
     padding: 0;
 }
 
+.ead-executive-hero {
+    align-items: center;
+    background:
+        linear-gradient(135deg, rgba(15, 23, 42, .96), rgba(30, 64, 175, .92)),
+        linear-gradient(135deg, var(--rn-primary), var(--rn-secondary));
+    border-radius: var(--rn-radius-xl);
+    box-shadow: var(--rn-shadow-md);
+    color: #fff;
+    display: grid;
+    gap: 24px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin-bottom: 22px;
+    overflow: hidden;
+    padding: clamp(24px, 4vw, 36px);
+}
+
+.ead-executive-hero h1 {
+    color: #fff;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.04;
+    margin: 8px 0 0;
+    max-width: 860px;
+}
+
+.ead-executive-hero p {
+    color: #dbeafe;
+    line-height: 1.7;
+    margin: 12px 0 20px;
+    max-width: 720px;
+}
+
+.ead-executive-hero .ead-eyebrow {
+    color: #bfdbfe;
+}
+
+.ead-engagement-ring {
+    --value: 0;
+    align-items: center;
+    aspect-ratio: 1;
+    background:
+        radial-gradient(circle, #0f172a 0 58%, transparent 59%),
+        conic-gradient(#22c55e calc(var(--value) * 1%), rgba(255, 255, 255, .18) 0);
+    border: 1px solid rgba(255, 255, 255, .22);
+    border-radius: 999px;
+    display: grid;
+    justify-items: center;
+    min-width: 168px;
+    padding: 26px;
+    text-align: center;
+}
+
+.ead-engagement-ring strong {
+    color: #fff;
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.ead-engagement-ring span {
+    color: #bfdbfe;
+    font-size: .78rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.ead-metrics-grid-wide {
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
 .ead-course-grid {
     display: grid;
     gap: 22px;
@@ -104,7 +172,12 @@
 .ead-card-actions {
     display: grid;
     gap: 10px;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ead-card-actions form,
+.ead-card-actions button {
+    width: 100%;
 }
 
 .ead-module-list,
@@ -235,7 +308,163 @@
     padding: 16px;
 }
 
+.ead-performance-list {
+    display: grid;
+    gap: 12px;
+}
+
+.ead-performance-card {
+    background: #fff;
+    border: 1px solid var(--rn-border);
+    border-radius: var(--rn-radius-md);
+    color: inherit;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 14px;
+    text-decoration: none;
+    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.ead-performance-card:hover {
+    border-color: color-mix(in srgb, var(--rn-primary) 24%, var(--rn-border));
+    box-shadow: var(--rn-shadow-sm);
+    transform: translateY(-1px);
+}
+
+.ead-performance-card strong {
+    color: var(--rn-text);
+    display: block;
+}
+
+.ead-performance-card span,
+.ead-performance-card small {
+    color: var(--rn-muted);
+    display: block;
+    font-weight: 800;
+    margin-top: 3px;
+}
+
+.ead-performance-card .ead-progress-track {
+    grid-column: 1 / -1;
+}
+
+.ead-lesson-shell {
+    display: grid;
+    gap: 22px;
+    grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+}
+
+.ead-lesson-sidebar,
+.ead-player-card {
+    background: var(--rn-card);
+    border: 1px solid var(--rn-border);
+    border-radius: var(--rn-radius-lg);
+    box-shadow: var(--rn-shadow-sm);
+}
+
+.ead-lesson-sidebar {
+    align-self: start;
+    display: grid;
+    gap: 16px;
+    padding: 18px;
+    position: sticky;
+    top: 96px;
+}
+
+.ead-lesson-sidebar h2 {
+    color: var(--rn-text);
+    font-size: 1rem;
+    margin: 0;
+}
+
+.ead-lesson-module {
+    display: grid;
+    gap: 8px;
+}
+
+.ead-lesson-module strong {
+    color: var(--rn-text);
+    font-size: .88rem;
+}
+
+.ead-lesson-module a {
+    align-items: center;
+    border-radius: var(--rn-radius-sm);
+    color: var(--rn-muted);
+    display: flex;
+    font-weight: 800;
+    gap: 8px;
+    padding: 9px 10px;
+    text-decoration: none;
+}
+
+.ead-lesson-module a:hover,
+.ead-lesson-module a.is-active {
+    background: #eff6ff;
+    color: var(--rn-primary);
+}
+
+.ead-lesson-main {
+    display: grid;
+    gap: 18px;
+    min-width: 0;
+}
+
+.ead-player-card {
+    display: grid;
+    gap: 16px;
+    padding: 18px;
+}
+
+.ead-player-placeholder {
+    align-items: center;
+    background: #0f172a;
+    border-radius: var(--rn-radius-md);
+    color: #fff;
+    display: grid;
+    justify-items: center;
+    min-height: 320px;
+    padding: 28px;
+    text-align: center;
+}
+
+.ead-player-placeholder i {
+    font-size: 48px;
+}
+
+.ead-player-placeholder span {
+    color: #cbd5e1;
+    margin-top: 8px;
+    overflow-wrap: anywhere;
+}
+
+.ead-lesson-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
 @media (max-width: 760px) {
+    .ead-executive-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .ead-engagement-ring {
+        justify-self: start;
+        min-width: 138px;
+    }
+
+    .ead-lesson-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .ead-lesson-sidebar {
+        position: static;
+    }
+
     .ead-student-hero {
         align-items: stretch;
         flex-direction: column;

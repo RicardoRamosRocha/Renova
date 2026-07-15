@@ -1,0 +1,76 @@
+@using Renova.Web.Areas.EAD.ViewModels.Courses
+@model LessonPlayerViewModel
+@{
+    ViewData["Title"] = Model.LessonTitle;
+}
+
+<section class="ead-lesson-shell">
+    <aside class="ead-lesson-sidebar">
+        <a class="rn-btn-secondary" asp-action="Content" asp-route-id="@Model.CourseId"><i class="ph ph-arrow-left" aria-hidden="true"></i>Conteudo</a>
+        <h2>@Model.CourseTitle</h2>
+        @foreach (var module in Model.Modules)
+        {
+            <div class="ead-lesson-module">
+                <strong>@module.Order. @module.Title</strong>
+                @foreach (var lesson in module.Lessons)
+                {
+                    <a class="@(lesson.Id == Model.LessonId ? "is-active" : string.Empty)" asp-action="Lesson" asp-route-id="@lesson.Id" asp-route-studentId="@Model.StudentId">
+                        <i class="ph ph-play-circle" aria-hidden="true"></i>@lesson.Title
+                    </a>
+                }
+            </div>
+        }
+    </aside>
+
+    <main class="ead-lesson-main">
+        <div class="admin-page-header">
+            <div>
+                <span>EAD / Aula</span>
+                <h1>@Model.LessonTitle</h1>
+                <p>@Model.LessonDescription</p>
+            </div>
+            <form method="get">
+                <input type="hidden" name="id" value="@Model.LessonId" />
+                <select class="admin-select" name="studentId" onchange="this.form.submit()">
+                    @foreach (var student in Model.Students)
+                    {
+                        <option value="@student.Id" selected="@(student.Id == Model.StudentId)">@student.Name</option>
+                    }
+                </select>
+            </form>
+        </div>
+
+        @if (TempData["Success"] is string success)
+        {
+            <div class="rn-alert rn-alert-success"><i class="ph ph-check-circle" aria-hidden="true"></i>@success</div>
+        }
+
+        <section class="ead-player-card">
+            <div class="ead-player-placeholder">
+                <i class="ph ph-video" aria-hidden="true"></i>
+                <strong>@Model.VideoProvider</strong>
+                <span>@(string.IsNullOrWhiteSpace(Model.VideoExternalId) ? "Conteudo textual ou video externo ainda nao informado." : Model.VideoExternalId)</span>
+            </div>
+            <div class="ead-progress-label"><span>Progresso de @(Model.StudentName ?? "aluno")</span><strong>@Model.Progress%</strong></div>
+            <div class="ead-progress-track"><div class="ead-progress-fill" style="width:@Model.Progress%;"></div></div>
+        </section>
+
+        <div class="ead-lesson-actions">
+            @if (Model.PreviousLessonId.HasValue)
+            {
+                <a class="rn-btn-secondary" asp-action="Lesson" asp-route-id="@Model.PreviousLessonId" asp-route-studentId="@Model.StudentId"><i class="ph ph-arrow-left" aria-hidden="true"></i>Anterior</a>
+            }
+            @if (Model.StudentId.HasValue)
+            {
+                <form asp-action="CompleteLesson" asp-route-id="@Model.LessonId" method="post">
+                    <input type="hidden" name="studentId" value="@Model.StudentId" />
+                    <button class="rn-btn-primary" type="submit"><i class="ph ph-check-circle" aria-hidden="true"></i>@(Model.IsCompleted ? "Concluida" : "Concluir aula")</button>
+                </form>
+            }
+            @if (Model.NextLessonId.HasValue)
+            {
+                <a class="rn-btn-secondary" asp-action="Lesson" asp-route-id="@Model.NextLessonId" asp-route-studentId="@Model.StudentId">Proxima<i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+            }
+        </div>
+    </main>
+</section>

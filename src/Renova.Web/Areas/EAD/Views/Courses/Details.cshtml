@@ -11,7 +11,10 @@
             <h1>@Model.Title</h1>
             <p>@Model.Description</p>
         </div>
-        <a class="rn-btn-primary" asp-action="Edit" asp-route-id="@Model.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>
+        <div class="rn-premium-actions">
+            <a class="rn-btn-secondary" asp-action="Content" asp-route-id="@Model.Id"><i class="ph ph-list-bullets" aria-hidden="true"></i>Conteudo</a>
+            <a class="rn-btn-primary" asp-action="Edit" asp-route-id="@Model.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>
+        </div>
     </div>
 
     <div class="patient-kpi-grid">
@@ -19,6 +22,8 @@
         <article><small>Aulas</small><strong>@Model.Lessons</strong></article>
         <article><small>Alunos</small><strong>@Model.Students</strong></article>
         <article><small>Progresso</small><strong>@Model.AverageProgress%</strong></article>
+        <article><small>Conclusao</small><strong>@Model.CompletionRate%</strong></article>
+        <article><small>Certificados</small><strong>@Model.Certificates</strong></article>
     </div>
 
     <section class="medical-panel">
@@ -46,16 +51,17 @@
                         </header>
                         <div class="renova-table-wrap">
                             <table class="renova-table">
-                                <thead><tr><th>Aula</th><th>Vídeo</th><th>Duração</th><th>Alunos</th><th>Progresso</th></tr></thead>
+                                <thead><tr><th>Aula</th><th>Video</th><th>Duracao</th><th>Alunos</th><th>Progresso</th><th>Conclusao</th></tr></thead>
                                 <tbody>
                                 @foreach (var lesson in module.Lessons)
                                 {
                                     <tr>
-                                        <td>@lesson.Title</td>
+                                        <td><a asp-action="Lesson" asp-route-id="@lesson.Id">@lesson.Title</a></td>
                                         <td>@lesson.VideoProvider</td>
                                         <td>@lesson.DurationInMinutes min</td>
                                         <td>@lesson.Students</td>
                                         <td>@lesson.AverageProgress%</td>
+                                        <td>@lesson.CompletionRate%</td>
                                     </tr>
                                 }
                                 </tbody>

@@ -16,4 +16,10 @@ public static class TenantBootstrapSeedExtensions
         using var scope = app.Services.CreateScope();
         await TenantUserClaimSeeder.SeedAsync(scope.ServiceProvider);
     }
+
+    public static async Task SeedEadDemoAsync(this WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+        await EadDemoSeeder.SeedAsync(scope.ServiceProvider);
+    }
 }

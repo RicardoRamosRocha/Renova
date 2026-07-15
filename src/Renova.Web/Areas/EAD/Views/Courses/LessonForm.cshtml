@@ -1,0 +1,40 @@
+@using Renova.Web.Areas.EAD.ViewModels.Courses
+@model LessonFormViewModel
+@{
+    ViewData["Title"] = Model.Id.HasValue ? "Editar Aula" : "Nova Aula";
+}
+
+<section class="admin-form-page">
+    <header class="admin-form-header">
+        <div>
+            <nav class="admin-form-breadcrumb"><a asp-action="Content" asp-route-id="@Model.CourseId">Conteudo</a><span>/</span><span>@ViewData["Title"]</span></nav>
+            <span class="rn-eyebrow">EAD</span>
+            <h1>@ViewData["Title"]</h1>
+            <p>Cadastre aula com conteudo textual seguro e referencia externa de video.</p>
+        </div>
+        <a class="rn-btn-secondary" asp-action="Content" asp-route-id="@Model.CourseId"><i class="ph ph-arrow-left" aria-hidden="true"></i>Voltar</a>
+    </header>
+
+    <form asp-action="@(Model.Id.HasValue ? "EditLesson" : "CreateLesson")" asp-route-id="@Model.Id" method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="CourseId" />
+        <input type="hidden" asp-for="ModuleId" />
+        <div class="admin-form-card">
+            <section class="admin-form-section">
+                <div class="admin-form-section-title"><div><span class="rn-eyebrow">Aula</span><h2>Conteudo principal</h2><p>Use URLs externas confiaveis; HTML livre nao e renderizado.</p></div></div>
+                <div class="admin-form-grid three">
+                    <div class="admin-form-group-full"><label class="admin-label required" asp-for="Title">Titulo</label><input class="admin-input" asp-for="Title" /><span class="admin-validation" asp-validation-for="Title"></span></div>
+                    <div class="admin-form-group"><label class="admin-label required" asp-for="VideoProvider">Tipo/provedor</label><select class="admin-select" asp-for="VideoProvider"><option>YouTube</option><option>Vimeo</option><option>Text</option><option>PDF</option><option>ExternalLink</option><option>Quiz</option><option>Assignment</option></select><span class="admin-validation" asp-validation-for="VideoProvider"></span></div>
+                    <div class="admin-form-group"><label class="admin-label" asp-for="VideoExternalId">Codigo ou URL externa</label><input class="admin-input" asp-for="VideoExternalId" /><span class="admin-validation" asp-validation-for="VideoExternalId"></span></div>
+                    <div class="admin-form-group"><label class="admin-label" asp-for="DurationInMinutes">Duracao</label><input class="admin-input" asp-for="DurationInMinutes" type="number" min="1" max="600" /><span class="admin-validation" asp-validation-for="DurationInMinutes"></span></div>
+                    <div class="admin-form-group"><label class="admin-label" asp-for="Order">Ordem</label><input class="admin-input" asp-for="Order" type="number" min="1" /><span class="admin-validation" asp-validation-for="Order"></span></div>
+                    <div class="admin-form-group-full"><label class="admin-label required" asp-for="Description">Descricao/conteudo</label><textarea class="admin-textarea" asp-for="Description"></textarea><span class="admin-validation" asp-validation-for="Description"></span></div>
+                </div>
+            </section>
+            <div class="admin-form-actions">
+                <a class="rn-btn-secondary" asp-action="Content" asp-route-id="@Model.CourseId">Cancelar</a>
+                <button class="rn-btn-primary" type="submit"><i class="ph ph-check-circle" aria-hidden="true"></i>Salvar aula</button>
+            </div>
+        </div>
+    </form>
+</section>

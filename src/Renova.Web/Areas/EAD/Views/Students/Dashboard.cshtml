@@ -6,7 +6,7 @@
 }
 
 <section class="ead-page">
-    @if (Model.StudentId == Guid.Empty)
+    @if (!Model.StudentId.HasValue)
     {
         <section class="crm-empty-state">
             <div class="crm-empty-icon"><i class="ph ph-student" aria-hidden="true"></i></div>
@@ -80,7 +80,7 @@
             </section>
 
             <section class="medical-panel">
-                <div class="medical-panel-title"><span class="rn-eyebrow">Gamificação</span><h2>Conquistas profissionais</h2></div>
+                <div class="medical-panel-title"><span class="rn-eyebrow">Conquistas</span><h2>Marcos educacionais</h2></div>
                 <div class="ead-achievement-grid">
                     @foreach (var achievement in Model.Achievements)
                     {

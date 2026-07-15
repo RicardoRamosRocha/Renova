@@ -21,7 +21,9 @@
 
     <div class="ead-metrics-grid">
         <article class="ead-metric-card"><span>Cursos ativos</span><strong>@Model.ActiveCourses</strong><small>@Model.TotalCourses cadastrados</small></article>
+        <article class="ead-metric-card"><span>Rascunhos/arquivados</span><strong>@Model.DraftCourses</strong><small>Fora da biblioteca ativa</small></article>
         <article class="ead-metric-card"><span>Alunos estudando</span><strong>@Model.StudyingStudents</strong><small>Tenant atual</small></article>
+        <article class="ead-metric-card"><span>Conclusoes no mes</span><strong>@Model.CompletionsThisMonth</strong><small>Aulas finalizadas</small></article>
         <article class="ead-metric-card"><span>Certificados</span><strong>@Model.Certificates</strong><small>Emitidos</small></article>
         <article class="ead-metric-card"><span>Engajamento</span><strong>@Model.AverageProgress%</strong><small>Progresso médio</small></article>
     </div>
@@ -43,7 +45,7 @@
                 <option value="@trail" selected="@(Model.Trail == trail)">@trail</option>
             }
         </select>
-        <button class="ead-secondary-button" type="submit"><i class="ph ph-funnel" aria-hidden="true"></i>Filtrar</button>
+        <button class="ead-secondary-button" type="submit" data-tooltip="Aplicar filtros"><i class="ph ph-funnel" aria-hidden="true"></i>Filtrar</button>
     </form>
 
     @if (Model.Courses.Items.Count == 0)
@@ -92,12 +94,17 @@
                         <div class="ead-course-stats">
                             <span><i class="ph ph-play-circle" aria-hidden="true"></i> @course.Lessons aulas</span>
                             <span><i class="ph ph-users-three" aria-hidden="true"></i> @course.Students alunos</span>
+                            <span><i class="ph ph-check-circle" aria-hidden="true"></i> @course.CompletionRate% conclusao</span>
                             <span><i class="ph ph-certificate" aria-hidden="true"></i> @course.Certificates certificados</span>
                         </div>
 
                         <div class="ead-card-actions">
-                            <a class="ead-primary-button" asp-area="EAD" asp-controller="Courses" asp-action="Details" asp-route-id="@course.Id">Abrir</a>
-                            <a class="ead-secondary-button" asp-area="EAD" asp-controller="Courses" asp-action="Edit" asp-route-id="@course.Id">Editar</a>
+                            <a class="ead-primary-button" asp-area="EAD" asp-controller="Courses" asp-action="Details" asp-route-id="@course.Id"><i class="ph ph-eye" aria-hidden="true"></i>Abrir</a>
+                            <a class="ead-secondary-button" asp-area="EAD" asp-controller="Courses" asp-action="Content" asp-route-id="@course.Id"><i class="ph ph-list-bullets" aria-hidden="true"></i>Conteudo</a>
+                            <a class="ead-secondary-button" asp-area="EAD" asp-controller="Courses" asp-action="Edit" asp-route-id="@course.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>
+                            <form asp-action="@(course.IsActive ? "Unpublish" : "Publish")" asp-route-id="@course.Id" method="post">
+                                <button class="ead-secondary-button" type="submit"><i class="ph @(course.IsActive ? "ph-eye-slash" : "ph-upload-simple")" aria-hidden="true"></i>@(course.IsActive ? "Despublicar" : "Publicar")</button>
+                            </form>
                         </div>
                     </div>
                 </article>

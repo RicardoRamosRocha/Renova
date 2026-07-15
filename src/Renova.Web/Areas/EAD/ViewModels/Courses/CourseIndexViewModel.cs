@@ -14,11 +14,17 @@ public sealed class CourseIndexViewModel
 
     public int ActiveCourses { get; set; }
 
+    public int DraftCourses { get; set; }
+
     public int StudyingStudents { get; set; }
+
+    public int CompletionsThisMonth { get; set; }
 
     public int Certificates { get; set; }
 
     public int AverageProgress { get; set; }
+
+    public int CompletionRate { get; set; }
 
     public IReadOnlyList<string> Trails { get; set; } = [];
 
@@ -57,6 +63,8 @@ public sealed class CourseIndexItemViewModel
 
     public int AverageProgress { get; set; }
 
+    public int CompletionRate { get; set; }
+
     public string Icon { get; set; } = "ph-book-open";
 }
 
@@ -86,11 +94,15 @@ public sealed class CourseDetailsViewModel
 
     public int AverageProgress { get; set; }
 
+    public int CompletionRate { get; set; }
+
     public IReadOnlyList<CourseModuleDetailsViewModel> Modules { get; set; } = [];
 }
 
 public sealed class CourseModuleDetailsViewModel
 {
+    public Guid Id { get; set; }
+
     public string Title { get; set; } = string.Empty;
 
     public string Description { get; set; } = string.Empty;
@@ -98,17 +110,31 @@ public sealed class CourseModuleDetailsViewModel
     public int Order { get; set; }
 
     public IReadOnlyList<CourseLessonDetailsViewModel> Lessons { get; set; } = [];
+
+    public int AverageProgress => Lessons.Count == 0 ? 0 : (int)Math.Round(Lessons.Average(item => item.AverageProgress));
 }
 
 public sealed class CourseLessonDetailsViewModel
 {
+    public Guid Id { get; set; }
+
+    public Guid ModuleId { get; set; }
+
     public string Title { get; set; } = string.Empty;
+
+    public string Description { get; set; } = string.Empty;
 
     public string VideoProvider { get; set; } = string.Empty;
 
+    public string VideoExternalId { get; set; } = string.Empty;
+
     public int DurationInMinutes { get; set; }
+
+    public int Order { get; set; }
 
     public int Students { get; set; }
 
     public int AverageProgress { get; set; }
+
+    public int CompletionRate { get; set; }
 }
