@@ -1,247 +1,42 @@
 @using Renova.Web.ViewModels
+
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<section class="orizon-dashboard">
+<section class="dashboard-v2">
 
-    <!-- HERO ------------------------------------------------------------ -->
+    <!-- ========================================================= -->
+    <!-- HEADER -->
+    <!-- ========================================================= -->
 
-    <section class="orizon-hero orizon-card orizon-card--premium">
+    <header class="dashboard-header">
 
-        <div class="orizon-hero__content">
+        <div class="dashboard-header-left">
 
-            <div>
+            <span class="dashboard-label">
+                RENOVA PLATFORM
+            </span>
 
-                <span class="orizon-badge orizon-badge--success">
-                    ● Plataforma Online
-                </span>
+            <h1>
+                Dashboard Executivo
+            </h1>
 
-                <h1>
-                    Bom dia, Ricardo 👋
-                </h1>
+            <p>
 
-                <p class="orizon-text-lg">
+                Gestão integrada da Comunidade Terapêutica
 
-                    Centro Terapêutico Renova
-
-                </p>
-
-                <p class="orizon-text-muted">
-
-                    Hoje existem
-                    <strong>34 acolhidos em tratamento</strong>,
-                    <strong>6 atendimentos</strong>,
-                    <strong>2 altas previstas</strong>
-                    e
-                    <strong>1 novo curso publicado.</strong>
-
-                </p>
-
-            </div>
-
-            <div class="orizon-flex orizon-gap-3">
-
-                <a class="orizon-button orizon-button--primary"
-                   asp-area="CRM"
-                   asp-controller="Students"
-                   asp-action="Create">
-
-                    Novo acolhido
-
-                </a>
-
-                <a class="orizon-button orizon-button--secondary"
-                   asp-area="CRM"
-                   asp-controller="Appointments"
-                   asp-action="Create">
-
-                    Nova consulta
-
-                </a>
-
-                <a class="orizon-button orizon-button--outline"
-                   asp-area="Reports"
-                   asp-controller="Reports"
-                   asp-action="Index">
-
-                    Relatórios
-
-                </a>
-
-            </div>
+            </p>
 
         </div>
 
-        <div class="orizon-hero__status">
-
-            <div class="orizon-stat">
-
-                <span>Pacientes</span>
-                <strong>126</strong>
-                <small>+8%</small>
-
-            </div>
-
-            <div class="orizon-stat">
-
-                <span>Agenda</span>
-                <strong>32</strong>
-                <small>Hoje</small>
-
-            </div>
-
-            <div class="orizon-stat">
-
-                <span>Cursos</span>
-                <strong>18</strong>
-                <small>Ativos</small>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- KPIs ------------------------------------------------------------ -->
-
-    <section class="orizon-kpi-grid">
-
-        <article class="orizon-kpi-card">
-
-            <div>
-
-                <small>Acolhidos</small>
-
-                <h2>126</h2>
-
-                <span class="success">
-                    ▲ 8%
-                </span>
-
-            </div>
-
-        </article>
-
-        <article class="orizon-kpi-card">
-
-            <div>
-
-                <small>Atendimentos</small>
-
-                <h2>32</h2>
-
-                <span class="success">
-                    91%
-                </span>
-
-            </div>
-
-        </article>
-
-        <article class="orizon-kpi-card">
-
-            <div>
-
-                <small>Cursos</small>
-
-                <h2>18</h2>
-
-                <span class="success">
-                    +4
-                </span>
-
-            </div>
-
-        </article>
-
-        <article class="orizon-kpi-card">
-
-            <div>
-
-                <small>Financeiro</small>
-
-                <h2>R$ 98 mil</h2>
-
-                <span class="success">
-
-                    ▲12%
-
-                </span>
-
-            </div>
-
-        </article>
-
-        <article class="orizon-kpi-card">
-
-            <div>
-
-                <small>Altas</small>
-
-                <h2>12</h2>
-
-                <span class="success">
-
-                    +2
-
-                </span>
-
-            </div>
-
-        </article>
-
-        <article class="orizon-kpi-card">
-
-            <div>
-
-                <small>Alertas</small>
-
-                <h2>4</h2>
-
-                <span class="warning">
-
-                    Prioridade
-
-                </span>
-
-            </div>
-
-        </article>
-
-    </section>
-
-
-
-    <!-- QUICK ACTIONS --------------------------------------------------- -->
-
-    <section class="orizon-card orizon-card--padding-lg">
-
-        <div class="orizon-section-header">
-
-            <div>
-
-                <h2>Ações rápidas</h2>
-
-                <p>
-
-                    Operações utilizadas diariamente.
-
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="orizon-dashboard-grid">
+        <div class="dashboard-header-right">
 
             <a asp-area="CRM"
                asp-controller="Students"
                asp-action="Create"
-               class="orizon-action-card">
+               class="orizon-button orizon-button--primary">
 
                 Novo acolhido
 
@@ -250,7 +45,628 @@
             <a asp-area="CRM"
                asp-controller="Appointments"
                asp-action="Create"
-               class="orizon-action-card">
+               class="orizon-button orizon-button--secondary">
+
+                Nova consulta
+
+            </a>
+
+        </div>
+
+    </header>
+
+    <!-- ========================================================= -->
+    <!-- KPIs -->
+    <!-- ========================================================= -->
+
+    <section class="dashboard-kpis">
+
+        <article class="dashboard-kpi">
+
+            <small>Acolhidos</small>
+
+            <h2>126</h2>
+
+            <span class="positive">
+
+                +8%
+
+            </span>
+
+        </article>
+
+        <article class="dashboard-kpi">
+
+            <small>Atendimentos</small>
+
+            <h2>32</h2>
+
+            <span class="positive">
+
+                +18%
+
+            </span>
+
+        </article>
+
+        <article class="dashboard-kpi">
+
+            <small>Taxa de Ocupação</small>
+
+            <h2>91%</h2>
+
+            <span class="positive">
+
+                +2%
+
+            </span>
+
+        </article>
+
+        <article class="dashboard-kpi">
+
+            <small>Receita</small>
+
+            <h2>R$ 98 mil</h2>
+
+            <span class="positive">
+
+                +12%
+
+            </span>
+
+        </article>
+
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- GRID -->
+    <!-- ========================================================= -->
+
+    <section class="dashboard-main">
+
+        <!-- ===================== LEFT ===================== -->
+
+        <div class="dashboard-left">
+
+            <!-- PERFORMANCE -->
+
+            <section class="dashboard-card">
+
+                <div class="dashboard-card-header">
+
+                    <div>
+
+                        <span class="dashboard-section">
+
+                            PERFORMANCE
+
+                        </span>
+
+                        <h2>
+
+                            Evolução dos últimos 30 dias
+
+                        </h2>
+
+                    </div>
+
+                    <button class="orizon-button orizon-button--outline">
+
+                        Exportar
+
+                    </button>
+
+                </div>
+
+                <div class="chart-placeholder">
+
+                    <div class="bar h40"></div>
+                    <div class="bar h55"></div>
+                    <div class="bar h48"></div>
+                    <div class="bar h70"></div>
+                    <div class="bar h62"></div>
+                    <div class="bar h85"></div>
+                    <div class="bar h100"></div>
+
+                </div>
+
+            </section>
+
+            <!-- GRID -->
+
+            <section class="dashboard-card">
+
+                <div class="dashboard-card-header">
+
+                    <div>
+
+                        <span class="dashboard-section">
+
+                            CRM
+
+                        </span>
+
+                        <h2>
+
+                            Pacientes recentes
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+                <div class="dashboard-toolbar">
+
+                    <input
+                        class="orizon-input"
+                        placeholder="Pesquisar..." />
+
+                    <select class="orizon-select">
+
+                        <option>Todos</option>
+                        <option>Internados</option>
+                        <option>Alta</option>
+
+                    </select>
+
+                    <button class="orizon-button orizon-button--outline">
+
+                        Filtrar
+
+                    </button>
+
+                </div>
+
+                <table class="dashboard-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Paciente</th>
+                            <th>Status</th>
+                            <th>Entrada</th>
+                            <th>Responsável</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>João Silva</td>
+                            <td>
+                                <span class="badge-success">
+                                    Internado
+                                </span>
+                            </td>
+                            <td>12/07</td>
+                            <td>Dra. Ana</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>Maria Souza</td>
+                            <td>
+
+                                <span class="badge-warning">
+
+                                    Observação
+
+                                </span>
+
+                            </td>
+
+                            <td>09/07</td>
+
+                            <td>
+
+                                Dr. Carlos
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>
+
+                                Pedro Alves
+
+                            </td>
+
+                            <td>
+
+                                <span class="badge-success">
+
+                                    Internado
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                04/07
+
+                            </td>
+
+                            <td>
+
+                                Dra. Paula
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </section>
+
+        </div>
+
+        <!-- ===================== RIGHT ===================== -->
+
+        <aside class="dashboard-right">
+
+                <!-- ========================================================= -->
+    <!-- AGENDA -->
+    <!-- ========================================================= -->
+
+    <section class="dashboard-card">
+
+        <div class="dashboard-card-header">
+
+            <div>
+
+                <span class="dashboard-section">
+                    AGENDA
+                </span>
+
+                <h2>
+                    Hoje
+                </h2>
+
+            </div>
+
+            <span class="dashboard-counter">
+
+                6
+
+            </span>
+
+        </div>
+
+        <div class="timeline">
+
+            <article class="timeline-item">
+
+                <span class="timeline-hour">
+                    09:00
+                </span>
+
+                <div>
+
+                    <strong>
+
+                        Consulta Inicial
+
+                    </strong>
+
+                    <small>
+
+                        João Silva
+
+                    </small>
+
+                </div>
+
+            </article>
+
+            <article class="timeline-item">
+
+                <span class="timeline-hour">
+
+                    10:30
+
+                </span>
+
+                <div>
+
+                    <strong>
+
+                        Atendimento Familiar
+
+                    </strong>
+
+                    <small>
+
+                        Sala 03
+
+                    </small>
+
+                </div>
+
+            </article>
+
+            <article class="timeline-item">
+
+                <span class="timeline-hour">
+
+                    14:00
+
+                </span>
+
+                <div>
+
+                    <strong>
+
+                        Psicologia
+
+                    </strong>
+
+                    <small>
+
+                        Maria Oliveira
+
+                    </small>
+
+                </div>
+
+            </article>
+
+            <article class="timeline-item">
+
+                <span class="timeline-hour">
+
+                    16:30
+
+                </span>
+
+                <div>
+
+                    <strong>
+
+                        Reunião Clínica
+
+                    </strong>
+
+                    <small>
+
+                        Equipe Multidisciplinar
+
+                    </small>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- ATIVIDADE -->
+    <!-- ========================================================= -->
+
+    <section class="dashboard-card">
+
+        <div class="dashboard-card-header">
+
+            <div>
+
+                <span class="dashboard-section">
+
+                    FEED
+
+                </span>
+
+                <h2>
+
+                    Atividade recente
+
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="activity-feed">
+
+            <article>
+
+                <strong>
+
+                    João Silva
+
+                </strong>
+
+                iniciou tratamento.
+
+                <small>
+
+                    há 12 min
+
+                </small>
+
+            </article>
+
+            <article>
+
+                <strong>
+
+                    Novo Curso
+
+                </strong>
+
+                Dependência Química.
+
+                <small>
+
+                    há 28 min
+
+                </small>
+
+            </article>
+
+            <article>
+
+                <strong>
+
+                    Alta registrada
+
+                </strong>
+
+                Carlos Souza.
+
+                <small>
+
+                    10:45
+
+                </small>
+
+            </article>
+
+            <article>
+
+                <strong>
+
+                    Novo profissional
+
+                </strong>
+
+                Psicóloga Ana Paula.
+
+                <small>
+
+                    09:20
+
+                </small>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- IA -->
+    <!-- ========================================================= -->
+
+    <section class="dashboard-card dashboard-ai">
+
+        <div class="dashboard-card-header">
+
+            <div>
+
+                <span class="dashboard-section">
+
+                    IA ASSISTENTE
+
+                </span>
+
+                <h2>
+
+                    Insights
+
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="ai-list">
+
+            <article class="ai-item warning">
+
+                <strong>
+
+                    3 pacientes
+
+                </strong>
+
+                apresentam risco de evasão.
+
+            </article>
+
+            <article class="ai-item success">
+
+                <strong>
+
+                    8 acolhidos
+
+                </strong>
+
+                concluíram um curso hoje.
+
+            </article>
+
+            <article class="ai-item info">
+
+                <strong>
+
+                    Financeiro
+
+                </strong>
+
+                quatro mensalidades vencem amanhã.
+
+            </article>
+
+            <article class="ai-item danger">
+
+                <strong>
+
+                    Atenção
+
+                </strong>
+
+                existem duas consultas sem confirmação.
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- AÇÕES -->
+    <!-- ========================================================= -->
+
+    <section class="dashboard-card">
+
+        <div class="dashboard-card-header">
+
+            <h2>
+
+                Ações rápidas
+
+            </h2>
+
+        </div>
+
+        <div class="quick-actions">
+
+            <a asp-area="CRM"
+               asp-controller="Students"
+               asp-action="Create"
+               class="orizon-button orizon-button--primary">
+
+                Novo acolhido
+
+            </a>
+
+            <a asp-area="CRM"
+               asp-controller="Appointments"
+               asp-action="Create"
+               class="orizon-button orizon-button--secondary">
 
                 Nova consulta
 
@@ -259,7 +675,7 @@
             <a asp-area="Medical"
                asp-controller="Professionals"
                asp-action="Index"
-               class="orizon-action-card">
+               class="orizon-button orizon-button--outline">
 
                 Profissionais
 
@@ -268,388 +684,16 @@
             <a asp-area="EAD"
                asp-controller="Courses"
                asp-action="Index"
-               class="orizon-action-card">
+               class="orizon-button orizon-button--outline">
 
                 Cursos
 
             </a>
 
-            <a asp-area="Reports"
-               asp-controller="Reports"
-               asp-action="Index"
-               class="orizon-action-card">
-
-                Relatórios
-
-            </a>
-
-            <a asp-area="Finance"
-               asp-controller="Payments"
-               asp-action="Index"
-               class="orizon-action-card">
-
-                Financeiro
-
-            </a>
-
         </div>
 
     </section>
 
-    <!-- DASHBOARD ------------------------------------------------------------>
-
-<section class="orizon-dashboard-grid">
-
-    <!-- Evolução ------------------------------------------------------>
-
-    <section class="orizon-card orizon-card--premium">
-
-        <div class="orizon-section-header">
-
-            <div>
-
-                <span class="orizon-card__subtitle">
-                    Analytics
-                </span>
-
-                <h2>Evolução do tratamento</h2>
-
-            </div>
-
-            <span class="orizon-badge orizon-badge--success">
-                Últimos 30 dias
-            </span>
-
-        </div>
-
-        <div class="orizon-chart-placeholder">
-
-            <div class="chart-line"></div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- Agenda ------------------------------------------------------>
-
-    <section class="orizon-card">
-
-        <div class="orizon-section-header">
-
-            <h2>Agenda de Hoje</h2>
-
-            <span class="orizon-badge">
-                6 compromissos
-            </span>
-
-        </div>
-
-        <div class="orizon-timeline">
-
-            <article class="orizon-timeline-item">
-
-                <strong>09:00</strong>
-
-                <div>
-
-                    Consulta Inicial
-
-                    <small>
-                        João Silva
-                    </small>
-
-                </div>
-
-            </article>
-
-            <article class="orizon-timeline-item">
-
-                <strong>10:30</strong>
-
-                <div>
-
-                    Atendimento Familiar
-
-                    <small>
-                        Sala 03
-                    </small>
-
-                </div>
-
-            </article>
-
-            <article class="orizon-timeline-item">
-
-                <strong>14:00</strong>
-
-                <div>
-
-                    Psicologia
-
-                    <small>
-                        Maria Oliveira
-                    </small>
-
-                </div>
-
-            </article>
-
-            <article class="orizon-timeline-item">
-
-                <strong>16:30</strong>
-
-                <div>
-
-                    Reunião Clínica
-
-                    <small>
-                        Equipe Multidisciplinar
-                    </small>
-
-                </div>
-
-            </article>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- IA ------------------------------------------------------>
-
-    <section class="orizon-card orizon-card--premium">
-
-        <div class="orizon-section-header">
-
-            <div>
-
-                <span class="orizon-card__subtitle">
-                    IA Assistente
-                </span>
-
-                <h2>Insights Inteligentes</h2>
-
-            </div>
-
-        </div>
-
-        <div class="orizon-grid orizon-gap-3">
-
-            <article class="orizon-alert orizon-alert--warning">
-
-                <strong>
-                    3 pacientes apresentam risco de evasão.
-                </strong>
-
-            </article>
-
-            <article class="orizon-alert orizon-alert--success">
-
-                <strong>
-                    8 pacientes concluíram um curso hoje.
-                </strong>
-
-            </article>
-
-            <article class="orizon-alert orizon-alert--info">
-
-                <strong>
-                    4 mensalidades vencem amanhã.
-                </strong>
-
-            </article>
-
-            <article class="orizon-alert orizon-alert--danger">
-
-                <strong>
-                    2 consultas aguardam confirmação.
-                </strong>
-
-            </article>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- Activity Feed -------------------------------------------->
-
-    <section class="orizon-card">
-
-        <div class="orizon-section-header">
-
-            <h2>Atividade em Tempo Real</h2>
-
-        </div>
-
-        <div class="orizon-activity-feed">
-
-            <article>
-
-                <strong>
-                    João Silva
-                </strong>
-
-                iniciou tratamento
-
-                <small>
-                    há 12 minutos
-                </small>
-
-            </article>
-
-            <article>
-
-                <strong>
-                    Curso publicado
-                </strong>
-
-                Dependência Química
-
-                <small>
-                    há 25 minutos
-                </small>
-
-            </article>
-
-            <article>
-
-                <strong>
-                    Alta registrada
-                </strong>
-
-                Carlos Souza
-
-                <small>
-                    10:45
-                </small>
-
-            </article>
-
-            <article>
-
-                <strong>
-                    Novo profissional
-                </strong>
-
-                Psicóloga Ana Paula
-
-                <small>
-                    09:20
-                </small>
-
-            </article>
-
-
-        </div>
-
-    </section>
-
+</aside>
 
 </section>
-
-            <section class="orizon-card orizon-card--premium orizon-card--padding-md">
-                <div class="orizon-flex orizon-items-start orizon-justify-between orizon-gap-3">
-                    <div>
-                        <span class="orizon-card__subtitle">Alertas inteligentes</span>
-                        <h2>O que merece atenção hoje</h2>
-                    </div>
-                    <span class="orizon-badge orizon-badge--warning orizon-badge--md">4 alertas</span>
-                </div>
-
-                <div class="orizon-grid orizon-gap-3">
-                    <article class="orizon-alert orizon-alert--info">
-                        <div class="orizon-alert__icon"></div>
-                        <div>
-                            <strong>Marco importante</strong>
-                            <span>João Silva completa 90 dias de tratamento hoje.</span>
-                        </div>
-                    </article>
-                    <article class="orizon-alert orizon-alert--info">
-                        <div class="orizon-alert__icon"></div>
-                        <div>
-                            <strong>Agenda familiar</strong>
-                            <span>Reunião com familiares agendada para 14h.</span>
-                        </div>
-                    </article>
-                    <article class="orizon-alert orizon-alert--info">
-                        <div class="orizon-alert__icon"></div>
-                        <div>
-                            <strong>EAD em movimento</strong>
-                            <span>Curso de prevenção à recaída concluído por 8 acolhidos.</span>
-                        </div>
-                    </article>
-                    <article class="orizon-alert orizon-alert--info">
-                        <div class="orizon-alert__icon"></div>
-                        <div>
-                            <strong>Financeiro</strong>
-                            <span>Existem 3 mensalidades pendentes para acompanhamento.</span>
-                        </div>
-                    </article>
-                </div>
-            </section>
-
-            <section class="orizon-card orizon-card--padding-md">
-                <div class="orizon-flex orizon-items-start orizon-justify-between orizon-gap-3">
-                    <div>
-                        <span class="orizon-card__subtitle">Movimentações</span>
-                        <h2>Atividades recentes</h2>
-                    </div>
-                </div>
-
-                <div class="orizon-grid orizon-gap-2">
-                    <article class="orizon-card orizon-card--muted orizon-card--padding-sm"><strong>Novo acolhido cadastrado</strong><span class="orizon-card__subtitle">há 12 min</span></article>
-                    <article class="orizon-card orizon-card--muted orizon-card--padding-sm"><strong>Curso publicado</strong><span class="orizon-card__subtitle">há 36 min</span></article>
-                    <article class="orizon-card orizon-card--muted orizon-card--padding-sm"><strong>Alta terapêutica registrada</strong><span class="orizon-card__subtitle">10:14</span></article>
-                    <article class="orizon-card orizon-card--muted orizon-card--padding-sm"><strong>Novo profissional adicionado</strong><span class="orizon-card__subtitle">09:52</span></article>
-                    <article class="orizon-card orizon-card--muted orizon-card--padding-sm"><strong>Pagamento confirmado</strong><span class="orizon-card__subtitle">09:18</span></article>
-                </div>
-            </section>
-        </div>
-
-        <aside class="orizon-grid orizon-gap-4">
-            <section class="orizon-card orizon-card--padding-md">
-                <div class="orizon-flex orizon-items-start orizon-justify-between orizon-gap-3">
-                    <h2>Ações rápidas</h2>
-                </div>
-                <div class="orizon-grid orizon-gap-2">
-                    <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-area="CRM" asp-controller="Appointments" asp-action="Index">Nova agenda</a>
-                    <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-area="Medical" asp-controller="Professionals" asp-action="Index">Profissionais</a>
-                    <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-area="EAD" asp-controller="Courses" asp-action="Index">Cursos</a>
-                </div>
-            </section>
-
-            <section class="orizon-card orizon-card--padding-md">
-                <div class="orizon-flex orizon-items-start orizon-justify-between orizon-gap-3"><h2>Próximos aniversariantes</h2></div>
-                <div class="orizon-grid orizon-gap-2">
-                    <span>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Ana Paula" })Ana Paula <strong>05/07</strong></span>
-                    <span>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Renato Lima" })Renato Lima <strong>08/07</strong></span>
-                    <span>@await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = "Clara Nunes" })Clara Nunes <strong>11/07</strong></span>
-                </div>
-            </section>
-
-            <section class="orizon-card orizon-card--padding-md">
-                <div class="orizon-flex orizon-items-start orizon-justify-between orizon-gap-3"><h2>Documentos pendentes</h2></div>
-                <div class="orizon-grid orizon-gap-2">
-                    <span>Termos LGPD <strong>4</strong></span>
-                    <span>Relatórios médicos <strong>6</strong></span>
-                    <span>Contratos familiares <strong>3</strong></span>
-                </div>
-            </section>
-
-            <section class="orizon-card orizon-card--padding-md">
-                <div class="orizon-flex orizon-items-start orizon-justify-between orizon-gap-3"><h2>Cursos mais acessados</h2></div>
-                <div class="orizon-grid orizon-gap-2">
-                    <span>Prevenção à recaída <strong>82%</strong></span>
-                    <span>Família e reintegração <strong>74%</strong></span>
-                    <span>Rotina saudável <strong>69%</strong></span>
-                </div>
-            </section>
-        </aside>
-    </div>
-</section>
-
