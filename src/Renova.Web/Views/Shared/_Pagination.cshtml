@@ -8,7 +8,7 @@
 
 @if (totalPages > 1)
 {
-    <nav class="admin-pagination" aria-label="Paginação">
+    <nav class="orizon-pagination" aria-label="Paginação">
         <a class="@(hasPrevious ? string.Empty : "is-disabled")" href="@Url.Action(null, new { page = page - 1, search = ViewBag.Search, status = ViewBag.Status, active = ViewBag.Active })">Anterior</a>
         @for (var item = 1; item <= totalPages; item++)
         {
@@ -17,3 +17,4 @@
         <a class="@(hasNext ? string.Empty : "is-disabled")" href="@Url.Action(null, new { page = page + 1, search = ViewBag.Search, status = ViewBag.Status, active = ViewBag.Active })">Próxima</a>
     </nav>
 }
+

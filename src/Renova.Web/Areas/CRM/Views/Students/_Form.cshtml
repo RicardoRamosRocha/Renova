@@ -10,7 +10,7 @@
 <input type="hidden" asp-for="Id" />
 <input type="hidden" asp-for="PhotoPath" />
 
-<div asp-validation-summary="ModelOnly" class="admin-validation-summary"></div>
+<div asp-validation-summary="ModelOnly" class="orizon-alert orizon-alert--danger"></div>
 
 @await Html.PartialAsync("~/Views/Shared/_ProfileHeader.cshtml", new ProfileHeaderViewModel
 {
@@ -31,40 +31,40 @@
             </div>
         </div>
 
-        <div class="admin-form-grid three">
-            <div class="admin-form-group">
-                <label class="admin-label required" asp-for="FullName">Nome completo</label>
-                <input class="admin-input" asp-for="FullName" autocomplete="name" placeholder="Digite o nome completo" />
-                <span class="admin-validation" asp-validation-for="FullName"></span>
+        <div class="orizon-form-grid">
+            <div class="orizon-field">
+                <label class="orizon-field__label required" asp-for="FullName">Nome completo</label>
+                <input class="orizon-input" asp-for="FullName" autocomplete="name" placeholder="Digite o nome completo" />
+                <span class="orizon-field__error" asp-validation-for="FullName"></span>
             </div>
 
-            <div class="admin-form-group">
-                <label class="admin-label required" asp-for="CPF">CPF</label>
-                <input class="admin-input" asp-for="CPF" inputmode="numeric" placeholder="000.000.000-00" />
-                <span class="admin-validation" asp-validation-for="CPF"></span>
+            <div class="orizon-field">
+                <label class="orizon-field__label required" asp-for="CPF">CPF</label>
+                <input class="orizon-input" asp-for="CPF" inputmode="numeric" placeholder="000.000.000-00" />
+                <span class="orizon-field__error" asp-validation-for="CPF"></span>
             </div>
 
-            <div class="admin-form-group">
-                <label class="admin-label" asp-for="RG">RG</label>
-                <input class="admin-input" asp-for="RG" placeholder="Digite o RG" />
-                <span class="admin-validation" asp-validation-for="RG"></span>
+            <div class="orizon-field">
+                <label class="orizon-field__label" asp-for="RG">RG</label>
+                <input class="orizon-input" asp-for="RG" placeholder="Digite o RG" />
+                <span class="orizon-field__error" asp-validation-for="RG"></span>
             </div>
 
-            <div class="admin-form-group">
-                <label class="admin-label required" asp-for="BirthDate">Data de nascimento</label>
-                <input class="admin-input" asp-for="BirthDate" type="date" />
-                <span class="admin-validation" asp-validation-for="BirthDate"></span>
+            <div class="orizon-field">
+                <label class="orizon-field__label required" asp-for="BirthDate">Data de nascimento</label>
+                <input class="orizon-input" asp-for="BirthDate" type="date" />
+                <span class="orizon-field__error" asp-validation-for="BirthDate"></span>
             </div>
 
-            <div class="admin-form-group">
-                <label class="admin-label required" asp-for="Status">Status</label>
-                <select class="admin-select" asp-for="Status">
+            <div class="orizon-field">
+                <label class="orizon-field__label required" asp-for="Status">Status</label>
+                <select class="orizon-select" asp-for="Status">
                     @foreach (var status in StudentStatuses.Labels)
                     {
                         <option value="@status.Key">@status.Value</option>
                     }
                 </select>
-                <span class="admin-validation" asp-validation-for="Status"></span>
+                <span class="orizon-field__error" asp-validation-for="Status"></span>
             </div>
         </div>
     </section>
@@ -78,23 +78,23 @@
             </div>
         </div>
 
-        <div class="admin-form-grid three">
-            <div class="admin-form-group">
-                <label class="admin-label required" asp-for="Phone">Telefone</label>
-                <input class="admin-input" asp-for="Phone" inputmode="tel" autocomplete="tel" placeholder="(00) 00000-0000" />
-                <span class="admin-validation" asp-validation-for="Phone"></span>
+        <div class="orizon-form-grid">
+            <div class="orizon-field">
+                <label class="orizon-field__label required" asp-for="Phone">Telefone</label>
+                <input class="orizon-input" asp-for="Phone" inputmode="tel" autocomplete="tel" placeholder="(00) 00000-0000" />
+                <span class="orizon-field__error" asp-validation-for="Phone"></span>
             </div>
 
-            <div class="admin-form-group">
-                <label class="admin-label" asp-for="WhatsApp">WhatsApp</label>
-                <input class="admin-input" asp-for="WhatsApp" inputmode="tel" placeholder="(00) 00000-0000" />
-                <span class="admin-validation" asp-validation-for="WhatsApp"></span>
+            <div class="orizon-field">
+                <label class="orizon-field__label" asp-for="WhatsApp">WhatsApp</label>
+                <input class="orizon-input" asp-for="WhatsApp" inputmode="tel" placeholder="(00) 00000-0000" />
+                <span class="orizon-field__error" asp-validation-for="WhatsApp"></span>
             </div>
 
-            <div class="admin-form-group">
-                <label class="admin-label" asp-for="Email">Email</label>
-                <input class="admin-input" asp-for="Email" autocomplete="email" placeholder="email@exemplo.com" />
-                <span class="admin-validation" asp-validation-for="Email"></span>
+            <div class="orizon-field">
+                <label class="orizon-field__label" asp-for="Email">Email</label>
+                <input class="orizon-input" asp-for="Email" autocomplete="email" placeholder="email@exemplo.com" />
+                <span class="orizon-field__error" asp-validation-for="Email"></span>
             </div>
         </div>
     </section>
@@ -108,10 +108,10 @@
             </div>
         </div>
 
-        <div class="admin-form-group-full">
-            <label class="admin-label" asp-for="Address">Endereço completo</label>
-            <input class="admin-input" asp-for="Address" autocomplete="street-address" placeholder="Rua, número, bairro, cidade e UF" />
-            <span class="admin-validation" asp-validation-for="Address"></span>
+        <div class="orizon-field">
+            <label class="orizon-field__label" asp-for="Address">Endereço completo</label>
+            <input class="orizon-input" asp-for="Address" autocomplete="street-address" placeholder="Rua, número, bairro, cidade e UF" />
+            <span class="orizon-field__error" asp-validation-for="Address"></span>
         </div>
     </section>
 
@@ -124,30 +124,31 @@
             </div>
         </div>
 
-        <div class="admin-form-grid three">
-            <div class="admin-form-group">
-                <label class="admin-label required" asp-for="AdmissionDate">Data de entrada</label>
-                <input class="admin-input" asp-for="AdmissionDate" type="date" />
-                <span class="admin-validation" asp-validation-for="AdmissionDate"></span>
+        <div class="orizon-form-grid">
+            <div class="orizon-field">
+                <label class="orizon-field__label required" asp-for="AdmissionDate">Data de entrada</label>
+                <input class="orizon-input" asp-for="AdmissionDate" type="date" />
+                <span class="orizon-field__error" asp-validation-for="AdmissionDate"></span>
             </div>
         </div>
 
-        <div class="admin-form-group-full mt-3">
-            <label class="admin-label" asp-for="Notes">Observações</label>
-            <textarea class="admin-textarea" asp-for="Notes" placeholder="Registre observações relevantes para a equipe"></textarea>
-            <span class="admin-help-text">Campo visual para apoio à demonstração. Não altera o modelo de domínio atual.</span>
-            <span class="admin-validation" asp-validation-for="Notes"></span>
+        <div class="orizon-field mt-3">
+            <label class="orizon-field__label" asp-for="Notes">Observações</label>
+            <textarea class="orizon-textarea" asp-for="Notes" placeholder="Registre observações relevantes para a equipe"></textarea>
+            <span class="orizon-field__message">Campo visual para apoio à demonstração. Não altera o modelo de domínio atual.</span>
+            <span class="orizon-field__error" asp-validation-for="Notes"></span>
         </div>
     </section>
 
-    <div class="admin-form-actions">
-        <a class="rn-btn-secondary" asp-action="Index">
+    <div class="orizon-form-actions">
+        <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Index">
             Cancelar
         </a>
 
-        <button class="rn-btn-primary" type="submit">
-            <i class="ph ph-check-circle" aria-hidden="true"></i>
+        <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="submit">
+            
             @(isEdit ? "Salvar alterações" : "Cadastrar acolhido")
         </button>
     </div>
 </div>
+

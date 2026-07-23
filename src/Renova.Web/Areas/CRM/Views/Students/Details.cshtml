@@ -4,12 +4,12 @@
 @{
     ViewData["Title"] = "Perfil do Acolhido";
     var statusBadgeClass = Model.Status == StudentStatuses.Inactive
-        ? "rn-badge-danger"
+        ? "orizon-badge--danger"
         : Model.Status == StudentStatuses.DischargePlanned
-            ? "rn-badge-warning"
+            ? "orizon-badge--warning"
             : Model.Status == StudentStatuses.InTreatment
-                ? "rn-badge-info"
-                : "rn-badge-success";
+                ? "orizon-badge--info"
+                : "orizon-badge--success";
 }
 
 <section class="admin-page patient-profile">
@@ -25,7 +25,7 @@
                 <span class="rn-eyebrow">CRM / Perfil do acolhido</span>
                 <h1>@Model.Name</h1>
                 <p>
-                    <span class="rn-badge @statusBadgeClass">@StudentStatuses.Label(Model.Status)</span>
+                    <span class="orizon-badge orizon-badge--md @statusBadgeClass">@StudentStatuses.Label(Model.Status)</span>
                     <span>@Model.TenantName</span>
                     @if (!string.IsNullOrWhiteSpace(Model.ResponsibleProfessional))
                     {
@@ -35,10 +35,10 @@
             </div>
         </div>
         <div class="patient-actions">
-            <a class="rn-btn-primary" asp-action="Edit" asp-route-id="@Model.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>
-            <a class="rn-btn-secondary" asp-controller="Admissions" asp-action="Create" asp-route-studentId="@Model.Id"><i class="ph ph-door-open" aria-hidden="true"></i>Admissão</a>
-            <a class="rn-btn-secondary" asp-controller="Families" asp-action="Create" asp-route-studentId="@Model.Id"><i class="ph ph-users-three" aria-hidden="true"></i>Familiar</a>
-            <a class="rn-btn-secondary" asp-action="Index"><i class="ph ph-arrow-left" aria-hidden="true"></i>Voltar</a>
+            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
+            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-controller="Admissions" asp-action="Create" asp-route-studentId="@Model.Id">Admissão</a>
+            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-controller="Families" asp-action="Create" asp-route-studentId="@Model.Id">Familiar</a>
+            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Index">Voltar</a>
         </div>
     </div>
 
@@ -132,11 +132,11 @@
                             <span>
                                 @if (member.IsResponsible)
                                 {
-                                    <span class="rn-badge rn-badge-info">Responsável</span>
+                                    <span class="orizon-badge orizon-badge--info orizon-badge--md">Responsável</span>
                                 }
                                 @if (member.CanAccessPortal)
                                 {
-                                    <span class="rn-badge rn-badge-success">Portal</span>
+                                    <span class="orizon-badge orizon-badge--success orizon-badge--md">Portal</span>
                                 }
                             </span>
                         </article>
@@ -177,3 +177,4 @@
         </section>
     </div>
 </section>
+

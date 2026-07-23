@@ -12,8 +12,8 @@
             <p>@Model.Description</p>
         </div>
         <div class="rn-premium-actions">
-            <a class="rn-btn-secondary" asp-action="Content" asp-route-id="@Model.Id"><i class="ph ph-list-bullets" aria-hidden="true"></i>Conteudo</a>
-            <a class="rn-btn-primary" asp-action="Edit" asp-route-id="@Model.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>
+            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Content" asp-route-id="@Model.Id">Conteudo</a>
+            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
         </div>
     </div>
 
@@ -49,8 +49,8 @@
                                 <p>@module.Description</p>
                             </div>
                         </header>
-                        <div class="renova-table-wrap">
-                            <table class="renova-table">
+                        <div class="orizon-table-container">
+                            <table class="orizon-table orizon-table--hoverable">
                                 <thead><tr><th>Aula</th><th>Video</th><th>Duracao</th><th>Alunos</th><th>Progresso</th><th>Conclusao</th></tr></thead>
                                 <tbody>
                                 @foreach (var lesson in module.Lessons)
@@ -73,3 +73,4 @@
         }
     </section>
 </section>
+

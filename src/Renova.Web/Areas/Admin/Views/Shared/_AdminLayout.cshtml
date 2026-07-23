@@ -1,36 +1,66 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light" data-color-mode="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@ViewData["Title"] | Admin Renova</title>
+    <title>@ViewData["Title"] | Renova</title>
     <link rel="icon" type="image/png" href="~/favicon.png" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link rel="stylesheet" href="https://unpkg.com/@@phosphor-icons/web@2.1.1/src/regular/style.css" />
-    <link rel="stylesheet" href="~/app.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/admin-premium.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/_content/Orizon.UI/css/orizon.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
-<body class="admin-body">
-    <a class="skip-link" href="#admin-content">Pular para o conteúdo</a>
-    <div class="admin-shell">
-        <aside class="admin-sidebar-shell" aria-label="Menu administrativo">
+<body class="orizon-admin-body">
+    <a class="orizon-sr-only orizon-focusable" href="#main-content">Pular para o conteúdo</a>
+    <div class="orizon-admin-shell" data-admin-layout>
+        <div class="orizon-sidebar-backdrop" data-sidebar-backdrop aria-hidden="true"></div>
+        <aside class="orizon-admin-sidebar" data-sidebar aria-label="Navegação principal">
             @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_AdminSidebar.cshtml")
         </aside>
 
-        <div class="admin-main-shell">
+        <div class="orizon-admin-main">
             @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_AdminTopbar.cshtml")
 
-            <main id="admin-content" class="admin-content" tabindex="-1">
+            <main id="main-content" class="orizon-admin-content" tabindex="-1">
                 @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_AdminBreadcrumb.cshtml")
-                @RenderBody()
+                <div class="orizon-admin-page">
+                    <div class="orizon-admin-messages" role="region" aria-label="Mensagens do sistema" aria-live="polite">
+                        @if (TempData["Success"] is string successMessage)
+                        {
+                            <orizon-alert variant="success" title="Operação concluída" dismissible>@successMessage</orizon-alert>
+                        }
+                        @if (TempData["Error"] is string errorMessage)
+                        {
+                            <orizon-alert variant="danger" title="Não foi possível concluir" dismissible>@errorMessage</orizon-alert>
+                        }
+                        @if (TempData["Warning"] is string warningMessage)
+                        {
+                            <orizon-alert variant="warning" title="Atenção" dismissible>@warningMessage</orizon-alert>
+                        }
+                        @if (TempData["Info"] is string infoMessage)
+                        {
+                            <orizon-alert variant="info" title="Informação" dismissible>@infoMessage</orizon-alert>
+                        }
+                        @if (ViewData["Message"] is string viewMessage)
+                        {
+                            <orizon-alert variant="info">@viewMessage</orizon-alert>
+                        }
+                        <div asp-validation-summary="All" class="orizon-validation-summary"></div>
+                        @await RenderSectionAsync("Notifications", required: false)
+                    </div>
+                    @RenderBody()
+                </div>
             </main>
 
-            <footer class="admin-footer">
-                <span>Renova Admin © 2026</span>
-            </footer>
+            <div class="orizon-admin-footer">
+                <footer class="orizon-footer">
+                    <div class="orizon-footer-left">© @DateTime.Now.Year <strong>Renova</strong></div>
+                    <div class="orizon-footer-right"><span>Orizon.UI 1.0.0-rc.1</span></div>
+                </footer>
+            </div>
         </div>
     </div>
-    <script src="~/js/profile-header.js" asp-append-version="true"></script>
-    <script src="~/js/premium-interactions.js" asp-append-version="true"></script>
+    <script src="~/_content/Orizon.UI/js/layout/admin-layout.js" asp-append-version="true"></script>
+    <script src="~/_content/Orizon.UI/js/layout/sidebar.js" asp-append-version="true"></script>
+    <script type="module" src="~/_content/Orizon.UI/js/orizon.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

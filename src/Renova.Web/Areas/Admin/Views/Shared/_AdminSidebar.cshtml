@@ -1,6 +1,8 @@
 @{
     var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var userName = User.Identity?.Name ?? "Usuário Renova";
+    var initials = string.Concat(userName.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(part => char.ToUpperInvariant(part[0])));
     string Active(string area, string controller) =>
         string.Equals(currentArea, area, StringComparison.OrdinalIgnoreCase)
         && string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase)
@@ -8,67 +10,62 @@
             : string.Empty;
 }
 
-<div class="admin-sidebar">
-    <div class="admin-brand">
-        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" aria-label="Renova Admin">
-            <span class="admin-brand-mark" aria-hidden="true">R</span>
-            <span class="admin-brand-text">
-                <strong>Renova</strong>
-                <small>Admin</small>
-            </span>
-        </a>
-        <button class="sidebar-toggle" type="button" aria-label="Recolher menu" title="Recolher menu">
-            <i class="ph ph-sidebar-simple" aria-hidden="true"></i>
-        </button>
+<div class="orizon-sidebar-header">
+    <a class="orizon-sidebar-brand" asp-area="Admin" asp-controller="Dashboard" asp-action="Index" aria-label="Renova">
+        <span class="orizon-sidebar-brand-mark" aria-hidden="true">R</span>
+        <span class="orizon-sidebar-brand-content">
+            <strong class="orizon-sidebar-brand-name">Renova</strong>
+            <span class="orizon-sidebar-brand-product">Gestão integrada</span>
+        </span>
+    </a>
+    <button type="button" class="orizon-sidebar-collapse-button" data-sidebar-collapse aria-label="Recolher menu lateral" aria-expanded="true">
+        <orizon-icon name="chevron-left" size="16" />
+    </button>
+</div>
+
+<nav class="orizon-sidebar-navigation" aria-label="Menu administrativo">
+    <div class="orizon-sidebar-section">
+        <span class="orizon-sidebar-section-title">Geral</span>
+        <a class="orizon-sidebar-link @Active("Admin", "Dashboard")" asp-area="Admin" asp-controller="Dashboard" asp-action="Index" title="Dashboard"><orizon-icon name="dashboard" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Dashboard</span></a>
+        <a class="orizon-sidebar-link @Active("CRM", "Dashboard")" asp-area="CRM" asp-controller="Dashboard" asp-action="Index" title="CRM"><orizon-icon name="chart-pie" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">CRM</span></a>
+        <a class="orizon-sidebar-link @Active("CRM", "Students")" asp-area="CRM" asp-controller="Students" asp-action="Index" title="Acolhidos"><orizon-icon name="users" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Acolhidos</span></a>
+        <a class="orizon-sidebar-link @Active("CRM", "Families")" asp-area="CRM" asp-controller="Families" asp-action="Index" title="Famílias"><orizon-icon name="house" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Famílias</span></a>
+        <a class="orizon-sidebar-link @Active("Medical", "Professionals")" asp-area="Medical" asp-controller="Professionals" asp-action="Index" title="Profissionais"><orizon-icon name="user-check" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Profissionais</span></a>
+        <a class="orizon-sidebar-link @Active("CRM", "Appointments")" asp-area="CRM" asp-controller="Appointments" asp-action="Index" title="Agenda"><orizon-icon name="calendar" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Agenda</span></a>
+        <a class="orizon-sidebar-link @Active("Medical", "MedicalRecords")" asp-area="Medical" asp-controller="MedicalRecords" asp-action="Index" title="Prontuário"><orizon-icon name="clipboard" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Prontuário</span></a>
     </div>
 
-    <nav class="admin-nav" aria-label="Navegação administrativa">
-        <div class="admin-nav-group">
-            <span class="admin-nav-title">Geral</span>
-            <a class="@Active("Admin", "Dashboard")" asp-area="Admin" asp-controller="Dashboard" asp-action="Index"><i class="ph ph-squares-four" aria-hidden="true"></i><span>Dashboard</span></a>
-            <a class="@Active("CRM", "Dashboard")" asp-area="CRM" asp-controller="Dashboard" asp-action="Index"><i class="ph ph-chart-donut" aria-hidden="true"></i><span>CRM</span></a>
-            <a class="@Active("CRM", "Students")" asp-area="CRM" asp-controller="Students" asp-action="Index"><i class="ph ph-users-three" aria-hidden="true"></i><span>Acolhidos</span></a>
-            <a class="@Active("CRM", "Families")" asp-area="CRM" asp-controller="Families" asp-action="Index"><i class="ph ph-house-line" aria-hidden="true"></i><span>Famílias</span></a>
-            <a class="@Active("Medical", "Professionals")" asp-area="Medical" asp-controller="Professionals" asp-action="Index"><i class="ph ph-stethoscope" aria-hidden="true"></i><span>Profissionais</span></a>
-            <a class="@Active("CRM", "Appointments")" asp-area="CRM" asp-controller="Appointments" asp-action="Index"><i class="ph ph-calendar-check" aria-hidden="true"></i><span>Agenda</span></a>
-            <a class="@Active("Medical", "MedicalRecords")" asp-area="Medical" asp-controller="MedicalRecords" asp-action="Index"><i class="ph ph-notebook" aria-hidden="true"></i><span>Prontuário</span></a>
-        </div>
-
-        <div class="admin-nav-group">
-            <span class="admin-nav-title">Ensino</span>
-            <a class="@Active("EAD", "Dashboard")" asp-area="EAD" asp-controller="Dashboard" asp-action="Index"><i class="ph ph-chart-bar" aria-hidden="true"></i><span>Visao geral</span></a>
-            <a class="@Active("EAD", "Courses")" asp-area="EAD" asp-controller="Courses" asp-action="Index"><i class="ph ph-books" aria-hidden="true"></i><span>Biblioteca de cursos</span></a>
-            <a class="@Active("EAD", "Students")" asp-area="EAD" asp-controller="Students" asp-action="Dashboard"><i class="ph ph-student" aria-hidden="true"></i><span>Jornada do aluno</span></a>
-        </div>
-
-        <div class="admin-nav-group">
-            <span class="admin-nav-title">Gestão</span>
-            <a class="@Active("Finance", "Finance")" asp-area="Finance" asp-controller="Finance" asp-action="Index"><i class="ph ph-currency-circle-dollar" aria-hidden="true"></i><span>Financeiro</span></a>
-            <a href="#" aria-disabled="true"><i class="ph ph-package" aria-hidden="true"></i><span>Estoque</span></a>
-            <a class="@Active("Reports", "Reports")" asp-area="Reports" asp-controller="Reports" asp-action="Index"><i class="ph ph-chart-line-up" aria-hidden="true"></i><span>Relatórios</span></a>
-        </div>
-
-        <div class="admin-nav-group">
-            <span class="admin-nav-title">Admin</span>
-            <a class="@Active("Admin", "Users")" asp-area="Admin" asp-controller="Users" asp-action="Index"><i class="ph ph-user-circle" aria-hidden="true"></i><span>Usuários</span></a>
-            <a class="@Active("Admin", "Roles")" asp-area="Admin" asp-controller="Roles" asp-action="Index"><i class="ph ph-shield-check" aria-hidden="true"></i><span>Perfis</span></a>
-            <a class="@Active("Settings", "Settings")" asp-area="Settings" asp-controller="Settings" asp-action="Index"><i class="ph ph-gear-six" aria-hidden="true"></i><span>Configurações</span></a>
-            <a class="@Active("Admin", "DesignSystem")" asp-area="Admin" asp-controller="DesignSystem" asp-action="Index"><i class="ph ph-palette" aria-hidden="true"></i><span>Design System</span></a>
-        </div>
-    </nav>
-
-    <div class="admin-sidebar-footer">
-        <div class="admin-sidebar-user">
-            <span>R</span>
-            <div>
-                <strong>Ricardo</strong>
-                <small>Diretor executivo</small>
-            </div>
-        </div>
-        <div class="admin-sidebar-version">Renova Design System v1.0</div>
-
-        <form class="admin-logout" action="/auth/web-logout" method="post">
-            <button type="submit"><i class="ph ph-sign-out" aria-hidden="true"></i><span>Sair</span></button>
-        </form>
+    <div class="orizon-sidebar-section">
+        <span class="orizon-sidebar-section-title">Ensino</span>
+        <a class="orizon-sidebar-link @Active("EAD", "Dashboard")" asp-area="EAD" asp-controller="Dashboard" asp-action="Index" title="Visão geral"><orizon-icon name="chart-bar" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Visão geral</span></a>
+        <a class="orizon-sidebar-link @Active("EAD", "Courses")" asp-area="EAD" asp-controller="Courses" asp-action="Index" title="Biblioteca de cursos"><orizon-icon name="folder-open" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Biblioteca de cursos</span></a>
+        <a class="orizon-sidebar-link @Active("EAD", "Students")" asp-area="EAD" asp-controller="Students" asp-action="Dashboard" title="Jornada do aluno"><orizon-icon name="timeline" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Jornada do aluno</span></a>
     </div>
+
+    <div class="orizon-sidebar-section">
+        <span class="orizon-sidebar-section-title">Gestão</span>
+        <a class="orizon-sidebar-link @Active("Finance", "Finance")" asp-area="Finance" asp-controller="Finance" asp-action="Index" title="Financeiro"><orizon-icon name="wallet" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Financeiro</span></a>
+        <a class="orizon-sidebar-link @Active("Reports", "Reports")" asp-area="Reports" asp-controller="Reports" asp-action="Index" title="Relatórios"><orizon-icon name="report" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Relatórios</span></a>
+    </div>
+
+    <div class="orizon-sidebar-section">
+        <span class="orizon-sidebar-section-title">Administração</span>
+        <a class="orizon-sidebar-link @Active("Admin", "Users")" asp-area="Admin" asp-controller="Users" asp-action="Index" title="Usuários"><orizon-icon name="user" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Usuários</span></a>
+        <a class="orizon-sidebar-link @Active("Admin", "Roles")" asp-area="Admin" asp-controller="Roles" asp-action="Index" title="Perfis"><orizon-icon name="shield-check" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Perfis</span></a>
+        <a class="orizon-sidebar-link @Active("Settings", "Settings")" asp-area="Settings" asp-controller="Settings" asp-action="Index" title="Configurações"><orizon-icon name="gear" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Configurações</span></a>
+        <a class="orizon-sidebar-link @Active("Admin", "DesignSystem")" asp-area="Admin" asp-controller="DesignSystem" asp-action="Index" title="Design System"><orizon-icon name="monitor" size="19" class="orizon-sidebar-link-icon" /><span class="orizon-sidebar-link-label">Design System</span></a>
+    </div>
+</nav>
+
+<div class="orizon-sidebar-footer">
+    <div class="orizon-sidebar-user">
+        <span class="orizon-sidebar-user-avatar" aria-hidden="true">@initials</span>
+        <div class="orizon-sidebar-user-content">
+            <strong class="orizon-sidebar-user-name">@userName</strong>
+            <span class="orizon-sidebar-user-role">Usuário Renova</span>
+        </div>
+    </div>
+    <form action="/auth/web-logout" method="post">
+        <orizon-button type="submit" variant="ghost" color="neutral" size="sm" full-width><orizon-icon name="logout" size="16" /> Sair</orizon-button>
+    </form>
 </div>

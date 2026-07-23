@@ -18,11 +18,11 @@
             <span class="rn-eyebrow">Profissional</span>
             <h1>@displayName</h1>
             <p>
-                <span class="renova-status-badge @(Model.IsActive ? "ok" : "danger")">@(Model.IsActive ? "Ativo" : "Inativo")</span>
+                <span class="renova-status-badge @(Model.IsActive ? "orizon-badge--success" : "orizon-badge--danger")">@(Model.IsActive ? "Ativo" : "Inativo")</span>
                 @Model.Specialty
             </p>
         </div>
-        <a class="rn-btn-primary" asp-action="Edit" asp-route-id="@Model.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>
+        <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
     </div>
     <div class="demo-profile-meta">
         <article><small>Registro</small><strong>@Model.RegistrationNumber</strong></article>
@@ -31,3 +31,4 @@
         <article><small>Criado em</small><strong>@Model.CreatedAt.ToString("dd/MM/yyyy")</strong></article>
     </div>
 </section>
+

@@ -11,9 +11,9 @@
             <h1>Educacao terapeutica conectada ao acompanhamento do acolhido</h1>
             <p>Monitore engajamento, conclusoes, certificados e trilhas de aprendizagem com indicadores reais do tenant atual.</p>
             <div class="rn-premium-actions">
-                <a class="ead-primary-button" asp-controller="Courses" asp-action="Index"><i class="ph ph-books" aria-hidden="true"></i>Biblioteca</a>
-                <a class="ead-secondary-button" asp-controller="Courses" asp-action="Create"><i class="ph ph-plus" aria-hidden="true"></i>Novo curso</a>
-                <a class="ead-secondary-button" asp-controller="Students" asp-action="Dashboard"><i class="ph ph-student" aria-hidden="true"></i>Jornada do aluno</a>
+                <a class="ead-primary-button" asp-controller="Courses" asp-action="Index">Biblioteca</a>
+                <a class="ead-secondary-button" asp-controller="Courses" asp-action="Create">Novo curso</a>
+                <a class="ead-secondary-button" asp-controller="Students" asp-action="Dashboard">Jornada do aluno</a>
             </div>
         </div>
         <div class="ead-engagement-ring" style="--value:@Model.AverageEngagement;">
@@ -79,7 +79,7 @@
                     @foreach (var trail in Model.Trails)
                     {
                         <article class="ead-trail-card">
-                            <i class="ph @trail.Icon" aria-hidden="true"></i>
+                            
                             <strong>@trail.Name</strong>
                             <span>@trail.Courses cursos - @trail.Students alunos</span>
                             <div class="ead-progress-track"><div class="ead-progress-fill" style="width:@trail.AverageProgress%;"></div></div>
@@ -95,14 +95,14 @@
             <div class="rn-timeline">
                 @if (Model.RecentActivities.Count == 0)
                 {
-                    <article class="rn-timeline-empty"><i class="ph ph-clock" aria-hidden="true"></i><strong>Nenhuma atividade recente</strong><span>O progresso dos acolhidos aparecera aqui.</span></article>
+                    <article class="rn-timeline-empty"><strong>Nenhuma atividade recente</strong><span>O progresso dos acolhidos aparecera aqui.</span></article>
                 }
                 else
                 {
                     @foreach (var activity in Model.RecentActivities)
                     {
                         <article class="rn-timeline-item">
-                            <span class="rn-timeline-icon"><i class="ph ph-graduation-cap" aria-hidden="true"></i></span>
+                            <span class="rn-timeline-icon"></span>
                             <div>
                                 <header><strong>@activity.StudentName</strong><time>@activity.OccurredAt.ToString("dd/MM/yyyy HH:mm")</time></header>
                                 <p>@activity.CourseTitle - @activity.LessonTitle</p>
@@ -115,3 +115,4 @@
         </section>
     </div>
 </section>
+

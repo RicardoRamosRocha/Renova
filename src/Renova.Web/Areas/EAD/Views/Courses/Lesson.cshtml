@@ -12,9 +12,9 @@
     <main class="ead-learning-main">
         <nav class="ead-breadcrumb" aria-label="Breadcrumb">
             <a asp-action="Index">Biblioteca</a>
-            <i class="ph ph-caret-right" aria-hidden="true"></i>
+            
             <a asp-action="Content" asp-route-id="@Model.CourseId">@Model.CourseTitle</a>
-            <i class="ph ph-caret-right" aria-hidden="true"></i>
+            
             <span>@Model.LessonTitle</span>
         </nav>
 
@@ -24,10 +24,10 @@
                 <h1>@Model.LessonTitle</h1>
                 <p>@Model.LessonDescription</p>
                 <div class="ead-learning-meta">
-                    <span><i class="ph ph-user-circle" aria-hidden="true"></i>@Model.CourseTeacher</span>
-                    <span><i class="ph ph-squares-four" aria-hidden="true"></i>@Model.CourseLevel</span>
-                    <span><i class="ph ph-clock" aria-hidden="true"></i>@Model.DurationInMinutes min</span>
-                    <span><i class="ph ph-certificate" aria-hidden="true"></i>Certificado</span>
+                    <span>@Model.CourseTeacher</span>
+                    <span>@Model.CourseLevel</span>
+                    <span>@Model.DurationInMinutes min</span>
+                    <span>Certificado</span>
                 </div>
             </div>
             <div class="ead-learning-score">
@@ -39,30 +39,30 @@
 
         @if (TempData["Success"] is string success)
         {
-            <div class="rn-alert rn-alert-success"><i class="ph ph-check-circle" aria-hidden="true"></i>@success</div>
+            <div class="orizon-alert orizon-alert--success">@success</div>
         }
         @if (TempData["Error"] is string error)
         {
-            <div class="rn-alert rn-alert-warning"><i class="ph ph-warning" aria-hidden="true"></i>@error</div>
+            <div class="orizon-alert orizon-alert--warning">@error</div>
         }
 
         <section class="ead-premium-player" aria-label="Player da aula">
             <div class="ead-video-stage">
                 <div class="ead-video-shine"></div>
                 <div class="ead-video-content">
-                    <i class="ph ph-play-circle" aria-hidden="true"></i>
+                    
                     <strong>@Model.VideoProvider</strong>
                     <span>@(string.IsNullOrWhiteSpace(Model.VideoExternalId) ? "Player preparado para video local, YouTube, Vimeo, Bunny, Azure Blob, S3 e Google Cloud Storage." : Model.VideoExternalId)</span>
                 </div>
                 <div class="ead-video-controls" aria-label="Controles preparados">
-                    <button type="button" data-tooltip="Play"><i class="ph ph-play" aria-hidden="true"></i></button>
-                    <button type="button" data-tooltip="Pause"><i class="ph ph-pause" aria-hidden="true"></i></button>
-                    <button type="button" data-tooltip="Volume"><i class="ph ph-speaker-high" aria-hidden="true"></i></button>
+                    <button type="button" data-tooltip="Play"></button>
+                    <button type="button" data-tooltip="Pause"></button>
+                    <button type="button" data-tooltip="Volume"></button>
                     <button type="button" data-tooltip="Velocidade"><span>1x</span></button>
-                    <button type="button" data-tooltip="Legendas"><i class="ph ph-closed-captioning" aria-hidden="true"></i></button>
-                    <button type="button" data-tooltip="Picture in picture"><i class="ph ph-picture-in-picture" aria-hidden="true"></i></button>
-                    <button type="button" data-tooltip="Qualidade"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i></button>
-                    <button type="button" data-tooltip="Tela cheia"><i class="ph ph-corners-out" aria-hidden="true"></i></button>
+                    <button type="button" data-tooltip="Legendas"></button>
+                    <button type="button" data-tooltip="Picture in picture"></button>
+                    <button type="button" data-tooltip="Qualidade"></button>
+                    <button type="button" data-tooltip="Tela cheia"></button>
                 </div>
             </div>
             <div class="ead-player-meta">
@@ -75,7 +75,7 @@
                     <strong>@Model.Progress%</strong>
                 </div>
                 <div class="ead-lesson-status @(Model.IsCompleted ? "is-completed" : string.Empty)">
-                    <i class="ph @(Model.IsCompleted ? "ph-check-circle" : "ph-clock")" aria-hidden="true"></i>
+                    
                     @(Model.IsCompleted ? "Concluida" : "Em andamento")
                 </div>
             </div>
@@ -118,7 +118,7 @@
                 <ul class="ead-check-list">
                     @foreach (var objective in Model.Objectives)
                     {
-                        <li><i class="ph ph-check-circle" aria-hidden="true"></i>@objective</li>
+                        <li>@objective</li>
                     }
                 </ul>
             </div>
@@ -129,10 +129,10 @@
                     @foreach (var material in Model.Materials)
                     {
                         <article class="ead-resource-card">
-                            <i class="ph @material.Icon" aria-hidden="true"></i>
+                            
                             <div><strong>@material.Name</strong><span>@material.Type - @material.Size</span></div>
-                            <button class="rn-btn-secondary" type="button"><i class="ph ph-eye" aria-hidden="true"></i>Visualizar</button>
-                            <button class="rn-btn-primary" type="button"><i class="ph ph-download-simple" aria-hidden="true"></i>Baixar</button>
+                            <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="button">Visualizar</button>
+                            <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="button">Baixar</button>
                         </article>
                     }
                 </div>
@@ -144,10 +144,10 @@
                     @foreach (var download in Model.Downloads)
                     {
                         <article class="ead-resource-card">
-                            <i class="ph @download.Icon" aria-hidden="true"></i>
+                            
                             <div><strong>@download.Name</strong><span>@download.Format - @download.Size</span></div>
-                            <button class="rn-btn-secondary" type="button"><i class="ph ph-link" aria-hidden="true"></i>Abrir</button>
-                            <button class="rn-btn-primary" type="button"><i class="ph ph-download-simple" aria-hidden="true"></i>Baixar</button>
+                            <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="button">Abrir</button>
+                            <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="button">Baixar</button>
                         </article>
                     }
                 </div>
@@ -169,7 +169,7 @@
                         </article>
                     }
                 </div>
-                <button class="rn-btn-primary" type="button"><i class="ph ph-check-square" aria-hidden="true"></i>Responder quiz</button>
+                <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="button">Responder quiz</button>
             </div>
 
             <div class="ead-tab-panel ead-tab-discussion">
@@ -179,7 +179,7 @@
                     {
                         <article>
                             <div class="ead-avatar-fallback">@discussion.Author[0]</div>
-                            <div><strong>@discussion.Author</strong><p>@discussion.Text</p><span><i class="ph ph-thumbs-up" aria-hidden="true"></i>@discussion.Likes curtidas</span></div>
+                            <div><strong>@discussion.Author</strong><p>@discussion.Text</p><span>@discussion.Likes curtidas</span></div>
                         </article>
                     }
                 </div>
@@ -190,10 +190,10 @@
                 <div class="ead-note-list">
                     @foreach (var note in Model.Notes)
                     {
-                        <article><i class="ph ph-note-pencil" aria-hidden="true"></i>@note</article>
+                        <article>@note</article>
                     }
                 </div>
-                <textarea class="admin-textarea" rows="4" placeholder="Escreva uma anotacao pessoal para esta aula..."></textarea>
+                <textarea class="orizon-textarea" rows="4" placeholder="Escreva uma anotacao pessoal para esta aula..."></textarea>
             </div>
 
             <div class="ead-tab-panel ead-tab-teacher">
@@ -212,10 +212,10 @@
 
     <aside class="ead-learning-sidebar">
         <div class="ead-sidebar-sticky">
-            <a class="rn-btn-secondary" asp-action="Content" asp-route-id="@Model.CourseId"><i class="ph ph-arrow-left" aria-hidden="true"></i>Conteudo</a>
+            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Content" asp-route-id="@Model.CourseId">Conteudo</a>
             <form method="get">
                 <input type="hidden" name="id" value="@Model.LessonId" />
-                <select class="admin-select" name="studentId" onchange="this.form.submit()">
+                <select class="orizon-select" name="studentId" onchange="this.form.submit()">
                     @foreach (var student in Model.Students)
                     {
                         <option value="@student.Id" selected="@(student.Id == Model.StudentId)">@student.Name</option>
@@ -236,7 +236,7 @@
                         var isActive = lesson.Id == Model.LessonId;
                         var isCompleted = Model.CompletedLessonIds.Contains(lesson.Id);
                         <a class="@(isActive ? "is-active" : string.Empty) @(isCompleted ? "is-completed" : string.Empty)" asp-action="Lesson" asp-route-id="@lesson.Id" asp-route-studentId="@Model.StudentId">
-                            <i class="ph @(isCompleted ? "ph-check-circle" : "ph-play-circle")" aria-hidden="true"></i>
+                            
                             <span>@lesson.Title<small>@lesson.VideoProvider - @lesson.DurationInMinutes min</small></span>
                             <em>@lesson.AverageProgress%</em>
                         </a>
@@ -251,28 +251,29 @@
     <div>
         @if (Model.PreviousLessonId.HasValue)
         {
-            <a class="rn-btn-secondary" asp-action="Lesson" asp-route-id="@Model.PreviousLessonId" asp-route-studentId="@Model.StudentId"><i class="ph ph-arrow-left" aria-hidden="true"></i>Anterior</a>
+            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Lesson" asp-route-id="@Model.PreviousLessonId" asp-route-studentId="@Model.StudentId">Anterior</a>
         }
     </div>
     <div class="ead-bottom-actions">
-        <button class="rn-btn-secondary" type="button"><i class="ph ph-floppy-disk" aria-hidden="true"></i>Salvar progresso</button>
+        <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="button">Salvar progresso</button>
         @if (Model.StudentId.HasValue)
         {
             @if (Model.IsCompleted)
             {
-                <button class="rn-btn-primary" type="button" disabled><i class="ph ph-check-circle" aria-hidden="true"></i>Aula concluida</button>
+                <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="button" disabled>Aula concluida</button>
             }
             else
             {
                 <form asp-action="CompleteLesson" asp-route-id="@Model.LessonId" method="post">
                     <input type="hidden" name="studentId" value="@Model.StudentId" />
-                    <button class="rn-btn-primary" type="submit"><i class="ph ph-check-circle" aria-hidden="true"></i>Concluir aula</button>
+                    <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="submit">Concluir aula</button>
                 </form>
             }
         }
         @if (Model.NextLessonId.HasValue)
         {
-            <a class="rn-btn-primary" asp-action="Lesson" asp-route-id="@Model.NextLessonId" asp-route-studentId="@Model.StudentId">Proxima<i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Lesson" asp-route-id="@Model.NextLessonId" asp-route-studentId="@Model.StudentId">Proxima</a>
         }
     </div>
 </nav>
+

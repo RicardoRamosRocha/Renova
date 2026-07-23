@@ -12,22 +12,22 @@
             <h1>Usuários</h1>
             <p>Gerencie contas, perfis de acesso e status dos usuários.</p>
         </div>
-        <a class="rn-btn-primary" asp-action="Create"><i class="ph ph-user-plus" aria-hidden="true"></i>Novo usuário</a>
+        <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create">Novo usuário</a>
     </div>
 
     @if (TempData["Success"] is string success)
     {
-        <div class="rn-alert rn-alert-success"><i class="ph ph-check-circle" aria-hidden="true"></i>@success</div>
+        <div class="orizon-alert orizon-alert--success">@success</div>
     }
 
     <div class="demo-grid-4">
-        <article class="rn-metric-card"><span>Usuários</span><strong>@ViewBag.Total</strong><small>Total</small></article>
-        <article class="rn-metric-card"><span>Ativos</span><strong>@ViewBag.ActiveCount</strong><small>Com acesso</small></article>
-        <article class="rn-metric-card"><span>Inativos</span><strong>@ViewBag.InactiveCount</strong><small>Bloqueados</small></article>
-        <article class="rn-metric-card"><span>Perfis</span><strong>@ViewBag.RolesCount</strong><small>Roles</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Usuários</span><strong>@ViewBag.Total</strong><small>Total</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Ativos</span><strong>@ViewBag.ActiveCount</strong><small>Com acesso</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Inativos</span><strong>@ViewBag.InactiveCount</strong><small>Bloqueados</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Perfis</span><strong>@ViewBag.RolesCount</strong><small>Roles</small></article>
     </div>
 
-    <section class="renova-table-card">
+    <section class="orizon-card orizon-card--padding-none">
         <div class="rn-premium-toolbar">
             <div>
                 <span class="rn-eyebrow">Busca e filtros</span>
@@ -41,23 +41,23 @@
                     <option value="true" selected="@(ViewBag.Active == true)">Ativo</option>
                     <option value="false" selected="@(ViewBag.Active == false)">Inativo</option>
                 </select>
-                <button class="rn-btn-secondary" type="submit" data-tooltip="Aplicar filtros"><i class="ph ph-funnel" aria-hidden="true"></i>Filtrar</button>
+                <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="submit" data-tooltip="Aplicar filtros">Filtrar</button>
             </form>
         </div>
 
         @if (Model.Items.Count == 0)
         {
             <div class="crm-empty-state">
-                <div class="crm-empty-icon"><i class="ph ph-user-circle" aria-hidden="true"></i></div>
+                <div class="crm-empty-icon"></div>
                 <strong>Nenhum registro encontrado</strong>
                 <p>Crie usuários administrativos para a demonstração.</p>
-                <a class="rn-btn-primary" asp-action="Create"><i class="ph ph-plus" aria-hidden="true"></i>Criar primeiro cadastro</a>
+                <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create">Criar primeiro cadastro</a>
             </div>
         }
         else
         {
-            <div class="renova-table-wrap">
-                <table class="renova-table">
+            <div class="orizon-table-container">
+                <table class="orizon-table orizon-table--hoverable">
                     <thead>
                         <tr>
                             <th>Nome</th>
@@ -88,12 +88,12 @@
                             <td><span class="renova-muted">@user.Email</span></td>
                             <td><span class="renova-muted">@(user.PhoneNumber ?? "Não informado")</span></td>
                             <td><span class="renova-muted">@user.CreatedAt.ToString("dd/MM/yyyy")</span></td>
-                            <td><span class="renova-status-badge @(user.IsActive ? "ok" : "danger")">@(user.IsActive ? "Ativo" : "Inativo")</span></td>
+                            <td><span class="renova-status-badge @(user.IsActive ? "orizon-badge--success" : "orizon-badge--danger")">@(user.IsActive ? "Ativo" : "Inativo")</span></td>
                             <td>
                                 <div class="renova-action-buttons">
-                                    <a class="renova-action-btn" data-tooltip="Detalhes" asp-action="Details" asp-route-id="@user.Id"><i class="ph ph-eye" aria-hidden="true"></i></a>
-                                    <a class="renova-action-btn" data-tooltip="Editar" asp-action="Edit" asp-route-id="@user.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i></a>
-                                    <a class="renova-action-btn danger" data-tooltip="Excluir" href="#delete-user-@user.Id"><i class="ph ph-trash" aria-hidden="true"></i></a>
+                                    <a class="renova-action-btn" data-tooltip="Detalhes" asp-action="Details" asp-route-id="@user.Id"></a>
+                                    <a class="renova-action-btn" data-tooltip="Editar" asp-action="Edit" asp-route-id="@user.Id"></a>
+                                    <a class="renova-action-btn danger" data-tooltip="Excluir" href="#delete-user-@user.Id"></a>
                                 </div>
                             </td>
                         </tr>
@@ -111,8 +111,8 @@
                         <h2>Excluir usuário</h2>
                         <p>Deseja realmente excluir este registro? Caso não seja possível excluir, o usuário será inativado com segurança.</p>
                         <div class="admin-delete-actions">
-                            <a class="rn-btn-secondary" href="#">Cancelar</a>
-                            <form asp-action="Delete" asp-route-id="@user.Id" method="post"><button class="rn-btn-danger" type="submit">Excluir</button></form>
+                            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" href="#">Cancelar</a>
+                            <form asp-action="Delete" asp-route-id="@user.Id" method="post"><button class="orizon-button orizon-button--solid orizon-button--danger orizon-button--md" type="submit">Excluir</button></form>
                         </div>
                     </div>
                 </div>
@@ -120,3 +120,4 @@
         }
     </section>
 </section>
+

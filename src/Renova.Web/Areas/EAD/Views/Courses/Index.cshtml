@@ -5,73 +5,73 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<section class="ead-page">
-    <div class="ead-page-header">
+<section class="orizon-grid orizon-gap-6">
+    <div class="orizon-card orizon-card--gradient orizon-card--padding-lg orizon-flex orizon-items-center orizon-justify-between orizon-gap-4">
         <div>
-            <span class="ead-eyebrow">Plataforma EAD</span>
+            <span class="orizon-badge orizon-badge--info orizon-badge--sm">Plataforma EAD</span>
             <h1>Biblioteca de Cursos</h1>
             <p>Cursos ligados a trilhas terapêuticas, progresso real dos acolhidos e certificados emitidos.</p>
         </div>
 
-        <a class="ead-primary-button" asp-area="EAD" asp-controller="Courses" asp-action="Create">
-            <i class="ph ph-plus" aria-hidden="true"></i>
+        <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-area="EAD" asp-controller="Courses" asp-action="Create">
+            
             Novo curso
         </a>
     </div>
 
-    <div class="ead-metrics-grid">
-        <article class="ead-metric-card"><span>Cursos ativos</span><strong>@Model.ActiveCourses</strong><small>@Model.TotalCourses cadastrados</small></article>
-        <article class="ead-metric-card"><span>Rascunhos/arquivados</span><strong>@Model.DraftCourses</strong><small>Fora da biblioteca ativa</small></article>
-        <article class="ead-metric-card"><span>Alunos estudando</span><strong>@Model.StudyingStudents</strong><small>Tenant atual</small></article>
-        <article class="ead-metric-card"><span>Conclusoes no mes</span><strong>@Model.CompletionsThisMonth</strong><small>Aulas finalizadas</small></article>
-        <article class="ead-metric-card"><span>Certificados</span><strong>@Model.Certificates</strong><small>Emitidos</small></article>
-        <article class="ead-metric-card"><span>Engajamento</span><strong>@Model.AverageProgress%</strong><small>Progresso médio</small></article>
+    <div class="orizon-dashboard-grid is-auto-fit is-responsive">
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Cursos ativos</span><strong>@Model.ActiveCourses</strong><small>@Model.TotalCourses cadastrados</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Rascunhos/arquivados</span><strong>@Model.DraftCourses</strong><small>Fora da biblioteca ativa</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Alunos estudando</span><strong>@Model.StudyingStudents</strong><small>Tenant atual</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Conclusoes no mes</span><strong>@Model.CompletionsThisMonth</strong><small>Aulas finalizadas</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Certificados</span><strong>@Model.Certificates</strong><small>Emitidos</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Engajamento</span><strong>@Model.AverageProgress%</strong><small>Progresso médio</small></article>
     </div>
 
-    <form class="ead-filter-bar" method="get">
+    <form class="orizon-card orizon-card--padding-md orizon-form-grid orizon-items-end" method="get">
         <label class="ead-search-box">
-            <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
-            <input name="search" value="@Model.Search" type="search" placeholder="Pesquisar curso, trilha ou descrição..." />
+            
+            <input class="orizon-input" name="search" value="@Model.Search" type="search" placeholder="Pesquisar curso, trilha ou descrição..." />
         </label>
-        <select name="active">
+        <select class="orizon-select" name="active">
             <option value="">Todos os status</option>
             <option value="true" selected="@(Model.Active == true)">Publicado</option>
             <option value="false" selected="@(Model.Active == false)">Arquivado</option>
         </select>
-        <select name="trail">
+        <select class="orizon-select" name="trail">
             <option value="">Todas as trilhas</option>
             @foreach (var trail in Model.Trails)
             {
                 <option value="@trail" selected="@(Model.Trail == trail)">@trail</option>
             }
         </select>
-        <button class="ead-secondary-button" type="submit" data-tooltip="Aplicar filtros"><i class="ph ph-funnel" aria-hidden="true"></i>Filtrar</button>
+        <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="submit" data-tooltip="Aplicar filtros">Filtrar</button>
     </form>
 
     @if (Model.Courses.Items.Count == 0)
     {
         <section class="crm-empty-state">
-            <div class="crm-empty-icon"><i class="ph ph-graduation-cap" aria-hidden="true"></i></div>
+            <div class="crm-empty-icon"></div>
             <strong>Nenhum curso encontrado</strong>
             <p>Crie cursos ou ajuste os filtros da biblioteca EAD.</p>
         </section>
     }
     else
     {
-        <div class="ead-course-grid">
+        <div class="orizon-dashboard-grid is-auto-fit is-responsive">
             @foreach (var course in Model.Courses.Items)
             {
-                var statusClass = course.IsActive ? "rn-badge-success" : "rn-badge-warning";
+                var statusClass = course.IsActive ? "orizon-badge--success" : "orizon-badge--warning";
 
-                <article class="ead-course-card">
+                <article class="orizon-card orizon-card--elevated orizon-card--padding-none">
                     <div class="ead-course-visual">
-                        <i class="ph @course.Icon" aria-hidden="true"></i>
+                        
                     </div>
 
-                    <div class="ead-course-body">
+                    <div class="orizon-card__body orizon-grid orizon-gap-4">
                         <div class="ead-course-meta">
-                            <span class="rn-badge rn-badge-info">@course.Trail</span>
-                            <span class="rn-badge @statusClass">@(course.IsActive ? "Publicado" : "Arquivado")</span>
+                            <span class="orizon-badge orizon-badge--info orizon-badge--md">@course.Trail</span>
+                            <span class="orizon-badge orizon-badge--md @statusClass">@(course.IsActive ? "Publicado" : "Arquivado")</span>
                         </div>
 
                         <div>
@@ -92,18 +92,18 @@
                         </div>
 
                         <div class="ead-course-stats">
-                            <span><i class="ph ph-play-circle" aria-hidden="true"></i> @course.Lessons aulas</span>
-                            <span><i class="ph ph-users-three" aria-hidden="true"></i> @course.Students alunos</span>
-                            <span><i class="ph ph-check-circle" aria-hidden="true"></i> @course.CompletionRate% conclusao</span>
-                            <span><i class="ph ph-certificate" aria-hidden="true"></i> @course.Certificates certificados</span>
+                            <span> @course.Lessons aulas</span>
+                            <span> @course.Students alunos</span>
+                            <span> @course.CompletionRate% conclusao</span>
+                            <span> @course.Certificates certificados</span>
                         </div>
 
                         <div class="ead-card-actions">
-                            <a class="ead-primary-button" asp-area="EAD" asp-controller="Courses" asp-action="Details" asp-route-id="@course.Id"><i class="ph ph-eye" aria-hidden="true"></i>Abrir</a>
-                            <a class="ead-secondary-button" asp-area="EAD" asp-controller="Courses" asp-action="Content" asp-route-id="@course.Id"><i class="ph ph-list-bullets" aria-hidden="true"></i>Conteudo</a>
-                            <a class="ead-secondary-button" asp-area="EAD" asp-controller="Courses" asp-action="Edit" asp-route-id="@course.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>
+                            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-area="EAD" asp-controller="Courses" asp-action="Details" asp-route-id="@course.Id">Abrir</a>
+                            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-area="EAD" asp-controller="Courses" asp-action="Content" asp-route-id="@course.Id">Conteudo</a>
+                            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-area="EAD" asp-controller="Courses" asp-action="Edit" asp-route-id="@course.Id">Editar</a>
                             <form asp-action="@(course.IsActive ? "Unpublish" : "Publish")" asp-route-id="@course.Id" method="post">
-                                <button class="ead-secondary-button" type="submit"><i class="ph @(course.IsActive ? "ph-eye-slash" : "ph-upload-simple")" aria-hidden="true"></i>@(course.IsActive ? "Despublicar" : "Publicar")</button>
+                                <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="submit">@(course.IsActive ? "Despublicar" : "Publicar")</button>
                             </form>
                         </div>
                     </div>
@@ -114,3 +114,4 @@
         @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model.Courses)
     }
 </section>
+

@@ -12,18 +12,18 @@
             <p>Organize modulos, aulas, ordem, duracao e materiais do curso.</p>
         </div>
         <div class="rn-premium-actions">
-            <a class="rn-btn-secondary" asp-action="Details" asp-route-id="@Model.CourseId"><i class="ph ph-eye" aria-hidden="true"></i>Detalhes</a>
-            <a class="rn-btn-primary" asp-action="CreateModule" asp-route-courseId="@Model.CourseId"><i class="ph ph-plus" aria-hidden="true"></i>Novo modulo</a>
+            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Details" asp-route-id="@Model.CourseId">Detalhes</a>
+            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="CreateModule" asp-route-courseId="@Model.CourseId">Novo modulo</a>
         </div>
     </div>
 
     @if (TempData["Success"] is string success)
     {
-        <div class="rn-alert rn-alert-success"><i class="ph ph-check-circle" aria-hidden="true"></i>@success</div>
+        <div class="orizon-alert orizon-alert--success">@success</div>
     }
     @if (TempData["Error"] is string error)
     {
-        <div class="rn-alert rn-alert-warning"><i class="ph ph-warning" aria-hidden="true"></i>@error</div>
+        <div class="orizon-alert orizon-alert--warning">@error</div>
     }
 
     @if (Model.Modules.Count == 0)
@@ -51,17 +51,17 @@
                             <strong>@module.Title</strong>
                             <p>@module.Description</p>
                             <div class="ead-module-summary">
-                                <small><i class="ph ph-play-circle" aria-hidden="true"></i>@module.Lessons.Count aulas</small>
-                                <small><i class="ph ph-clock" aria-hidden="true"></i>@moduleDuration min</small>
-                                <small><i class="ph ph-chart-line-up" aria-hidden="true"></i>@moduleAverage% medio</small>
+                                <small>@module.Lessons.Count aulas</small>
+                                <small>@moduleDuration min</small>
+                                <small>@moduleAverage% medio</small>
                             </div>
                         </div>
                         <div class="renova-action-buttons">
-                            <form asp-action="MoveModule" asp-route-id="@module.Id" method="post"><input type="hidden" name="direction" value="up" /><button class="renova-action-btn" type="submit" data-tooltip="Subir"><i class="ph ph-arrow-up" aria-hidden="true"></i></button></form>
-                            <form asp-action="MoveModule" asp-route-id="@module.Id" method="post"><input type="hidden" name="direction" value="down" /><button class="renova-action-btn" type="submit" data-tooltip="Descer"><i class="ph ph-arrow-down" aria-hidden="true"></i></button></form>
-                            <a class="renova-action-btn" asp-action="EditModule" asp-route-id="@module.Id" data-tooltip="Editar modulo"><i class="ph ph-pencil-simple" aria-hidden="true"></i></a>
-                            <a class="renova-action-btn" asp-action="CreateLesson" asp-route-courseId="@Model.CourseId" asp-route-moduleId="@module.Id" data-tooltip="Nova aula"><i class="ph ph-plus" aria-hidden="true"></i></a>
-                            <form asp-action="DeleteModule" asp-route-id="@module.Id" method="post" onsubmit="return confirm('Remover este modulo? A operacao sera bloqueada se houver progresso de alunos.');"><button class="renova-action-btn danger" type="submit" data-tooltip="Remover modulo"><i class="ph ph-trash" aria-hidden="true"></i></button></form>
+                            <form asp-action="MoveModule" asp-route-id="@module.Id" method="post"><input type="hidden" name="direction" value="up" /><button class="renova-action-btn" type="submit" data-tooltip="Subir"></button></form>
+                            <form asp-action="MoveModule" asp-route-id="@module.Id" method="post"><input type="hidden" name="direction" value="down" /><button class="renova-action-btn" type="submit" data-tooltip="Descer"></button></form>
+                            <a class="renova-action-btn" asp-action="EditModule" asp-route-id="@module.Id" data-tooltip="Editar modulo"></a>
+                            <a class="renova-action-btn" asp-action="CreateLesson" asp-route-courseId="@Model.CourseId" asp-route-moduleId="@module.Id" data-tooltip="Nova aula"></a>
+                            <form asp-action="DeleteModule" asp-route-id="@module.Id" method="post" onsubmit="return confirm('Remover este modulo? A operacao sera bloqueada se houver progresso de alunos.');"><button class="renova-action-btn danger" type="submit" data-tooltip="Remover modulo"></button></form>
                         </div>
                     </summary>
 
@@ -71,8 +71,8 @@
                     }
                     else
                     {
-                        <div class="renova-table-wrap">
-                            <table class="renova-table">
+                        <div class="orizon-table-container">
+                            <table class="orizon-table orizon-table--hoverable">
                                 <thead>
                                     <tr><th>Aula</th><th>Tipo</th><th>Duracao</th><th>Alunos</th><th>Progresso</th><th class="text-end">Acoes</th></tr>
                                 </thead>
@@ -92,11 +92,11 @@
                                         </td>
                                         <td>
                                             <div class="renova-action-buttons">
-                                                <a class="renova-action-btn" asp-action="Lesson" asp-route-id="@lesson.Id" data-tooltip="Abrir aula"><i class="ph ph-play-circle" aria-hidden="true"></i></a>
-                                                <a class="renova-action-btn" asp-action="EditLesson" asp-route-id="@lesson.Id" data-tooltip="Editar aula"><i class="ph ph-pencil-simple" aria-hidden="true"></i></a>
-                                                <form asp-action="MoveLesson" asp-route-id="@lesson.Id" method="post"><input type="hidden" name="direction" value="up" /><button class="renova-action-btn" type="submit" data-tooltip="Subir"><i class="ph ph-arrow-up" aria-hidden="true"></i></button></form>
-                                                <form asp-action="MoveLesson" asp-route-id="@lesson.Id" method="post"><input type="hidden" name="direction" value="down" /><button class="renova-action-btn" type="submit" data-tooltip="Descer"><i class="ph ph-arrow-down" aria-hidden="true"></i></button></form>
-                                                <form asp-action="DeleteLesson" asp-route-id="@lesson.Id" method="post" onsubmit="return confirm('Remover esta aula? A operacao sera bloqueada se houver progresso de alunos.');"><button class="renova-action-btn danger" type="submit" data-tooltip="Remover aula"><i class="ph ph-trash" aria-hidden="true"></i></button></form>
+                                                <a class="renova-action-btn" asp-action="Lesson" asp-route-id="@lesson.Id" data-tooltip="Abrir aula"></a>
+                                                <a class="renova-action-btn" asp-action="EditLesson" asp-route-id="@lesson.Id" data-tooltip="Editar aula"></a>
+                                                <form asp-action="MoveLesson" asp-route-id="@lesson.Id" method="post"><input type="hidden" name="direction" value="up" /><button class="renova-action-btn" type="submit" data-tooltip="Subir"></button></form>
+                                                <form asp-action="MoveLesson" asp-route-id="@lesson.Id" method="post"><input type="hidden" name="direction" value="down" /><button class="renova-action-btn" type="submit" data-tooltip="Descer"></button></form>
+                                                <form asp-action="DeleteLesson" asp-route-id="@lesson.Id" method="post" onsubmit="return confirm('Remover esta aula? A operacao sera bloqueada se houver progresso de alunos.');"><button class="renova-action-btn danger" type="submit" data-tooltip="Remover aula"></button></form>
                                             </div>
                                         </td>
                                     </tr>
@@ -110,3 +110,4 @@
         </div>
     }
 </section>
+

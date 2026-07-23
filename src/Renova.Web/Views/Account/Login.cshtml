@@ -2,160 +2,80 @@
     ViewData["Title"] = "Login | Renova";
     ViewData["MetaDescription"] = "Acesso seguro ao painel Renova.";
     ViewData["MetaKeywords"] = "Renova, login, plataforma de acolhimento";
+    ViewData["UseOrizonOnly"] = true;
     var returnUrl = ViewBag.ReturnUrl as string ?? "/Admin";
     var hasError = ViewBag.HasError is true;
 }
 
-<main id="conteudo" class="login-premium-page is-dark">
-    <section class="login-premium-shell" aria-label="Acesso ao sistema Renova">
-        <aside class="login-brand-panel">
-            <div class="login-care-visual" aria-hidden="true"></div>
+<main id="conteudo" class="orizon-container orizon-grid orizon-gap-6 orizon-py-4" tabindex="-1">
+    <header class="orizon-flex orizon-items-center orizon-justify-between orizon-gap-4">
+        <a class="orizon-sidebar-brand" asp-controller="Home" asp-action="Index" aria-label="Renova">
+            <span class="orizon-sidebar-brand-mark" aria-hidden="true">R</span>
+            <span class="orizon-sidebar-brand-content">
+                <strong class="orizon-sidebar-brand-name">Renova</strong>
+                <span class="orizon-sidebar-brand-product">Plataforma de Acolhimento</span>
+            </span>
+        </a>
+        <orizon-badge variant="success" pill><orizon-icon name="shield-check" size="15" /> Acesso seguro</orizon-badge>
+    </header>
 
-            <div class="login-brand-content">
-                <a class="login-brand-logo" asp-controller="Home" asp-action="Index" aria-label="Renova">
-                    <span aria-hidden="true">R</span>
-                    <strong>Renova</strong>
-                    <small>Plataforma de Acolhimento</small>
-                </a>
-
-                <div class="login-brand-copy">
-                    <span class="login-brand-title">Tecnologia que acolhe.</span>
-                    <h1>Gestão que transforma.</h1>
-                    <p>Uma plataforma completa para acolhimento, acompanhamento e desenvolvimento humano.</p>
-                </div>
-
-                <div class="login-feature-grid" aria-label="Recursos principais">
-                    <article class="login-feature-card">
-                        <span aria-hidden="true">🤝</span>
-                        <strong>Acolhimento</strong>
-                        <p>Gestão de acolhidos e famílias.</p>
-                    </article>
-
-                    <article class="login-feature-card">
-                        <span aria-hidden="true">📋</span>
-                        <strong>Prontuário</strong>
-                        <p>Evoluções e acompanhamento.</p>
-                    </article>
-
-                    <article class="login-feature-card">
-                        <span aria-hidden="true">🎓</span>
-                        <strong>EAD</strong>
-                        <p>Cursos e desenvolvimento.</p>
-                    </article>
-                </div>
-
-                <div class="login-stats-grid" aria-label="Indicadores do Renova">
-                    <article class="login-stats-card">
-                        <strong>LGPD</strong>
-                        <span>Segurança de dados</span>
-                    </article>
-
-                    <article class="login-stats-card">
-                        <strong>+10</strong>
-                        <span>Módulos integrados</span>
-                    </article>
-
-                    <article class="login-stats-card">
-                        <strong>100%</strong>
-                        <span>Web responsivo</span>
-                    </article>
-
-                    <article class="login-stats-card">
-                        <strong>24h</strong>
-                        <span>Acesso seguro</span>
-                    </article>
-                </div>
-
-                <div class="login-dashboard-preview" aria-hidden="true">
-                    <div>
-                        <span>Dashboard</span>
-                        <strong>Operação ativa</strong>
-                    </div>
-
-                    <div class="login-preview-grid">
-                        <span><strong>126</strong>Acolhidos</span>
-                        <span><strong>32</strong>Atendimentos</span>
-                        <span><strong>18</strong>Cursos</span>
-                        <span><strong>94</strong>Alunos</span>
-                    </div>
-                </div>
-
-                <p class="login-brand-footer">
-                    Tecnologia que acolhe. <strong>Gestão que transforma.</strong>
-                </p>
-
-                <p class="login-copyright">&copy; 2026 Renova. Todos os direitos reservados.</p>
+    <section class="orizon-dashboard-grid is-auto-fit is-responsive" aria-label="Acesso ao sistema Renova">
+        <orizon-card title="Tecnologia que acolhe" subtitle="Gestão que transforma" variant="gradient" padding="lg">
+            <p>Uma plataforma completa para acolhimento, acompanhamento e desenvolvimento humano.</p>
+            <div class="orizon-grid orizon-gap-4 orizon-mt-6">
+                <orizon-card title="Acolhimento" subtitle="Gestão de acolhidos e famílias" variant="glass"><orizon-icon name="users" size="28" /></orizon-card>
+                <orizon-card title="Prontuário" subtitle="Evoluções e acompanhamento" variant="glass"><orizon-icon name="clipboard" size="28" /></orizon-card>
+                <orizon-card title="Educação" subtitle="Cursos e desenvolvimento" variant="glass"><orizon-icon name="timeline" size="28" /></orizon-card>
             </div>
-        </aside>
+        </orizon-card>
 
-        <section class="login-auth-panel">
-            <div class="login-auth-card">
-                <div class="login-auth-heading">
-                    <span>Painel Administrativo</span>
-                    <h2>Bem-vindo</h2>
-                    <p>Entre com suas credenciais para continuar.</p>
+        <orizon-card title="Bem-vindo" subtitle="Entre com suas credenciais para continuar" variant="elevated" padding="lg">
+            @if (hasError)
+            {
+                <orizon-alert variant="danger" title="Não foi possível entrar">Confira seu email, senha ou status do usuário.</orizon-alert>
+            }
+
+            <form class="orizon-form orizon-mt-4" action="/auth/web-login" method="post">
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+                <div class="orizon-field">
+                    <label class="orizon-field__label" for="login-email">Email</label>
+                    <input class="orizon-input" id="login-email" name="email" type="email" autocomplete="username" placeholder="seu@email.com.br" required />
                 </div>
 
-                @if (hasError)
-                {
-                    <div class="login-alert" role="alert">
-                        Não foi possível entrar. Confira seu email, senha ou status do usuário.
-                    </div>
-                }
+                <div class="orizon-field">
+                    <label class="orizon-field__label" for="login-password">Senha</label>
+                    <input class="orizon-input" id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Digite sua senha" required />
+                    <button class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm login-password-toggle" type="button" aria-label="Mostrar ou ocultar senha" aria-controls="login-password">Mostrar senha</button>
+                </div>
 
-                <form class="login-premium-form" action="/auth/web-login" method="post">
-                    <input type="hidden" name="returnUrl" value="@returnUrl" />
-
-                    <label class="login-input-group">
-                        <span>Email</span>
-                        <div>
-                            <i aria-hidden="true">@@</i>
-                            <input name="email" type="email" autocomplete="username" placeholder="seu@email.com.br" required />
-                        </div>
+                <div class="orizon-flex orizon-items-center orizon-justify-between orizon-gap-3">
+                    <label class="orizon-flex orizon-items-center orizon-gap-2">
+                        <input name="rememberMe" type="checkbox" value="true" />
+                        <span>Permanecer conectado</span>
                     </label>
+                    <a href="/login">Esqueci minha senha</a>
+                </div>
 
-                    <label class="login-input-group">
-                        <span>Senha</span>
-                        <div>
-                            <i aria-hidden="true">🔒</i>
-                            <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Digite sua senha" required />
-                            <button class="login-password-toggle" type="button" aria-label="Mostrar ou ocultar senha" aria-controls="login-password">
-                                Mostrar
-                            </button>
-                        </div>
-                    </label>
-
-                    <div class="login-form-row">
-                        <label class="login-remember">
-                            <input name="rememberMe" type="checkbox" value="true" />
-                            <span>Permanecer conectado</span>
-                        </label>
-
-                        <a href="/login">Esqueci minha senha</a>
-                    </div>
-
-                    <button class="login-submit-button" type="submit">
-                        Entrar no Renova
-                    </button>
-                </form>
-
-                <p class="login-auth-footer">
-                    Plataforma de Acolhimento · Versão 1.0
-                </p>
-            </div>
-        </section>
+                <orizon-button type="submit" full-width><orizon-icon name="login" size="18" /> Entrar no Renova</orizon-button>
+            </form>
+        </orizon-card>
     </section>
+
+    <footer class="orizon-footer">
+        <div class="orizon-footer-left">© @DateTime.Now.Year <strong>Renova</strong></div>
+        <div class="orizon-footer-right"><span>Orizon.UI 1.0.0-rc.1</span></div>
+    </footer>
 </main>
 
 <script>
     (() => {
         const password = document.querySelector("#login-password");
         const passwordToggle = document.querySelector(".login-password-toggle");
-
         passwordToggle?.addEventListener("click", () => {
             const isPassword = password.type === "password";
             password.type = isPassword ? "text" : "password";
-            passwordToggle.textContent = isPassword ? "Ocultar" : "Mostrar";
+            passwordToggle.textContent = isPassword ? "Ocultar senha" : "Mostrar senha";
         });
     })();
 </script>

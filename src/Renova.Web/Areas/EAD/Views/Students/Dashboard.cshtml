@@ -9,7 +9,7 @@
     @if (!Model.StudentId.HasValue)
     {
         <section class="crm-empty-state">
-            <div class="crm-empty-icon"><i class="ph ph-student" aria-hidden="true"></i></div>
+            <div class="crm-empty-icon"></div>
             <strong>Nenhum acolhido disponivel</strong>
             <p>Cadastre acolhidos para acompanhar desenvolvimento pessoal, trilhas e certificados.</p>
         </section>
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <form method="get">
-                <select class="admin-select" name="studentId" onchange="this.form.submit()">
+                <select class="orizon-select" name="studentId" onchange="this.form.submit()">
                     @foreach (var student in Model.Students)
                     {
                         <option value="@student.Id" selected="@(student.Id == Model.StudentId)">@student.Name</option>
@@ -66,8 +66,8 @@
 
             <section class="medical-panel">
                 <div class="medical-panel-title"><span class="rn-eyebrow">Plano terapeutico</span><h2>Metas EAD</h2></div>
-                <div class="renova-table-wrap">
-                    <table class="renova-table">
+                <div class="orizon-table-container">
+                    <table class="orizon-table orizon-table--hoverable">
                         <thead><tr><th>Objetivo</th><th>Atividade</th><th>Responsavel</th><th>Status</th><th>Conclusao</th></tr></thead>
                         <tbody>
                         @foreach (var goal in Model.Goals)
@@ -85,7 +85,7 @@
                     @foreach (var achievement in Model.Achievements)
                     {
                         <article class="@(achievement.Achieved ? "is-achieved" : string.Empty)">
-                            <i class="ph @achievement.Icon" aria-hidden="true"></i>
+                            
                             <strong>@achievement.Title</strong>
                             <span>@achievement.Description</span>
                         </article>
@@ -99,7 +99,7 @@
                     @if (Model.CertificateItems.Count == 0)
                     {
                         <article class="ead-certificate-preview">
-                            <i class="ph ph-qr-code" aria-hidden="true"></i>
+                            
                             <div>
                                 <strong>Nenhum certificado emitido</strong>
                                 <span>Os certificados aparecem aqui quando o aluno conclui todas as aulas de um curso.</span>
@@ -111,7 +111,7 @@
                         @foreach (var certificate in Model.CertificateItems)
                         {
                             <article class="ead-certificate-preview">
-                                <i class="ph ph-certificate" aria-hidden="true"></i>
+                                
                                 <div>
                                     <strong>@certificate.CourseTitle</strong>
                                     <span>Codigo @certificate.VerificationCode - Emitido em @certificate.IssuedAt.ToLocalTime().ToString("dd/MM/yyyy")</span>
@@ -124,3 +124,4 @@
         </div>
     }
 </section>
+
