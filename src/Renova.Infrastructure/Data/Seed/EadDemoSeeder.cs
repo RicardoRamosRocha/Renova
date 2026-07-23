@@ -12,6 +12,19 @@ public sealed class EadDemoSeeder
     private static readonly IReadOnlyList<DemoCourse> DemoCourses =
     [
         new(
+            "Programa Completo de Formacao em Dependencia Quimica",
+            "Formacao demonstrativa premium para equipes, acolhidos e instituicoes que precisam compreender dependencia quimica, cuidado integrado, prevencao a recaida e reinsercao social.",
+            [
+                new("Fundamentos da dependencia quimica", "Conceitos essenciais para uma leitura tecnica e humana do cuidado.", ["Abertura do programa", "Dependencia quimica como fenomeno biopsicossocial", "Mitos, estigmas e linguagem de cuidado", "Ciclo de uso, abuso e dependencia"]),
+                new("Acolhimento e vinculo terapeutico", "Como criar seguranca, pertencimento e adesao ao plano.", ["Primeiro contato com o acolhido", "Escuta qualificada", "Contrato terapeutico", "Rotina inicial da comunidade"]),
+                new("Avaliacao e plano individual", "Organizacao de objetivos, riscos e intervencoes.", ["Levantamento de historico", "Mapeamento de riscos", "Metas terapeuticas mensuraveis", "Indicadores de evolucao"]),
+                new("Prevencao a recaida", "Ferramentas praticas para reconhecer gatilhos e agir cedo.", ["Gatilhos internos", "Gatilhos externos", "Plano de emergencia", "Rede de apoio em momentos criticos", "Simulacao de tomada de decisao"]),
+                new("Saude mental e comorbidades", "Leitura integrada entre sofrimento psiquico, comportamento e cuidado.", ["Ansiedade e fissura", "Depressao e isolamento", "Trauma e uso de substancias", "Encaminhamento multiprofissional"]),
+                new("Familia e rede de apoio", "Intervencoes com familiares e fortalecimento dos vinculos.", ["Psicoeducacao familiar", "Limites saudaveis", "Reunioes de acompanhamento", "Plano familiar de continuidade"]),
+                new("Reinsercao social e trabalho", "Preparacao para estudo, trabalho e convivencia segura.", ["Projeto de vida", "Rotina produtiva", "Empregabilidade e postura profissional", "Ambientes de risco", "Plano pos-acolhimento"]),
+                new("Certificacao e avaliacao final", "Fechamento do percurso com avaliacao, materiais e certificado.", ["Revisao geral", "Estudo de caso integrador", "Quiz final demonstrativo", "Plano de manutencao", "Emissao de certificado"])
+            ]),
+        new(
             "Primeiros Passos na Recuperacao",
             "Curso introdutorio para orientar acolhidos nos primeiros dias de rotina, pertencimento e compromisso terapeutico.",
             [
