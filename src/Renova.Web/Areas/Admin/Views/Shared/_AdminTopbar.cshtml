@@ -3,6 +3,7 @@
     var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     var pageTitle = ViewData["Title"]?.ToString() ?? "Dashboard";
+
     var contextLabel = currentArea switch
     {
         "CRM" => "Relacionamento e acolhimento",
@@ -15,15 +16,23 @@
         "Admin" => "Administração",
         _ => "Gestão integrada"
     };
-    var initial = userName.Substring(0, 1).ToUpperInvariant();
+
+    var initial = string.IsNullOrWhiteSpace(userName)
+        ? "U"
+        : userName[..1].ToUpperInvariant();
 }
 
 <header class="orizon-admin-topbar">
     <div class="orizon-topbar-content">
         <div class="orizon-topbar-left">
-            <button type="button" class="orizon-topbar-menu-button" data-sidebar-toggle aria-label="Abrir menu lateral" aria-expanded="false">
+            <button type="button"
+                    class="orizon-topbar-menu-button"
+                    data-sidebar-toggle
+                    aria-label="Abrir menu lateral"
+                    aria-expanded="false">
                 <orizon-icon name="menu" size="20" />
             </button>
+
             <div class="orizon-topbar-title-container">
                 <span class="orizon-topbar-eyebrow">@contextLabel</span>
                 <strong class="orizon-topbar-title">@pageTitle</strong>
@@ -31,15 +40,50 @@
         </div>
 
         <div class="orizon-topbar-actions">
-            <a class="orizon-topbar-action-button" asp-area="CRM" asp-controller="Students" asp-action="Index" aria-label="Buscar acolhidos" title="Buscar acolhidos">
+            <a class="orizon-topbar-action-button"
+               asp-area="CRM"
+               asp-controller="Students"
+               asp-action="Index"
+               aria-label="Buscar acolhidos"
+               title="Buscar acolhidos">
                 <orizon-icon name="search" size="19" />
             </a>
-            <a class="orizon-topbar-action-button" asp-area="Reports" asp-controller="Reports" asp-action="Index" aria-label="Abrir relatórios" title="Relatórios">
+
+            <a class="orizon-topbar-action-button"
+               asp-area="Reports"
+               asp-controller="Reports"
+               asp-action="Index"
+               aria-label="Abrir relatórios"
+               title="Relatórios">
                 <orizon-icon name="bell" size="19" />
             </a>
+
+            <button type="button"
+                    class="orizon-topbar-action-button"
+                    data-theme-toggle
+                    aria-label="Ativar modo escuro"
+                    title="Ativar modo escuro"
+                    aria-pressed="false">
+                <span data-theme-icon="dark" aria-hidden="true">
+                    <orizon-icon name="moon" size="19" />
+                </span>
+
+                <span data-theme-icon="light"
+                      aria-hidden="true"
+                      hidden>
+                    <orizon-icon name="sun" size="19" />
+                </span>
+            </button>
+
             <span class="orizon-topbar-divider" aria-hidden="true"></span>
-            <div class="orizon-topbar-profile-button" aria-label="Usuário logado">
-                <span class="orizon-topbar-profile-avatar" aria-hidden="true">@initial</span>
+
+            <div class="orizon-topbar-profile-button"
+                 aria-label="Usuário logado">
+                <span class="orizon-topbar-profile-avatar"
+                      aria-hidden="true">
+                    @initial
+                </span>
+
                 <span class="orizon-topbar-profile-content">
                     <strong>@userName</strong>
                     <small>Online</small>

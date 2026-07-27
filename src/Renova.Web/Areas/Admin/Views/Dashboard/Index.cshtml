@@ -1,699 +1,358 @@
-@using Renova.Web.ViewModels
-
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<section class="dashboard-v2">
+<style>
+    .renova-dashboard {
+        --rd-primary: var(--orizon-color-primary, #2563eb);
+        --rd-primary-dark: #1d4ed8;
+        --rd-text: var(--orizon-color-text-primary, #0f172a);
+        --rd-muted: var(--orizon-color-text-secondary, #64748b);
+        --rd-border: var(--orizon-color-border, #e2e8f0);
+        --rd-surface: var(--orizon-color-surface, #fff);
+        display: grid;
+        gap: 24px;
+        color: var(--rd-text);
+    }
 
-    <!-- ========================================================= -->
-    <!-- HEADER -->
-    <!-- ========================================================= -->
+    .rd-hero {
+        position: relative;
+        min-height: 230px;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(320px, .7fr);
+        gap: 40px;
+        align-items: center;
+        padding: 38px 42px;
+        border: 1px solid rgba(148, 163, 184, .22);
+        border-radius: 24px;
+        color: #fff;
+        background:
+            radial-gradient(circle at 86% 18%, rgba(56, 189, 248, .28), transparent 28%),
+            radial-gradient(circle at 58% 110%, rgba(37, 99, 235, .45), transparent 40%),
+            linear-gradient(125deg, #0b1220 0%, #111f3c 52%, #12356d 100%);
+        box-shadow: 0 22px 55px rgba(15, 23, 42, .18);
+    }
 
-    <header class="dashboard-header">
+    .rd-hero::after {
+        content: "";
+        position: absolute;
+        width: 230px;
+        height: 230px;
+        right: -70px;
+        bottom: -105px;
+        border: 1px solid rgba(255, 255, 255, .14);
+        border-radius: 50%;
+        box-shadow: 0 0 0 34px rgba(255, 255, 255, .035), 0 0 0 68px rgba(255, 255, 255, .025);
+    }
 
-        <div class="dashboard-header-left">
+    .rd-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+        color: #93c5fd;
+        font-size: .72rem;
+        font-weight: 800;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+    }
 
-            <span class="dashboard-label">
-                RENOVA PLATFORM
-            </span>
+    .rd-eyebrow::before {
+        content: "";
+        width: 24px;
+        height: 2px;
+        border-radius: 999px;
+        background: #60a5fa;
+    }
 
-            <h1>
-                Dashboard Executivo
-            </h1>
+    .rd-hero h1 {
+        margin: 0;
+        max-width: 720px;
+        color: #fff;
+        font-size: clamp(2rem, 4vw, 3.25rem);
+        line-height: 1.02;
+        letter-spacing: -.045em;
+    }
 
-            <p>
+    .rd-hero p {
+        max-width: 620px;
+        margin: 18px 0 0;
+        color: #cbd5e1;
+        font-size: 1rem;
+        line-height: 1.65;
+    }
 
-                Gestão integrada da Comunidade Terapêutica
+    .rd-hero-actions {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        gap: 12px;
+    }
 
-            </p>
+    .rd-hero-action {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        min-height: 58px;
+        padding: 12px 16px;
+        color: #fff;
+        text-decoration: none;
+        border: 1px solid rgba(255, 255, 255, .13);
+        border-radius: 15px;
+        background: rgba(255, 255, 255, .075);
+        backdrop-filter: blur(12px);
+        transition: transform .2s ease, background .2s ease, border-color .2s ease;
+    }
 
+    .rd-hero-action:hover {
+        color: #fff;
+        transform: translateY(-2px);
+        border-color: rgba(147, 197, 253, .55);
+        background: rgba(255, 255, 255, .13);
+    }
+
+    .rd-action-copy { display: grid; gap: 2px; }
+    .rd-action-copy strong { font-size: .92rem; }
+    .rd-action-copy small { color: #94a3b8; font-size: .75rem; }
+    .rd-arrow { color: #93c5fd; font-size: 1.2rem; }
+
+    .rd-kpis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .rd-kpi {
+        position: relative;
+        overflow: hidden;
+        min-height: 148px;
+        padding: 22px;
+        border: 1px solid var(--rd-border);
+        border-radius: 18px;
+        background: var(--rd-surface);
+        box-shadow: 0 7px 25px rgba(15, 23, 42, .055);
+    }
+
+    .rd-kpi::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 3px;
+        background: var(--kpi-accent, var(--rd-primary));
+    }
+
+    .rd-kpi-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .rd-kpi-label { color: var(--rd-muted); font-size: .76rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .rd-kpi-trend { padding: 4px 8px; color: #047857; border-radius: 999px; background: #ecfdf5; font-size: .72rem; font-weight: 800; }
+    .rd-kpi-value { display: block; margin-top: 17px; font-size: clamp(1.7rem, 3vw, 2.2rem); line-height: 1; letter-spacing: -.04em; }
+    .rd-kpi-caption { display: block; margin-top: 9px; color: var(--rd-muted); font-size: .78rem; }
+
+    .rd-main {
+        display: grid;
+        grid-template-columns: minmax(0, 1.65fr) minmax(300px, .7fr);
+        gap: 20px;
+        align-items: start;
+    }
+
+    .rd-column { display: grid; gap: 20px; min-width: 0; }
+
+    .rd-panel {
+        overflow: hidden;
+        border: 1px solid var(--rd-border);
+        border-radius: 19px;
+        background: var(--rd-surface);
+        box-shadow: 0 6px 22px rgba(15, 23, 42, .045);
+    }
+
+    .rd-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 22px 24px 17px;
+    }
+
+    .rd-panel-kicker { color: var(--rd-primary); font-size: .7rem; font-weight: 850; letter-spacing: .11em; text-transform: uppercase; }
+    .rd-panel-title { margin: 5px 0 0; font-size: 1.1rem; letter-spacing: -.02em; }
+    .rd-panel-link { color: var(--rd-primary); font-size: .8rem; font-weight: 750; text-decoration: none; }
+
+    .rd-chart {
+        height: 260px;
+        padding: 18px 24px 24px;
+    }
+
+    .rd-chart-bars {
+        height: 190px;
+        display: flex;
+        align-items: end;
+        gap: clamp(8px, 2vw, 18px);
+        padding: 12px 8px 0;
+        border-bottom: 1px solid var(--rd-border);
+        background: repeating-linear-gradient(to bottom, transparent 0, transparent 46px, rgba(148, 163, 184, .15) 47px);
+    }
+
+    .rd-chart-bars span {
+        flex: 1;
+        min-width: 14px;
+        height: var(--bar);
+        border-radius: 8px 8px 2px 2px;
+        background: linear-gradient(180deg, #60a5fa, #2563eb);
+        box-shadow: 0 7px 18px rgba(37, 99, 235, .18);
+    }
+
+    .rd-chart-labels { display: flex; justify-content: space-around; margin-top: 12px; color: var(--rd-muted); font-size: .7rem; }
+
+    .rd-table-wrap { overflow-x: auto; }
+    .rd-table { width: 100%; border-collapse: collapse; }
+    .rd-table th { padding: 12px 24px; color: var(--rd-muted); background: rgba(148, 163, 184, .07); font-size: .68rem; letter-spacing: .06em; text-align: left; text-transform: uppercase; }
+    .rd-table td { padding: 15px 24px; border-top: 1px solid var(--rd-border); font-size: .84rem; vertical-align: middle; }
+    .rd-person { display: flex; align-items: center; gap: 10px; font-weight: 750; }
+    .rd-avatar { width: 34px; height: 34px; display: grid; place-items: center; color: #1d4ed8; border-radius: 10px; background: #dbeafe; font-size: .72rem; }
+    .rd-status { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; color: #047857; border-radius: 999px; background: #ecfdf5; font-size: .7rem; font-weight: 750; }
+    .rd-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #10b981; }
+    .rd-status--warning { color: #a16207; background: #fefce8; }
+    .rd-status--warning::before { background: #eab308; }
+
+    .rd-agenda { display: grid; padding: 0 22px 22px; }
+    .rd-event { position: relative; display: grid; grid-template-columns: 48px 1fr; gap: 14px; padding: 15px 0; border-top: 1px solid var(--rd-border); }
+    .rd-event time { color: var(--rd-primary); font-size: .76rem; font-weight: 850; }
+    .rd-event strong { display: block; font-size: .84rem; }
+    .rd-event small { display: block; margin-top: 4px; color: var(--rd-muted); font-size: .73rem; }
+
+    .rd-insights { display: grid; gap: 10px; padding: 0 20px 20px; }
+    .rd-insight { padding: 13px 14px; border: 1px solid var(--rd-border); border-radius: 12px; background: rgba(148, 163, 184, .055); font-size: .78rem; line-height: 1.45; }
+    .rd-insight strong { color: var(--rd-primary); }
+
+    .rd-quick { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px 20px; }
+    .rd-quick a { min-height: 72px; display: grid; align-content: center; gap: 4px; padding: 12px; color: var(--rd-text); text-decoration: none; border: 1px solid var(--rd-border); border-radius: 13px; background: rgba(148, 163, 184, .045); transition: border-color .2s ease, transform .2s ease; }
+    .rd-quick a:hover { transform: translateY(-2px); border-color: #93c5fd; }
+    .rd-quick strong { font-size: .78rem; }
+    .rd-quick small { color: var(--rd-muted); font-size: .67rem; }
+
+    @@media (max-width: 1180px) {
+        .rd-hero { grid-template-columns: 1fr; }
+        .rd-hero-actions { grid-template-columns: 1fr 1fr; }
+        .rd-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .rd-main { grid-template-columns: 1fr; }
+        .rd-column--aside { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .rd-column--aside .rd-panel:last-child { grid-column: 1 / -1; }
+    }
+
+    @@media (max-width: 680px) {
+        .renova-dashboard { gap: 16px; }
+        .rd-hero { min-height: auto; padding: 28px 22px; border-radius: 18px; }
+        .rd-hero-actions, .rd-kpis, .rd-column--aside { grid-template-columns: 1fr; }
+        .rd-column--aside .rd-panel:last-child { grid-column: auto; }
+        .rd-panel-header { padding: 19px 18px 15px; }
+        .rd-table th, .rd-table td { padding-inline: 18px; }
+    }
+</style>
+
+<main class="renova-dashboard" aria-labelledby="dashboard-title">
+    <section class="rd-hero">
+        <div>
+            <span class="rd-eyebrow">Renova Intelligence</span>
+            <h1 id="dashboard-title">Visão clara para cuidar melhor.</h1>
+            <p>Acompanhe acolhimentos, atendimentos, ocupação e saúde financeira em uma experiência executiva integrada.</p>
         </div>
 
-        <div class="dashboard-header-right">
-
-            <a asp-area="CRM"
-               asp-controller="Students"
-               asp-action="Create"
-               class="orizon-button orizon-button--primary">
-
-                Novo acolhido
-
+        <div class="rd-hero-actions" aria-label="Ações principais">
+            <a class="rd-hero-action" asp-area="CRM" asp-controller="Students" asp-action="Create">
+                <span class="rd-action-copy"><strong>Novo acolhimento</strong><small>Cadastre uma nova entrada</small></span>
+                <span class="rd-arrow" aria-hidden="true">→</span>
             </a>
-
-            <a asp-area="CRM"
-               asp-controller="Appointments"
-               asp-action="Create"
-               class="orizon-button orizon-button--secondary">
-
-                Nova consulta
-
+            <a class="rd-hero-action" asp-area="CRM" asp-controller="Appointments" asp-action="Create">
+                <span class="rd-action-copy"><strong>Agendar atendimento</strong><small>Organize a agenda clínica</small></span>
+                <span class="rd-arrow" aria-hidden="true">→</span>
             </a>
-
         </div>
-
-    </header>
-
-    <!-- ========================================================= -->
-    <!-- KPIs -->
-    <!-- ========================================================= -->
-
-    <section class="dashboard-kpis">
-
-        <article class="dashboard-kpi">
-
-            <small>Acolhidos</small>
-
-            <h2>126</h2>
-
-            <span class="positive">
-
-                +8%
-
-            </span>
-
-        </article>
-
-        <article class="dashboard-kpi">
-
-            <small>Atendimentos</small>
-
-            <h2>32</h2>
-
-            <span class="positive">
-
-                +18%
-
-            </span>
-
-        </article>
-
-        <article class="dashboard-kpi">
-
-            <small>Taxa de Ocupação</small>
-
-            <h2>91%</h2>
-
-            <span class="positive">
-
-                +2%
-
-            </span>
-
-        </article>
-
-        <article class="dashboard-kpi">
-
-            <small>Receita</small>
-
-            <h2>R$ 98 mil</h2>
-
-            <span class="positive">
-
-                +12%
-
-            </span>
-
-        </article>
-
     </section>
 
-    <!-- ========================================================= -->
-    <!-- GRID -->
-    <!-- ========================================================= -->
+    <section class="rd-kpis" aria-label="Indicadores principais">
+        <article class="rd-kpi" style="--kpi-accent:#2563eb">
+            <div class="rd-kpi-top"><span class="rd-kpi-label">Acolhidos ativos</span><span class="rd-kpi-trend">+8%</span></div>
+            <strong class="rd-kpi-value">126</strong><span class="rd-kpi-caption">10 novos neste mês</span>
+        </article>
+        <article class="rd-kpi" style="--kpi-accent:#8b5cf6">
+            <div class="rd-kpi-top"><span class="rd-kpi-label">Atendimentos</span><span class="rd-kpi-trend">+18%</span></div>
+            <strong class="rd-kpi-value">32</strong><span class="rd-kpi-caption">6 agendados para hoje</span>
+        </article>
+        <article class="rd-kpi" style="--kpi-accent:#10b981">
+            <div class="rd-kpi-top"><span class="rd-kpi-label">Taxa de ocupação</span><span class="rd-kpi-trend">+2%</span></div>
+            <strong class="rd-kpi-value">91%</strong><span class="rd-kpi-caption">14 vagas disponíveis</span>
+        </article>
+        <article class="rd-kpi" style="--kpi-accent:#f59e0b">
+            <div class="rd-kpi-top"><span class="rd-kpi-label">Receita mensal</span><span class="rd-kpi-trend">+12%</span></div>
+            <strong class="rd-kpi-value">R$ 98 mil</strong><span class="rd-kpi-caption">92% da meta prevista</span>
+        </article>
+    </section>
 
-    <section class="dashboard-main">
-
-        <!-- ===================== LEFT ===================== -->
-
-        <div class="dashboard-left">
-
-            <!-- PERFORMANCE -->
-
-            <section class="dashboard-card">
-
-                <div class="dashboard-card-header">
-
-                    <div>
-
-                        <span class="dashboard-section">
-
-                            PERFORMANCE
-
-                        </span>
-
-                        <h2>
-
-                            Evolução dos últimos 30 dias
-
-                        </h2>
-
+    <section class="rd-main">
+        <div class="rd-column">
+            <article class="rd-panel">
+                <header class="rd-panel-header">
+                    <div><span class="rd-panel-kicker">Performance</span><h2 class="rd-panel-title">Evolução dos últimos 30 dias</h2></div>
+                    <button type="button" class="orizon-button orizon-button--outline orizon-button--sm">Exportar</button>
+                </header>
+                <div class="rd-chart" role="img" aria-label="Gráfico demonstrativo da evolução nos últimos sete períodos">
+                    <div class="rd-chart-bars">
+                        <span style="--bar:42%"></span><span style="--bar:56%"></span><span style="--bar:48%"></span>
+                        <span style="--bar:69%"></span><span style="--bar:61%"></span><span style="--bar:83%"></span><span style="--bar:94%"></span>
                     </div>
-
-                    <button class="orizon-button orizon-button--outline">
-
-                        Exportar
-
-                    </button>
-
+                    <div class="rd-chart-labels"><span>Sem 1</span><span>Sem 2</span><span>Sem 3</span><span>Sem 4</span></div>
                 </div>
+            </article>
 
-                <div class="chart-placeholder">
-
-                    <div class="bar h40"></div>
-                    <div class="bar h55"></div>
-                    <div class="bar h48"></div>
-                    <div class="bar h70"></div>
-                    <div class="bar h62"></div>
-                    <div class="bar h85"></div>
-                    <div class="bar h100"></div>
-
+            <article class="rd-panel">
+                <header class="rd-panel-header">
+                    <div><span class="rd-panel-kicker">CRM</span><h2 class="rd-panel-title">Acolhimentos recentes</h2></div>
+                    <a class="rd-panel-link" asp-area="CRM" asp-controller="Students" asp-action="Index">Ver todos →</a>
+                </header>
+                <div class="rd-table-wrap">
+                    <table class="rd-table">
+                        <thead><tr><th>Acolhido</th><th>Status</th><th>Entrada</th><th>Responsável</th></tr></thead>
+                        <tbody>
+                            <tr><td><span class="rd-person"><span class="rd-avatar">JS</span>João Silva</span></td><td><span class="rd-status">Ativo</span></td><td>12/07/2026</td><td>Dra. Ana</td></tr>
+                            <tr><td><span class="rd-person"><span class="rd-avatar">MS</span>Maria Souza</span></td><td><span class="rd-status rd-status--warning">Observação</span></td><td>09/07/2026</td><td>Dr. Carlos</td></tr>
+                            <tr><td><span class="rd-person"><span class="rd-avatar">PA</span>Pedro Alves</span></td><td><span class="rd-status">Ativo</span></td><td>04/07/2026</td><td>Dra. Paula</td></tr>
+                        </tbody>
+                    </table>
                 </div>
-
-            </section>
-
-            <!-- GRID -->
-
-            <section class="dashboard-card">
-
-                <div class="dashboard-card-header">
-
-                    <div>
-
-                        <span class="dashboard-section">
-
-                            CRM
-
-                        </span>
-
-                        <h2>
-
-                            Pacientes recentes
-
-                        </h2>
-
-                    </div>
-
-                </div>
-
-                <div class="dashboard-toolbar">
-
-                    <input
-                        class="orizon-input"
-                        placeholder="Pesquisar..." />
-
-                    <select class="orizon-select">
-
-                        <option>Todos</option>
-                        <option>Internados</option>
-                        <option>Alta</option>
-
-                    </select>
-
-                    <button class="orizon-button orizon-button--outline">
-
-                        Filtrar
-
-                    </button>
-
-                </div>
-
-                <table class="dashboard-table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>Paciente</th>
-                            <th>Status</th>
-                            <th>Entrada</th>
-                            <th>Responsável</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-
-                            <td>João Silva</td>
-                            <td>
-                                <span class="badge-success">
-                                    Internado
-                                </span>
-                            </td>
-                            <td>12/07</td>
-                            <td>Dra. Ana</td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>Maria Souza</td>
-                            <td>
-
-                                <span class="badge-warning">
-
-                                    Observação
-
-                                </span>
-
-                            </td>
-
-                            <td>09/07</td>
-
-                            <td>
-
-                                Dr. Carlos
-
-                            </td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>
-
-                                Pedro Alves
-
-                            </td>
-
-                            <td>
-
-                                <span class="badge-success">
-
-                                    Internado
-
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                04/07
-
-                            </td>
-
-                            <td>
-
-                                Dra. Paula
-
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </section>
-
+            </article>
         </div>
 
-        <!-- ===================== RIGHT ===================== -->
-
-        <aside class="dashboard-right">
-
-                <!-- ========================================================= -->
-    <!-- AGENDA -->
-    <!-- ========================================================= -->
-
-    <section class="dashboard-card">
-
-        <div class="dashboard-card-header">
-
-            <div>
-
-                <span class="dashboard-section">
-                    AGENDA
-                </span>
-
-                <h2>
-                    Hoje
-                </h2>
-
-            </div>
-
-            <span class="dashboard-counter">
-
-                6
-
-            </span>
-
-        </div>
-
-        <div class="timeline">
-
-            <article class="timeline-item">
-
-                <span class="timeline-hour">
-                    09:00
-                </span>
-
-                <div>
-
-                    <strong>
-
-                        Consulta Inicial
-
-                    </strong>
-
-                    <small>
-
-                        João Silva
-
-                    </small>
-
+        <aside class="rd-column rd-column--aside" aria-label="Resumo operacional">
+            <article class="rd-panel">
+                <header class="rd-panel-header"><div><span class="rd-panel-kicker">Agenda</span><h2 class="rd-panel-title">Hoje</h2></div><span class="orizon-badge orizon-badge--primary">4 eventos</span></header>
+                <div class="rd-agenda">
+                    <div class="rd-event"><time>09:00</time><div><strong>Consulta inicial</strong><small>João Silva · Sala 02</small></div></div>
+                    <div class="rd-event"><time>10:30</time><div><strong>Atendimento familiar</strong><small>Família Souza · Sala 03</small></div></div>
+                    <div class="rd-event"><time>14:00</time><div><strong>Psicologia</strong><small>Maria Oliveira · Consultório</small></div></div>
+                    <div class="rd-event"><time>16:30</time><div><strong>Reunião clínica</strong><small>Equipe multidisciplinar</small></div></div>
                 </div>
-
             </article>
 
-            <article class="timeline-item">
-
-                <span class="timeline-hour">
-
-                    10:30
-
-                </span>
-
-                <div>
-
-                    <strong>
-
-                        Atendimento Familiar
-
-                    </strong>
-
-                    <small>
-
-                        Sala 03
-
-                    </small>
-
+            <article class="rd-panel">
+                <header class="rd-panel-header"><div><span class="rd-panel-kicker">Orizon AI</span><h2 class="rd-panel-title">Insights prioritários</h2></div></header>
+                <div class="rd-insights">
+                    <div class="rd-insight"><strong>Atenção:</strong> três acolhidos apresentam sinais que pedem acompanhamento.</div>
+                    <div class="rd-insight"><strong>Boa evolução:</strong> oito trilhas educacionais foram concluídas hoje.</div>
+                    <div class="rd-insight"><strong>Financeiro:</strong> quatro mensalidades vencem nas próximas 24 horas.</div>
                 </div>
-
             </article>
 
-            <article class="timeline-item">
-
-                <span class="timeline-hour">
-
-                    14:00
-
-                </span>
-
-                <div>
-
-                    <strong>
-
-                        Psicologia
-
-                    </strong>
-
-                    <small>
-
-                        Maria Oliveira
-
-                    </small>
-
+            <article class="rd-panel">
+                <header class="rd-panel-header"><div><span class="rd-panel-kicker">Atalhos</span><h2 class="rd-panel-title">Ações rápidas</h2></div></header>
+                <div class="rd-quick">
+                    <a asp-area="CRM" asp-controller="Students" asp-action="Create"><strong>Novo acolhido</strong><small>Cadastro de entrada</small></a>
+                    <a asp-area="CRM" asp-controller="Appointments" asp-action="Create"><strong>Nova consulta</strong><small>Agenda clínica</small></a>
+                    <a asp-area="Medical" asp-controller="Professionals" asp-action="Index"><strong>Profissionais</strong><small>Equipe técnica</small></a>
+                    <a asp-area="EAD" asp-controller="Courses" asp-action="Index"><strong>Cursos</strong><small>Ambiente EAD</small></a>
                 </div>
-
             </article>
-
-            <article class="timeline-item">
-
-                <span class="timeline-hour">
-
-                    16:30
-
-                </span>
-
-                <div>
-
-                    <strong>
-
-                        Reunião Clínica
-
-                    </strong>
-
-                    <small>
-
-                        Equipe Multidisciplinar
-
-                    </small>
-
-                </div>
-
-            </article>
-
-        </div>
-
+        </aside>
     </section>
-
-    <!-- ========================================================= -->
-    <!-- ATIVIDADE -->
-    <!-- ========================================================= -->
-
-    <section class="dashboard-card">
-
-        <div class="dashboard-card-header">
-
-            <div>
-
-                <span class="dashboard-section">
-
-                    FEED
-
-                </span>
-
-                <h2>
-
-                    Atividade recente
-
-                </h2>
-
-            </div>
-
-        </div>
-
-        <div class="activity-feed">
-
-            <article>
-
-                <strong>
-
-                    João Silva
-
-                </strong>
-
-                iniciou tratamento.
-
-                <small>
-
-                    há 12 min
-
-                </small>
-
-            </article>
-
-            <article>
-
-                <strong>
-
-                    Novo Curso
-
-                </strong>
-
-                Dependência Química.
-
-                <small>
-
-                    há 28 min
-
-                </small>
-
-            </article>
-
-            <article>
-
-                <strong>
-
-                    Alta registrada
-
-                </strong>
-
-                Carlos Souza.
-
-                <small>
-
-                    10:45
-
-                </small>
-
-            </article>
-
-            <article>
-
-                <strong>
-
-                    Novo profissional
-
-                </strong>
-
-                Psicóloga Ana Paula.
-
-                <small>
-
-                    09:20
-
-                </small>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!-- ========================================================= -->
-    <!-- IA -->
-    <!-- ========================================================= -->
-
-    <section class="dashboard-card dashboard-ai">
-
-        <div class="dashboard-card-header">
-
-            <div>
-
-                <span class="dashboard-section">
-
-                    IA ASSISTENTE
-
-                </span>
-
-                <h2>
-
-                    Insights
-
-                </h2>
-
-            </div>
-
-        </div>
-
-        <div class="ai-list">
-
-            <article class="ai-item warning">
-
-                <strong>
-
-                    3 pacientes
-
-                </strong>
-
-                apresentam risco de evasão.
-
-            </article>
-
-            <article class="ai-item success">
-
-                <strong>
-
-                    8 acolhidos
-
-                </strong>
-
-                concluíram um curso hoje.
-
-            </article>
-
-            <article class="ai-item info">
-
-                <strong>
-
-                    Financeiro
-
-                </strong>
-
-                quatro mensalidades vencem amanhã.
-
-            </article>
-
-            <article class="ai-item danger">
-
-                <strong>
-
-                    Atenção
-
-                </strong>
-
-                existem duas consultas sem confirmação.
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!-- ========================================================= -->
-    <!-- AÇÕES -->
-    <!-- ========================================================= -->
-
-    <section class="dashboard-card">
-
-        <div class="dashboard-card-header">
-
-            <h2>
-
-                Ações rápidas
-
-            </h2>
-
-        </div>
-
-        <div class="quick-actions">
-
-            <a asp-area="CRM"
-               asp-controller="Students"
-               asp-action="Create"
-               class="orizon-button orizon-button--primary">
-
-                Novo acolhido
-
-            </a>
-
-            <a asp-area="CRM"
-               asp-controller="Appointments"
-               asp-action="Create"
-               class="orizon-button orizon-button--secondary">
-
-                Nova consulta
-
-            </a>
-
-            <a asp-area="Medical"
-               asp-controller="Professionals"
-               asp-action="Index"
-               class="orizon-button orizon-button--outline">
-
-                Profissionais
-
-            </a>
-
-            <a asp-area="EAD"
-               asp-controller="Courses"
-               asp-action="Index"
-               class="orizon-button orizon-button--outline">
-
-                Cursos
-
-            </a>
-
-        </div>
-
-    </section>
-
-</aside>
-
-</section>
+</main>
