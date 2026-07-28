@@ -1,4 +1,5 @@
 @model Renova.Web.ViewModels.ProfileAvatarViewModel
+
 @{
     static string Initials(string? name)
     {
@@ -7,26 +8,79 @@
             return "?";
         }
 
-        var parts = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length == 1)
-        {
-            return parts[0][..1].ToUpperInvariant();
-        }
+        var parts = name.Trim()
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-        return string.Concat(parts[0][..1], parts[^1][..1]).ToUpperInvariant();
+        return parts.Length == 1
+            ? parts[0][..1].ToUpperInvariant()
+            : string.Concat(parts[0][..1], parts[^1][..1])
+                .ToUpperInvariant();
     }
 
     var initials = Initials(Model.Name);
-    var sizeClass = string.IsNullOrWhiteSpace(Model.Size) ? "sm" : Model.Size;
+    var sizeClass = string.IsNullOrWhiteSpace(Model.Size)
+        ? "sm"
+        : Model.Size.ToLowerInvariant();
+
+    var size = sizeClass switch
+    {
+        "lg" => "88px",
+        "md" => "56px",
+        _ => "42px"
+    };
 }
 
-<span class="profile-avatar profile-avatar-@sizeClass" aria-hidden="true">
+<span class="profile-avatar profile-avatar-@sizeClass"
+      aria-hidden="true"
+      style="
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          flex:0 0 @size;
+          width:@size;
+          min-width:@size;
+          max-width:@size;
+          height:@size;
+          min-height:@size;
+          max-height:@size;
+          overflow:hidden;
+          border-radius:50%;
+          background:var(--orizon-color-surface-secondary, #e2e8f0);
+          color:var(--orizon-color-text-primary, #334155);
+      ">
+
     @if (!string.IsNullOrWhiteSpace(Model.PhotoUrl))
     {
-        <img class="profile-avatar-image" src="@Model.PhotoUrl" alt="" />
+        <img class="profile-avatar-image"
+             src="@Model.PhotoUrl"
+             alt=""
+             width="@size.Replace("px", "")"
+             height="@size.Replace("px", "")"
+             loading="lazy"
+             style="
+                 display:block;
+                 width:100%;
+                 min-width:100%;
+                 max-width:100%;
+                 height:100%;
+                 min-height:100%;
+                 max-height:100%;
+                 object-fit:cover;
+                 object-position:center;
+             " />
     }
     else
     {
-        <span class="profile-avatar-placeholder">@initials</span>
+        <span class="profile-avatar-placeholder"
+              style="
+                  display:flex;
+                  align-items:center;
+                  justify-content:center;
+                  width:100%;
+                  height:100%;
+                  font-weight:700;
+              ">
+            @initials
+        </span>
     }
 </span>

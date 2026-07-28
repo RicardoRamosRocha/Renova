@@ -1,21 +1,428 @@
 @using Renova.Web.Areas.CRM.ViewModels.Students
 @model StudentFormViewModel
 @{
-    ViewData["Title"] = "Novo Acolhido";
+    ViewData["Title"] = Model.Id.HasValue ? "Editar acolhido" : "Novo acolhido";
 }
 
-<section class="admin-form-page">
-    <header class="admin-form-header">
+@section Styles {
+    <style>
+        .student-editor {
+            width: min(100%, 1180px);
+            margin-inline: auto;
+            padding-bottom: 2rem;
+        }
+
+        .student-editor__header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .student-editor__back {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            margin-bottom: .8rem;
+            color: var(--orizon-color-text-secondary, #64748b);
+            font-size: .875rem;
+            font-weight: 650;
+            text-decoration: none;
+        }
+
+        .student-editor__back:hover {
+            color: var(--orizon-brand-primary, #2563eb);
+        }
+
+        .student-editor__eyebrow {
+            display: block;
+            margin-bottom: .3rem;
+            color: var(--orizon-brand-primary, #2563eb);
+            font-size: .72rem;
+            font-weight: 800;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        .student-editor__header h1 {
+            margin: 0;
+            color: var(--orizon-color-text-primary, #0f172a);
+            font-size: clamp(1.65rem, 3vw, 2.15rem);
+            line-height: 1.15;
+            letter-spacing: -.035em;
+        }
+
+        .student-editor__header p {
+            max-width: 640px;
+            margin: .55rem 0 0;
+            color: var(--orizon-color-text-secondary, #64748b);
+            line-height: 1.6;
+        }
+
+        .student-editor__save {
+            flex: 0 0 auto;
+            min-width: 174px;
+        }
+
+        .student-editor__validation:empty {
+            display: none;
+        }
+
+        .student-editor__layout {
+            display: grid;
+            grid-template-columns: 270px minmax(0, 1fr);
+            gap: 1.25rem;
+            align-items: start;
+        }
+
+        .student-profile,
+        .student-form-card {
+            border: 1px solid var(--orizon-color-border, #e2e8f0);
+            background: var(--orizon-color-surface, #fff);
+            box-shadow: var(--orizon-shadow-sm, 0 1px 3px rgb(15 23 42 / .07));
+        }
+
+        .student-profile {
+            position: sticky;
+            top: 1.25rem;
+            overflow: hidden;
+            border-radius: var(--orizon-radius-xl, 18px);
+        }
+
+        .student-profile__accent {
+            height: 5px;
+            background: linear-gradient(90deg, var(--orizon-brand-primary, #2563eb), #14b8a6);
+        }
+
+        .student-profile__body {
+            padding: 1.4rem;
+            text-align: center;
+        }
+
+        .student-profile__avatar {
+            position: relative;
+            display: grid;
+            width: 104px;
+            height: 104px;
+            margin: 0 auto 1rem;
+            place-items: center;
+            overflow: hidden;
+            border: 4px solid var(--orizon-color-surface, #fff);
+            border-radius: 50%;
+            background: var(--orizon-brand-primary-soft, #dbeafe);
+            box-shadow: 0 0 0 1px var(--orizon-color-border, #e2e8f0);
+            color: var(--orizon-brand-primary, #2563eb);
+            font-size: 1.75rem;
+            font-weight: 800;
+        }
+
+        .student-profile__avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .student-profile__avatar img[hidden],
+        .student-profile__initials[hidden] {
+            display: none;
+        }
+
+        .student-profile__name {
+            display: block;
+            overflow: hidden;
+            margin-bottom: .25rem;
+            color: var(--orizon-color-text-primary, #0f172a);
+            font-size: 1rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .student-profile__meta {
+            margin: 0 0 1rem;
+            color: var(--orizon-color-text-muted, #94a3b8);
+            font-size: .8rem;
+        }
+
+        .student-profile__upload {
+            display: block;
+            padding: .7rem .9rem;
+            border: 1px dashed var(--orizon-color-border-strong, #cbd5e1);
+            border-radius: var(--orizon-radius-md, 10px);
+            color: var(--orizon-color-text-secondary, #64748b);
+            cursor: pointer;
+            font-size: .82rem;
+            font-weight: 700;
+            transition: border-color .2s ease, background .2s ease, color .2s ease;
+        }
+
+        .student-profile__upload:hover {
+            border-color: var(--orizon-brand-primary, #2563eb);
+            background: var(--orizon-brand-primary-soft, #eff6ff);
+            color: var(--orizon-brand-primary, #2563eb);
+        }
+
+        .student-profile__upload input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+        }
+
+        .student-profile__hint {
+            display: block;
+            margin-top: .55rem;
+            color: var(--orizon-color-text-muted, #94a3b8);
+            font-size: .7rem;
+            line-height: 1.45;
+        }
+
+        .student-profile__remove {
+            margin-top: .65rem;
+            border: 0;
+            background: transparent;
+            color: var(--orizon-color-danger, #dc2626);
+            cursor: pointer;
+            font-size: .76rem;
+            font-weight: 700;
+        }
+
+        .student-profile__remove[hidden] {
+            display: none;
+        }
+
+        .student-profile__note {
+            display: flex;
+            gap: .6rem;
+            margin: 0;
+            padding: 1rem 1.2rem;
+            border-top: 1px solid var(--orizon-color-border, #e2e8f0);
+            background: var(--orizon-color-surface-secondary, #f8fafc);
+            color: var(--orizon-color-text-secondary, #64748b);
+            font-size: .76rem;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        .student-form-card {
+            overflow: hidden;
+            border-radius: var(--orizon-radius-xl, 18px);
+        }
+
+        .student-form-section {
+            padding: 1.55rem 1.65rem;
+        }
+
+        .student-form-section + .student-form-section {
+            border-top: 1px solid var(--orizon-color-border, #e2e8f0);
+        }
+
+        .student-form-section__heading {
+            display: grid;
+            grid-template-columns: 34px minmax(0, 1fr);
+            gap: .8rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .student-form-section__icon {
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border-radius: 9px;
+            background: var(--orizon-brand-primary-soft, #eff6ff);
+            color: var(--orizon-brand-primary, #2563eb);
+        }
+
+        .student-form-section h2 {
+            margin: 0;
+            color: var(--orizon-color-text-primary, #0f172a);
+            font-size: 1rem;
+            letter-spacing: -.01em;
+        }
+
+        .student-form-section__heading p {
+            margin: .2rem 0 0;
+            color: var(--orizon-color-text-secondary, #64748b);
+            font-size: .8rem;
+        }
+
+        .student-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem 1.1rem;
+        }
+
+        .student-form-grid .span-2 {
+            grid-column: 1 / -1;
+        }
+
+        .student-form-card .orizon-field {
+            min-width: 0;
+        }
+
+        .student-form-card .orizon-field__label {
+            margin-bottom: .4rem;
+            font-size: .78rem;
+            font-weight: 700;
+        }
+
+        .student-form-card .orizon-input,
+        .student-form-card .orizon-select,
+        .student-form-card .orizon-textarea {
+            width: 100%;
+        }
+
+        .student-form-card .orizon-textarea {
+            min-height: 112px;
+            resize: vertical;
+        }
+
+        .student-form-card__actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: .75rem;
+            padding: 1rem 1.65rem;
+            border-top: 1px solid var(--orizon-color-border, #e2e8f0);
+            background: var(--orizon-color-surface-secondary, #f8fafc);
+        }
+
+        @@media (max-width: 900px) {
+            .student-editor__layout {
+                grid-template-columns: 1fr;
+            }
+
+            .student-profile {
+                position: static;
+            }
+
+            .student-profile__body {
+                display: grid;
+                grid-template-columns: auto minmax(0, 1fr);
+                gap: 0 1rem;
+                text-align: left;
+            }
+
+            .student-profile__avatar {
+                grid-row: 1 / 5;
+                width: 82px;
+                height: 82px;
+                margin: 0;
+            }
+
+            .student-profile__upload,
+            .student-profile__hint,
+            .student-profile__remove {
+                grid-column: 2;
+            }
+        }
+
+        @@media (max-width: 640px) {
+            .student-editor__header {
+                display: block;
+            }
+
+            .student-editor__save {
+                display: none;
+            }
+
+            .student-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .student-form-grid .span-2 {
+                grid-column: auto;
+            }
+
+            .student-form-section {
+                padding: 1.25rem;
+            }
+
+            .student-form-card__actions {
+                position: sticky;
+                bottom: 0;
+                z-index: 2;
+                padding: .9rem 1.25rem;
+            }
+
+            .student-form-card__actions .orizon-button {
+                flex: 1;
+            }
+        }
+    </style>
+}
+
+<section class="student-editor">
+    <header class="student-editor__header">
         <div>
-            <nav class="admin-form-breadcrumb"><a asp-action="Index">Acolhidos</a><span>/</span><span>Novo cadastro</span></nav>
-            <span class="rn-eyebrow">Acolhidos</span>
-            <h1>Novo Acolhido</h1>
-            <p>Organize os dados pessoais, contato e informações de acolhimento em uma tela clara e segura.</p>
+            <a class="student-editor__back" asp-action="Index">
+                <orizon-icon name="arrow-left" size="16" />
+                Voltar para acolhidos
+            </a>
+            <span class="student-editor__eyebrow">CRM · Acolhimento</span>
+            <h1>@ViewData["Title"]</h1>
+            <p>Registre apenas as informações essenciais. Os dados poderão ser complementados posteriormente no perfil do acolhido.</p>
         </div>
-        <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Index">Voltar</a>
+
+        <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md student-editor__save"
+                type="submit"
+                form="student-form">
+            <orizon-icon name="save" size="17" />
+            @(Model.Id.HasValue ? "Salvar alterações" : "Cadastrar acolhido")
+        </button>
     </header>
-    <form asp-action="Create" method="post" enctype="multipart/form-data">
+
+    <form id="student-form"
+          asp-action="Create"
+          method="post"
+          enctype="multipart/form-data">
         @await Html.PartialAsync("_Form", Model)
     </form>
 </section>
 
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (() => {
+            const root = document.querySelector("[data-student-photo]");
+            if (!root) return;
+
+            const input = root.querySelector("[data-photo-input]");
+            const image = root.querySelector("[data-photo-preview]");
+            const initials = root.querySelector("[data-photo-initials]");
+            const removeButton = root.querySelector("[data-photo-remove]");
+            const removeInput = root.querySelector("[data-photo-remove-input]");
+            let objectUrl = null;
+
+            const clearPreview = () => {
+                if (objectUrl) URL.revokeObjectURL(objectUrl);
+                objectUrl = null;
+                image.removeAttribute("src");
+                image.hidden = true;
+                initials.hidden = false;
+                removeButton.hidden = true;
+            };
+
+            input?.addEventListener("change", () => {
+                const file = input.files?.[0];
+                if (!file) return;
+
+                if (objectUrl) URL.revokeObjectURL(objectUrl);
+                objectUrl = URL.createObjectURL(file);
+                image.src = objectUrl;
+                image.hidden = false;
+                initials.hidden = true;
+                removeButton.hidden = false;
+                removeInput.value = "false";
+            });
+
+            removeButton?.addEventListener("click", () => {
+                input.value = "";
+                removeInput.value = "true";
+                clearPreview();
+            });
+        })();
+    </script>
+}

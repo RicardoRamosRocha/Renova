@@ -6,125 +6,603 @@
 @{
     ViewData["Title"] = "Acolhidos";
     var statuses = Model.Statuses;
+    var hasFilters = !string.IsNullOrWhiteSpace(Model.Search)
+        || Model.Status.HasValue
+        || Model.AdmissionFrom.HasValue
+        || Model.AdmissionTo.HasValue;
 }
 
-<section class="orizon-grid orizon-gap-6">
-    <div class="orizon-card orizon-card--gradient orizon-card--padding-lg orizon-flex orizon-items-center orizon-justify-between orizon-gap-4">
-        <div>
+@section Styles {
+    <style>
+        .renova-workspace {
+            display: grid;
+            gap: var(--orizon-spacing-6, 1.5rem);
+        }
+
+        .renova-page-hero {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            overflow: hidden;
+            padding: clamp(1.35rem, 2.5vw, 2rem);
+            border: 1px solid var(--orizon-color-border);
+            border-radius: var(--orizon-radius-xl, 1rem);
+            background:
+                radial-gradient(circle at 90% 15%, color-mix(in srgb, var(--orizon-brand-primary) 18%, transparent), transparent 34%),
+                linear-gradient(135deg, var(--orizon-color-surface-elevated), var(--orizon-color-surface));
+            box-shadow: var(--orizon-elevation-2);
+        }
+
+        .renova-page-hero::after {
+            position: absolute;
+            right: -3rem;
+            bottom: -5rem;
+            width: 14rem;
+            height: 14rem;
+            border: 1px solid color-mix(in srgb, var(--orizon-brand-primary) 22%, transparent);
+            border-radius: 50%;
+            content: "";
+            pointer-events: none;
+        }
+
+        .renova-page-hero__content,
+        .renova-page-hero__actions {
+            position: relative;
+            z-index: 1;
+        }
+
+        .renova-page-hero h1 {
+            margin: .65rem 0 .35rem;
+            color: var(--orizon-color-text-primary);
+            font-size: clamp(1.65rem, 3vw, 2.25rem);
+            line-height: 1.1;
+        }
+
+        .renova-page-hero p {
+            max-width: 44rem;
+            margin: 0;
+            color: var(--orizon-color-text-secondary);
+        }
+
+        .renova-primary-action {
+            display: inline-flex;
+            align-items: center;
+            gap: .65rem;
+            min-height: 2.85rem;
+            white-space: nowrap;
+            box-shadow: 0 .65rem 1.5rem color-mix(in srgb, var(--orizon-brand-primary) 24%, transparent);
+        }
+
+        .renova-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .renova-metric {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 0;
+            padding: 1.1rem;
+            border: 1px solid var(--orizon-color-border);
+            border-radius: var(--orizon-radius-lg, .875rem);
+            background: var(--orizon-color-surface);
+            box-shadow: var(--orizon-elevation-1);
+            transition: transform var(--orizon-motion-duration-fast, 120ms) ease,
+                        box-shadow var(--orizon-motion-duration-fast, 120ms) ease;
+        }
+
+        .renova-metric:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--orizon-elevation-2);
+        }
+
+        .renova-metric__icon {
+            display: grid;
+            flex: 0 0 2.75rem;
+            width: 2.75rem;
+            height: 2.75rem;
+            place-items: center;
+            border-radius: .8rem;
+            color: var(--metric-color);
+            background: color-mix(in srgb, var(--metric-color) 13%, transparent);
+        }
+
+        .renova-metric__content {
+            display: grid;
+            min-width: 0;
+        }
+
+        .renova-metric__content span,
+        .renova-metric__content small {
+            overflow: hidden;
+            color: var(--orizon-color-text-secondary);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .renova-metric__content strong {
+            color: var(--orizon-color-text-primary);
+            font-size: 1.55rem;
+            line-height: 1.15;
+        }
+
+        .renova-metric--primary { --metric-color: var(--orizon-brand-primary); }
+        .renova-metric--success { --metric-color: var(--orizon-color-success, #16a34a); }
+        .renova-metric--info { --metric-color: var(--orizon-color-info, #0284c7); }
+        .renova-metric--warning { --metric-color: var(--orizon-color-warning, #d97706); }
+
+        .renova-list-card {
+            overflow: hidden;
+            border: 1px solid var(--orizon-color-border);
+            border-radius: var(--orizon-radius-xl, 1rem);
+            background: var(--orizon-color-surface);
+            box-shadow: var(--orizon-elevation-1);
+        }
+
+        .renova-list-card__header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1.25rem;
+            padding: 1.35rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--orizon-color-border);
+        }
+
+        .renova-list-card__header h2 {
+            margin: 0 0 .25rem;
+            color: var(--orizon-color-text-primary);
+            font-size: 1.15rem;
+        }
+
+        .renova-list-card__header p {
+            margin: 0;
+            color: var(--orizon-color-text-secondary);
+            font-size: .9rem;
+        }
+
+        .renova-result-count {
+            flex: none;
+            color: var(--orizon-color-text-secondary);
+        }
+
+        .renova-filter-panel {
+            padding: 1rem 1.5rem 1.25rem;
+            background: var(--orizon-color-surface-secondary);
+            border-bottom: 1px solid var(--orizon-color-border);
+        }
+
+        .renova-filters {
+            display: grid;
+            grid-template-columns: minmax(16rem, 2fr) minmax(10rem, 1fr) repeat(2, minmax(9.5rem, .8fr)) auto;
+            align-items: end;
+            gap: .75rem;
+        }
+
+        .renova-field {
+            display: grid;
+            gap: .4rem;
+            min-width: 0;
+        }
+
+        .renova-field label {
+            color: var(--orizon-color-text-secondary);
+            font-size: .75rem;
+            font-weight: 700;
+            letter-spacing: .035em;
+            text-transform: uppercase;
+        }
+
+        .renova-search {
+            position: relative;
+        }
+
+        .renova-search > orizon-icon {
+            position: absolute;
+            top: 50%;
+            left: .85rem;
+            z-index: 1;
+            color: var(--orizon-color-text-muted);
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .renova-search .orizon-input {
+            width: 100%;
+            padding-left: 2.65rem;
+        }
+
+        .renova-filter-actions {
+            display: flex;
+            gap: .5rem;
+        }
+
+        .renova-table-wrap {
+            overflow-x: auto;
+        }
+
+        .renova-table {
+            min-width: 760px;
+            margin: 0;
+        }
+
+        .renova-table thead th {
+            padding: .8rem 1rem;
+            color: var(--orizon-color-text-secondary);
+            background: var(--orizon-color-surface-secondary);
+            font-size: .72rem;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+
+        .renova-table tbody td {
+            padding: .9rem 1rem;
+            vertical-align: middle;
+        }
+
+        .renova-person {
+            display: inline-flex;
+            align-items: center;
+            gap: .75rem;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .renova-person__text {
+            display: grid;
+            gap: .1rem;
+        }
+
+        .renova-person__text strong {
+            color: var(--orizon-color-text-primary);
+        }
+
+        .renova-person__text small,
+        .renova-cell-muted,
+        .renova-cell-stack small {
+            color: var(--orizon-color-text-secondary);
+        }
+
+        .renova-cell-stack {
+            display: grid;
+            gap: .15rem;
+        }
+
+        .renova-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: .25rem;
+        }
+
+        .renova-icon-action {
+            display: inline-grid;
+            width: 2.2rem;
+            height: 2.2rem;
+            padding: 0;
+            place-items: center;
+            border-radius: .65rem;
+        }
+
+        .renova-empty-state {
+            display: grid;
+            justify-items: center;
+            gap: .7rem;
+            padding: 4rem 1.5rem;
+            text-align: center;
+        }
+
+        .renova-empty-state__icon {
+            display: grid;
+            width: 4.25rem;
+            height: 4.25rem;
+            place-items: center;
+            border-radius: 1.25rem;
+            color: var(--orizon-brand-primary);
+            background: color-mix(in srgb, var(--orizon-brand-primary) 12%, transparent);
+        }
+
+        .renova-empty-state strong {
+            color: var(--orizon-color-text-primary);
+            font-size: 1.1rem;
+        }
+
+        .renova-empty-state p {
+            max-width: 30rem;
+            margin: 0 0 .35rem;
+            color: var(--orizon-color-text-secondary);
+        }
+
+        .renova-delete-modal {
+            position: fixed;
+            inset: 0;
+            z-index: var(--orizon-z-modal, 1050);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background: rgb(2 6 23 / 68%);
+            backdrop-filter: blur(4px);
+        }
+
+        .renova-delete-modal:target {
+            display: flex;
+        }
+
+        .renova-delete-dialog {
+            width: min(100%, 28rem);
+            padding: 1.5rem;
+            border: 1px solid var(--orizon-color-border);
+            border-radius: var(--orizon-radius-xl, 1rem);
+            background: var(--orizon-color-surface-elevated);
+            box-shadow: var(--orizon-elevation-5);
+        }
+
+        .renova-delete-dialog h2 {
+            margin: 0 0 .5rem;
+            color: var(--orizon-color-text-primary);
+        }
+
+        .renova-delete-dialog p {
+            margin: 0;
+            color: var(--orizon-color-text-secondary);
+        }
+
+        .renova-delete-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: .65rem;
+            margin-top: 1.35rem;
+        }
+
+        @@media (max-width: 1100px) {
+            .renova-metrics {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .renova-filters {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .renova-field--search {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @@media (max-width: 680px) {
+            .renova-page-hero,
+            .renova-list-card__header {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .renova-primary-action {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .renova-metrics,
+            .renova-filters {
+                grid-template-columns: 1fr;
+            }
+
+            .renova-field--search {
+                grid-column: auto;
+            }
+
+            .renova-filter-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .renova-list-card__header,
+            .renova-filter-panel {
+                padding-right: 1rem;
+                padding-left: 1rem;
+            }
+
+            .renova-person {
+                display: inline-flex;
+                align-items: center;
+                gap: .75rem;
+                min-width: 0;
+            }
+
+            .renova-person img {
+                display: block;
+                width: 44px !important;
+                min-width: 44px !important;
+                max-width: 44px !important;
+                height: 44px !important;
+                min-height: 44px !important;
+                max-height: 44px !important;
+                object-fit: cover;
+                object-position: center;
+                border: 2px solid var(--orizon-color-border);
+                border-radius: 50%;
+                background: var(--orizon-color-surface-secondary);
+            }
+
+            .renova-person__text {
+                min-width: 0;
+            }
+
+            .renova-person__text strong {
+                display: block;
+                max-width: 14rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+    </style>
+}
+
+<section class="renova-workspace">
+    <header class="renova-page-hero">
+        <div class="renova-page-hero__content">
             <span class="orizon-badge orizon-badge--info orizon-badge--sm">CRM / Acolhidos</span>
-            <h1>Acolhidos</h1>
-            <p>Gerencie cadastros, admissões, vínculos familiares e acesso rápido ao perfil dos acolhidos.</p>
+            <h1>Gestão de acolhidos</h1>
+            <p>Cadastros, admissões, vínculos familiares e acompanhamento da jornada de cuidado em um único lugar.</p>
         </div>
 
-        <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create">
-            
-            Novo acolhido
-        </a>
-    </div>
-
-    @if (TempData["Success"] is string success)
-    {
-        <div class="orizon-alert orizon-alert--success">
-            
-            <span>@success</span>
+        <div class="renova-page-hero__actions">
+            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md renova-primary-action"
+               asp-action="Create">
+                <orizon-icon name="plus" size="18" />
+                Novo acolhimento
+            </a>
         </div>
-    }
+    </header>
 
-    <div class="orizon-dashboard-grid is-auto-fit is-responsive">
-        <article class="orizon-card orizon-card--elevated orizon-card--padding-md">
-            <div class="metric-icon">
-                
-            </div>
-            <span>Total</span>
-            <strong>@Model.Total</strong>
-            <small>Acolhidos cadastrados</small>
+    <div class="renova-metrics" aria-label="Indicadores dos acolhidos">
+        <article class="renova-metric renova-metric--primary">
+            <span class="renova-metric__icon"><orizon-icon name="users" size="22" /></span>
+            <span class="renova-metric__content">
+                <span>Total</span>
+                <strong>@Model.Total</strong>
+                <small>Acolhidos cadastrados</small>
+            </span>
         </article>
 
-        <article class="orizon-card orizon-card--elevated orizon-card--padding-md">
-            <div class="metric-icon">
-                
-            </div>
-            <span>Ativos</span>
-            <strong>@Model.Active</strong>
-            <small>Em operação</small>
+        <article class="renova-metric renova-metric--success">
+            <span class="renova-metric__icon"><orizon-icon name="check-circle" size="22" /></span>
+            <span class="renova-metric__content">
+                <span>Ativos</span>
+                <strong>@Model.Active</strong>
+                <small>Em acompanhamento</small>
+            </span>
         </article>
 
-        <article class="orizon-card orizon-card--elevated orizon-card--padding-md">
-            <div class="metric-icon">
-                
-            </div>
-            <span>Em tratamento</span>
-            <strong>@Model.InTreatment</strong>
-            <small>Planos ativos</small>
+        <article class="renova-metric renova-metric--info">
+            <span class="renova-metric__icon"><orizon-icon name="activity" size="22" /></span>
+            <span class="renova-metric__content">
+                <span>Em tratamento</span>
+                <strong>@Model.InTreatment</strong>
+                <small>Planos ativos</small>
+            </span>
         </article>
 
-        <article class="orizon-card orizon-card--elevated orizon-card--padding-md">
-            <div class="metric-icon">
-                
-            </div>
-            <span>Altas previstas</span>
-            <strong>@Model.DischargePlanned</strong>
-            <small>Planejadas no CRM</small>
+        <article class="renova-metric renova-metric--warning">
+            <span class="renova-metric__icon"><orizon-icon name="calendar" size="22" /></span>
+            <span class="renova-metric__content">
+                <span>Altas previstas</span>
+                <strong>@Model.DischargePlanned</strong>
+                <small>Planejadas no CRM</small>
+            </span>
         </article>
     </div>
 
-    <section class="orizon-card orizon-card--padding-none">
-        <div class="orizon-command-bar orizon-flex orizon-items-center orizon-justify-between orizon-gap-4">
+    <section class="renova-list-card" aria-labelledby="students-list-title">
+        <div class="renova-list-card__header">
             <div>
-                <span class="orizon-badge orizon-badge--info orizon-badge--sm">Lista</span>
-                <h2>Cadastros de acolhidos</h2>
-                <p>Visualize os acolhidos, status e ações principais.</p>
+                <h2 id="students-list-title">Cadastros de acolhidos</h2>
+                <p>Consulte perfis, situação atual e responsáveis pelo acompanhamento.</p>
             </div>
+            <span class="orizon-badge orizon-badge--neutral orizon-badge--md renova-result-count">
+                @Model.Students.Items.Count nesta página
+            </span>
+        </div>
 
-            <form class="orizon-form-grid orizon-items-end" method="get">
-                <div class="crm-search-box">
-                    
-                    <input class="orizon-input" name="search"
-                           value="@Model.Search"
-                           type="search"
-                           placeholder="Buscar por nome, CPF, telefone ou email" />
+        <div class="renova-filter-panel">
+            <form class="renova-filters" method="get">
+                <div class="renova-field renova-field--search">
+                    <label for="student-search">Buscar acolhido</label>
+                    <div class="renova-search">
+                        <orizon-icon name="search" size="18" />
+                        <input id="student-search"
+                               class="orizon-input"
+                               name="search"
+                               value="@Model.Search"
+                               type="search"
+                               placeholder="Nome, CPF, telefone ou e-mail" />
+                    </div>
                 </div>
 
-                <select class="orizon-select" name="status">
-                    <option value="">Todos os status</option>
-                    @foreach (var status in statuses)
+                <div class="renova-field">
+                    <label for="student-status">Situação</label>
+                    <select id="student-status" class="orizon-select" name="status">
+                        <option value="">Todos os status</option>
+                        @foreach (var status in statuses)
+                        {
+                            <option value="@status.Key" selected="@(Model.Status == status.Key)">
+                                @status.Value
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="renova-field">
+                    <label for="admission-from">Entrada a partir de</label>
+                    <input id="admission-from"
+                           class="orizon-input"
+                           name="admissionFrom"
+                           value="@Model.AdmissionFrom?.ToString("yyyy-MM-dd")"
+                           type="date" />
+                </div>
+
+                <div class="renova-field">
+                    <label for="admission-to">Entrada até</label>
+                    <input id="admission-to"
+                           class="orizon-input"
+                           name="admissionTo"
+                           value="@Model.AdmissionTo?.ToString("yyyy-MM-dd")"
+                           type="date" />
+                </div>
+
+                <div class="renova-filter-actions">
+                    @if (hasFilters)
                     {
-                        <option value="@status.Key" selected="@(Model.Status == status.Key)">
-                            @status.Value
-                        </option>
+                        <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--md"
+                           asp-action="Index"
+                           title="Limpar filtros">
+                            Limpar
+                        </a>
                     }
-                </select>
-
-                <input class="orizon-input" name="admissionFrom" value="@Model.AdmissionFrom?.ToString("yyyy-MM-dd")" type="date" />
-                <input class="orizon-input" name="admissionTo" value="@Model.AdmissionTo?.ToString("yyyy-MM-dd")" type="date" />
-
-                <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="submit" data-tooltip="Aplicar filtros">
-                    
-                    Filtrar
-                </button>
+                    <button class="orizon-button orizon-button--outline orizon-button--primary orizon-button--md"
+                            type="submit">
+                        <orizon-icon name="filter" size="17" />
+                        Filtrar
+                    </button>
+                </div>
             </form>
         </div>
 
         @if (Model.Students.Items.Count == 0)
         {
-            <div class="orizon-empty-state orizon-card orizon-card--padding-lg">
-                <div class="crm-empty-icon">
-                    
-                </div>
-
+            <div class="renova-empty-state">
+                <span class="renova-empty-state__icon">
+                    <orizon-icon name="users" size="30" />
+                </span>
                 <strong>Nenhum acolhido encontrado</strong>
-                <p>Cadastre o primeiro acolhido ou ajuste os filtros de busca.</p>
-
-                <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create">
-                    
-                    Criar primeiro cadastro
-                </a>
+                <p>
+                    @(hasFilters
+                        ? "Não encontramos registros com os filtros informados. Tente ampliar sua busca."
+                        : "Comece cadastrando o primeiro acolhido da instituição.")
+                </p>
+                @if (hasFilters)
+                {
+                    <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md"
+                       asp-action="Index">
+                        Limpar filtros
+                    </a>
+                }
+                else
+                {
+                    <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md"
+                       asp-action="Create">
+                        <orizon-icon name="plus" size="17" />
+                        Criar primeiro cadastro
+                    </a>
+                }
             </div>
         }
         else
         {
-            <div class="orizon-table-container">
-                <table class="orizon-table orizon-table--hoverable">
+            <div class="renova-table-wrap">
+                <table class="orizon-table orizon-table--hoverable renova-table">
                     <thead>
                         <tr>
                             <th>Acolhido</th>
@@ -135,76 +613,70 @@
                             <th class="text-end">Ações</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         @foreach (var student in Model.Students.Items)
                         {
                             var statusClass = student.Status == StudentStatuses.Inactive
-                                ? "danger"
+                                ? "orizon-badge--danger"
                                 : student.Status == StudentStatuses.InTreatment
-                                    ? "info"
+                                    ? "orizon-badge--info"
                                     : student.Status == StudentStatuses.DischargePlanned
-                                        ? "warn"
-                                        : "ok";
+                                        ? "orizon-badge--warning"
+                                        : "orizon-badge--success";
 
                             <tr>
                                 <td>
-                                    <a class="renova-person-cell" asp-action="Details" asp-route-id="@student.Id">
+                                    <a class="renova-person"
+                                       asp-action="Details"
+                                       asp-route-id="@student.Id">
                                         @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
                                         {
                                             Name = student.Name,
                                             PhotoUrl = student.PhotoUrl
                                         })
-
-                                        <span>
-                                            <strong class="renova-row-title">@student.Name</strong>
-                                            <small class="renova-row-subtitle">@StudentStatuses.Label(student.Status)</small>
+                                        <span class="renova-person__text">
+                                            <strong>@student.Name</strong>
+                                            <small>@StudentStatuses.Label(student.Status)</small>
                                         </span>
                                     </a>
                                 </td>
-
+                                <td><span class="renova-cell-muted">@student.Cpf</span></td>
+                                <td><span class="renova-cell-muted">@student.Phone</span></td>
                                 <td>
-                                    <span class="renova-muted">@student.Cpf</span>
+                                    <span class="renova-cell-stack">
+                                        <span class="renova-cell-muted">@student.AdmissionDate.ToString("dd/MM/yyyy")</span>
+                                        @if (!string.IsNullOrWhiteSpace(student.ResponsibleProfessional))
+                                        {
+                                            <small>Resp. @student.ResponsibleProfessional</small>
+                                        }
+                                    </span>
                                 </td>
-
-                                <td>
-                                    <span class="renova-muted">@student.Phone</span>
-                                </td>
-
-                                <td>
-                                    <span class="renova-muted">@student.AdmissionDate.ToString("dd/MM/yyyy")</span>
-                                    @if (!string.IsNullOrWhiteSpace(student.ResponsibleProfessional))
-                                    {
-                                        <small class="renova-row-subtitle">Resp. @student.ResponsibleProfessional</small>
-                                    }
-                                </td>
-
                                 <td>
                                     <span class="orizon-badge orizon-badge--md @statusClass">
                                         @StudentStatuses.Label(student.Status)
                                     </span>
                                 </td>
-
                                 <td>
-                                    <div class="orizon-flex orizon-gap-2">
-                                        <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm"
-                                           data-tooltip="Detalhes"
+                                    <div class="renova-actions">
+                                        <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm renova-icon-action"
                                            asp-action="Details"
-                                           asp-route-id="@student.Id">
-                                            
+                                           asp-route-id="@student.Id"
+                                           aria-label="Ver detalhes de @student.Name"
+                                           title="Detalhes">
+                                            <orizon-icon name="eye" size="17" />
                                         </a>
-
-                                        <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm"
-                                           data-tooltip="Editar"
+                                        <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm renova-icon-action"
                                            asp-action="Edit"
-                                           asp-route-id="@student.Id">
-                                            
+                                           asp-route-id="@student.Id"
+                                           aria-label="Editar @student.Name"
+                                           title="Editar">
+                                            <orizon-icon name="edit" size="17" />
                                         </a>
-
-                                        <a class="orizon-button orizon-button--ghost orizon-button--danger orizon-button--sm"
-                                           data-tooltip="Arquivar"
-                                           href="#delete-student-@student.Id">
-                                            
+                                        <a class="orizon-button orizon-button--ghost orizon-button--danger orizon-button--sm renova-icon-action"
+                                           href="#delete-student-@student.Id"
+                                           aria-label="Arquivar @student.Name"
+                                           title="Arquivar">
+                                            <orizon-icon name="archive" size="17" />
                                         </a>
                                     </div>
                                 </td>
@@ -218,16 +690,25 @@
 
             @foreach (var student in Model.Students.Items)
             {
-                <div id="delete-student-@student.Id" class="admin-delete-modal" role="dialog" aria-modal="true">
-                    <div class="admin-delete-dialog">
-                        <h2>Arquivar acolhido</h2>
-                        <p>Deseja realmente arquivar este registro? Se houver vínculos, o acolhido será inativado com segurança.</p>
-
-                        <div class="admin-delete-actions">
-                            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" href="#">Cancelar</a>
-
+                <div id="delete-student-@student.Id"
+                     class="renova-delete-modal"
+                     role="dialog"
+                     aria-modal="true"
+                     aria-labelledby="delete-title-@student.Id">
+                    <div class="renova-delete-dialog">
+                        <h2 id="delete-title-@student.Id">Arquivar acolhido</h2>
+                        <p>
+                            Deseja realmente arquivar <strong>@student.Name</strong>?
+                            Se houver vínculos, o cadastro será inativado com segurança.
+                        </p>
+                        <div class="renova-delete-actions">
+                            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md"
+                               href="#">
+                                Cancelar
+                            </a>
                             <form asp-action="Delete" asp-route-id="@student.Id" method="post">
-                                <button class="orizon-button orizon-button--solid orizon-button--danger orizon-button--md" type="submit">
+                                <button class="orizon-button orizon-button--solid orizon-button--danger orizon-button--md"
+                                        type="submit">
                                     Arquivar
                                 </button>
                             </form>
@@ -238,4 +719,3 @@
         }
     </section>
 </section>
-

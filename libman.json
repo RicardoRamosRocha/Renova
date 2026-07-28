@@ -1,0 +1,18 @@
+{
+  "version": "3.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "jquery-validation-unobtrusive@4.0.0",
+      "destination": "./src/Renova.Web/wwwroot/lib/jquery-validation-unobtrusive"
+    },
+    {
+      "library": "jquery-validate@1.21.0",
+      "destination": "./src/Renova.Web/wwwroot/lib/jquery-validation"
+    },
+    {
+      "library": "jquery@3.7.1",
+      "destination": "./src/Renova.Web/wwwroot/lib/jquery"
+    }
+  ]
+}
