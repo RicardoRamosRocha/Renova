@@ -1,154 +1,228 @@
 @using Renova.Web.Areas.CRM.ViewModels.Students
-@using Renova.Web.ViewModels
 @model StudentFormViewModel
 
 @{
     var isEdit = Model.Id.HasValue;
-    var statusText = StudentStatuses.Label(Model.Status);
+    var displayName = string.IsNullOrWhiteSpace(Model.FullName) ? "Novo acolhido" : Model.FullName;
+    var nameParts = displayName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+    var initials = nameParts.Length switch
+    {
+        0 => "NA",
+        1 => nameParts[0][..1].ToUpperInvariant(),
+        _ => string.Concat(nameParts[0][..1], nameParts[^1][..1]).ToUpperInvariant()
+    };
 }
 
 <input type="hidden" asp-for="Id" />
 <input type="hidden" asp-for="PhotoPath" />
 
-<div asp-validation-summary="ModelOnly" class="orizon-alert orizon-alert--danger"></div>
+<div asp-validation-summary="ModelOnly"
+     class="orizon-alert orizon-alert--danger student-editor__validation"
+     role="alert"></div>
 
-@await Html.PartialAsync("~/Views/Shared/_ProfileHeader.cshtml", new ProfileHeaderViewModel
-{
-    Name = Model.FullName,
-    Subtitle = "Acolhido",
-    Status = statusText,
-    SupportingText = Model.AdmissionDate == default ? "Cadastro em andamento" : $"Entrada em {Model.AdmissionDate:dd/MM/yyyy}",
-    PhotoUrl = Model.PhotoPath
-})
+<div class="student-editor__layout">
+    <aside class="student-profile" data-student-photo>
+        <div class="student-profile__accent"></div>
 
-<div class="admin-form-card">
-    <section class="admin-form-section">
-        <div class="admin-form-section-title">
-            <div>
-                <span class="rn-eyebrow">Dados pessoais</span>
-                <h2>Identificação do acolhido</h2>
-                <p>Dados usados para cadastro, acompanhamento e prontuário.</p>
-            </div>
+        <div class="student-profile__body">
+            <span class="student-profile__avatar">
+                <img src="@Model.PhotoPath"
+                     alt="Foto de @displayName"
+                     data-photo-preview
+                     hidden="@(string.IsNullOrWhiteSpace(Model.PhotoPath))" />
+                <span data-photo-initials
+                      hidden="@(!string.IsNullOrWhiteSpace(Model.PhotoPath))"
+                      class="student-profile__initials">@initials</span>
+            </span>
+
+            <strong class="student-profile__name">@displayName</strong>
+            <p class="student-profile__meta">Perfil do acolhido</p>
+
+            <label class="student-profile__upload">
+                <input asp-for="Photo"
+                       accept="image/jpeg,image/png,image/webp"
+                       data-photo-input />
+                <span>Escolher foto</span>
+            </label>
+            <span asp-validation-for="Photo" class="orizon-field__error"></span>
+            <small class="student-profile__hint">JPG, PNG ou WebP. Use uma imagem clara e frontal.</small>
+
+            <input asp-for="RemovePhoto" type="hidden" data-photo-remove-input />
+            <button type="button"
+                    class="student-profile__remove"
+                    data-photo-remove
+                    hidden="@(!isEdit || string.IsNullOrWhiteSpace(Model.PhotoPath))">
+                Remover foto
+            </button>
         </div>
 
-        <div class="orizon-form-grid">
-            <div class="orizon-field">
-                <label class="orizon-field__label required" asp-for="FullName">Nome completo</label>
-                <input class="orizon-input" asp-for="FullName" autocomplete="name" placeholder="Digite o nome completo" />
-                <span class="orizon-field__error" asp-validation-for="FullName"></span>
+        <p class="student-profile__note">
+            <orizon-icon name="shield" size="16" />
+            Os dados pessoais devem ser acessados somente pela equipe autorizada.
+        </p>
+    </aside>
+
+    <div class="student-form-card">
+        <section class="student-form-section">
+            <header class="student-form-section__heading">
+                <span class="student-form-section__icon">
+                    <orizon-icon name="user" size="17" />
+                </span>
+                <div>
+                    <h2>Identificação</h2>
+                    <p>Dados básicos e documentos do acolhido.</p>
+                </div>
+            </header>
+
+            <div class="student-form-grid">
+                <div class="orizon-field span-2">
+                    <label class="orizon-field__label required" asp-for="FullName">Nome completo</label>
+                    <input class="orizon-input"
+                           asp-for="FullName"
+                           autocomplete="name"
+                           placeholder="Digite o nome completo" />
+                    <span class="orizon-field__error" asp-validation-for="FullName"></span>
+                </div>
+
+                <div class="orizon-field">
+                    <label class="orizon-field__label required" asp-for="CPF">CPF</label>
+                    <input class="orizon-input"
+                           asp-for="CPF"
+                           inputmode="numeric"
+                           placeholder="000.000.000-00" />
+                    <span class="orizon-field__error" asp-validation-for="CPF"></span>
+                </div>
+
+                <div class="orizon-field">
+                    <label class="orizon-field__label" asp-for="RG">RG</label>
+                    <input class="orizon-input" asp-for="RG" placeholder="Digite o RG" />
+                    <span class="orizon-field__error" asp-validation-for="RG"></span>
+                </div>
+
+                <div class="orizon-field">
+                    <label class="orizon-field__label required" asp-for="BirthDate">Data de nascimento</label>
+                    <input class="orizon-input" asp-for="BirthDate" type="date" />
+                    <span class="orizon-field__error" asp-validation-for="BirthDate"></span>
+                </div>
+
+                <div class="orizon-field">
+                    <label class="orizon-field__label required" asp-for="Status">Status inicial</label>
+                    <select class="orizon-select" asp-for="Status">
+                        @foreach (var status in StudentStatuses.Labels)
+                        {
+                            <option value="@status.Key">@status.Value</option>
+                        }
+                    </select>
+                    <span class="orizon-field__error" asp-validation-for="Status"></span>
+                </div>
             </div>
+        </section>
 
-            <div class="orizon-field">
-                <label class="orizon-field__label required" asp-for="CPF">CPF</label>
-                <input class="orizon-input" asp-for="CPF" inputmode="numeric" placeholder="000.000.000-00" />
-                <span class="orizon-field__error" asp-validation-for="CPF"></span>
+        <section class="student-form-section">
+            <header class="student-form-section__heading">
+                <span class="student-form-section__icon">
+                    <orizon-icon name="phone" size="17" />
+                </span>
+                <div>
+                    <h2>Contato</h2>
+                    <p>Canais para comunicação com o acolhido ou responsável.</p>
+                </div>
+            </header>
+
+            <div class="student-form-grid">
+                <div class="orizon-field">
+                    <label class="orizon-field__label required" asp-for="Phone">Telefone</label>
+                    <input class="orizon-input"
+                           asp-for="Phone"
+                           inputmode="tel"
+                           autocomplete="tel"
+                           placeholder="(00) 00000-0000" />
+                    <span class="orizon-field__error" asp-validation-for="Phone"></span>
+                </div>
+
+                <div class="orizon-field">
+                    <label class="orizon-field__label" asp-for="WhatsApp">WhatsApp</label>
+                    <input class="orizon-input"
+                           asp-for="WhatsApp"
+                           inputmode="tel"
+                           placeholder="(00) 00000-0000" />
+                    <span class="orizon-field__error" asp-validation-for="WhatsApp"></span>
+                </div>
+
+                <div class="orizon-field span-2">
+                    <label class="orizon-field__label" asp-for="Email">E-mail</label>
+                    <input class="orizon-input"
+                           asp-for="Email"
+                           autocomplete="email"
+                           placeholder="email@exemplo.com" />
+                    <span class="orizon-field__error" asp-validation-for="Email"></span>
+                </div>
             </div>
+        </section>
 
-            <div class="orizon-field">
-                <label class="orizon-field__label" asp-for="RG">RG</label>
-                <input class="orizon-input" asp-for="RG" placeholder="Digite o RG" />
-                <span class="orizon-field__error" asp-validation-for="RG"></span>
+        <section class="student-form-section">
+            <header class="student-form-section__heading">
+                <span class="student-form-section__icon">
+                    <orizon-icon name="location" size="17" />
+                </span>
+                <div>
+                    <h2>Endereço</h2>
+                    <p>Localização informada no momento do cadastro.</p>
+                </div>
+            </header>
+
+            <div class="student-form-grid">
+                <div class="orizon-field span-2">
+                    <label class="orizon-field__label" asp-for="Address">Endereço completo</label>
+                    <input class="orizon-input"
+                           asp-for="Address"
+                           autocomplete="street-address"
+                           placeholder="Rua, número, bairro, cidade e UF" />
+                    <span class="orizon-field__error" asp-validation-for="Address"></span>
+                </div>
             </div>
+        </section>
 
-            <div class="orizon-field">
-                <label class="orizon-field__label required" asp-for="BirthDate">Data de nascimento</label>
-                <input class="orizon-input" asp-for="BirthDate" type="date" />
-                <span class="orizon-field__error" asp-validation-for="BirthDate"></span>
+        <section class="student-form-section">
+            <header class="student-form-section__heading">
+                <span class="student-form-section__icon">
+                    <orizon-icon name="calendar" size="17" />
+                </span>
+                <div>
+                    <h2>Acolhimento</h2>
+                    <p>Informações iniciais para o acompanhamento da equipe.</p>
+                </div>
+            </header>
+
+            <div class="student-form-grid">
+                <div class="orizon-field">
+                    <label class="orizon-field__label required" asp-for="AdmissionDate">Data de entrada</label>
+                    <input class="orizon-input" asp-for="AdmissionDate" type="date" />
+                    <span class="orizon-field__error" asp-validation-for="AdmissionDate"></span>
+                </div>
+
+                <div class="orizon-field span-2">
+                    <label class="orizon-field__label" asp-for="Notes">Observações iniciais</label>
+                    <textarea class="orizon-textarea"
+                              asp-for="Notes"
+                              maxlength="1000"
+                              placeholder="Registre somente informações relevantes para o início do acompanhamento"></textarea>
+                    <span class="orizon-field__error" asp-validation-for="Notes"></span>
+                </div>
             </div>
+        </section>
 
-            <div class="orizon-field">
-                <label class="orizon-field__label required" asp-for="Status">Status</label>
-                <select class="orizon-select" asp-for="Status">
-                    @foreach (var status in StudentStatuses.Labels)
-                    {
-                        <option value="@status.Key">@status.Value</option>
-                    }
-                </select>
-                <span class="orizon-field__error" asp-validation-for="Status"></span>
-            </div>
-        </div>
-    </section>
+        <footer class="student-form-card__actions">
+            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md"
+               asp-action="Index">
+                Cancelar
+            </a>
 
-    <section class="admin-form-section">
-        <div class="admin-form-section-title">
-            <div>
-                <span class="rn-eyebrow">Contato</span>
-                <h2>Canais de comunicação</h2>
-                <p>Informações usadas pela equipe para contato rápido.</p>
-            </div>
-        </div>
-
-        <div class="orizon-form-grid">
-            <div class="orizon-field">
-                <label class="orizon-field__label required" asp-for="Phone">Telefone</label>
-                <input class="orizon-input" asp-for="Phone" inputmode="tel" autocomplete="tel" placeholder="(00) 00000-0000" />
-                <span class="orizon-field__error" asp-validation-for="Phone"></span>
-            </div>
-
-            <div class="orizon-field">
-                <label class="orizon-field__label" asp-for="WhatsApp">WhatsApp</label>
-                <input class="orizon-input" asp-for="WhatsApp" inputmode="tel" placeholder="(00) 00000-0000" />
-                <span class="orizon-field__error" asp-validation-for="WhatsApp"></span>
-            </div>
-
-            <div class="orizon-field">
-                <label class="orizon-field__label" asp-for="Email">Email</label>
-                <input class="orizon-input" asp-for="Email" autocomplete="email" placeholder="email@exemplo.com" />
-                <span class="orizon-field__error" asp-validation-for="Email"></span>
-            </div>
-        </div>
-    </section>
-
-    <section class="admin-form-section">
-        <div class="admin-form-section-title">
-            <div>
-                <span class="rn-eyebrow">Endereço</span>
-                <h2>Localização</h2>
-                <p>Endereço completo para cadastro institucional.</p>
-            </div>
-        </div>
-
-        <div class="orizon-field">
-            <label class="orizon-field__label" asp-for="Address">Endereço completo</label>
-            <input class="orizon-input" asp-for="Address" autocomplete="street-address" placeholder="Rua, número, bairro, cidade e UF" />
-            <span class="orizon-field__error" asp-validation-for="Address"></span>
-        </div>
-    </section>
-
-    <section class="admin-form-section">
-        <div class="admin-form-section-title">
-            <div>
-                <span class="rn-eyebrow">Acolhimento</span>
-                <h2>Informações do acompanhamento</h2>
-                <p>Dados operacionais para início e histórico do tratamento.</p>
-            </div>
-        </div>
-
-        <div class="orizon-form-grid">
-            <div class="orizon-field">
-                <label class="orizon-field__label required" asp-for="AdmissionDate">Data de entrada</label>
-                <input class="orizon-input" asp-for="AdmissionDate" type="date" />
-                <span class="orizon-field__error" asp-validation-for="AdmissionDate"></span>
-            </div>
-        </div>
-
-        <div class="orizon-field mt-3">
-            <label class="orizon-field__label" asp-for="Notes">Observações</label>
-            <textarea class="orizon-textarea" asp-for="Notes" placeholder="Registre observações relevantes para a equipe"></textarea>
-            <span class="orizon-field__message">Campo visual para apoio à demonstração. Não altera o modelo de domínio atual.</span>
-            <span class="orizon-field__error" asp-validation-for="Notes"></span>
-        </div>
-    </section>
-
-    <div class="orizon-form-actions">
-        <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Index">
-            Cancelar
-        </a>
-
-        <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="submit">
-            
-            @(isEdit ? "Salvar alterações" : "Cadastrar acolhido")
-        </button>
+            <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md"
+                    type="submit">
+                <orizon-icon name="save" size="17" />
+                @(isEdit ? "Salvar alterações" : "Cadastrar acolhido")
+            </button>
+        </footer>
     </div>
 </div>
-
