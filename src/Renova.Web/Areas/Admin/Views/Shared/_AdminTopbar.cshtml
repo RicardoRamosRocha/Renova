@@ -1,7 +1,9 @@
 @{
-    var userName = User.Identity?.Name;
+    var userName = User.Identity?.Name ?? "Usuário Renova";
     var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var pageTitle = ViewData["Title"]?.ToString() ?? "Dashboard";
+
     var contextLabel = currentArea switch
     {
         "CRM" => "Relacionamento e acolhimento",
@@ -14,26 +16,119 @@
         "Admin" => "Administração",
         _ => "Gestão integrada"
     };
+
+    var initial = string.IsNullOrWhiteSpace(userName)
+        ? "U"
+        : userName[..1].ToUpperInvariant();
 }
 
-<header class="admin-topbar">
-    <div class="admin-topbar-title">
-        <span>Painel Renova</span>
-        <strong>@contextLabel</strong>
-    </div>
+<header class="orizon-admin-topbar">
+    <div class="orizon-topbar-content">
 
-    <div class="admin-topbar-actions">
-        <label class="admin-search">
-            <span class="sr-only">Buscar no painel</span>
-            <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
-            <input type="search" placeholder="Buscar..." />
-        </label>
+        <div class="orizon-topbar-left">
+            <button type="button"
+                    class="orizon-topbar-menu-button"
+                    data-sidebar-toggle
+                    aria-label="Abrir menu lateral"
+                    aria-expanded="false">
+                <orizon-icon name="menu" size="21" />
+            </button>
 
-        <div class="admin-user" aria-label="Usuário logado">
-            <span>@((userName ?? "Admin").Substring(0, 1).ToUpperInvariant())</span>
-            <div>
-                <strong>@(userName ?? "Usuário Renova")</strong>
-                <small>Online</small>
+            <div class="orizon-topbar-title-container">
+                <span class="orizon-topbar-eyebrow">
+                    @contextLabel
+                </span>
+
+                <strong class="orizon-topbar-title">
+                    @pageTitle
+                </strong>
+            </div>
+        </div>
+
+        <form class="orizon-topbar-search"
+              asp-area="CRM"
+              asp-controller="Students"
+              asp-action="Index"
+              method="get"
+              role="search">
+
+            <orizon-icon name="search" size="19" />
+
+            <label class="orizon-sr-only"
+                   for="orizon-global-search">
+                Buscar no Renova
+            </label>
+
+            <input id="orizon-global-search"
+                   name="search"
+                   type="search"
+                   autocomplete="off"
+                   placeholder="Buscar acolhidos, módulos e informações..." />
+
+            <kbd aria-hidden="true">Ctrl K</kbd>
+        </form>
+
+        <div class="orizon-topbar-actions">
+
+            <button type="button"
+                    class="orizon-topbar-action-button orizon-topbar-mobile-search"
+                    data-topbar-search-toggle
+                    aria-label="Abrir pesquisa"
+                    title="Pesquisar">
+                <orizon-icon name="search" size="19" />
+            </button>
+
+            <a class="orizon-topbar-action-button"
+               asp-area="Reports"
+               asp-controller="Reports"
+               asp-action="Index"
+               aria-label="Abrir central de relatórios"
+               title="Relatórios e notificações">
+                <orizon-icon name="bell" size="19" />
+
+                <span class="orizon-topbar-notification-dot"
+                      aria-hidden="true">
+                </span>
+            </a>
+
+            <button type="button"
+                    class="orizon-topbar-action-button"
+                    data-theme-toggle
+                    aria-label="Ativar modo escuro"
+                    title="Ativar modo escuro"
+                    aria-pressed="false">
+
+                <span data-theme-icon="dark" aria-hidden="true">
+                    <orizon-icon name="moon" size="19" />
+                </span>
+
+                <span data-theme-icon="light"
+                      aria-hidden="true"
+                      hidden>
+                    <orizon-icon name="sun" size="19" />
+                </span>
+            </button>
+
+            <span class="orizon-topbar-divider"
+                  aria-hidden="true">
+            </span>
+
+            <div class="orizon-topbar-profile-button"
+                 aria-label="Usuário conectado">
+
+                <span class="orizon-topbar-profile-avatar"
+                      aria-hidden="true">
+                    @initial
+                </span>
+
+                <span class="orizon-topbar-profile-content">
+                    <strong>@userName</strong>
+
+                    <small>
+                        <span aria-hidden="true"></span>
+                        Online
+                    </small>
+                </span>
             </div>
         </div>
     </div>

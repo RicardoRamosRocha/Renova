@@ -8,59 +8,59 @@
     var statuses = Model.Statuses;
 }
 
-<section class="crm-index-page">
-    <div class="crm-page-header">
+<section class="orizon-grid orizon-gap-6">
+    <div class="orizon-card orizon-card--gradient orizon-card--padding-lg orizon-flex orizon-items-center orizon-justify-between orizon-gap-4">
         <div>
-            <span class="crm-eyebrow">CRM / Acolhidos</span>
+            <span class="orizon-badge orizon-badge--info orizon-badge--sm">CRM / Acolhidos</span>
             <h1>Acolhidos</h1>
             <p>Gerencie cadastros, admissões, vínculos familiares e acesso rápido ao perfil dos acolhidos.</p>
         </div>
 
-        <a class="crm-primary-button" asp-action="Create">
-            <i class="ph ph-user-plus" aria-hidden="true"></i>
+        <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create">
+            
             Novo acolhido
         </a>
     </div>
 
     @if (TempData["Success"] is string success)
     {
-        <div class="crm-alert-success">
-            <i class="ph ph-check-circle" aria-hidden="true"></i>
+        <div class="orizon-alert orizon-alert--success">
+            
             <span>@success</span>
         </div>
     }
 
-    <div class="crm-metrics-grid">
-        <article class="crm-metric-card">
+    <div class="orizon-dashboard-grid is-auto-fit is-responsive">
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md">
             <div class="metric-icon">
-                <i class="ph ph-users" aria-hidden="true"></i>
+                
             </div>
             <span>Total</span>
             <strong>@Model.Total</strong>
             <small>Acolhidos cadastrados</small>
         </article>
 
-        <article class="crm-metric-card">
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md">
             <div class="metric-icon">
-                <i class="ph ph-check-circle" aria-hidden="true"></i>
+                
             </div>
             <span>Ativos</span>
             <strong>@Model.Active</strong>
             <small>Em operação</small>
         </article>
 
-        <article class="crm-metric-card">
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md">
             <div class="metric-icon">
-                <i class="ph ph-heartbeat" aria-hidden="true"></i>
+                
             </div>
             <span>Em tratamento</span>
             <strong>@Model.InTreatment</strong>
             <small>Planos ativos</small>
         </article>
 
-        <article class="crm-metric-card">
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md">
             <div class="metric-icon">
-                <i class="ph ph-calendar-check" aria-hidden="true"></i>
+                
             </div>
             <span>Altas previstas</span>
             <strong>@Model.DischargePlanned</strong>
@@ -68,24 +68,24 @@
         </article>
     </div>
 
-    <section class="renova-table-card">
-        <div class="rn-premium-toolbar">
+    <section class="orizon-card orizon-card--padding-none">
+        <div class="orizon-command-bar orizon-flex orizon-items-center orizon-justify-between orizon-gap-4">
             <div>
-                <span class="crm-eyebrow">Lista</span>
+                <span class="orizon-badge orizon-badge--info orizon-badge--sm">Lista</span>
                 <h2>Cadastros de acolhidos</h2>
                 <p>Visualize os acolhidos, status e ações principais.</p>
             </div>
 
-            <form class="crm-filter-form rn-premium-actions" method="get">
+            <form class="orizon-form-grid orizon-items-end" method="get">
                 <div class="crm-search-box">
-                    <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
-                    <input name="search"
+                    
+                    <input class="orizon-input" name="search"
                            value="@Model.Search"
                            type="search"
                            placeholder="Buscar por nome, CPF, telefone ou email" />
                 </div>
 
-                <select name="status">
+                <select class="orizon-select" name="status">
                     <option value="">Todos os status</option>
                     @foreach (var status in statuses)
                     {
@@ -95,11 +95,11 @@
                     }
                 </select>
 
-                <input class="admin-input" name="admissionFrom" value="@Model.AdmissionFrom?.ToString("yyyy-MM-dd")" type="date" />
-                <input class="admin-input" name="admissionTo" value="@Model.AdmissionTo?.ToString("yyyy-MM-dd")" type="date" />
+                <input class="orizon-input" name="admissionFrom" value="@Model.AdmissionFrom?.ToString("yyyy-MM-dd")" type="date" />
+                <input class="orizon-input" name="admissionTo" value="@Model.AdmissionTo?.ToString("yyyy-MM-dd")" type="date" />
 
-                <button class="crm-secondary-button" type="submit" data-tooltip="Aplicar filtros">
-                    <i class="ph ph-funnel" aria-hidden="true"></i>
+                <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="submit" data-tooltip="Aplicar filtros">
+                    
                     Filtrar
                 </button>
             </form>
@@ -107,24 +107,24 @@
 
         @if (Model.Students.Items.Count == 0)
         {
-            <div class="crm-empty-state">
+            <div class="orizon-empty-state orizon-card orizon-card--padding-lg">
                 <div class="crm-empty-icon">
-                    <i class="ph ph-users" aria-hidden="true"></i>
+                    
                 </div>
 
                 <strong>Nenhum acolhido encontrado</strong>
                 <p>Cadastre o primeiro acolhido ou ajuste os filtros de busca.</p>
 
-                <a class="crm-primary-button" asp-action="Create">
-                    <i class="ph ph-user-plus" aria-hidden="true"></i>
+                <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create">
+                    
                     Criar primeiro cadastro
                 </a>
             </div>
         }
         else
         {
-            <div class="renova-table-wrap">
-                <table class="renova-table">
+            <div class="orizon-table-container">
+                <table class="orizon-table orizon-table--hoverable">
                     <thead>
                         <tr>
                             <th>Acolhido</th>
@@ -180,31 +180,31 @@
                                 </td>
 
                                 <td>
-                                    <span class="renova-status-badge @statusClass">
+                                    <span class="orizon-badge orizon-badge--md @statusClass">
                                         @StudentStatuses.Label(student.Status)
                                     </span>
                                 </td>
 
                                 <td>
-                                    <div class="renova-action-buttons">
-                                        <a class="renova-action-btn"
+                                    <div class="orizon-flex orizon-gap-2">
+                                        <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm"
                                            data-tooltip="Detalhes"
                                            asp-action="Details"
                                            asp-route-id="@student.Id">
-                                            <i class="ph ph-eye" aria-hidden="true"></i>
+                                            
                                         </a>
 
-                                        <a class="renova-action-btn"
+                                        <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm"
                                            data-tooltip="Editar"
                                            asp-action="Edit"
                                            asp-route-id="@student.Id">
-                                            <i class="ph ph-pencil-simple" aria-hidden="true"></i>
+                                            
                                         </a>
 
-                                        <a class="renova-action-btn danger"
+                                        <a class="orizon-button orizon-button--ghost orizon-button--danger orizon-button--sm"
                                            data-tooltip="Arquivar"
                                            href="#delete-student-@student.Id">
-                                            <i class="ph ph-archive" aria-hidden="true"></i>
+                                            
                                         </a>
                                     </div>
                                 </td>
@@ -224,10 +224,10 @@
                         <p>Deseja realmente arquivar este registro? Se houver vínculos, o acolhido será inativado com segurança.</p>
 
                         <div class="admin-delete-actions">
-                            <a class="admin-button-secondary" href="#">Cancelar</a>
+                            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" href="#">Cancelar</a>
 
                             <form asp-action="Delete" asp-route-id="@student.Id" method="post">
-                                <button class="admin-action-button danger" type="submit">
+                                <button class="orizon-button orizon-button--solid orizon-button--danger orizon-button--md" type="submit">
                                     Arquivar
                                 </button>
                             </form>
@@ -238,3 +238,4 @@
         }
     </section>
 </section>
+

@@ -6,7 +6,7 @@
 <input type="hidden" asp-for="StudentId" />
 <input type="hidden" asp-for="StudentName" />
 
-<div asp-validation-summary="ModelOnly" class="admin-validation-summary"></div>
+<div asp-validation-summary="ModelOnly" class="orizon-alert orizon-alert--danger"></div>
 
 <div class="admin-form-card">
     <section class="admin-form-section">
@@ -18,72 +18,73 @@
             </div>
         </div>
 
-        <div class="admin-form-grid three">
-            <div class="admin-form-group">
-                <label class="admin-label required" asp-for="AdmissionDate">Data de entrada</label>
-                <input class="admin-input" asp-for="AdmissionDate" type="date" />
-                <span class="admin-validation" asp-validation-for="AdmissionDate"></span>
+        <div class="orizon-form-grid">
+            <div class="orizon-field">
+                <label class="orizon-field__label required" asp-for="AdmissionDate">Data de entrada</label>
+                <input class="orizon-input" asp-for="AdmissionDate" type="date" />
+                <span class="orizon-field__error" asp-validation-for="AdmissionDate"></span>
             </div>
-            <div class="admin-form-group">
-                <label class="admin-label" asp-for="ExpectedDischargeDate">Previsão de alta</label>
-                <input class="admin-input" asp-for="ExpectedDischargeDate" type="date" />
-                <span class="admin-validation" asp-validation-for="ExpectedDischargeDate"></span>
+            <div class="orizon-field">
+                <label class="orizon-field__label" asp-for="ExpectedDischargeDate">Previsão de alta</label>
+                <input class="orizon-input" asp-for="ExpectedDischargeDate" type="date" />
+                <span class="orizon-field__error" asp-validation-for="ExpectedDischargeDate"></span>
             </div>
-            <div class="admin-form-group">
-                <label class="admin-label required" asp-for="AdmissionStatus">Status</label>
-                <select class="admin-select" asp-for="AdmissionStatus" asp-items="Html.GetEnumSelectList<AdmissionStatus>()"></select>
-                <span class="admin-validation" asp-validation-for="AdmissionStatus"></span>
+            <div class="orizon-field">
+                <label class="orizon-field__label required" asp-for="AdmissionStatus">Status</label>
+                <select class="orizon-select" asp-for="AdmissionStatus" asp-items="Html.GetEnumSelectList<AdmissionStatus>()"></select>
+                <span class="orizon-field__error" asp-validation-for="AdmissionStatus"></span>
             </div>
-            <div class="admin-form-group">
-                <label class="admin-label" asp-for="ResponsibleProfessional">Profissional responsável</label>
-                <input class="admin-input" asp-for="ResponsibleProfessional" />
-                <span class="admin-validation" asp-validation-for="ResponsibleProfessional"></span>
+            <div class="orizon-field">
+                <label class="orizon-field__label" asp-for="ResponsibleProfessional">Profissional responsável</label>
+                <input class="orizon-input" asp-for="ResponsibleProfessional" />
+                <span class="orizon-field__error" asp-validation-for="ResponsibleProfessional"></span>
             </div>
-            <div class="admin-form-group">
-                <label class="admin-label" asp-for="Origin">Origem</label>
-                <input class="admin-input" asp-for="Origin" />
-                <span class="admin-validation" asp-validation-for="Origin"></span>
+            <div class="orizon-field">
+                <label class="orizon-field__label" asp-for="Origin">Origem</label>
+                <input class="orizon-input" asp-for="Origin" />
+                <span class="orizon-field__error" asp-validation-for="Origin"></span>
             </div>
-            <div class="admin-form-group">
-                <label class="admin-label" asp-for="ReferredBy">Encaminhado por</label>
-                <input class="admin-input" asp-for="ReferredBy" />
-                <span class="admin-validation" asp-validation-for="ReferredBy"></span>
+            <div class="orizon-field">
+                <label class="orizon-field__label" asp-for="ReferredBy">Encaminhado por</label>
+                <input class="orizon-input" asp-for="ReferredBy" />
+                <span class="orizon-field__error" asp-validation-for="ReferredBy"></span>
             </div>
         </div>
     </section>
 
     <section class="admin-form-section">
-        <div class="admin-form-grid two">
-            <div class="admin-form-group">
-                <label class="admin-label" asp-for="DischargeDate">Data de alta/saída</label>
-                <input class="admin-input" asp-for="DischargeDate" type="date" />
-                <span class="admin-validation" asp-validation-for="DischargeDate"></span>
+        <div class="orizon-form-grid two">
+            <div class="orizon-field">
+                <label class="orizon-field__label" asp-for="DischargeDate">Data de alta/saída</label>
+                <input class="orizon-input" asp-for="DischargeDate" type="date" />
+                <span class="orizon-field__error" asp-validation-for="DischargeDate"></span>
             </div>
-            <div class="admin-form-group">
-                <label class="admin-label" asp-for="DestinationAfterDischarge">Destino após alta</label>
-                <input class="admin-input" asp-for="DestinationAfterDischarge" />
-                <span class="admin-validation" asp-validation-for="DestinationAfterDischarge"></span>
+            <div class="orizon-field">
+                <label class="orizon-field__label" asp-for="DestinationAfterDischarge">Destino após alta</label>
+                <input class="orizon-input" asp-for="DestinationAfterDischarge" />
+                <span class="orizon-field__error" asp-validation-for="DestinationAfterDischarge"></span>
             </div>
         </div>
-        <div class="admin-form-group-full">
-            <label class="admin-label" asp-for="AdmissionReason">Motivo da admissão</label>
-            <textarea class="admin-textarea" asp-for="AdmissionReason"></textarea>
-            <span class="admin-validation" asp-validation-for="AdmissionReason"></span>
+        <div class="orizon-field">
+            <label class="orizon-field__label" asp-for="AdmissionReason">Motivo da admissão</label>
+            <textarea class="orizon-textarea" asp-for="AdmissionReason"></textarea>
+            <span class="orizon-field__error" asp-validation-for="AdmissionReason"></span>
         </div>
-        <div class="admin-form-group-full">
-            <label class="admin-label" asp-for="DischargeReason">Motivo da saída</label>
-            <textarea class="admin-textarea" asp-for="DischargeReason"></textarea>
-            <span class="admin-validation" asp-validation-for="DischargeReason"></span>
+        <div class="orizon-field">
+            <label class="orizon-field__label" asp-for="DischargeReason">Motivo da saída</label>
+            <textarea class="orizon-textarea" asp-for="DischargeReason"></textarea>
+            <span class="orizon-field__error" asp-validation-for="DischargeReason"></span>
         </div>
-        <div class="admin-form-group-full">
-            <label class="admin-label" asp-for="Notes">Observações</label>
-            <textarea class="admin-textarea" asp-for="Notes"></textarea>
-            <span class="admin-validation" asp-validation-for="Notes"></span>
+        <div class="orizon-field">
+            <label class="orizon-field__label" asp-for="Notes">Observações</label>
+            <textarea class="orizon-textarea" asp-for="Notes"></textarea>
+            <span class="orizon-field__error" asp-validation-for="Notes"></span>
         </div>
     </section>
 
-    <div class="admin-form-actions">
-        <a class="rn-btn-secondary" asp-controller="Students" asp-action="Details" asp-route-id="@Model.StudentId">Cancelar</a>
-        <button class="rn-btn-primary" type="submit"><i class="ph ph-check-circle" aria-hidden="true"></i>Salvar admissão</button>
+    <div class="orizon-form-actions">
+        <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-controller="Students" asp-action="Details" asp-route-id="@Model.StudentId">Cancelar</a>
+        <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="submit">Salvar admissão</button>
     </div>
 </div>
+

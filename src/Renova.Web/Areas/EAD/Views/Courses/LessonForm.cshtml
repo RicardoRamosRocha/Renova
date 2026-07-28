@@ -1,0 +1,41 @@
+@using Renova.Web.Areas.EAD.ViewModels.Courses
+@model LessonFormViewModel
+@{
+    ViewData["Title"] = Model.Id.HasValue ? "Editar Aula" : "Nova Aula";
+}
+
+<section class="admin-form-page">
+    <header class="admin-form-header">
+        <div>
+            <nav class="admin-form-breadcrumb"><a asp-action="Content" asp-route-id="@Model.CourseId">Conteudo</a><span>/</span><span>@ViewData["Title"]</span></nav>
+            <span class="rn-eyebrow">EAD</span>
+            <h1>@ViewData["Title"]</h1>
+            <p>Cadastre aula com conteudo textual seguro e referencia externa de video.</p>
+        </div>
+        <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Content" asp-route-id="@Model.CourseId">Voltar</a>
+    </header>
+
+    <form asp-action="@(Model.Id.HasValue ? "EditLesson" : "CreateLesson")" asp-route-id="@Model.Id" method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="CourseId" />
+        <input type="hidden" asp-for="ModuleId" />
+        <div class="admin-form-card">
+            <section class="admin-form-section">
+                <div class="admin-form-section-title"><div><span class="rn-eyebrow">Aula</span><h2>Conteudo principal</h2><p>Use URLs externas confiaveis; HTML livre nao e renderizado.</p></div></div>
+                <div class="orizon-form-grid">
+                    <div class="orizon-field"><label class="orizon-field__label required" asp-for="Title">Titulo</label><input class="orizon-input" asp-for="Title" /><span class="orizon-field__error" asp-validation-for="Title"></span></div>
+                    <div class="orizon-field"><label class="orizon-field__label required" asp-for="VideoProvider">Tipo/provedor</label><select class="orizon-select" asp-for="VideoProvider"><option>YouTube</option><option>Vimeo</option><option>Text</option><option>PDF</option><option>ExternalLink</option><option>Quiz</option><option>Assignment</option></select><span class="orizon-field__error" asp-validation-for="VideoProvider"></span></div>
+                    <div class="orizon-field"><label class="orizon-field__label" asp-for="VideoExternalId">Codigo ou URL externa</label><input class="orizon-input" asp-for="VideoExternalId" /><span class="orizon-field__error" asp-validation-for="VideoExternalId"></span></div>
+                    <div class="orizon-field"><label class="orizon-field__label" asp-for="DurationInMinutes">Duracao</label><input class="orizon-input" asp-for="DurationInMinutes" type="number" min="1" max="600" /><span class="orizon-field__error" asp-validation-for="DurationInMinutes"></span></div>
+                    <div class="orizon-field"><label class="orizon-field__label" asp-for="Order">Ordem</label><input class="orizon-input" asp-for="Order" type="number" min="1" /><span class="orizon-field__error" asp-validation-for="Order"></span></div>
+                    <div class="orizon-field"><label class="orizon-field__label required" asp-for="Description">Descricao/conteudo</label><textarea class="orizon-textarea" asp-for="Description"></textarea><span class="orizon-field__error" asp-validation-for="Description"></span></div>
+                </div>
+            </section>
+            <div class="orizon-form-actions">
+                <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Content" asp-route-id="@Model.CourseId">Cancelar</a>
+                <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="submit">Salvar aula</button>
+            </div>
+        </div>
+    </form>
+</section>
+

@@ -9,22 +9,22 @@
     @if (TempData["Success"] is string success)
     {
         <div class="crm-alert-success">
-            <i class="ph ph-check-circle" aria-hidden="true"></i>
+            
             <span>@success</span>
         </div>
     }
     @if (TempData["Error"] is string error)
     {
-        <div class="admin-validation-summary">@error</div>
+        <div class="orizon-alert orizon-alert--danger">@error</div>
     }
 
     @if (Model.StudentId == Guid.Empty)
     {
         <section class="crm-empty-state">
-            <div class="crm-empty-icon"><i class="ph ph-notebook" aria-hidden="true"></i></div>
+            <div class="crm-empty-icon"></div>
             <strong>Nenhum acolhido disponível</strong>
             <p>Cadastre um acolhido para abrir o prontuário eletrônico.</p>
-            <a class="rn-btn-primary" asp-area="CRM" asp-controller="Students" asp-action="Create">Novo acolhido</a>
+            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-area="CRM" asp-controller="Students" asp-action="Create">Novo acolhido</a>
         </section>
     }
     else
@@ -32,8 +32,8 @@
         <div class="medical-record-shell">
             <aside class="medical-record-sidebar">
                 <form method="get" class="medical-student-picker">
-                    <label class="admin-label" for="studentId">Acolhido</label>
-                    <select class="admin-select" id="studentId" name="studentId" onchange="this.form.submit()">
+                    <label class="orizon-field__label" for="studentId">Acolhido</label>
+                    <select class="orizon-select" id="studentId" name="studentId" onchange="this.form.submit()">
                         @foreach (var student in Model.Students)
                         {
                             <option value="@student.Id" selected="@(student.Id == Model.StudentId)">@student.Name · @student.Status</option>
@@ -42,14 +42,14 @@
                 </form>
 
                 <nav class="medical-side-menu" aria-label="Menu do prontuário">
-                    <a href="#resumo"><i class="ph ph-clipboard-text" aria-hidden="true"></i>Resumo</a>
-                    <a href="#avaliacao"><i class="ph ph-first-aid-kit" aria-hidden="true"></i>Avaliação inicial</a>
-                    <a href="#evolucoes"><i class="ph ph-pulse" aria-hidden="true"></i>Evoluções</a>
-                    <a href="#medicamentos"><i class="ph ph-pill" aria-hidden="true"></i>Medicamentos</a>
-                    <a href="#plano"><i class="ph ph-target" aria-hidden="true"></i>Plano terapêutico</a>
-                    <a href="#agenda"><i class="ph ph-calendar-check" aria-hidden="true"></i>Agenda</a>
-                    <a href="#documentos"><i class="ph ph-file-text" aria-hidden="true"></i>Documentos</a>
-                    <a href="#historico"><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>Histórico</a>
+                    <a href="#resumo">Resumo</a>
+                    <a href="#avaliacao">Avaliação inicial</a>
+                    <a href="#evolucoes">Evoluções</a>
+                    <a href="#medicamentos">Medicamentos</a>
+                    <a href="#plano">Plano terapêutico</a>
+                    <a href="#agenda">Agenda</a>
+                    <a href="#documentos">Documentos</a>
+                    <a href="#historico">Histórico</a>
                 </nav>
             </aside>
 
@@ -66,7 +66,7 @@
                             <span class="rn-eyebrow">Prontuário eletrônico inteligente</span>
                             <h1>@Model.StudentName</h1>
                             <p>
-                                <span class="rn-badge rn-badge-info">@Model.Status</span>
+                                <span class="orizon-badge orizon-badge--info orizon-badge--md">@Model.Status</span>
                                 <span>@Model.CareDays dias de acolhimento</span>
                                 <span>@Model.Age anos</span>
                                 @if (!string.IsNullOrWhiteSpace(Model.ResponsibleProfessional))
@@ -77,9 +77,9 @@
                         </div>
                     </div>
                     <div class="patient-actions">
-                        <a class="rn-btn-primary" href="#nova-evolucao"><i class="ph ph-plus-circle" aria-hidden="true"></i>Evolução</a>
-                        <a class="rn-btn-secondary" href="#documentos"><i class="ph ph-upload-simple" aria-hidden="true"></i>Documento</a>
-                        <a class="rn-btn-secondary" asp-area="CRM" asp-controller="Students" asp-action="Details" asp-route-id="@Model.StudentId"><i class="ph ph-user" aria-hidden="true"></i>Perfil CRM</a>
+                        <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" href="#nova-evolucao">Evolução</a>
+                        <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" href="#documentos">Documento</a>
+                        <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-area="CRM" asp-controller="Students" asp-action="Details" asp-route-id="@Model.StudentId">Perfil CRM</a>
                     </div>
                 </header>
 
@@ -128,8 +128,8 @@
                                     </div>
                                     <p>@evolution.Description</p>
                                     <footer>
-                                        <span><i class="ph ph-user-focus" aria-hidden="true"></i>@evolution.ProfessionalName</span>
-                                        <span><i class="ph ph-signature" aria-hidden="true"></i>@evolution.Signature</span>
+                                        <span>@evolution.ProfessionalName</span>
+                                        <span>@evolution.Signature</span>
                                     </footer>
                                 </article>
                             }
@@ -144,24 +144,24 @@
                     </div>
                     <form asp-action="CreateEvolution" method="post" class="medical-inline-form">
                         <input type="hidden" asp-for="EvolutionForm.StudentId" name="StudentId" />
-                        <div class="admin-form-grid two">
-                            <div class="admin-form-group">
-                                <label class="admin-label required" for="ProfessionalId">Profissional</label>
-                                <select class="admin-select" id="ProfessionalId" name="ProfessionalId" asp-items="Model.Professionals">
+                        <div class="orizon-form-grid two">
+                            <div class="orizon-field">
+                                <label class="orizon-field__label required" for="ProfessionalId">Profissional</label>
+                                <select class="orizon-select" id="ProfessionalId" name="ProfessionalId" asp-items="Model.Professionals">
                                     <option value="">Selecione</option>
                                 </select>
                             </div>
-                            <div class="admin-form-group">
-                                <label class="admin-label">Tipo</label>
-                                <input class="admin-input" value="Inferido pelo tipo do profissional" disabled />
+                            <div class="orizon-field">
+                                <label class="orizon-field__label">Tipo</label>
+                                <input class="orizon-input" value="Inferido pelo tipo do profissional" disabled />
                             </div>
                         </div>
-                        <div class="admin-form-group-full">
-                            <label class="admin-label required" for="Description">Descrição</label>
-                            <textarea class="admin-textarea" id="Description" name="Description" placeholder="Registre a evolução clínica, social, pedagógica ou administrativa."></textarea>
+                        <div class="orizon-field">
+                            <label class="orizon-field__label required" for="Description">Descrição</label>
+                            <textarea class="orizon-textarea" id="Description" name="Description" placeholder="Registre a evolução clínica, social, pedagógica ou administrativa."></textarea>
                         </div>
-                        <div class="admin-form-actions compact">
-                            <button class="rn-btn-primary" type="submit"><i class="ph ph-check-circle" aria-hidden="true"></i>Assinar evolução</button>
+                        <div class="orizon-form-actions compact">
+                            <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="submit">Assinar evolução</button>
                         </div>
                     </form>
                 </section>
@@ -189,8 +189,8 @@
                     }
                     else
                     {
-                        <div class="renova-table-wrap">
-                            <table class="renova-table">
+                        <div class="orizon-table-container">
+                            <table class="orizon-table orizon-table--hoverable">
                                 <thead><tr><th>Objetivo</th><th>Meta</th><th>Intervenção</th><th>Periodicidade</th><th>Responsável</th><th>Situação</th></tr></thead>
                                 <tbody>
                                 @foreach (var item in Model.TherapeuticPlan)
@@ -215,7 +215,7 @@
                         <span class="rn-eyebrow">Agenda</span>
                         <h2>Consultas e atendimentos</h2>
                     </div>
-                    <a class="rn-btn-secondary" asp-area="CRM" asp-controller="Appointments" asp-action="Index"><i class="ph ph-calendar" aria-hidden="true"></i>Abrir agenda operacional</a>
+                    <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-area="CRM" asp-controller="Appointments" asp-action="Index">Abrir agenda operacional</a>
                 </section>
 
                 <section class="medical-panel" id="documentos">
@@ -225,9 +225,9 @@
                     </div>
                     <form asp-action="UploadDocument" method="post" enctype="multipart/form-data" class="medical-document-form">
                         <input type="hidden" asp-for="DocumentUpload.StudentId" name="StudentId" />
-                        <input class="admin-input" asp-for="DocumentUpload.Title" name="Title" placeholder="Título do documento" />
-                        <input class="admin-input" asp-for="DocumentUpload.File" name="File" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx" />
-                        <button class="rn-btn-primary" type="submit"><i class="ph ph-upload-simple" aria-hidden="true"></i>Anexar</button>
+                        <input class="orizon-input" asp-for="DocumentUpload.Title" name="Title" placeholder="Título do documento" />
+                        <input class="orizon-input" asp-for="DocumentUpload.File" name="File" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx" />
+                        <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="submit">Anexar</button>
                     </form>
                     <div class="medical-document-list">
                         @if (Model.Documents.Count == 0)
@@ -239,7 +239,7 @@
                             @foreach (var document in Model.Documents)
                             {
                                 <article>
-                                    <i class="ph ph-file-text" aria-hidden="true"></i>
+                                    
                                     <div>
                                         <strong>@document.Title</strong>
                                         <span>@document.ContentType · @((document.Size / 1024m).ToString("N1")) KB · @document.UploadDate.ToString("dd/MM/yyyy HH:mm")</span>
@@ -259,7 +259,7 @@
                         @if (Model.Timeline.Count == 0)
                         {
                             <article class="rn-timeline-empty">
-                                <i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i>
+                                
                                 <strong>Nenhum evento registrado</strong>
                                 <span>Admissões, consultas, evoluções, cursos e financeiro aparecerão aqui.</span>
                             </article>
@@ -269,7 +269,7 @@
                             @foreach (var item in Model.Timeline)
                             {
                                 <article class="rn-timeline-item">
-                                    <span class="rn-timeline-icon"><i class="ph @item.Icon" aria-hidden="true"></i></span>
+                                    <span class="rn-timeline-icon"></span>
                                     <div>
                                         <header><strong>@item.Title</strong><time datetime="@item.OccurredAt.ToString("O")">@item.OccurredAt.ToString("dd/MM/yyyy HH:mm")</time></header>
                                         @if (!string.IsNullOrWhiteSpace(item.Description))
@@ -287,3 +287,4 @@
         </div>
     }
 </section>
+

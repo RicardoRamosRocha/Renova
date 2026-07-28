@@ -1,6 +1,7 @@
 @{
     var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var pageTitle = ViewData["Title"]?.ToString() ?? currentController ?? "Dashboard";
     var sectionLabel = currentArea switch
     {
         "CRM" => "CRM",
@@ -15,10 +16,15 @@
     };
 }
 
-<nav class="admin-breadcrumb" aria-label="Breadcrumb">
-    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Início</a>
-    @if (!string.IsNullOrWhiteSpace(sectionLabel))
-    {
-        <span>@sectionLabel</span>
-    }
+<nav class="orizon-breadcrumb" aria-label="Breadcrumb">
+    <ol class="orizon-breadcrumb-list">
+        <li class="orizon-breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Início</a></li>
+        @if (!string.IsNullOrWhiteSpace(sectionLabel))
+        {
+            <li class="orizon-breadcrumb-separator" aria-hidden="true">/</li>
+            <li class="orizon-breadcrumb-item"><span>@sectionLabel</span></li>
+        }
+        <li class="orizon-breadcrumb-separator" aria-hidden="true">/</li>
+        <li class="orizon-breadcrumb-item is-active" aria-current="page">@pageTitle</li>
+    </ol>
 </nav>

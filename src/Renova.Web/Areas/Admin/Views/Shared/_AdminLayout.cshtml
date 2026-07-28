@@ -1,36 +1,304 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light" data-color-mode="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@ViewData["Title"] | Admin Renova</title>
+
+    <title>@ViewData["Title"] | Renova</title>
+
+    <script>
+        (() => {
+            const storageKey = "renova.admin.theme";
+            const validThemes = ["light", "dark"];
+
+            let theme = "light";
+
+            try {
+                const savedTheme = localStorage.getItem(storageKey);
+
+                if (validThemes.includes(savedTheme)) {
+                    theme = savedTheme;
+                } else if (
+                    window.matchMedia &&
+                    window.matchMedia("(prefers-color-scheme: dark)").matches
+                ) {
+                    theme = "dark";
+                }
+            } catch {
+                theme = "light";
+            }
+
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.dataset.colorMode = theme;
+            document.documentElement.style.colorScheme = theme;
+        })();
+    </script>
+
     <link rel="icon" type="image/png" href="~/favicon.png" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link rel="stylesheet" href="https://unpkg.com/@@phosphor-icons/web@2.1.1/src/regular/style.css" />
-    <link rel="stylesheet" href="~/app.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/admin-premium.css" asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/_content/Orizon.UI/css/orizon.css"
+          asp-append-version="true" />
+
+        <link rel="stylesheet"
+      href="~/css/topbar.css"
+      asp-append-version="true" />  
+
+    <link rel="stylesheet"
+          href="~/css/dashboard-v2.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    @await RenderSectionAsync("Styles", required: false)
 </head>
-<body class="admin-body">
-    <a class="skip-link" href="#admin-content">Pular para o conteúdo</a>
-    <div class="admin-shell">
-        <aside class="admin-sidebar-shell" aria-label="Menu administrativo">
-            @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_AdminSidebar.cshtml")
+
+<body class="orizon-admin-body">
+    <a class="orizon-sr-only orizon-focusable" href="#main-content">
+        Pular para o conteúdo
+    </a>
+
+    <div class="orizon-admin-shell" data-admin-layout>
+        <div class="orizon-sidebar-backdrop"
+             data-sidebar-backdrop
+             aria-hidden="true">
+        </div>
+
+        <aside class="orizon-admin-sidebar"
+               data-sidebar
+               aria-label="Navegação principal">
+            @await Html.PartialAsync(
+                "~/Areas/Admin/Views/Shared/_AdminSidebar.cshtml")
         </aside>
 
-        <div class="admin-main-shell">
-            @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_AdminTopbar.cshtml")
+        <div class="orizon-admin-main">
+            @await Html.PartialAsync(
+                "~/Areas/Admin/Views/Shared/_AdminTopbar.cshtml")
 
-            <main id="admin-content" class="admin-content" tabindex="-1">
-                @await Html.PartialAsync("~/Areas/Admin/Views/Shared/_AdminBreadcrumb.cshtml")
-                @RenderBody()
+            <main id="main-content"
+                  class="orizon-admin-content"
+                  tabindex="-1">
+
+                @await Html.PartialAsync(
+                    "~/Areas/Admin/Views/Shared/_AdminBreadcrumb.cshtml")
+
+                <div class="orizon-admin-page">
+                    <div class="orizon-admin-messages"
+                         role="region"
+                         aria-label="Mensagens do sistema"
+                         aria-live="polite">
+
+                        @if (TempData["Success"] is string successMessage)
+                        {
+                            <orizon-alert variant="success"
+                                          title="Operação concluída"
+                                          dismissible>
+                                @successMessage
+                            </orizon-alert>
+                        }
+
+                        @if (TempData["Error"] is string errorMessage)
+                        {
+                            <orizon-alert variant="danger"
+                                          title="Não foi possível concluir"
+                                          dismissible>
+                                @errorMessage
+                            </orizon-alert>
+                        }
+
+                        @if (TempData["Warning"] is string warningMessage)
+                        {
+                            <orizon-alert variant="warning"
+                                          title="Atenção"
+                                          dismissible>
+                                @warningMessage
+                            </orizon-alert>
+                        }
+
+                        @if (TempData["Info"] is string infoMessage)
+                        {
+                            <orizon-alert variant="info"
+                                          title="Informação"
+                                          dismissible>
+                                @infoMessage
+                            </orizon-alert>
+                        }
+
+                        @if (ViewData["Message"] is string viewMessage)
+                        {
+                            <orizon-alert variant="info">
+                                @viewMessage
+                            </orizon-alert>
+                        }
+
+                        <div asp-validation-summary="All"
+                             class="orizon-validation-summary">
+                        </div>
+
+                        @await RenderSectionAsync(
+                            "Notifications",
+                            required: false)
+                    </div>
+
+                    @RenderBody()
+                </div>
             </main>
 
-            <footer class="admin-footer">
-                <span>Renova Admin © 2026</span>
-            </footer>
+            <div class="orizon-admin-footer">
+                <footer class="orizon-footer">
+                    <div class="orizon-footer-left">
+                        © @DateTime.Now.Year <strong>Renova</strong>
+                    </div>
+
+                    <div class="orizon-footer-right">
+                        <span>Orizon.UI 1.2.0</span>
+                    </div>
+                </footer>
+            </div>
         </div>
     </div>
-    <script src="~/js/profile-header.js" asp-append-version="true"></script>
-    <script src="~/js/premium-interactions.js" asp-append-version="true"></script>
+
+    <script src="~/_content/Orizon.UI/js/layout/admin-layout.js"
+            asp-append-version="true"></script>
+
+    <script src="~/_content/Orizon.UI/js/layout/sidebar.js"
+            asp-append-version="true"></script>
+
+    <script type="module"
+            src="~/_content/Orizon.UI/js/orizon.js"
+            asp-append-version="true"></script>
+
+    <script>
+        (() => {
+            const storageKey = "renova.admin.theme";
+            const root = document.documentElement;
+            const toggle = document.querySelector("[data-theme-toggle]");
+
+            if (!toggle) {
+                return;
+            }
+
+            const darkIcon = toggle.querySelector(
+                '[data-theme-icon="dark"]'
+            );
+
+            const lightIcon = toggle.querySelector(
+                '[data-theme-icon="light"]'
+            );
+
+            function applyTheme(theme, persist) {
+                const normalizedTheme =
+                    theme === "dark" ? "dark" : "light";
+
+                const isDark = normalizedTheme === "dark";
+
+                root.dataset.theme = normalizedTheme;
+                root.dataset.colorMode = normalizedTheme;
+                root.style.colorScheme = normalizedTheme;
+
+                toggle.setAttribute(
+                    "aria-pressed",
+                    isDark ? "true" : "false"
+                );
+
+                toggle.setAttribute(
+                    "aria-label",
+                    isDark
+                        ? "Ativar modo claro"
+                        : "Ativar modo escuro"
+                );
+
+                toggle.setAttribute(
+                    "title",
+                    isDark
+                        ? "Ativar modo claro"
+                        : "Ativar modo escuro"
+                );
+
+                if (darkIcon) {
+                    darkIcon.hidden = isDark;
+                }
+
+                if (lightIcon) {
+                    lightIcon.hidden = !isDark;
+                }
+
+                if (persist) {
+                    try {
+                        localStorage.setItem(
+                            storageKey,
+                            normalizedTheme
+                        );
+                    } catch {
+                        // O tema continua ativo durante a sessão.
+                    }
+                }
+
+                window.dispatchEvent(
+                    new CustomEvent("orizon:themechange", {
+                        detail: { theme: normalizedTheme }
+                    })
+                );
+            }
+
+            applyTheme(root.dataset.theme, false);
+
+            toggle.addEventListener("click", () => {
+                const nextTheme =
+                    root.dataset.theme === "dark"
+                        ? "light"
+                        : "dark";
+
+                applyTheme(nextTheme, true);
+            });
+        })();
+    </script>
+
+    <script>
+    (() => {
+        const topbar = document.querySelector(".orizon-admin-topbar");
+        const searchToggle = document.querySelector(
+            "[data-topbar-search-toggle]"
+        );
+        const searchInput = document.querySelector(
+            "#orizon-global-search"
+        );
+
+        searchToggle?.addEventListener("click", () => {
+            const isOpen = topbar?.classList.toggle(
+                "is-search-open"
+            );
+
+            searchToggle.setAttribute(
+                "aria-expanded",
+                isOpen ? "true" : "false"
+            );
+
+            if (isOpen) {
+                searchInput?.focus();
+            }
+        });
+
+        document.addEventListener("keydown", event => {
+            if (
+                (event.ctrlKey || event.metaKey) &&
+                event.key.toLowerCase() === "k"
+            ) {
+                event.preventDefault();
+
+                topbar?.classList.add("is-search-open");
+                searchInput?.focus();
+            }
+
+            if (event.key === "Escape") {
+                topbar?.classList.remove("is-search-open");
+            }
+        });
+    })();
+</script>
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

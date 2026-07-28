@@ -1,5 +1,8 @@
+@{
+    var useOrizonOnly = ViewData["UseOrizonOnly"] is true;
+}
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light" data-color-mode="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -13,10 +16,17 @@
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="canonical" href="/" />
     <link rel="icon" type="image/png" href="~/favicon.png" />
-    <link rel="stylesheet" href="~/app.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/_content/Orizon.UI/css/orizon.css" asp-append-version="true" />
+    @if (!useOrizonOnly)
+    {
+        <link rel="stylesheet" href="~/app.css" asp-append-version="true" />
+    }
+    @await RenderSectionAsync("Styles", required: false)
 </head>
-<body class="landing-body">
-    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+<body class="@(useOrizonOnly ? null : "landing-body")">
+    <a class="orizon-sr-only orizon-focusable" href="#conteudo">Pular para o conteúdo</a>
     @RenderBody()
+    <script type="module" src="~/_content/Orizon.UI/js/orizon.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

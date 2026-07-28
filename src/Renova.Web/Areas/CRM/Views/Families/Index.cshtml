@@ -17,28 +17,28 @@
     @if (TempData["Success"] is string success)
     {
         <div class="crm-alert-success">
-            <i class="ph ph-check-circle" aria-hidden="true"></i>
+            
             <span>@success</span>
         </div>
     }
 
-    <section class="renova-table-card">
+    <section class="orizon-card orizon-card--padding-none">
         @if (Model.Count == 0)
         {
             <div class="crm-empty-state">
-                <div class="crm-empty-icon"><i class="ph ph-users-three" aria-hidden="true"></i></div>
+                <div class="crm-empty-icon"></div>
                 <strong>Nenhum familiar encontrado</strong>
                 <p>Cadastre familiares a partir do perfil de um acolhido.</p>
                 <a class="crm-secondary-button" asp-controller="Students" asp-action="Index">
-                    <i class="ph ph-arrow-left" aria-hidden="true"></i>
+                    
                     Ver acolhidos
                 </a>
             </div>
         }
         else
         {
-            <div class="renova-table-wrap">
-                <table class="renova-table">
+            <div class="orizon-table-container">
+                <table class="orizon-table orizon-table--hoverable">
                     <thead>
                         <tr>
                             <th>Familiar</th>
@@ -72,21 +72,21 @@
                             <td>
                                 @if (member.IsResponsible)
                                 {
-                                    <span class="rn-badge rn-badge-info">Responsável</span>
+                                    <span class="orizon-badge orizon-badge--info orizon-badge--md">Responsável</span>
                                 }
                                 @if (member.CanAccessPortal)
                                 {
-                                    <span class="rn-badge rn-badge-success">Portal</span>
+                                    <span class="orizon-badge orizon-badge--success orizon-badge--md">Portal</span>
                                 }
                             </td>
                             <td>
                                 <div class="renova-action-buttons">
                                     <a class="renova-action-btn" asp-action="Edit" asp-route-id="@member.Id" title="Editar">
-                                        <i class="ph ph-pencil-simple" aria-hidden="true"></i>
+                                        
                                     </a>
                                     <form asp-action="Archive" asp-route-id="@member.Id" method="post">
                                         <button class="renova-action-btn danger" type="submit" title="Arquivar">
-                                            <i class="ph ph-archive" aria-hidden="true"></i>
+                                            
                                         </button>
                                     </form>
                                 </div>
@@ -99,3 +99,4 @@
         }
     </section>
 </section>
+

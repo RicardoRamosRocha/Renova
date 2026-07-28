@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Renova.Infrastructure.Data;
 using Renova.Web.Areas.EAD.ViewModels.Dashboard;
@@ -7,6 +8,7 @@ using Renova.Web.Services;
 namespace Renova.Web.Areas.EAD.Controllers;
 
 [Area("EAD")]
+[Authorize]
 public sealed class DashboardController(
     IDbContextFactory<AppDbContext> dbContextFactory,
     ICurrentTenantService currentTenantService) : Controller
@@ -47,13 +49,66 @@ public sealed class DashboardController(
             .OrderBy(item => item.Name)
             .ToList();
 
+        var courses = await db.Courses
+            .AsNoTracking()
+            .Include(course => course.Modules)
+                .ThenInclude(module => module.Lessons)
+                    .ThenInclude(lesson => lesson.ProgressEntries)
+                        .ThenInclude(item => item.Student)
+            .Include(course => course.Certificates)
+                .ThenInclude(item => item.Student)
+            .AsSplitQuery()
+            .ToListAsync();
+
+        var lessonCount = courses.SelectMany(course => course.Modules).SelectMany(module => module.Lessons).Count();
+        var completedLessons = progress.Count(item => item.CompletedAt.HasValue || item.WatchedPercentage >= 100);
+        var learningMinutes = progress.Sum(item =>
+            (item.Lesson?.DurationInMinutes ?? 0) *
+            Math.Clamp(item.WatchedPercentage, 0, 100) / 100m);
+        var studentsNeedingAttention = progress
+            .GroupBy(item => item.StudentId)
+            .Count(group =>
+                group.Average(item => item.WatchedPercentage) < 40 ||
+                group.Max(item => item.UpdatedAt ?? item.CreatedAt) < DateTime.UtcNow.AddDays(-14));
+
+        var topCourses = courses
+            .Select(course =>
+            {
+                var courseProgress = course.Modules
+                    .SelectMany(module => module.Lessons)
+                    .SelectMany(lesson => lesson.ProgressEntries)
+                    .Where(item => item.Student.TenantId == tenantId.Value)
+                    .ToList();
+                var completed = courseProgress.Count(item => item.CompletedAt.HasValue || item.WatchedPercentage >= 100);
+                return new CoursePerformanceViewModel
+                {
+                    Id = course.Id,
+                    Title = course.Title,
+                    Trail = CoursesController.InferTrail(course.Title),
+                    Students = courseProgress.Select(item => item.StudentId).Distinct().Count(),
+                    AverageProgress = courseProgress.Count == 0 ? 0 : ClampPercent((int)Math.Round(courseProgress.Average(item => item.WatchedPercentage))),
+                    CompletionRate = courseProgress.Count == 0 ? 0 : ClampPercent((int)Math.Round(completed * 100m / courseProgress.Count))
+                };
+            })
+            .Where(item => item.Students > 0)
+            .OrderByDescending(item => item.AverageProgress)
+            .ThenByDescending(item => item.CompletionRate)
+            .Take(5)
+            .ToList();
+
         return View(new EadDashboardViewModel
         {
-            ActiveCourses = await db.Courses.CountAsync(item => item.IsActive),
+            ActiveCourses = courses.Count(item => item.IsActive),
+            TotalCourses = courses.Count,
+            AvailableLessons = lessonCount,
             StudyingStudents = progress.Select(item => item.StudentId).Distinct().Count(),
-            CompletedLessons = progress.Count(item => item.CompletedAt.HasValue),
+            CompletedLessons = completedLessons,
+            LearningHours = (int)Math.Round(learningMinutes / 60m),
             Certificates = await db.Certificates.CountAsync(item => item.Student.TenantId == tenantId.Value),
-            AverageEngagement = progress.Count == 0 ? 0 : (int)Math.Round(progress.Average(item => item.WatchedPercentage)),
+            AverageEngagement = progress.Count == 0 ? 0 : ClampPercent((int)Math.Round(progress.Average(item => item.WatchedPercentage))),
+            CompletionRate = progress.Count == 0 ? 0 : ClampPercent((int)Math.Round(completedLessons * 100m / progress.Count)),
+            StudentsNeedingAttention = studentsNeedingAttention,
+            TopCourses = topCourses,
             Trails = trails,
             RecentActivities = progress
                 .Take(8)
@@ -68,4 +123,6 @@ public sealed class DashboardController(
                 .ToList()
         });
     }
+
+    private static int ClampPercent(int value) => Math.Clamp(value, 0, 100);
 }

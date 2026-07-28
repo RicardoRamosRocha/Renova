@@ -17,9 +17,9 @@
         <div>
             <span class="rn-eyebrow">Usuário</span>
             <h1>@Model.FullName</h1>
-            <p><span class="renova-status-badge @(Model.IsActive ? "ok" : "danger")">@(Model.IsActive ? "Ativo" : "Inativo")</span> @Model.Email</p>
+            <p><span class="renova-status-badge @(Model.IsActive ? "orizon-badge--success" : "orizon-badge--danger")">@(Model.IsActive ? "Ativo" : "Inativo")</span> @Model.Email</p>
         </div>
-        <a class="rn-btn-primary" asp-action="Edit" asp-route-id="@Model.Id"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>
+        <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
     </div>
 
     <div class="demo-profile-meta">
@@ -29,3 +29,4 @@
         <article><small>Status</small><strong>@(Model.IsActive ? "Ativo" : "Inativo")</strong></article>
     </div>
 </section>
+

@@ -2,7 +2,7 @@ namespace Renova.Web.Areas.EAD.ViewModels.Students;
 
 public sealed class StudentLearningDashboardViewModel
 {
-    public Guid StudentId { get; set; }
+    public Guid? StudentId { get; set; }
 
     public string StudentName { get; set; } = string.Empty;
 
@@ -11,6 +11,8 @@ public sealed class StudentLearningDashboardViewModel
     public int OverallProgress { get; set; }
 
     public int Certificates { get; set; }
+
+    public IReadOnlyList<StudentCertificateSummaryViewModel> CertificateItems { get; set; } = [];
 
     public int CompletedLessons { get; set; }
 
@@ -80,4 +82,13 @@ public sealed class StudentAchievementViewModel
     public bool Achieved { get; set; }
 
     public string Icon { get; set; } = "ph-medal";
+}
+
+public sealed class StudentCertificateSummaryViewModel
+{
+    public string CourseTitle { get; set; } = string.Empty;
+
+    public string VerificationCode { get; set; } = string.Empty;
+
+    public DateTime IssuedAt { get; set; }
 }

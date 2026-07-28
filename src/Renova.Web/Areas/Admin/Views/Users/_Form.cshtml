@@ -7,7 +7,7 @@
 
 <input type="hidden" asp-for="Id" />
 <input type="hidden" asp-for="PhotoPath" />
-<div asp-validation-summary="ModelOnly" class="admin-validation-summary"></div>
+<div asp-validation-summary="ModelOnly" class="orizon-alert orizon-alert--danger"></div>
 
 @await Html.PartialAsync("~/Views/Shared/_ProfileHeader.cshtml", new ProfileHeaderViewModel
 {
@@ -23,11 +23,11 @@
         <div class="admin-form-section-title">
             <div><span class="rn-eyebrow">Identificação</span><h2>Dados do usuário</h2><p>Informações básicas da conta utilizada para acessar o Renova.</p></div>
         </div>
-        <div class="admin-form-grid">
-            <div class="admin-form-group"><label class="admin-label required" asp-for="FullName">Nome completo</label><input class="admin-input" asp-for="FullName" autocomplete="name" /><span class="admin-validation" asp-validation-for="FullName"></span></div>
-            <div class="admin-form-group"><label class="admin-label required" asp-for="Email">Email</label><input class="admin-input" asp-for="Email" autocomplete="email" /><span class="admin-validation" asp-validation-for="Email"></span></div>
-            <div class="admin-form-group"><label class="admin-label" asp-for="Phone">Telefone</label><input class="admin-input" asp-for="Phone" inputmode="tel" autocomplete="tel" /><span class="admin-validation" asp-validation-for="Phone"></span></div>
-            <div class="admin-form-group"><label class="admin-label" asp-for="IsActive">Status</label><select class="admin-select" asp-for="IsActive"><option value="true">Ativo</option><option value="false">Inativo</option></select><span class="admin-validation" asp-validation-for="IsActive"></span></div>
+        <div class="orizon-form-grid">
+            <div class="orizon-field"><label class="orizon-field__label required" asp-for="FullName">Nome completo</label><input class="orizon-input" asp-for="FullName" autocomplete="name" /><span class="orizon-field__error" asp-validation-for="FullName"></span></div>
+            <div class="orizon-field"><label class="orizon-field__label required" asp-for="Email">Email</label><input class="orizon-input" asp-for="Email" autocomplete="email" /><span class="orizon-field__error" asp-validation-for="Email"></span></div>
+            <div class="orizon-field"><label class="orizon-field__label" asp-for="Phone">Telefone</label><input class="orizon-input" asp-for="Phone" inputmode="tel" autocomplete="tel" /><span class="orizon-field__error" asp-validation-for="Phone"></span></div>
+            <div class="orizon-field"><label class="orizon-field__label" asp-for="IsActive">Status</label><select class="orizon-select" asp-for="IsActive"><option value="true">Ativo</option><option value="false">Inativo</option></select><span class="orizon-field__error" asp-validation-for="IsActive"></span></div>
         </div>
     </section>
 
@@ -35,29 +35,30 @@
         <div class="admin-form-section-title">
             <div><span class="rn-eyebrow">Acesso</span><h2>Perfil e senha</h2><p>Defina o perfil de acesso e, se necessário, uma senha provisória.</p></div>
         </div>
-        <div class="admin-form-grid">
-            <div class="admin-form-group">
-                <label class="admin-label" asp-for="Role">Perfil/Role</label>
-                <select class="admin-select" asp-for="Role">
+        <div class="orizon-form-grid">
+            <div class="orizon-field">
+                <label class="orizon-field__label" asp-for="Role">Perfil/Role</label>
+                <select class="orizon-select" asp-for="Role">
                     <option value="">Sem perfil</option>
                     @foreach (var role in roles)
                     {
                         <option value="@role">@role</option>
                     }
                 </select>
-                <span class="admin-validation" asp-validation-for="Role"></span>
+                <span class="orizon-field__error" asp-validation-for="Role"></span>
             </div>
-            <div class="admin-form-group">
-                <label class="admin-label" asp-for="TemporaryPassword">Senha provisória</label>
-                <input class="admin-input" asp-for="TemporaryPassword" placeholder="Opcional ao editar" />
-                <span class="admin-help-text">Use apenas quando desejar criar ou redefinir uma senha provisória.</span>
-                <span class="admin-validation" asp-validation-for="TemporaryPassword"></span>
+            <div class="orizon-field">
+                <label class="orizon-field__label" asp-for="TemporaryPassword">Senha provisória</label>
+                <input class="orizon-input" asp-for="TemporaryPassword" placeholder="Opcional ao editar" />
+                <span class="orizon-field__message">Use apenas quando desejar criar ou redefinir uma senha provisória.</span>
+                <span class="orizon-field__error" asp-validation-for="TemporaryPassword"></span>
             </div>
         </div>
     </section>
 
-    <div class="admin-form-actions">
-        <a class="rn-btn-secondary" asp-action="Index">Cancelar</a>
-        <button class="rn-btn-primary" type="submit"><i class="ph ph-check-circle" aria-hidden="true"></i>Salvar usuário</button>
+    <div class="orizon-form-actions">
+        <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Index">Cancelar</a>
+        <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="submit">Salvar usuário</button>
     </div>
 </div>
+

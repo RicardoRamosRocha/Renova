@@ -1,0 +1,279 @@
+@using Renova.Web.Areas.EAD.ViewModels.Courses
+@model LessonPlayerViewModel
+@{
+    ViewData["Title"] = Model.LessonTitle;
+    var currentModule = Model.Modules.FirstOrDefault(module => module.Lessons.Any(lesson => lesson.Id == Model.LessonId));
+    var moduleProgress = currentModule is null || currentModule.Lessons.Count == 0
+        ? 0
+        : (int)Math.Round(currentModule.Lessons.Count(lesson => Model.CompletedLessonIds.Contains(lesson.Id)) * 100m / currentModule.Lessons.Count);
+}
+
+<section class="ead-learning-shell">
+    <main class="ead-learning-main">
+        <nav class="ead-breadcrumb" aria-label="Breadcrumb">
+            <a asp-action="Index">Biblioteca</a>
+            
+            <a asp-action="Content" asp-route-id="@Model.CourseId">@Model.CourseTitle</a>
+            
+            <span>@Model.LessonTitle</span>
+        </nav>
+
+        <header class="ead-learning-hero">
+            <div>
+                <span class="ead-eyebrow">@Model.CourseCategory / @Model.ModuleTitle</span>
+                <h1>@Model.LessonTitle</h1>
+                <p>@Model.LessonDescription</p>
+                <div class="ead-learning-meta">
+                    <span>@Model.CourseTeacher</span>
+                    <span>@Model.CourseLevel</span>
+                    <span>@Model.DurationInMinutes min</span>
+                    <span>Certificado</span>
+                </div>
+            </div>
+            <div class="ead-learning-score">
+                <span>Progresso do curso</span>
+                <strong>@Model.CourseProgress%</strong>
+                <div class="ead-progress-track"><div class="ead-progress-fill" style="width:@Model.CourseProgress%;"></div></div>
+            </div>
+        </header>
+
+        @if (TempData["Success"] is string success)
+        {
+            <div class="orizon-alert orizon-alert--success">@success</div>
+        }
+        @if (TempData["Error"] is string error)
+        {
+            <div class="orizon-alert orizon-alert--warning">@error</div>
+        }
+
+        <section class="ead-premium-player" aria-label="Player da aula">
+            <div class="ead-video-stage">
+                <div class="ead-video-shine"></div>
+                <div class="ead-video-content">
+                    
+                    <strong>@Model.VideoProvider</strong>
+                    <span>@(string.IsNullOrWhiteSpace(Model.VideoExternalId) ? "Player preparado para video local, YouTube, Vimeo, Bunny, Azure Blob, S3 e Google Cloud Storage." : Model.VideoExternalId)</span>
+                </div>
+                <div class="ead-video-controls" aria-label="Controles preparados">
+                    <button type="button" data-tooltip="Play"></button>
+                    <button type="button" data-tooltip="Pause"></button>
+                    <button type="button" data-tooltip="Volume"></button>
+                    <button type="button" data-tooltip="Velocidade"><span>1x</span></button>
+                    <button type="button" data-tooltip="Legendas"></button>
+                    <button type="button" data-tooltip="Picture in picture"></button>
+                    <button type="button" data-tooltip="Qualidade"></button>
+                    <button type="button" data-tooltip="Tela cheia"></button>
+                </div>
+            </div>
+            <div class="ead-player-meta">
+                <div>
+                    <span>Aluno selecionado</span>
+                    <strong>@(Model.StudentName ?? "Nenhum aluno selecionado")</strong>
+                </div>
+                <div>
+                    <span>Progresso da aula</span>
+                    <strong>@Model.Progress%</strong>
+                </div>
+                <div class="ead-lesson-status @(Model.IsCompleted ? "is-completed" : string.Empty)">
+                    
+                    @(Model.IsCompleted ? "Concluida" : "Em andamento")
+                </div>
+            </div>
+        </section>
+
+        <section class="ead-learning-tabs">
+            <input checked id="ead-tab-description" name="ead-tabs" type="radio" />
+            <input id="ead-tab-objectives" name="ead-tabs" type="radio" />
+            <input id="ead-tab-materials" name="ead-tabs" type="radio" />
+            <input id="ead-tab-downloads" name="ead-tabs" type="radio" />
+            <input id="ead-tab-quiz" name="ead-tabs" type="radio" />
+            <input id="ead-tab-discussion" name="ead-tabs" type="radio" />
+            <input id="ead-tab-notes" name="ead-tabs" type="radio" />
+            <input id="ead-tab-teacher" name="ead-tabs" type="radio" />
+
+            <div class="ead-tab-list" role="tablist">
+                <label for="ead-tab-description">Descricao</label>
+                <label for="ead-tab-objectives">Objetivos</label>
+                <label for="ead-tab-materials">Materiais</label>
+                <label for="ead-tab-downloads">Downloads</label>
+                <label for="ead-tab-quiz">Quiz</label>
+                <label for="ead-tab-discussion">Discussao</label>
+                <label for="ead-tab-notes">Anotacoes</label>
+                <label for="ead-tab-teacher">Professor</label>
+            </div>
+
+            <div class="ead-tab-panel ead-tab-description">
+                <h2>Descricao da aula</h2>
+                <p>@Model.LessonDescription</p>
+                <div class="ead-mini-grid">
+                    <span><strong>@Model.CourseWorkloadHours h</strong>Carga horaria</span>
+                    <span><strong>@Model.Modules.Count</strong>Modulos</span>
+                    <span><strong>@Model.Modules.Sum(module => module.Lessons.Count)</strong>Aulas</span>
+                    <span><strong>@moduleProgress%</strong>Modulo atual</span>
+                </div>
+            </div>
+
+            <div class="ead-tab-panel ead-tab-objectives">
+                <h2>Objetivos</h2>
+                <ul class="ead-check-list">
+                    @foreach (var objective in Model.Objectives)
+                    {
+                        <li>@objective</li>
+                    }
+                </ul>
+            </div>
+
+            <div class="ead-tab-panel ead-tab-materials">
+                <h2>Materiais complementares</h2>
+                <div class="ead-resource-grid">
+                    @foreach (var material in Model.Materials)
+                    {
+                        <article class="ead-resource-card">
+                            
+                            <div><strong>@material.Name</strong><span>@material.Type - @material.Size</span></div>
+                            <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="button">Visualizar</button>
+                            <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="button">Baixar</button>
+                        </article>
+                    }
+                </div>
+            </div>
+
+            <div class="ead-tab-panel ead-tab-downloads">
+                <h2>Downloads</h2>
+                <div class="ead-resource-grid">
+                    @foreach (var download in Model.Downloads)
+                    {
+                        <article class="ead-resource-card">
+                            
+                            <div><strong>@download.Name</strong><span>@download.Format - @download.Size</span></div>
+                            <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="button">Abrir</button>
+                            <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="button">Baixar</button>
+                        </article>
+                    }
+                </div>
+            </div>
+
+            <div class="ead-tab-panel ead-tab-quiz">
+                <h2>@Model.Quiz.Title</h2>
+                <p>Nota minima: @Model.Quiz.PassingScore pontos.</p>
+                <div class="ead-quiz-list">
+                    @foreach (var question in Model.Quiz.Questions)
+                    {
+                        <article>
+                            <strong>@question.Text</strong>
+                            @foreach (var answer in question.Answers)
+                            {
+                                <label><input type="radio" disabled /> @answer.Text</label>
+                            }
+                            <small>Feedback preparado para correcao automatica e resultado final.</small>
+                        </article>
+                    }
+                </div>
+                <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="button">Responder quiz</button>
+            </div>
+
+            <div class="ead-tab-panel ead-tab-discussion">
+                <h2>Discussao</h2>
+                <div class="ead-discussion-list">
+                    @foreach (var discussion in Model.Discussions)
+                    {
+                        <article>
+                            <div class="ead-avatar-fallback">@discussion.Author[0]</div>
+                            <div><strong>@discussion.Author</strong><p>@discussion.Text</p><span>@discussion.Likes curtidas</span></div>
+                        </article>
+                    }
+                </div>
+            </div>
+
+            <div class="ead-tab-panel ead-tab-notes">
+                <h2>Anotacoes pessoais</h2>
+                <div class="ead-note-list">
+                    @foreach (var note in Model.Notes)
+                    {
+                        <article>@note</article>
+                    }
+                </div>
+                <textarea class="orizon-textarea" rows="4" placeholder="Escreva uma anotacao pessoal para esta aula..."></textarea>
+            </div>
+
+            <div class="ead-tab-panel ead-tab-teacher">
+                <h2>Sobre o professor</h2>
+                <article class="ead-teacher-card">
+                    <div class="ead-teacher-photo">@Model.Teacher.Name[0]</div>
+                    <div>
+                        <strong>@Model.Teacher.Name</strong>
+                        <span>@Model.Teacher.Specialty - @Model.Teacher.Courses cursos</span>
+                        <p>@Model.Teacher.Bio</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <aside class="ead-learning-sidebar">
+        <div class="ead-sidebar-sticky">
+            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Content" asp-route-id="@Model.CourseId">Conteudo</a>
+            <form method="get">
+                <input type="hidden" name="id" value="@Model.LessonId" />
+                <select class="orizon-select" name="studentId" onchange="this.form.submit()">
+                    @foreach (var student in Model.Students)
+                    {
+                        <option value="@student.Id" selected="@(student.Id == Model.StudentId)">@student.Name</option>
+                    }
+                </select>
+            </form>
+
+            @foreach (var module in Model.Modules)
+            {
+                var completedInModule = module.Lessons.Count(lesson => Model.CompletedLessonIds.Contains(lesson.Id));
+                <details class="ead-sidebar-module" open="@(module.Lessons.Any(lesson => lesson.Id == Model.LessonId))">
+                    <summary>
+                        <span>@module.Order. @module.Title</span>
+                        <small>@completedInModule/@module.Lessons.Count aulas</small>
+                    </summary>
+                    @foreach (var lesson in module.Lessons)
+                    {
+                        var isActive = lesson.Id == Model.LessonId;
+                        var isCompleted = Model.CompletedLessonIds.Contains(lesson.Id);
+                        <a class="@(isActive ? "is-active" : string.Empty) @(isCompleted ? "is-completed" : string.Empty)" asp-action="Lesson" asp-route-id="@lesson.Id" asp-route-studentId="@Model.StudentId">
+                            
+                            <span>@lesson.Title<small>@lesson.VideoProvider - @lesson.DurationInMinutes min</small></span>
+                            <em>@lesson.AverageProgress%</em>
+                        </a>
+                    }
+                </details>
+            }
+        </div>
+    </aside>
+</section>
+
+<nav class="ead-bottom-bar" aria-label="Acoes da aula">
+    <div>
+        @if (Model.PreviousLessonId.HasValue)
+        {
+            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Lesson" asp-route-id="@Model.PreviousLessonId" asp-route-studentId="@Model.StudentId">Anterior</a>
+        }
+    </div>
+    <div class="ead-bottom-actions">
+        <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="button">Salvar progresso</button>
+        @if (Model.StudentId.HasValue)
+        {
+            @if (Model.IsCompleted)
+            {
+                <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="button" disabled>Aula concluida</button>
+            }
+            else
+            {
+                <form asp-action="CompleteLesson" asp-route-id="@Model.LessonId" method="post">
+                    <input type="hidden" name="studentId" value="@Model.StudentId" />
+                    <button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="submit">Concluir aula</button>
+                </form>
+            }
+        }
+        @if (Model.NextLessonId.HasValue)
+        {
+            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Lesson" asp-route-id="@Model.NextLessonId" asp-route-studentId="@Model.StudentId">Proxima</a>
+        }
+    </div>
+</nav>
+

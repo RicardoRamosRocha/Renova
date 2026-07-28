@@ -13,16 +13,16 @@
             <p>Indicadores reais de acolhidos, admissões, altas e agenda do tenant atual.</p>
         </div>
         <a class="crm-primary-button" asp-controller="Students" asp-action="Create">
-            <i class="ph ph-user-plus" aria-hidden="true"></i>
+            
             Novo acolhido
         </a>
     </div>
 
     <div class="crm-metrics-grid">
-        <article class="crm-metric-card"><div class="metric-icon"><i class="ph ph-users-three" aria-hidden="true"></i></div><span>Acolhidos ativos</span><strong>@Model.ActiveStudents</strong><small>Tenant atual</small></article>
-        <article class="crm-metric-card"><div class="metric-icon"><i class="ph ph-door-open" aria-hidden="true"></i></div><span>Admissões no mês</span><strong>@Model.AdmissionsThisMonth</strong><small>Entradas registradas</small></article>
-        <article class="crm-metric-card"><div class="metric-icon"><i class="ph ph-calendar-check" aria-hidden="true"></i></div><span>Altas previstas</span><strong>@Model.ExpectedDischarges</strong><small>A partir de hoje</small></article>
-        <article class="crm-metric-card"><div class="metric-icon"><i class="ph ph-flag-checkered" aria-hidden="true"></i></div><span>Altas realizadas</span><strong>@Model.CompletedDischarges</strong><small>No mês atual</small></article>
+        <article class="crm-metric-card"><div class="metric-icon"></div><span>Acolhidos ativos</span><strong>@Model.ActiveStudents</strong><small>Tenant atual</small></article>
+        <article class="crm-metric-card"><div class="metric-icon"></div><span>Admissões no mês</span><strong>@Model.AdmissionsThisMonth</strong><small>Entradas registradas</small></article>
+        <article class="crm-metric-card"><div class="metric-icon"></div><span>Altas previstas</span><strong>@Model.ExpectedDischarges</strong><small>A partir de hoje</small></article>
+        <article class="crm-metric-card"><div class="metric-icon"></div><span>Altas realizadas</span><strong>@Model.CompletedDischarges</strong><small>No mês atual</small></article>
     </div>
 
     <div class="patient-profile-grid">
@@ -91,3 +91,4 @@
         </section>
     </div>
 </section>
+

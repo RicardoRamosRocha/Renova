@@ -47,26 +47,26 @@
                            data-profile-input />
 
                     <label class="profile-upload-button" for="@inputId">
-                        <i class="ph ph-camera" aria-hidden="true"></i>
+                        
                         Alterar foto
                     </label>
 
                     <input type="hidden" name="@Model.RemovePhotoInputName" value="false" data-profile-remove-input />
 
                     <button class="profile-remove-button" type="button" data-profile-remove>
-                        <i class="ph ph-trash" aria-hidden="true"></i>
+                        
                         Remover foto
                     </button>
                 </div>
 
                 <span class="profile-upload-error" data-profile-error aria-live="polite"></span>
-                @Html.ValidationMessage(Model.PhotoInputName, null, new { @class = "admin-validation" })
+                @Html.ValidationMessage(Model.PhotoInputName, null, new { @class = "orizon-field__error" })
             }
         </div>
 
         <div class="profile-header-content">
             <span class="profile-chip">
-                <i class="ph ph-sparkle" aria-hidden="true"></i>
+                
                 Perfil Renova
             </span>
 
@@ -97,3 +97,4 @@
         </div>
     </div>
 </section>
+
