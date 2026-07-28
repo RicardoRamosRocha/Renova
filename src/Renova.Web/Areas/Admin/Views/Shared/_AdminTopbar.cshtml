@@ -24,38 +24,71 @@
 
 <header class="orizon-admin-topbar">
     <div class="orizon-topbar-content">
+
         <div class="orizon-topbar-left">
             <button type="button"
                     class="orizon-topbar-menu-button"
                     data-sidebar-toggle
                     aria-label="Abrir menu lateral"
                     aria-expanded="false">
-                <orizon-icon name="menu" size="20" />
+                <orizon-icon name="menu" size="21" />
             </button>
 
             <div class="orizon-topbar-title-container">
-                <span class="orizon-topbar-eyebrow">@contextLabel</span>
-                <strong class="orizon-topbar-title">@pageTitle</strong>
+                <span class="orizon-topbar-eyebrow">
+                    @contextLabel
+                </span>
+
+                <strong class="orizon-topbar-title">
+                    @pageTitle
+                </strong>
             </div>
         </div>
 
+        <form class="orizon-topbar-search"
+              asp-area="CRM"
+              asp-controller="Students"
+              asp-action="Index"
+              method="get"
+              role="search">
+
+            <orizon-icon name="search" size="19" />
+
+            <label class="orizon-sr-only"
+                   for="orizon-global-search">
+                Buscar no Renova
+            </label>
+
+            <input id="orizon-global-search"
+                   name="search"
+                   type="search"
+                   autocomplete="off"
+                   placeholder="Buscar acolhidos, módulos e informações..." />
+
+            <kbd aria-hidden="true">Ctrl K</kbd>
+        </form>
+
         <div class="orizon-topbar-actions">
-            <a class="orizon-topbar-action-button"
-               asp-area="CRM"
-               asp-controller="Students"
-               asp-action="Index"
-               aria-label="Buscar acolhidos"
-               title="Buscar acolhidos">
+
+            <button type="button"
+                    class="orizon-topbar-action-button orizon-topbar-mobile-search"
+                    data-topbar-search-toggle
+                    aria-label="Abrir pesquisa"
+                    title="Pesquisar">
                 <orizon-icon name="search" size="19" />
-            </a>
+            </button>
 
             <a class="orizon-topbar-action-button"
                asp-area="Reports"
                asp-controller="Reports"
                asp-action="Index"
-               aria-label="Abrir relatórios"
-               title="Relatórios">
+               aria-label="Abrir central de relatórios"
+               title="Relatórios e notificações">
                 <orizon-icon name="bell" size="19" />
+
+                <span class="orizon-topbar-notification-dot"
+                      aria-hidden="true">
+                </span>
             </a>
 
             <button type="button"
@@ -64,6 +97,7 @@
                     aria-label="Ativar modo escuro"
                     title="Ativar modo escuro"
                     aria-pressed="false">
+
                 <span data-theme-icon="dark" aria-hidden="true">
                     <orizon-icon name="moon" size="19" />
                 </span>
@@ -75,10 +109,13 @@
                 </span>
             </button>
 
-            <span class="orizon-topbar-divider" aria-hidden="true"></span>
+            <span class="orizon-topbar-divider"
+                  aria-hidden="true">
+            </span>
 
             <div class="orizon-topbar-profile-button"
-                 aria-label="Usuário logado">
+                 aria-label="Usuário conectado">
+
                 <span class="orizon-topbar-profile-avatar"
                       aria-hidden="true">
                     @initial
@@ -86,7 +123,11 @@
 
                 <span class="orizon-topbar-profile-content">
                     <strong>@userName</strong>
-                    <small>Online</small>
+
+                    <small>
+                        <span aria-hidden="true"></span>
+                        Online
+                    </small>
                 </span>
             </div>
         </div>

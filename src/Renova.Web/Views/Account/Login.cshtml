@@ -3,79 +3,734 @@
     ViewData["MetaDescription"] = "Acesso seguro ao painel Renova.";
     ViewData["MetaKeywords"] = "Renova, login, plataforma de acolhimento";
     ViewData["UseOrizonOnly"] = true;
+
     var returnUrl = ViewBag.ReturnUrl as string ?? "/Admin";
     var hasError = ViewBag.HasError is true;
 }
 
-<main id="conteudo" class="orizon-container orizon-grid orizon-gap-6 orizon-py-4" tabindex="-1">
-    <header class="orizon-flex orizon-items-center orizon-justify-between orizon-gap-4">
-        <a class="orizon-sidebar-brand" asp-controller="Home" asp-action="Index" aria-label="Renova">
-            <span class="orizon-sidebar-brand-mark" aria-hidden="true">R</span>
-            <span class="orizon-sidebar-brand-content">
-                <strong class="orizon-sidebar-brand-name">Renova</strong>
-                <span class="orizon-sidebar-brand-product">Plataforma de Acolhimento</span>
-            </span>
-        </a>
-        <orizon-badge variant="success" pill><orizon-icon name="shield-check" size="15" /> Acesso seguro</orizon-badge>
-    </header>
+<style>
+    .renova-login {
+        --login-primary: var(--orizon-brand-primary, #2563eb);
+        --login-primary-strong: #1d4ed8;
+        --login-ink: var(--orizon-color-text-primary, #0f172a);
+        --login-muted: var(--orizon-color-text-secondary, #64748b);
+        --login-border: var(--orizon-color-border, #e2e8f0);
+        --login-surface: var(--orizon-color-surface, #ffffff);
+        --login-surface-soft: var(--orizon-color-surface-secondary, #f8fafc);
+        min-height: 100svh;
+        padding: clamp(1rem, 2.5vw, 2rem);
+        display: grid;
+        place-items: center;
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        color: var(--login-ink);
+        background:
+            radial-gradient(circle at 8% 10%, color-mix(in srgb, var(--login-primary) 14%, transparent), transparent 30rem),
+            radial-gradient(circle at 94% 90%, rgba(14, 165, 233, .11), transparent 28rem),
+            var(--login-surface-soft);
+    }
 
-    <section class="orizon-dashboard-grid is-auto-fit is-responsive" aria-label="Acesso ao sistema Renova">
-        <orizon-card title="Tecnologia que acolhe" subtitle="Gestão que transforma" variant="gradient" padding="lg">
-            <p>Uma plataforma completa para acolhimento, acompanhamento e desenvolvimento humano.</p>
-            <div class="orizon-grid orizon-gap-4 orizon-mt-6">
-                <orizon-card title="Acolhimento" subtitle="Gestão de acolhidos e famílias" variant="glass"><orizon-icon name="users" size="28" /></orizon-card>
-                <orizon-card title="Prontuário" subtitle="Evoluções e acompanhamento" variant="glass"><orizon-icon name="clipboard" size="28" /></orizon-card>
-                <orizon-card title="Educação" subtitle="Cursos e desenvolvimento" variant="glass"><orizon-icon name="timeline" size="28" /></orizon-card>
+    .renova-login::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        opacity: .32;
+        pointer-events: none;
+        background-image:
+            linear-gradient(var(--login-border) 1px, transparent 1px),
+            linear-gradient(90deg, var(--login-border) 1px, transparent 1px);
+        background-size: 40px 40px;
+        mask-image: linear-gradient(to bottom, black, transparent 74%);
+    }
+
+    .renova-login__shell {
+        width: min(1120px, 100%);
+        min-height: min(720px, calc(100svh - clamp(2rem, 5vw, 4rem)));
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(390px, .92fr);
+        overflow: hidden;
+        border: 1px solid color-mix(in srgb, var(--login-border) 82%, transparent);
+        border-radius: 28px;
+        background: var(--login-surface);
+        box-shadow: 0 30px 80px rgba(15, 23, 42, .16);
+    }
+
+    .renova-login__story {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(2rem, 4vw, 4rem);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        color: #fff;
+        background:
+            radial-gradient(circle at 85% 12%, rgba(255, 255, 255, .22), transparent 16rem),
+            radial-gradient(circle at 10% 95%, rgba(56, 189, 248, .24), transparent 24rem),
+            linear-gradient(145deg, #0f3f91 0%, #155dc2 52%, #087fbd 100%);
+    }
+
+    .renova-login__story::after {
+        content: "";
+        position: absolute;
+        right: -9rem;
+        bottom: -12rem;
+        width: 30rem;
+        height: 30rem;
+        border: 1px solid rgba(255, 255, 255, .2);
+        border-radius: 50%;
+        box-shadow:
+            0 0 0 3rem rgba(255, 255, 255, .035),
+            0 0 0 7rem rgba(255, 255, 255, .025);
+        pointer-events: none;
+    }
+
+    .renova-login__brand,
+    .renova-login__content,
+    .renova-login__benefits,
+    .renova-login__story-footer {
+        position: relative;
+        z-index: 1;
+    }
+
+    .renova-login__brand {
+        display: inline-flex;
+        align-items: center;
+        gap: .85rem;
+        width: fit-content;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .renova-login__mark {
+        width: 46px;
+        height: 46px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(255, 255, 255, .28);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, .16);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .24);
+        backdrop-filter: blur(12px);
+        font-size: 1.4rem;
+        font-weight: 800;
+    }
+
+    .renova-login__brand-copy {
+        display: grid;
+        line-height: 1.1;
+    }
+
+    .renova-login__brand-copy strong {
+        font-size: 1.15rem;
+        letter-spacing: -.02em;
+    }
+
+    .renova-login__brand-copy span {
+        margin-top: .25rem;
+        color: rgba(255, 255, 255, .72);
+        font-size: .76rem;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    .renova-login__content {
+        max-width: 34rem;
+        margin: clamp(2rem, 7vh, 5rem) 0 2rem;
+    }
+
+    .renova-login__eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        margin: 0 0 1rem;
+        color: #bae6fd;
+        font-size: .78rem;
+        font-weight: 800;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+    }
+
+    .renova-login__eyebrow::before {
+        content: "";
+        width: 1.5rem;
+        height: 2px;
+        border-radius: 999px;
+        background: currentColor;
+    }
+
+    .renova-login__content h1 {
+        max-width: 12ch;
+        margin: 0;
+        color: #fff;
+        font-size: clamp(2.35rem, 4.3vw, 4rem);
+        line-height: 1.02;
+        letter-spacing: -.055em;
+    }
+
+    .renova-login__content p {
+        max-width: 31rem;
+        margin: 1.35rem 0 0;
+        color: rgba(255, 255, 255, .78);
+        font-size: clamp(1rem, 1.3vw, 1.1rem);
+        line-height: 1.7;
+    }
+
+    .renova-login__benefits {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: .75rem;
+        margin-top: auto;
+    }
+
+    .renova-login__benefit {
+        min-width: 0;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, .16);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, .095);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12);
+        backdrop-filter: blur(12px);
+    }
+
+    .renova-login__benefit-icon {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        margin-bottom: .8rem;
+        border-radius: 10px;
+        color: #fff;
+        background: rgba(255, 255, 255, .15);
+    }
+
+    .renova-login__benefit strong,
+    .renova-login__benefit span {
+        display: block;
+    }
+
+    .renova-login__benefit strong {
+        color: #fff;
+        font-size: .9rem;
+    }
+
+    .renova-login__benefit span {
+        margin-top: .28rem;
+        overflow: hidden;
+        color: rgba(255, 255, 255, .66);
+        font-size: .76rem;
+        line-height: 1.35;
+    }
+
+    .renova-login__story-footer {
+        margin-top: 1.25rem;
+        color: rgba(255, 255, 255, .58);
+        font-size: .75rem;
+    }
+
+    .renova-login__access {
+        padding: clamp(2rem, 4.5vw, 4.25rem);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background:
+            linear-gradient(145deg, color-mix(in srgb, var(--login-surface) 96%, transparent), var(--login-surface));
+    }
+
+    .renova-login__access-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: clamp(2rem, 5vh, 3.5rem);
+    }
+
+    .renova-login__mobile-brand {
+        display: none;
+        align-items: center;
+        gap: .65rem;
+        color: var(--login-ink);
+        text-decoration: none;
+        font-weight: 800;
+    }
+
+    .renova-login__mobile-mark {
+        width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
+        border-radius: 11px;
+        color: #fff;
+        background: var(--login-primary);
+    }
+
+    .renova-login__security {
+        margin-left: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .48rem .72rem;
+        border: 1px solid color-mix(in srgb, #16a34a 24%, var(--login-border));
+        border-radius: 999px;
+        color: #15803d;
+        background: color-mix(in srgb, #22c55e 9%, var(--login-surface));
+        font-size: .76rem;
+        font-weight: 800;
+    }
+
+    .renova-login__heading {
+        margin-bottom: 1.75rem;
+    }
+
+    .renova-login__heading h2 {
+        margin: 0;
+        color: var(--login-ink);
+        font-size: clamp(1.8rem, 3vw, 2.35rem);
+        line-height: 1.15;
+        letter-spacing: -.04em;
+    }
+
+    .renova-login__heading p {
+        margin: .65rem 0 0;
+        color: var(--login-muted);
+        line-height: 1.55;
+    }
+
+    .renova-login__alert {
+        margin-bottom: 1.25rem;
+        padding: .9rem 1rem;
+        border: 1px solid color-mix(in srgb, #ef4444 28%, var(--login-border));
+        border-radius: 13px;
+        color: #b91c1c;
+        background: color-mix(in srgb, #ef4444 8%, var(--login-surface));
+        font-size: .87rem;
+        line-height: 1.45;
+    }
+
+    .renova-login__alert strong {
+        display: block;
+        margin-bottom: .15rem;
+    }
+
+    .renova-login__form {
+        display: grid;
+        gap: 1.15rem;
+    }
+
+    .renova-login__field {
+        display: grid;
+        gap: .5rem;
+    }
+
+    .renova-login__field label {
+        color: var(--login-ink);
+        font-size: .84rem;
+        font-weight: 750;
+    }
+
+    .renova-login__input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .renova-login__field-icon {
+        position: absolute;
+        left: .95rem;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        color: var(--login-muted);
+        pointer-events: none;
+    }
+
+    .renova-login__input {
+        width: 100%;
+        min-height: 50px;
+        padding: .75rem 1rem .75rem 3rem;
+        border: 1px solid var(--login-border);
+        border-radius: 13px;
+        outline: none;
+        color: var(--login-ink);
+        background: var(--login-surface);
+        font: inherit;
+        transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+    }
+
+    .renova-login__input.has-action {
+        padding-right: 4.8rem;
+    }
+
+    .renova-login__input::placeholder {
+        color: color-mix(in srgb, var(--login-muted) 72%, transparent);
+    }
+
+    .renova-login__input:focus {
+        border-color: var(--login-primary);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--login-primary) 15%, transparent);
+    }
+
+    .renova-login__password-toggle {
+        position: absolute;
+        right: .55rem;
+        z-index: 1;
+        padding: .48rem .55rem;
+        border: 0;
+        border-radius: 8px;
+        color: var(--login-primary);
+        background: transparent;
+        cursor: pointer;
+        font: inherit;
+        font-size: .76rem;
+        font-weight: 800;
+    }
+
+    .renova-login__password-toggle:hover {
+        background: color-mix(in srgb, var(--login-primary) 9%, transparent);
+    }
+
+    .renova-login__options {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        font-size: .82rem;
+    }
+
+    .renova-login__remember {
+        display: inline-flex;
+        align-items: center;
+        gap: .55rem;
+        color: var(--login-muted);
+        cursor: pointer;
+    }
+
+    .renova-login__remember input {
+        width: 17px;
+        height: 17px;
+        accent-color: var(--login-primary);
+    }
+
+    .renova-login__link {
+        color: var(--login-primary);
+        font-weight: 750;
+        text-decoration: none;
+    }
+
+    .renova-login__link:hover {
+        text-decoration: underline;
+    }
+
+    .renova-login__submit {
+        width: 100%;
+        min-height: 52px;
+        margin-top: .2rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .65rem;
+        border: 0;
+        border-radius: 13px;
+        color: #fff;
+        background: linear-gradient(135deg, var(--login-primary), var(--login-primary-strong));
+        box-shadow: 0 12px 28px color-mix(in srgb, var(--login-primary) 30%, transparent);
+        cursor: pointer;
+        font: inherit;
+        font-weight: 800;
+        transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+
+    .renova-login__submit:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.04);
+        box-shadow: 0 16px 32px color-mix(in srgb, var(--login-primary) 36%, transparent);
+    }
+
+    .renova-login__submit:active {
+        transform: translateY(0);
+    }
+
+    .renova-login__access-footer {
+        margin-top: clamp(2rem, 5vh, 3.5rem);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        color: var(--login-muted);
+        font-size: .73rem;
+    }
+
+    @@media (max-width: 900px) {
+        .renova-login {
+            overflow: auto;
+        }
+
+        .renova-login__shell {
+            min-height: auto;
+            grid-template-columns: 1fr;
+        }
+
+        .renova-login__story {
+            min-height: 330px;
+            padding: 2rem;
+        }
+
+        .renova-login__content {
+            margin: 3rem 0 2rem;
+        }
+
+        .renova-login__content h1 {
+            max-width: 16ch;
+            font-size: clamp(2.2rem, 8vw, 3.4rem);
+        }
+
+        .renova-login__story-footer {
+            display: none;
+        }
+
+        .renova-login__access {
+            padding: 2rem;
+        }
+
+        .renova-login__access-top {
+            margin-bottom: 2rem;
+        }
+    }
+
+    @@media (max-width: 620px) {
+        .renova-login {
+            padding: 0;
+            display: block;
+            background: var(--login-surface);
+        }
+
+        .renova-login__shell {
+            width: 100%;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .renova-login__story {
+            display: none;
+        }
+
+        .renova-login__access {
+            min-height: 100svh;
+            padding: 1.35rem;
+        }
+
+        .renova-login__mobile-brand {
+            display: inline-flex;
+        }
+
+        .renova-login__benefits {
+            grid-template-columns: 1fr;
+        }
+
+        .renova-login__options,
+        .renova-login__access-footer {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+
+    @@media (max-height: 760px) and (min-width: 901px) {
+        .renova-login {
+            padding: 1rem;
+        }
+
+        .renova-login__shell {
+            min-height: calc(100svh - 2rem);
+        }
+
+        .renova-login__story,
+        .renova-login__access {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        .renova-login__content {
+            margin: 2rem 0 1.5rem;
+        }
+
+        .renova-login__access-top,
+        .renova-login__access-footer {
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        .renova-login__input,
+        .renova-login__submit {
+            transition: none;
+        }
+    }
+</style>
+
+<main id="conteudo" class="renova-login" tabindex="-1">
+    <section class="renova-login__shell" aria-label="Acesso ao sistema Renova">
+        <aside class="renova-login__story" aria-label="Conheça o Renova">
+            <a class="renova-login__brand" asp-controller="Home" asp-action="Index" aria-label="Renova — página inicial">
+                <span class="renova-login__mark" aria-hidden="true">R</span>
+                <span class="renova-login__brand-copy">
+                    <strong>Renova</strong>
+                    <span>Plataforma de acolhimento</span>
+                </span>
+            </a>
+
+            <div class="renova-login__content">
+                <span class="renova-login__eyebrow">Tecnologia que acolhe</span>
+                <h1>Cuidado humano. Gestão inteligente.</h1>
+                <p>
+                    Uma experiência integrada para acolher, acompanhar e transformar
+                    jornadas com segurança, clareza e propósito.
+                </p>
             </div>
-        </orizon-card>
 
-        <orizon-card title="Bem-vindo" subtitle="Entre com suas credenciais para continuar" variant="elevated" padding="lg">
+            <div class="renova-login__benefits" aria-label="Recursos da plataforma">
+                <article class="renova-login__benefit">
+                    <span class="renova-login__benefit-icon" aria-hidden="true">
+                        <orizon-icon name="users" size="18"></orizon-icon>
+                    </span>
+                    <strong>Acolhimento</strong>
+                    <span>Jornadas e famílias conectadas.</span>
+                </article>
+
+                <article class="renova-login__benefit">
+                    <span class="renova-login__benefit-icon" aria-hidden="true">
+                        <orizon-icon name="clipboard" size="18"></orizon-icon>
+                    </span>
+                    <strong>Prontuário</strong>
+                    <span>Acompanhamento seguro e completo.</span>
+                </article>
+
+                <article class="renova-login__benefit">
+                    <span class="renova-login__benefit-icon" aria-hidden="true">
+                        <orizon-icon name="timeline" size="18"></orizon-icon>
+                    </span>
+                    <strong>Desenvolvimento</strong>
+                    <span>Educação e evolução contínua.</span>
+                </article>
+            </div>
+
+            <div class="renova-login__story-footer">
+                © @DateTime.Now.Year Renova. Feito para quem transforma vidas.
+            </div>
+        </aside>
+
+        <div class="renova-login__access">
+            <div class="renova-login__access-top">
+                <a class="renova-login__mobile-brand" asp-controller="Home" asp-action="Index" aria-label="Renova — página inicial">
+                    <span class="renova-login__mobile-mark" aria-hidden="true">R</span>
+                    <span>Renova</span>
+                </a>
+
+                <span class="renova-login__security">
+                    <orizon-icon name="shield-check" size="15"></orizon-icon>
+                    Ambiente seguro
+                </span>
+            </div>
+
+            <div class="renova-login__heading">
+                <h2>Bem-vindo de volta</h2>
+                <p>Entre com suas credenciais para acessar o painel.</p>
+            </div>
+
             @if (hasError)
             {
-                <orizon-alert variant="danger" title="Não foi possível entrar">Confira seu email, senha ou status do usuário.</orizon-alert>
+                <div class="renova-login__alert" role="alert">
+                    <strong>Não foi possível entrar</strong>
+                    Confira seu email, senha ou status do usuário.
+                </div>
             }
 
-            <form class="orizon-form orizon-mt-4" action="/auth/web-login" method="post">
+            <form class="renova-login__form" action="/auth/web-login" method="post">
+                @Html.AntiForgeryToken()
                 <input type="hidden" name="returnUrl" value="@returnUrl" />
 
-                <div class="orizon-field">
-                    <label class="orizon-field__label" for="login-email">Email</label>
-                    <input class="orizon-input" id="login-email" name="email" type="email" autocomplete="username" placeholder="seu@email.com.br" required />
+                <div class="renova-login__field">
+                    <label for="login-email">Email</label>
+                    <div class="renova-login__input-wrap">
+                        <span class="renova-login__field-icon" aria-hidden="true">
+                            <orizon-icon name="mail" size="18"></orizon-icon>
+                        </span>
+                        <input class="renova-login__input"
+                               id="login-email"
+                               name="email"
+                               type="email"
+                               autocomplete="username"
+                               inputmode="email"
+                               placeholder="seu@email.com.br"
+                               required
+                               autofocus />
+                    </div>
                 </div>
 
-                <div class="orizon-field">
-                    <label class="orizon-field__label" for="login-password">Senha</label>
-                    <input class="orizon-input" id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Digite sua senha" required />
-                    <button class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm login-password-toggle" type="button" aria-label="Mostrar ou ocultar senha" aria-controls="login-password">Mostrar senha</button>
+                <div class="renova-login__field">
+                    <label for="login-password">Senha</label>
+                    <div class="renova-login__input-wrap">
+                        <span class="renova-login__field-icon" aria-hidden="true">
+                            <orizon-icon name="lock" size="18"></orizon-icon>
+                        </span>
+                        <input class="renova-login__input has-action"
+                               id="login-password"
+                               name="password"
+                               type="password"
+                               autocomplete="current-password"
+                               placeholder="Digite sua senha"
+                               required />
+                        <button class="renova-login__password-toggle"
+                                type="button"
+                                aria-label="Mostrar senha"
+                                aria-controls="login-password"
+                                aria-pressed="false">
+                            Mostrar
+                        </button>
+                    </div>
                 </div>
 
-                <div class="orizon-flex orizon-items-center orizon-justify-between orizon-gap-3">
-                    <label class="orizon-flex orizon-items-center orizon-gap-2">
+                <div class="renova-login__options">
+                    <label class="renova-login__remember">
                         <input name="rememberMe" type="checkbox" value="true" />
                         <span>Permanecer conectado</span>
                     </label>
-                    <a href="/login">Esqueci minha senha</a>
+
+                    <a class="renova-login__link" href="/login">Esqueci minha senha</a>
                 </div>
 
-                <orizon-button type="submit" full-width><orizon-icon name="login" size="18" /> Entrar no Renova</orizon-button>
+                <button class="renova-login__submit" type="submit">
+                    <orizon-icon name="login" size="18"></orizon-icon>
+                    Entrar no Renova
+                </button>
             </form>
-        </orizon-card>
-    </section>
 
-    <footer class="orizon-footer">
-        <div class="orizon-footer-left">© @DateTime.Now.Year <strong>Renova</strong></div>
-        <div class="orizon-footer-right"><span>Orizon.UI 1.0.0-rc.1</span></div>
-    </footer>
+            <footer class="renova-login__access-footer">
+                <span>Seus dados são protegidos.</span>
+                <span>Orizon.UI 1.2.0</span>
+            </footer>
+        </div>
+    </section>
 </main>
 
 <script>
     (() => {
         const password = document.querySelector("#login-password");
-        const passwordToggle = document.querySelector(".login-password-toggle");
-        passwordToggle?.addEventListener("click", () => {
-            const isPassword = password.type === "password";
-            password.type = isPassword ? "text" : "password";
-            passwordToggle.textContent = isPassword ? "Ocultar senha" : "Mostrar senha";
+        const toggle = document.querySelector(".renova-login__password-toggle");
+
+        if (!password || !toggle) {
+            return;
+        }
+
+        toggle.addEventListener("click", () => {
+            const showPassword = password.type === "password";
+            password.type = showPassword ? "text" : "password";
+            toggle.textContent = showPassword ? "Ocultar" : "Mostrar";
+            toggle.setAttribute("aria-label", showPassword ? "Ocultar senha" : "Mostrar senha");
+            toggle.setAttribute("aria-pressed", showPassword ? "true" : "false");
+            password.focus();
         });
     })();
 </script>

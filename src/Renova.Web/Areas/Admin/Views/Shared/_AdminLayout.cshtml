@@ -40,6 +40,10 @@
           href="~/_content/Orizon.UI/css/orizon.css"
           asp-append-version="true" />
 
+        <link rel="stylesheet"
+      href="~/css/topbar.css"
+      asp-append-version="true" />  
+
     <link rel="stylesheet"
           href="~/css/dashboard-v2.css"
           asp-append-version="true" />
@@ -251,6 +255,49 @@
             });
         })();
     </script>
+
+    <script>
+    (() => {
+        const topbar = document.querySelector(".orizon-admin-topbar");
+        const searchToggle = document.querySelector(
+            "[data-topbar-search-toggle]"
+        );
+        const searchInput = document.querySelector(
+            "#orizon-global-search"
+        );
+
+        searchToggle?.addEventListener("click", () => {
+            const isOpen = topbar?.classList.toggle(
+                "is-search-open"
+            );
+
+            searchToggle.setAttribute(
+                "aria-expanded",
+                isOpen ? "true" : "false"
+            );
+
+            if (isOpen) {
+                searchInput?.focus();
+            }
+        });
+
+        document.addEventListener("keydown", event => {
+            if (
+                (event.ctrlKey || event.metaKey) &&
+                event.key.toLowerCase() === "k"
+            ) {
+                event.preventDefault();
+
+                topbar?.classList.add("is-search-open");
+                searchInput?.focus();
+            }
+
+            if (event.key === "Escape") {
+                topbar?.classList.remove("is-search-open");
+            }
+        });
+    })();
+</script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
