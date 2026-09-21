@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Renova.Domain.Entities;
@@ -9,6 +10,7 @@ using Renova.Web.Services;
 namespace Renova.Web.Areas.CRM.Controllers;
 
 [Area("CRM")]
+[Authorize]
 public sealed class AdmissionsController(
     IDbContextFactory<AppDbContext> dbContextFactory,
     ICurrentTenantService currentTenantService) : Controller
@@ -39,7 +41,10 @@ public sealed class AdmissionsController(
 
         var admissions = await db.Admissions
             .AsNoTracking()
-            .Where(item => item.TenantId == tenantId.Value && item.StudentId == studentId)
+            .Where(item =>
+                item.TenantId == tenantId.Value &&
+                item.Student.TenantId == tenantId.Value &&
+                item.StudentId == studentId)
             .OrderByDescending(item => item.AdmissionDate)
             .ToListAsync();
 
@@ -127,7 +132,10 @@ public sealed class AdmissionsController(
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var admission = await db.Admissions
             .Include(item => item.Student)
-            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
+            .FirstOrDefaultAsync(item =>
+                item.Id == id &&
+                item.TenantId == tenantId.Value &&
+                item.Student.TenantId == tenantId.Value);
 
         return admission is null ? NotFound() : View(ToForm(admission));
     }
@@ -151,7 +159,10 @@ public sealed class AdmissionsController(
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var admission = await db.Admissions
             .Include(item => item.Student)
-            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
+            .FirstOrDefaultAsync(item =>
+                item.Id == id &&
+                item.TenantId == tenantId.Value &&
+                item.Student.TenantId == tenantId.Value);
 
         if (admission is null)
         {
@@ -251,7 +262,10 @@ public sealed class AdmissionsController(
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var admission = await db.Admissions
             .Include(item => item.Student)
-            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
+            .FirstOrDefaultAsync(item =>
+                item.Id == id &&
+                item.TenantId == tenantId.Value &&
+                item.Student.TenantId == tenantId.Value);
 
         if (admission is null)
         {

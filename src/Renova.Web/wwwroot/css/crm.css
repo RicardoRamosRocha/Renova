@@ -1,3 +1,121 @@
+/* CRM foundation: new pages should use these shared Renova patterns together
+   with Orizon.UI primitives. Legacy selectors below remain for existing views. */
+.crm-page-header,
+.crm-form-header {
+    align-items: flex-start;
+    background: var(--orizon-color-surface, var(--rn-card));
+    border: 1px solid var(--orizon-color-border, var(--rn-border));
+    border-radius: var(--orizon-radius-xl, var(--rn-radius-xl));
+    box-shadow: var(--orizon-elevation-1, var(--rn-shadow-sm));
+    display: flex;
+    gap: 1.5rem;
+    justify-content: space-between;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.crm-page-header__content,
+.crm-form-header__content,
+.crm-page-header__actions,
+.crm-form-header__actions {
+    min-width: 0;
+}
+
+.crm-page-header h1,
+.crm-form-header h1 {
+    color: var(--orizon-color-text-primary, var(--rn-text));
+    font-size: clamp(1.65rem, 3vw, 2.4rem);
+    line-height: 1.1;
+    margin: .55rem 0 0;
+}
+
+.crm-page-header p,
+.crm-form-header p {
+    color: var(--orizon-color-text-secondary, var(--rn-muted));
+    line-height: 1.6;
+    margin: .55rem 0 0;
+    max-width: 48rem;
+}
+
+.crm-page-header__actions,
+.crm-form-header__actions {
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    gap: .65rem;
+}
+
+.crm-page-header__breadcrumb,
+.crm-form-header__breadcrumb {
+    color: var(--orizon-color-text-secondary, var(--rn-muted));
+    display: flex;
+    flex-wrap: wrap;
+    font-size: .8rem;
+    font-weight: 700;
+    gap: .45rem;
+    margin-bottom: .5rem;
+}
+
+.crm-page-header__breadcrumb a,
+.crm-form-header__breadcrumb a {
+    color: var(--orizon-brand-primary, var(--rn-primary));
+    text-decoration: none;
+}
+
+.crm-status-badge {
+    align-items: center;
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: .75rem;
+    font-weight: 800;
+    gap: .35rem;
+    line-height: 1;
+    padding: .45rem .7rem;
+}
+
+.crm-status-badge--success { background: color-mix(in srgb, var(--orizon-color-success, #16a34a) 14%, transparent); color: var(--orizon-color-success, #15803d); }
+.crm-status-badge--info { background: color-mix(in srgb, var(--orizon-color-info, #0284c7) 14%, transparent); color: var(--orizon-color-info, #0369a1); }
+.crm-status-badge--warning { background: color-mix(in srgb, var(--orizon-color-warning, #d97706) 16%, transparent); color: var(--orizon-color-warning, #b45309); }
+.crm-status-badge--danger { background: color-mix(in srgb, var(--orizon-color-danger, #dc2626) 14%, transparent); color: var(--orizon-color-danger, #b91c1c); }
+.crm-status-badge--neutral { background: var(--orizon-color-surface-secondary, #f1f5f9); color: var(--orizon-color-text-secondary, #475569); }
+
+.crm-empty-state {
+    align-items: center;
+    display: grid;
+    gap: .65rem;
+    justify-items: center;
+    padding: clamp(2.5rem, 6vw, 4rem) 1.5rem;
+    text-align: center;
+}
+
+.crm-empty-state__icon {
+    align-items: center;
+    background: color-mix(in srgb, var(--orizon-brand-primary, var(--rn-primary)) 12%, transparent);
+    border-radius: var(--orizon-radius-lg, var(--rn-radius-lg));
+    color: var(--orizon-brand-primary, var(--rn-primary));
+    display: inline-flex;
+    height: 3.75rem;
+    justify-content: center;
+    width: 3.75rem;
+}
+
+.crm-empty-state strong { color: var(--orizon-color-text-primary, var(--rn-text)); }
+.crm-empty-state p { color: var(--orizon-color-text-secondary, var(--rn-muted)); margin: 0; max-width: 34rem; }
+
+@media (max-width: 680px) {
+    .crm-page-header,
+    .crm-form-header {
+        flex-direction: column;
+    }
+
+    .crm-page-header__actions,
+    .crm-form-header__actions,
+    .crm-page-header__actions > *,
+    .crm-form-header__actions > * {
+        width: 100%;
+    }
+}
+
 .crm-index-page {
     background: transparent;
     min-height: auto;

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Renova.Domain.Entities;
@@ -8,6 +9,7 @@ using Renova.Web.Services;
 namespace Renova.Web.Areas.CRM.Controllers;
 
 [Area("CRM")]
+[Authorize]
 public sealed class FamiliesController(
     IDbContextFactory<AppDbContext> dbContextFactory,
     ICurrentTenantService currentTenantService,
@@ -33,7 +35,9 @@ public sealed class FamiliesController(
 
         if (studentId.HasValue)
         {
-            query = query.Where(item => item.StudentId == studentId.Value);
+            query = query.Where(item =>
+                item.StudentId == studentId.Value &&
+                item.Student.TenantId == tenantId.Value);
         }
 
         ViewBag.StudentId = studentId;
@@ -136,7 +140,10 @@ public sealed class FamiliesController(
         var member = await db.FamilyMembers
             .Include(item => item.Person)
             .Include(item => item.Student)
-            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
+            .FirstOrDefaultAsync(item =>
+                item.Id == id &&
+                item.TenantId == tenantId.Value &&
+                item.Student.TenantId == tenantId.Value);
 
         return member is null ? NotFound() : View(ToForm(member));
     }
@@ -161,7 +168,10 @@ public sealed class FamiliesController(
         var member = await db.FamilyMembers
             .Include(item => item.Person)
             .Include(item => item.Student)
-            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
+            .FirstOrDefaultAsync(item =>
+                item.Id == id &&
+                item.TenantId == tenantId.Value &&
+                item.Student.TenantId == tenantId.Value);
 
         if (member is null)
         {

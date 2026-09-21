@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Renova.Domain.Entities;
@@ -9,6 +10,7 @@ using Renova.Web.Services;
 namespace Renova.Web.Areas.CRM.Controllers;
 
 [Area("CRM")]
+[Authorize]
 public sealed class DashboardController(
     IDbContextFactory<AppDbContext> dbContextFactory,
     ICurrentTenantService currentTenantService) : Controller
@@ -94,6 +96,7 @@ public sealed class DashboardController(
                 .Include(item => item.Professional)
                 .Where(item =>
                     item.Student.TenantId == tenantId.Value &&
+                    (item.Professional == null || item.Professional.TenantId == tenantId.Value) &&
                     item.ScheduledAt >= todayStart &&
                     item.ScheduledAt < tomorrow)
                 .OrderBy(item => item.ScheduledAt)

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Renova.Infrastructure.Data;
@@ -7,6 +8,7 @@ using Renova.Web.Services;
 namespace Renova.Web.Areas.CRM.Controllers;
 
 [Area("CRM")]
+[Authorize]
 public sealed class AppointmentsController(
     IDbContextFactory<AppDbContext> dbContextFactory,
     ICurrentTenantService currentTenantService) : Controller
@@ -34,6 +36,7 @@ public sealed class AppointmentsController(
             .Include(item => item.Professional)
             .Where(item =>
                 item.Student.TenantId == tenantId.Value &&
+                (item.Professional == null || item.Professional.TenantId == tenantId.Value) &&
                 item.ScheduledAt >= from &&
                 item.ScheduledAt < to);
 

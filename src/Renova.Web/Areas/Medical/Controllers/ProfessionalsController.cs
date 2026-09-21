@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Renova.Domain.Entities;
@@ -9,6 +10,7 @@ using Renova.Web.ViewModels;
 namespace Renova.Web.Areas.Medical.Controllers;
 
 [Area("Medical")]
+[Authorize]
 public sealed class ProfessionalsController(
     IDbContextFactory<AppDbContext> dbContextFactory,
     ICurrentTenantService currentTenantService,

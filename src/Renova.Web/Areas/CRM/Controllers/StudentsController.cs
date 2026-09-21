@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Renova.Domain.Entities;
@@ -11,6 +12,7 @@ using Renova.Web.ViewModels;
 namespace Renova.Web.Areas.CRM.Controllers;
 
 [Area("CRM")]
+[Authorize]
 public sealed class StudentsController(
     IDbContextFactory<AppDbContext> dbContextFactory,
     IPhotoService photoService,
@@ -452,7 +454,9 @@ public sealed class StudentsController(
             .ToList();
 
         var appointments = student.Appointments
-            .Where(item => item.ScheduledAt.Date >= today)
+            .Where(item =>
+                (item.Professional == null || item.Professional.TenantId == student.TenantId) &&
+                item.ScheduledAt.Date >= today)
             .OrderBy(item => item.ScheduledAt)
             .Take(3)
             .Select(item => new StudentAppointmentSummaryViewModel
@@ -506,7 +510,9 @@ public sealed class StudentsController(
             Responsible = item.ProfessionalName
         }));
 
-        timeline.AddRange(student.Appointments.Select(item => new TimelineItemViewModel
+        timeline.AddRange(student.Appointments
+            .Where(item => item.Professional == null || item.Professional.TenantId == student.TenantId)
+            .Select(item => new TimelineItemViewModel
         {
             Icon = "ph-calendar-check",
             Title = "Atendimento agendado",

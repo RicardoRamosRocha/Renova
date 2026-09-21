@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Renova.Web.Areas.CRM.Controllers;
 
 [Area("CRM")]
+[Authorize]
 public sealed class ProfessionalsController : Controller
 {
     public IActionResult Index() => RedirectToAction("Index", "Professionals", new { area = "Medical" });
