@@ -1,0 +1,84 @@
+/*
+   Renova Experience — visual foundation
+
+   Contract:
+   Orizon.UI -> Renova Foundation -> domain compositions -> screens
+
+   This file intentionally contains tokens and integration aliases only.
+   It does not recreate Orizon UI components and does not migrate legacy
+   screen selectors. Legacy CSS remains loaded during the transition.
+*/
+
+:root {
+    /* Typography: prefer Orizon tokens, then the current Renova fallback. */
+    --renova-font-family: var(
+        --orizon-font-family,
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif
+    );
+    --renova-font-size-page-title: var(--orizon-font-size-3xl, 2rem);
+    --renova-font-size-section-title: var(--orizon-font-size-xl, 1.25rem);
+    --renova-font-size-body: var(--orizon-font-size-md, 1rem);
+    --renova-font-size-secondary: var(--orizon-font-size-sm, .875rem);
+    --renova-font-size-caption: var(--orizon-font-size-xs, .75rem);
+    --renova-font-weight-regular: var(--orizon-font-weight-regular, 400);
+    --renova-font-weight-medium: var(--orizon-font-weight-medium, 500);
+    --renova-font-weight-semibold: var(--orizon-font-weight-semibold, 600);
+    --renova-font-weight-bold: var(--orizon-font-weight-bold, 700);
+    --renova-line-height-body: var(--orizon-line-height-body, 1.5);
+    --renova-line-height-heading: var(--orizon-line-height-heading, 1.15);
+
+    /* Spacing scale for new compositions. Existing screens are not changed. */
+    --renova-space-1: var(--orizon-space-1, .25rem);
+    --renova-space-2: var(--orizon-space-2, .5rem);
+    --renova-space-3: var(--orizon-space-3, .75rem);
+    --renova-space-4: var(--orizon-space-4, 1rem);
+    --renova-space-5: var(--orizon-space-5, 1.25rem);
+    --renova-space-6: var(--orizon-space-6, 1.5rem);
+    --renova-space-8: var(--orizon-space-8, 2rem);
+    --renova-space-10: var(--orizon-space-10, 2.5rem);
+    --renova-space-12: var(--orizon-space-12, 3rem);
+
+    /* Shape, surfaces and elevation. */
+    --renova-radius-sm: var(--orizon-radius-sm, 8px);
+    --renova-radius-md: var(--orizon-radius-md, 12px);
+    --renova-radius-lg: var(--orizon-radius-lg, 16px);
+    --renova-radius-xl: var(--orizon-radius-xl, 24px);
+    --renova-border-width: var(--orizon-border-width, 1px);
+    --renova-border-color: var(--orizon-color-border, #e2e8f0);
+    --renova-surface: var(--orizon-color-surface, #ffffff);
+    --renova-surface-subtle: var(--orizon-color-surface-secondary, #f8fafc);
+    --renova-shadow-sm: var(--orizon-elevation-1, 0 10px 28px rgba(15, 23, 42, .06));
+    --renova-shadow-md: var(--orizon-elevation-2, 0 20px 54px rgba(15, 23, 42, .09));
+
+    /* Semantic colors: Orizon remains the source of truth when available. */
+    --renova-text: var(--orizon-color-text-primary, #0f172a);
+    --renova-text-muted: var(--orizon-color-text-secondary, #64748b);
+    --renova-primary: var(--orizon-brand-primary, var(--orizon-color-primary, #2563eb));
+    --renova-success: var(--orizon-color-success, #16a34a);
+    --renova-warning: var(--orizon-color-warning, #d97706);
+    --renova-danger: var(--orizon-color-danger, #dc2626);
+    --renova-focus-ring: var(--orizon-focus-ring, 0 0 0 4px rgba(37, 99, 235, .16));
+
+    /* Layout contract for future page compositions. */
+    --renova-container-max-width: var(--orizon-container-max-width, 1440px);
+    --renova-page-gutter: var(--orizon-page-gutter, var(--renova-space-6));
+}
+
+/* Opt-in foundation scope for future migrations. No current screen opts in yet. */
+.renova-foundation {
+    color: var(--renova-text);
+    font-family: var(--renova-font-family);
+    line-height: var(--renova-line-height-body);
+}
+
+.renova-foundation :where(a, button, input, select, textarea):focus-visible {
+    box-shadow: var(--renova-focus-ring);
+    outline: 0;
+}
+
+@media (max-width: 760px) {
+    :root {
+        --renova-page-gutter: var(--renova-space-4);
+    }
+}

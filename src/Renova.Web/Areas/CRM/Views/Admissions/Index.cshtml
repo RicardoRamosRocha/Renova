@@ -4,47 +4,49 @@
     ViewData["Title"] = "Admissões";
 }
 
-<section class="admin-page">
-    <header class="admin-form-header">
-        <div>
+<section class="admin-page renova-listing-page">
+    <header class="admin-form-header renova-listing-header">
+        <div class="renova-listing-header__content">
             <nav class="admin-form-breadcrumb"><a asp-controller="Students" asp-action="Details" asp-route-id="@ViewBag.StudentId">Perfil</a><span>/</span><span>Admissões</span></nav>
             <span class="rn-eyebrow">CRM</span>
             <h1>Admissões de @ViewBag.StudentName</h1>
         </div>
-        <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create" asp-route-studentId="@ViewBag.StudentId">Nova admissão</a>
+        <div class="renova-listing-header__actions">
+            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create" asp-route-studentId="@ViewBag.StudentId">Nova admissão</a>
+        </div>
     </header>
 
-    <section class="orizon-card orizon-card--padding-none">
+    <section class="orizon-card orizon-card--padding-none renova-listing-card renova-listing-card--flush">
         @if (Model.Count == 0)
         {
-            <div class="crm-empty-state">
-                <div class="crm-empty-icon"></div>
+            <div class="renova-listing-empty">
+                <div class="renova-listing-empty__icon"><orizon-icon name="clipboard" size="28" /></div>
                 <strong>Nenhuma admissão registrada</strong>
                 <p>Crie a primeira admissão para iniciar o histórico do acolhido.</p>
             </div>
         }
         else
         {
-            <div class="orizon-table-container">
-                <table class="orizon-table orizon-table--hoverable">
+            <div class="orizon-table-container renova-listing-table-wrap">
+                <table class="orizon-table orizon-table--hoverable renova-listing-table">
                     <thead><tr><th>Entrada</th><th>Status</th><th>Responsável</th><th>Previsão</th><th class="text-end">Ações</th></tr></thead>
                     <tbody>
                     @foreach (var admission in Model)
                     {
                         <tr>
                             <td><a asp-action="Details" asp-route-id="@admission.Id">@admission.AdmissionDate.ToString("dd/MM/yyyy")</a></td>
-                            <td><span class="crm-status-badge">@AdmissionStatusLabel(admission.AdmissionStatus)</span></td>
+                            <td><span class="orizon-badge orizon-badge--md @((admission.AdmissionStatus == AdmissionStatus.Active) ? "orizon-badge--success" : admission.AdmissionStatus == AdmissionStatus.Planned ? "orizon-badge--warning" : admission.AdmissionStatus == AdmissionStatus.Cancelled ? "orizon-badge--danger" : "orizon-badge--info")">@AdmissionStatusLabel(admission.AdmissionStatus)</span></td>
                             <td>@(admission.ResponsibleProfessional ?? "Não informado")</td>
                             <td>@(admission.ExpectedDischargeDate?.ToString("dd/MM/yyyy") ?? "Sem previsão")</td>
                             <td>
-                                <div class="renova-action-buttons">
-                                    <a class="renova-action-btn" asp-action="Details" asp-route-id="@admission.Id" title="Ver detalhes">Ver</a>
-                                    <a class="renova-action-btn" asp-action="Edit" asp-route-id="@admission.Id" title="Editar">Editar</a>
+                                <div class="renova-action-buttons renova-row-actions">
+                                    <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm" asp-action="Details" asp-route-id="@admission.Id" title="Ver detalhes">Ver</a>
+                                    <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm" asp-action="Edit" asp-route-id="@admission.Id" title="Editar">Editar</a>
                                     @if (admission.AdmissionStatus is AdmissionStatus.Active or AdmissionStatus.Planned)
                                     {
-                                        <form asp-action="Discharge" asp-route-id="@admission.Id" method="post" onsubmit="return confirm('Registrar alta desta admissão?');"><button class="renova-action-btn" type="submit" title="Alta">Alta</button></form>
-                                        <form asp-action="Transfer" asp-route-id="@admission.Id" method="post" onsubmit="return confirm('Registrar transferência desta admissão?');"><button class="renova-action-btn" type="submit" title="Transferir">Transferir</button></form>
-                                        <form asp-action="Cancel" asp-route-id="@admission.Id" method="post" onsubmit="return confirm('Cancelar esta admissão?');"><button class="renova-action-btn" type="submit" title="Cancelar">Cancelar</button></form>
+                                        <form asp-action="Discharge" asp-route-id="@admission.Id" method="post" onsubmit="return confirm('Registrar alta desta admissão?');"><button class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm" type="submit" title="Alta">Alta</button></form>
+                                        <form asp-action="Transfer" asp-route-id="@admission.Id" method="post" onsubmit="return confirm('Registrar transferência desta admissão?');"><button class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm" type="submit" title="Transferir">Transferir</button></form>
+                                        <form asp-action="Cancel" asp-route-id="@admission.Id" method="post" onsubmit="return confirm('Cancelar esta admissão?');"><button class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm" type="submit" title="Cancelar">Cancelar</button></form>
                                     }
                                 </div>
                             </td>

@@ -1,0 +1,431 @@
+/* Renova Experience — shared CRM listing composition.
+   This layer standardizes structure only. Domain-specific content, routes,
+   filters, statuses and actions remain in each view. */
+
+.renova-listing-page {
+    display: grid;
+    gap: var(--renova-space-6, 1.5rem);
+    min-width: 0;
+}
+
+.renova-listing-metrics {
+    display: grid;
+    gap: var(--renova-space-4, 1rem);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.renova-metric {
+    align-items: center;
+    background: var(--renova-surface, #fff);
+    border: var(--renova-border-width, 1px) solid var(--renova-border-color, #e2e8f0);
+    border-radius: var(--renova-radius-lg, 16px);
+    box-shadow: var(--renova-shadow-sm, 0 10px 28px rgba(15, 23, 42, .06));
+    display: flex;
+    gap: var(--renova-space-4, 1rem);
+    min-width: 0;
+    padding: var(--renova-space-4, 1rem);
+    transition: transform var(--renova-motion-fast, 120ms) ease, box-shadow var(--renova-motion-fast, 120ms) ease;
+}
+
+.renova-metric:hover {
+    box-shadow: var(--renova-shadow-md, 0 16px 36px rgba(15, 23, 42, .1));
+    transform: translateY(-2px);
+}
+
+.renova-metric__icon {
+    align-items: center;
+    background: color-mix(in srgb, var(--metric-color, var(--renova-primary, #2563eb)) 13%, transparent);
+    border-radius: var(--renova-radius-md, 12px);
+    color: var(--metric-color, var(--renova-primary, #2563eb));
+    display: inline-flex;
+    flex: 0 0 2.75rem;
+    height: 2.75rem;
+    justify-content: center;
+    width: 2.75rem;
+}
+
+.renova-metric__content { display: grid; min-width: 0; }
+.renova-metric__content span,
+.renova-metric__content small {
+    color: var(--renova-text-muted, #64748b);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.renova-metric__content strong {
+    color: var(--renova-text, #0f172a);
+    font-size: 1.55rem;
+    line-height: 1.15;
+}
+.renova-metric--primary { --metric-color: var(--renova-primary, #2563eb); }
+.renova-metric--success { --metric-color: var(--renova-success, #16a34a); }
+.renova-metric--info { --metric-color: var(--renova-info, #0284c7); }
+.renova-metric--warning { --metric-color: var(--renova-warning, #d97706); }
+
+.renova-listing-header {
+    align-items: flex-start;
+    background: var(--renova-surface, #fff);
+    border: var(--renova-border-width, 1px) solid var(--renova-border-color, #e2e8f0);
+    border-radius: var(--renova-radius-xl, 24px);
+    box-shadow: var(--renova-shadow-sm, 0 10px 28px rgba(15, 23, 42, .06));
+    display: flex;
+    gap: var(--renova-space-6, 1.5rem);
+    justify-content: space-between;
+    padding: var(--renova-space-6, 1.5rem) var(--renova-space-8, 2rem);
+}
+
+.renova-listing-header__content,
+.renova-listing-header__actions {
+    min-width: 0;
+}
+
+.renova-listing-header__actions {
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    gap: var(--renova-space-2, .5rem);
+}
+
+.renova-listing-header__content > p {
+    color: var(--renova-text-muted, #64748b);
+    line-height: var(--renova-line-height-body, 1.5);
+    margin: var(--renova-space-2, .5rem) 0 0;
+    max-width: 52rem;
+}
+
+.renova-listing-header__breadcrumb {
+    align-items: center;
+    color: var(--renova-text-muted, #64748b);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: var(--renova-font-size-caption, .75rem);
+    font-weight: var(--renova-font-weight-semibold, 600);
+    gap: var(--renova-space-2, .5rem);
+    margin-bottom: var(--renova-space-2, .5rem);
+}
+
+.renova-listing-header__breadcrumb a {
+    color: var(--renova-primary, #2563eb);
+    text-decoration: none;
+}
+
+.renova-listing-header h1 {
+    color: var(--renova-text, #0f172a);
+    font-size: clamp(1.65rem, 3vw, 2.35rem);
+    line-height: var(--renova-line-height-heading, 1.15);
+    margin: var(--renova-space-2, .5rem) 0 0;
+}
+
+.renova-listing-toolbar {
+    background: var(--renova-surface, #fff);
+    border: var(--renova-border-width, 1px) solid var(--renova-border-color, #e2e8f0);
+    border-radius: var(--renova-radius-lg, 16px);
+    box-shadow: var(--renova-shadow-sm, 0 10px 28px rgba(15, 23, 42, .06));
+    padding: var(--renova-space-5, 1.25rem);
+}
+
+.renova-listing-toolbar--embedded {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.renova-listing-toolbar__heading {
+    margin-bottom: var(--renova-space-4, 1rem);
+}
+
+.renova-listing-toolbar__heading h2 {
+    color: var(--renova-text, #0f172a);
+    font-size: var(--renova-font-size-section-title, 1.25rem);
+    margin: 0;
+}
+
+.renova-listing-toolbar__heading p {
+    color: var(--renova-text-muted, #64748b);
+    margin: var(--renova-space-1, .25rem) 0 0;
+}
+
+.renova-listing-filters {
+    align-items: end;
+    display: grid;
+    gap: var(--renova-space-3, .75rem);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.renova-listing-filters > .orizon-field,
+.renova-listing-filters > .renova-field {
+    min-width: 0;
+}
+
+.renova-listing-filters > .orizon-field:first-child,
+.renova-listing-filters > .renova-field:first-child {
+    grid-column: span 4;
+}
+
+.renova-listing-filters > .renova-filter-actions,
+.renova-listing-filters > .orizon-form-actions,
+.renova-listing-filters > .renova-filter-submit {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--renova-space-2, .5rem);
+    grid-column: span 2;
+}
+
+.renova-listing-filters .orizon-field__label,
+.renova-listing-filters label:not(.admin-check) {
+    color: var(--renova-text-muted, #64748b);
+    font-size: var(--renova-font-size-caption, .75rem);
+    font-weight: var(--renova-font-weight-semibold, 600);
+}
+
+.renova-search {
+    position: relative;
+}
+
+.renova-search > orizon-icon {
+    color: var(--renova-text-muted, #64748b);
+    left: var(--renova-space-3, .75rem);
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.renova-search .orizon-input {
+    padding-left: 2.65rem;
+    width: 100%;
+}
+
+.renova-listing-card {
+    background: var(--renova-surface, #fff);
+    border: var(--renova-border-width, 1px) solid var(--renova-border-color, #e2e8f0);
+    border-radius: var(--renova-radius-lg, 16px);
+    box-shadow: var(--renova-shadow-sm, 0 10px 28px rgba(15, 23, 42, .06));
+    min-width: 0;
+    overflow: hidden;
+}
+
+.renova-listing-card--flush {
+    padding: 0;
+}
+
+.renova-listing-card__header {
+    align-items: center;
+    display: flex;
+    gap: var(--renova-space-4, 1rem);
+    justify-content: space-between;
+    padding: var(--renova-space-5, 1.25rem) var(--renova-space-6, 1.5rem);
+}
+.renova-listing-card__header h2 {
+    color: var(--renova-text, #0f172a);
+    font-size: var(--renova-font-size-section-title, 1.25rem);
+    margin: 0;
+}
+.renova-listing-card__header p {
+    color: var(--renova-text-muted, #64748b);
+    margin: var(--renova-space-1, .25rem) 0 0;
+}
+
+.renova-listing-table-wrap {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.renova-listing-table {
+    min-width: 720px;
+    width: 100%;
+}
+
+.renova-listing-table thead th {
+    background: var(--renova-surface-subtle, #f8fafc);
+    color: var(--renova-text-muted, #64748b);
+    font-size: var(--renova-font-size-caption, .75rem);
+    font-weight: var(--renova-font-weight-bold, 700);
+    letter-spacing: .04em;
+    padding: var(--renova-space-3, .75rem) var(--renova-space-4, 1rem);
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.renova-listing-table tbody td {
+    padding: var(--renova-space-4, 1rem);
+    vertical-align: middle;
+}
+
+.renova-listing-table tbody tr:hover {
+    background: color-mix(in srgb, var(--renova-primary, #2563eb) 3%, transparent);
+}
+
+.renova-person-cell,
+.renova-person {
+    align-items: center;
+    color: inherit;
+    display: flex;
+    gap: var(--renova-space-3, .75rem);
+    min-width: 0;
+    text-decoration: none;
+}
+.renova-person__text,
+.renova-cell-stack { display: grid; min-width: 0; }
+.renova-person__text strong,
+.renova-row-title {
+    color: var(--renova-text, #0f172a);
+    display: block;
+    font-weight: var(--renova-font-weight-bold, 700);
+    line-height: 1.15;
+}
+.renova-person__text small,
+.renova-cell-stack small,
+.renova-row-subtitle,
+.renova-cell-muted,
+.renova-muted {
+    color: var(--renova-text-muted, #64748b);
+    display: block;
+    font-size: var(--renova-font-size-caption, .75rem);
+}
+
+.renova-listing-table .renova-row-actions,
+.renova-listing-table .renova-actions,
+.renova-listing-table .renova-action-buttons {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--renova-space-1, .25rem);
+    justify-content: flex-end;
+    white-space: nowrap;
+}
+
+.renova-listing-table .renova-row-actions form,
+.renova-listing-table .renova-actions form,
+.renova-listing-table .renova-action-buttons form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.renova-listing-table .renova-action-btn,
+.renova-listing-table .renova-icon-action {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    min-height: 2.25rem;
+}
+
+.renova-listing-empty {
+    align-items: center;
+    display: grid;
+    gap: var(--renova-space-3, .75rem);
+    justify-items: center;
+    padding: var(--renova-space-12, 3rem) var(--renova-space-6, 1.5rem);
+    text-align: center;
+}
+
+.renova-listing-empty__icon {
+    align-items: center;
+    background: color-mix(in srgb, var(--renova-primary, #2563eb) 10%, transparent);
+    border-radius: var(--renova-radius-lg, 16px);
+    color: var(--renova-primary, #2563eb);
+    display: inline-flex;
+    height: 3.5rem;
+    justify-content: center;
+    width: 3.5rem;
+}
+
+.renova-listing-empty strong {
+    color: var(--renova-text, #0f172a);
+    font-size: var(--renova-font-size-section-title, 1.25rem);
+}
+
+.renova-listing-empty p {
+    color: var(--renova-text-muted, #64748b);
+    margin: 0;
+    max-width: 36rem;
+}
+
+.renova-listing-pagination {
+    display: flex;
+    justify-content: center;
+    padding: var(--renova-space-4, 1rem) var(--renova-space-5, 1.25rem);
+}
+.renova-listing-pagination .orizon-pagination { margin: 0; }
+
+@media (max-width: 1100px) {
+    .renova-listing-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .renova-listing-filters > .orizon-field:first-child,
+    .renova-listing-filters > .renova-field:first-child {
+        grid-column: span 6;
+    }
+
+    .renova-listing-filters > * {
+        grid-column: span 3;
+    }
+
+    .renova-listing-filters > .renova-filter-actions,
+    .renova-listing-filters > .orizon-form-actions,
+    .renova-listing-filters > .renova-filter-submit {
+        grid-column: span 3;
+    }
+}
+
+@media (max-width: 680px) {
+    .renova-listing-page {
+        gap: var(--renova-space-4, 1rem);
+    }
+
+    .renova-listing-header {
+        flex-direction: column;
+        padding: var(--renova-space-5, 1.25rem);
+    }
+
+    .renova-listing-header__actions,
+    .renova-listing-header__actions > * {
+        width: 100%;
+    }
+
+    .renova-listing-header__actions > * {
+        justify-content: center;
+    }
+
+    .renova-listing-filters,
+    .renova-listing-filters > * {
+        grid-template-columns: 1fr;
+        grid-column: auto !important;
+    }
+
+    .renova-listing-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .renova-listing-filters > .renova-filter-actions,
+    .renova-listing-filters > .orizon-form-actions,
+    .renova-listing-filters > .renova-filter-submit {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .renova-listing-filters > .renova-filter-actions > *,
+    .renova-listing-filters > .orizon-form-actions > *,
+    .renova-listing-filters > .renova-filter-submit > * {
+        width: 100%;
+    }
+
+    .renova-listing-table {
+        min-width: 680px;
+    }
+
+    .renova-listing-card__header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .renova-listing-table tbody td,
+    .renova-listing-table thead th {
+        padding-left: var(--renova-space-3, .75rem);
+        padding-right: var(--renova-space-3, .75rem);
+    }
+}

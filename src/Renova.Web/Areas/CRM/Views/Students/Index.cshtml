@@ -14,307 +14,6 @@
 
 @section Styles {
     <style>
-        .renova-workspace {
-            display: grid;
-            gap: var(--orizon-spacing-6, 1.5rem);
-        }
-
-        .renova-page-hero {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1.5rem;
-            overflow: hidden;
-            padding: clamp(1.35rem, 2.5vw, 2rem);
-            border: 1px solid var(--orizon-color-border);
-            border-radius: var(--orizon-radius-xl, 1rem);
-            background:
-                radial-gradient(circle at 90% 15%, color-mix(in srgb, var(--orizon-brand-primary) 18%, transparent), transparent 34%),
-                linear-gradient(135deg, var(--orizon-color-surface-elevated), var(--orizon-color-surface));
-            box-shadow: var(--orizon-elevation-2);
-        }
-
-        .renova-page-hero::after {
-            position: absolute;
-            right: -3rem;
-            bottom: -5rem;
-            width: 14rem;
-            height: 14rem;
-            border: 1px solid color-mix(in srgb, var(--orizon-brand-primary) 22%, transparent);
-            border-radius: 50%;
-            content: "";
-            pointer-events: none;
-        }
-
-        .renova-page-hero__content,
-        .renova-page-hero__actions {
-            position: relative;
-            z-index: 1;
-        }
-
-        .renova-page-hero h1 {
-            margin: .65rem 0 .35rem;
-            color: var(--orizon-color-text-primary);
-            font-size: clamp(1.65rem, 3vw, 2.25rem);
-            line-height: 1.1;
-        }
-
-        .renova-page-hero p {
-            max-width: 44rem;
-            margin: 0;
-            color: var(--orizon-color-text-secondary);
-        }
-
-        .renova-primary-action {
-            display: inline-flex;
-            align-items: center;
-            gap: .65rem;
-            min-height: 2.85rem;
-            white-space: nowrap;
-            box-shadow: 0 .65rem 1.5rem color-mix(in srgb, var(--orizon-brand-primary) 24%, transparent);
-        }
-
-        .renova-metrics {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 1rem;
-        }
-
-        .renova-metric {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            min-width: 0;
-            padding: 1.1rem;
-            border: 1px solid var(--orizon-color-border);
-            border-radius: var(--orizon-radius-lg, .875rem);
-            background: var(--orizon-color-surface);
-            box-shadow: var(--orizon-elevation-1);
-            transition: transform var(--orizon-motion-duration-fast, 120ms) ease,
-                        box-shadow var(--orizon-motion-duration-fast, 120ms) ease;
-        }
-
-        .renova-metric:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--orizon-elevation-2);
-        }
-
-        .renova-metric__icon {
-            display: grid;
-            flex: 0 0 2.75rem;
-            width: 2.75rem;
-            height: 2.75rem;
-            place-items: center;
-            border-radius: .8rem;
-            color: var(--metric-color);
-            background: color-mix(in srgb, var(--metric-color) 13%, transparent);
-        }
-
-        .renova-metric__content {
-            display: grid;
-            min-width: 0;
-        }
-
-        .renova-metric__content span,
-        .renova-metric__content small {
-            overflow: hidden;
-            color: var(--orizon-color-text-secondary);
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .renova-metric__content strong {
-            color: var(--orizon-color-text-primary);
-            font-size: 1.55rem;
-            line-height: 1.15;
-        }
-
-        .renova-metric--primary { --metric-color: var(--orizon-brand-primary); }
-        .renova-metric--success { --metric-color: var(--orizon-color-success, #16a34a); }
-        .renova-metric--info { --metric-color: var(--orizon-color-info, #0284c7); }
-        .renova-metric--warning { --metric-color: var(--orizon-color-warning, #d97706); }
-
-        .renova-list-card {
-            overflow: hidden;
-            border: 1px solid var(--orizon-color-border);
-            border-radius: var(--orizon-radius-xl, 1rem);
-            background: var(--orizon-color-surface);
-            box-shadow: var(--orizon-elevation-1);
-        }
-
-        .renova-list-card__header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 1.25rem;
-            padding: 1.35rem 1.5rem 1rem;
-            border-bottom: 1px solid var(--orizon-color-border);
-        }
-
-        .renova-list-card__header h2 {
-            margin: 0 0 .25rem;
-            color: var(--orizon-color-text-primary);
-            font-size: 1.15rem;
-        }
-
-        .renova-list-card__header p {
-            margin: 0;
-            color: var(--orizon-color-text-secondary);
-            font-size: .9rem;
-        }
-
-        .renova-result-count {
-            flex: none;
-            color: var(--orizon-color-text-secondary);
-        }
-
-        .renova-filter-panel {
-            padding: 1rem 1.5rem 1.25rem;
-            background: var(--orizon-color-surface-secondary);
-            border-bottom: 1px solid var(--orizon-color-border);
-        }
-
-        .renova-filters {
-            display: grid;
-            grid-template-columns: minmax(16rem, 2fr) minmax(10rem, 1fr) repeat(2, minmax(9.5rem, .8fr)) auto;
-            align-items: end;
-            gap: .75rem;
-        }
-
-        .renova-field {
-            display: grid;
-            gap: .4rem;
-            min-width: 0;
-        }
-
-        .renova-field label {
-            color: var(--orizon-color-text-secondary);
-            font-size: .75rem;
-            font-weight: 700;
-            letter-spacing: .035em;
-            text-transform: uppercase;
-        }
-
-        .renova-search {
-            position: relative;
-        }
-
-        .renova-search > orizon-icon {
-            position: absolute;
-            top: 50%;
-            left: .85rem;
-            z-index: 1;
-            color: var(--orizon-color-text-muted);
-            transform: translateY(-50%);
-            pointer-events: none;
-        }
-
-        .renova-search .orizon-input {
-            width: 100%;
-            padding-left: 2.65rem;
-        }
-
-        .renova-filter-actions {
-            display: flex;
-            gap: .5rem;
-        }
-
-        .renova-table-wrap {
-            overflow-x: auto;
-        }
-
-        .renova-table {
-            min-width: 760px;
-            margin: 0;
-        }
-
-        .renova-table thead th {
-            padding: .8rem 1rem;
-            color: var(--orizon-color-text-secondary);
-            background: var(--orizon-color-surface-secondary);
-            font-size: .72rem;
-            letter-spacing: .04em;
-            text-transform: uppercase;
-        }
-
-        .renova-table tbody td {
-            padding: .9rem 1rem;
-            vertical-align: middle;
-        }
-
-        .renova-person {
-            display: inline-flex;
-            align-items: center;
-            gap: .75rem;
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .renova-person__text {
-            display: grid;
-            gap: .1rem;
-        }
-
-        .renova-person__text strong {
-            color: var(--orizon-color-text-primary);
-        }
-
-        .renova-person__text small,
-        .renova-cell-muted,
-        .renova-cell-stack small {
-            color: var(--orizon-color-text-secondary);
-        }
-
-        .renova-cell-stack {
-            display: grid;
-            gap: .15rem;
-        }
-
-        .renova-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: .25rem;
-        }
-
-        .renova-icon-action {
-            display: inline-grid;
-            width: 2.2rem;
-            height: 2.2rem;
-            padding: 0;
-            place-items: center;
-            border-radius: .65rem;
-        }
-
-        .renova-empty-state {
-            display: grid;
-            justify-items: center;
-            gap: .7rem;
-            padding: 4rem 1.5rem;
-            text-align: center;
-        }
-
-        .renova-empty-state__icon {
-            display: grid;
-            width: 4.25rem;
-            height: 4.25rem;
-            place-items: center;
-            border-radius: 1.25rem;
-            color: var(--orizon-brand-primary);
-            background: color-mix(in srgb, var(--orizon-brand-primary) 12%, transparent);
-        }
-
-        .renova-empty-state strong {
-            color: var(--orizon-color-text-primary);
-            font-size: 1.1rem;
-        }
-
-        .renova-empty-state p {
-            max-width: 30rem;
-            margin: 0 0 .35rem;
-            color: var(--orizon-color-text-secondary);
-        }
-
         .renova-delete-modal {
             position: fixed;
             inset: 0;
@@ -357,99 +56,19 @@
             margin-top: 1.35rem;
         }
 
-        @@media (max-width: 1100px) {
-            .renova-metrics {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .renova-filters {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .renova-field--search {
-                grid-column: 1 / -1;
-            }
-        }
-
-        @@media (max-width: 680px) {
-            .renova-page-hero,
-            .renova-list-card__header {
-                align-items: stretch;
-                flex-direction: column;
-            }
-
-            .renova-primary-action {
-                justify-content: center;
-                width: 100%;
-            }
-
-            .renova-metrics,
-            .renova-filters {
-                grid-template-columns: 1fr;
-            }
-
-            .renova-field--search {
-                grid-column: auto;
-            }
-
-            .renova-filter-actions {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .renova-list-card__header,
-            .renova-filter-panel {
-                padding-right: 1rem;
-                padding-left: 1rem;
-            }
-
-            .renova-person {
-                display: inline-flex;
-                align-items: center;
-                gap: .75rem;
-                min-width: 0;
-            }
-
-            .renova-person img {
-                display: block;
-                width: 44px !important;
-                min-width: 44px !important;
-                max-width: 44px !important;
-                height: 44px !important;
-                min-height: 44px !important;
-                max-height: 44px !important;
-                object-fit: cover;
-                object-position: center;
-                border: 2px solid var(--orizon-color-border);
-                border-radius: 50%;
-                background: var(--orizon-color-surface-secondary);
-            }
-
-            .renova-person__text {
-                min-width: 0;
-            }
-
-            .renova-person__text strong {
-                display: block;
-                max-width: 14rem;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-        }
     </style>
 }
 
-<section class="renova-workspace">
-    <header class="renova-page-hero">
-        <div class="renova-page-hero__content">
+<section class="renova-listing-page">
+    <header class="renova-listing-header">
+        <div class="renova-listing-header__content">
             <span class="orizon-badge orizon-badge--info orizon-badge--sm">CRM / Acolhidos</span>
             <h1>Gestão de acolhidos</h1>
             <p>Cadastros, admissões, vínculos familiares e acompanhamento da jornada de cuidado em um único lugar.</p>
         </div>
 
-        <div class="renova-page-hero__actions">
-            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md renova-primary-action"
+        <div class="renova-listing-header__actions">
+            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md"
                asp-action="Create">
                 <orizon-icon name="plus" size="18" />
                 Novo acolhimento
@@ -457,7 +76,7 @@
         </div>
     </header>
 
-    <div class="renova-metrics" aria-label="Indicadores dos acolhidos">
+    <div class="renova-metrics renova-listing-metrics" aria-label="Indicadores dos acolhidos">
         <article class="renova-metric renova-metric--primary">
             <span class="renova-metric__icon"><orizon-icon name="users" size="22" /></span>
             <span class="renova-metric__content">
@@ -495,8 +114,8 @@
         </article>
     </div>
 
-    <section class="renova-list-card" aria-labelledby="students-list-title">
-        <div class="renova-list-card__header">
+    <section class="renova-listing-card" aria-labelledby="students-list-title">
+        <div class="renova-listing-card__header">
             <div>
                 <h2 id="students-list-title">Cadastros de acolhidos</h2>
                 <p>Consulte perfis, situação atual e responsáveis pelo acompanhamento.</p>
@@ -506,9 +125,9 @@
             </span>
         </div>
 
-        <div class="renova-filter-panel">
-            <form class="renova-filters" method="get">
-                <div class="renova-field renova-field--search">
+        <div class="renova-listing-toolbar renova-listing-toolbar--embedded">
+            <form class="renova-listing-filters" method="get">
+                <div class="orizon-field renova-field--search">
                     <label for="student-search">Buscar acolhido</label>
                     <div class="renova-search">
                         <orizon-icon name="search" size="18" />
@@ -521,7 +140,7 @@
                     </div>
                 </div>
 
-                <div class="renova-field">
+                <div class="orizon-field">
                     <label for="student-status">Situação</label>
                     <select id="student-status" class="orizon-select" name="status">
                         <option value="">Todos os status</option>
@@ -534,7 +153,7 @@
                     </select>
                 </div>
 
-                <div class="renova-field">
+                <div class="orizon-field">
                     <label for="admission-from">Entrada a partir de</label>
                     <input id="admission-from"
                            class="orizon-input"
@@ -543,7 +162,7 @@
                            type="date" />
                 </div>
 
-                <div class="renova-field">
+                <div class="orizon-field">
                     <label for="admission-to">Entrada até</label>
                     <input id="admission-to"
                            class="orizon-input"
@@ -572,8 +191,8 @@
 
         @if (Model.Students.Items.Count == 0)
         {
-            <div class="renova-empty-state">
-                <span class="renova-empty-state__icon">
+            <div class="renova-listing-empty">
+                <span class="renova-listing-empty__icon">
                     <orizon-icon name="users" size="30" />
                 </span>
                 <strong>Nenhum acolhido encontrado</strong>
@@ -601,8 +220,8 @@
         }
         else
         {
-            <div class="renova-table-wrap">
-                <table class="orizon-table orizon-table--hoverable renova-table">
+            <div class="orizon-table-container renova-listing-table-wrap">
+                <table class="orizon-table orizon-table--hoverable renova-listing-table">
                     <thead>
                         <tr>
                             <th>Acolhido</th>
@@ -626,7 +245,7 @@
 
                             <tr>
                                 <td>
-                                    <a class="renova-person"
+                                    <a class="renova-person-cell"
                                        asp-action="Details"
                                        asp-route-id="@student.Id">
                                         @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
@@ -657,22 +276,22 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <div class="renova-actions">
-                                        <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm renova-icon-action"
+                                    <div class="renova-action-buttons renova-row-actions">
+                                        <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm"
                                            asp-action="Details"
                                            asp-route-id="@student.Id"
                                            aria-label="Ver detalhes de @student.Name"
                                            title="Detalhes">
                                             <orizon-icon name="eye" size="17" />
                                         </a>
-                                        <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm renova-icon-action"
+                                        <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm"
                                            asp-action="Edit"
                                            asp-route-id="@student.Id"
                                            aria-label="Editar @student.Name"
                                            title="Editar">
                                             <orizon-icon name="edit" size="17" />
                                         </a>
-                                        <a class="orizon-button orizon-button--ghost orizon-button--danger orizon-button--sm renova-icon-action"
+                                        <a class="orizon-button orizon-button--ghost orizon-button--danger orizon-button--sm"
                                            href="#delete-student-@student.Id"
                                            aria-label="Arquivar @student.Name"
                                            title="Arquivar">

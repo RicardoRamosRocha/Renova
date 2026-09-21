@@ -5,50 +5,58 @@
     ViewData["Title"] = "Profissionais";
 }
 
-<section class="admin-page">
-    <div class="admin-page-header">
-        <div>
+<section class="admin-page renova-listing-page">
+    <header class="admin-page-header renova-listing-header">
+        <div class="renova-listing-header__content">
             <span>Medical / Profissionais</span>
             <h1>Profissionais</h1>
             <p>Gerencie equipe técnica, especialidades e status de atendimento.</p>
         </div>
-        <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create">Novo profissional</a>
-    </div>
+        <div class="renova-listing-header__actions">
+            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create">Novo profissional</a>
+        </div>
+    </header>
 
     @if (TempData["Success"] is string success)
     {
         <div class="orizon-alert orizon-alert--success">@success</div>
     }
 
-    <div class="demo-grid-4">
+    <div class="renova-listing-metrics">
         <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Profissionais</span><strong>@ViewBag.Total</strong><small>Total</small></article>
         <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Ativos</span><strong>@ViewBag.ActiveCount</strong><small>Disponíveis</small></article>
         <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Inativos</span><strong>@ViewBag.InactiveCount</strong><small>Arquivados</small></article>
         <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Especialidades</span><strong>@ViewBag.Specialties</strong><small>Áreas técnicas</small></article>
     </div>
 
-    <section class="orizon-card orizon-card--padding-none">
-        <div class="orizon-table orizon-table--hoverable-header">
-            <div>
+    <div class="renova-listing-toolbar">
+            <div class="renova-listing-toolbar__heading">
                 <span class="rn-eyebrow">Busca e filtros</span>
                 <h2>Lista de profissionais</h2>
                 <p>Visualize especialidade, registro, status e ações principais.</p>
             </div>
-            <form class="demo-filter-row" method="get">
-                <input name="search" value="@ViewBag.Search" type="search" placeholder="Pesquisar por nome, email, especialidade ou registro" />
-                <select name="active">
+            <form class="renova-listing-filters" method="get">
+                <div class="orizon-field">
+                    <label class="orizon-field__label" for="professional-search">Buscar profissional</label>
+                    <input id="professional-search" class="orizon-input" name="search" value="@ViewBag.Search" type="search" placeholder="Pesquisar por nome, email, especialidade ou registro" />
+                </div>
+                <div class="orizon-field">
+                    <label class="orizon-field__label" for="professional-active">Status</label>
+                    <select id="professional-active" class="orizon-select" name="active">
                     <option value="">Todos os status</option>
                     <option value="true" selected="@(ViewBag.Active == true)">Ativo</option>
                     <option value="false" selected="@(ViewBag.Active == false)">Inativo</option>
-                </select>
-                <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="submit">Filtrar</button>
+                    </select>
+                </div>
+                <div class="renova-filter-submit"><button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="submit">Filtrar</button></div>
             </form>
-        </div>
+    </div>
 
+    <section class="orizon-card orizon-card--padding-none renova-listing-card renova-listing-card--flush">
         @if (Model.Items.Count == 0)
         {
-            <div class="crm-empty-state">
-                <div class="crm-empty-icon"></div>
+            <div class="renova-listing-empty">
+                <div class="renova-listing-empty__icon"><orizon-icon name="user-check" size="28" /></div>
                 <strong>Nenhum registro encontrado</strong>
                 <p>Cadastre a equipe técnica para iniciar a operação.</p>
                 <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create">Criar primeiro cadastro</a>
@@ -56,8 +64,8 @@
         }
         else
         {
-            <div class="orizon-table-container">
-                <table class="orizon-table orizon-table--hoverable">
+            <div class="orizon-table-container renova-listing-table-wrap">
+                <table class="orizon-table orizon-table--hoverable renova-listing-table">
                     <thead>
                         <tr>
                             <th>Nome</th>
@@ -89,12 +97,12 @@
                             <td><span class="renova-muted">@professional.Specialty</span></td>
                             <td><span class="renova-muted">@professional.RegistrationNumber</span></td>
                             <td><span class="renova-muted">@professional.DisplayPhone</span></td>
-                            <td><span class="renova-status-badge @(professional.IsActive ? "orizon-badge--success" : "orizon-badge--danger")">@(professional.IsActive ? "Ativo" : "Inativo")</span></td>
+                            <td><span class="orizon-badge orizon-badge--md @(professional.IsActive ? "orizon-badge--success" : "orizon-badge--danger")">@(professional.IsActive ? "Ativo" : "Inativo")</span></td>
                             <td>
-                                <div class="renova-action-buttons">
-                                    <a class="renova-action-btn" title="Detalhes" asp-action="Details" asp-route-id="@professional.Id"></a>
-                                    <a class="renova-action-btn" title="Editar" asp-action="Edit" asp-route-id="@professional.Id"></a>
-                                    <a class="renova-action-btn danger" title="Excluir" href="#delete-professional-@professional.Id"></a>
+                                <div class="renova-action-buttons renova-row-actions">
+                                    <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm" title="Detalhes" aria-label="Ver detalhes de @displayName" asp-action="Details" asp-route-id="@professional.Id"><orizon-icon name="eye" size="16" /></a>
+                                    <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm" title="Editar" aria-label="Editar @displayName" asp-action="Edit" asp-route-id="@professional.Id"><orizon-icon name="edit" size="16" /></a>
+                                    <a class="orizon-button orizon-button--ghost orizon-button--danger orizon-button--sm" title="Excluir" aria-label="Excluir @displayName" href="#delete-professional-@professional.Id"><orizon-icon name="archive" size="16" /></a>
                                 </div>
                             </td>
                         </tr>

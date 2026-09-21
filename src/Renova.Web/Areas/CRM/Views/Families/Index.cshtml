@@ -6,26 +6,31 @@
     var paged = Model.Families;
 }
 
-<section class="admin-page">
-    <header class="admin-form-header">
-        <div>
+<section class="admin-page renova-listing-page">
+    <header class="admin-form-header renova-listing-header">
+        <div class="renova-listing-header__content">
             <span class="rn-eyebrow">CRM / Famílias</span>
             <h1>Vínculos familiares</h1>
             <p>Contatos familiares vinculados aos acolhidos do tenant atual.</p>
         </div>
     </header>
 
-    <section class="orizon-card">
-        <form method="get" class="orizon-form-grid">
+    <section class="orizon-card renova-listing-toolbar">
+        <div class="renova-listing-toolbar__heading">
+            <h2>Buscar familiares</h2>
+            <p>Use os filtros para localizar vínculos familiares no tenant atual.</p>
+        </div>
+        <form method="get" class="renova-listing-filters">
             <div class="orizon-field">
                 <label class="orizon-field__label" for="search">Buscar</label>
                 <input class="orizon-input" id="search" name="search" value="@Model.Search" placeholder="Nome, acolhido, parentesco ou telefone" />
             </div>
-            <div class="orizon-field" style="align-self:end">
-                <label class="admin-check"><input type="checkbox" name="includeArchived" value="true" checked="@Model.IncludeArchived" /> <span>Incluir arquivados</span></label>
+            <div class="orizon-field">
+                <label class="orizon-field__label" for="include-archived">Status do vínculo</label>
+                <label for="include-archived"><input id="include-archived" type="checkbox" name="includeArchived" value="true" checked="@Model.IncludeArchived" /> <span>Incluir arquivados</span></label>
             </div>
             @if (Model.StudentId.HasValue) { <input type="hidden" name="studentId" value="@Model.StudentId" /> }
-            <div class="orizon-form-actions" style="align-self:end"><button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="submit">Buscar</button><a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Index">Limpar</a></div>
+            <div class="orizon-form-actions"><button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="submit">Buscar</button><a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Index">Limpar</a></div>
         </form>
     </section>
 
@@ -37,14 +42,14 @@
         </div>
     }
 
-    <section class="orizon-card orizon-card--padding-none">
+    <section class="orizon-card orizon-card--padding-none renova-listing-card renova-listing-card--flush">
         @if (paged.Items.Count == 0)
         {
-            <div class="crm-empty-state">
-                <div class="crm-empty-icon"></div>
+            <div class="renova-listing-empty">
+                <div class="renova-listing-empty__icon"><orizon-icon name="users" size="28" /></div>
                 <strong>Nenhum familiar encontrado</strong>
                 <p>Cadastre familiares a partir do perfil de um acolhido.</p>
-                <a class="crm-secondary-button" asp-controller="Students" asp-action="Index">
+                <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-controller="Students" asp-action="Index">
                     
                     Ver acolhidos
                 </a>
@@ -52,8 +57,8 @@
         }
         else
         {
-            <div class="orizon-table-container">
-                <table class="orizon-table orizon-table--hoverable">
+            <div class="orizon-table-container renova-listing-table-wrap">
+                <table class="orizon-table orizon-table--hoverable renova-listing-table">
                     <thead>
                         <tr>
                             <th>Familiar</th>
@@ -95,17 +100,15 @@
                                 }
                             </td>
                             <td>
-                                <div class="renova-action-buttons">
-                                    <a class="renova-action-btn" asp-action="Details" asp-route-id="@member.Id" title="Detalhes">Ver</a>
+                                <div class="renova-action-buttons renova-row-actions">
+                                    <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm" asp-action="Details" asp-route-id="@member.Id" title="Detalhes">Ver</a>
                                     @if (!member.IsArchived)
                                     {
-                                    <a class="renova-action-btn" asp-action="Edit" asp-route-id="@member.Id" title="Editar">
-                                        
+                                    <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm" asp-action="Edit" asp-route-id="@member.Id" title="Editar">
+                                        Editar
                                     </a>
                                     <form asp-action="Archive" asp-route-id="@member.Id" method="post" onsubmit="return confirm('Arquivar este vínculo familiar?');">
-                                        <button class="renova-action-btn danger" type="submit" title="Arquivar">
-                                            
-                                        </button>
+                                        <button class="orizon-button orizon-button--ghost orizon-button--danger orizon-button--sm" type="submit" title="Arquivar">Arquivar</button>
                                     </form>
                                     }
                                 </div>
@@ -116,7 +119,9 @@
                 </table>
             </div>
         }
-        @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", paged)
+        <div class="renova-listing-pagination">
+            @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", paged)
+        </div>
     </section>
 </section>
 

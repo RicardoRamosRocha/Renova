@@ -5,36 +5,77 @@
     ViewData["Title"] = "Agenda";
 }
 
-<section class="admin-page">
-    <div class="admin-page-header">
-        <div>
+<section class="admin-page renova-listing-page">
+    <header class="admin-page-header renova-listing-header">
+        <div class="renova-listing-header__content">
             <span>Calendário diário</span>
             <h1>Agenda de atendimentos</h1>
             <p>Atendimentos reais filtrados pelo tenant atual via acolhido vinculado.</p>
         </div>
-        <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create">Novo atendimento</a>
-    </div>
+        <div class="renova-listing-header__actions">
+            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create">Novo atendimento</a>
+        </div>
+    </header>
 
-    <div class="crm-metrics-grid">
+    <div class="renova-listing-metrics">
         <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Total</span><strong>@Model.Total</strong><small>Resultado atual</small></article>
         <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Agendados</span><strong>@Model.Scheduled</strong><small>Status ativo</small></article>
         <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Concluídos</span><strong>@Model.Completed</strong><small>Histórico</small></article>
         <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Cancelados</span><strong>@Model.Cancelled</strong><small>Histórico</small></article>
     </div>
 
-    <section class="orizon-card orizon-card--padding-none">
+    <div class="renova-listing-toolbar">
+    <form class="renova-listing-filters" method="get" aria-label="Filtros da agenda">
+        <div class="orizon-field">
+            <label class="orizon-field__label" for="appointment-search">Buscar acolhido</label>
+            <input id="appointment-search" class="orizon-input" name="search" value="@Model.Search" placeholder="Buscar acolhido" />
+        </div>
+        <div class="orizon-field">
+            <label class="orizon-field__label" for="appointment-from">De</label>
+            <input id="appointment-from" class="orizon-input" name="from" value="@Model.From?.ToString("yyyy-MM-dd")" type="date" />
+        </div>
+        <div class="orizon-field">
+            <label class="orizon-field__label" for="appointment-to">Até</label>
+            <input id="appointment-to" class="orizon-input" name="to" value="@Model.To?.ToString("yyyy-MM-dd")" type="date" />
+        </div>
+        <div class="orizon-field">
+            <label class="orizon-field__label" for="appointment-status">Status</label>
+            <select id="appointment-status" class="orizon-select" name="status">
+                <option value="">Todos os status</option>
+                <option value="1" selected="@(Model.Status == 1)">Agendado</option>
+                <option value="2" selected="@(Model.Status == 2)">Concluído</option>
+                <option value="3" selected="@(Model.Status == 3)">Cancelado</option>
+            </select>
+        </div>
+        <div class="orizon-field">
+            <label class="orizon-field__label" for="appointment-professional">Profissional</label>
+            <select id="appointment-professional" class="orizon-select" name="professionalId">
+                <option value="">Todos os profissionais</option>
+                @foreach (var professional in Model.Professionals)
+                {
+                    <option value="@professional.Id" selected="@(Model.ProfessionalId == professional.Id)">@professional.Name</option>
+                }
+            </select>
+        </div>
+        <div class="renova-filter-submit">
+            <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="submit">Filtrar</button>
+        </div>
+    </form>
+    </div>
+
+    <section class="orizon-card orizon-card--padding-none renova-listing-card renova-listing-card--flush">
         @if (Model.Appointments.Count == 0)
         {
-            <div class="crm-empty-state">
-                <div class="crm-empty-icon"></div>
+            <div class="renova-listing-empty">
+                <div class="renova-listing-empty__icon"><orizon-icon name="calendar" size="28" /></div>
                 <strong>Nenhum atendimento encontrado</strong>
                 <p>Não há atendimentos para os filtros selecionados.</p>
             </div>
         }
         else
         {
-            <div class="orizon-table-container">
-                <table class="orizon-table orizon-table--hoverable">
+            <div class="orizon-table-container renova-listing-table-wrap">
+                <table class="orizon-table orizon-table--hoverable renova-listing-table">
                     <thead><tr><th>Data e hora</th><th>Acolhido</th><th>Profissional</th><th>Status</th><th>Notas</th><th></th></tr></thead>
                     <tbody>
                     @foreach (var appointment in Model.Appointments)
@@ -52,7 +93,7 @@
                                 </a>
                             </td>
                             <td>@(appointment.ProfessionalName ?? "Não definido")</td>
-                            <td><span class="renova-status-badge info">@appointment.StatusLabel</span></td>
+                            <td><span class="orizon-badge orizon-badge--md @(appointment.Status == 2 ? "orizon-badge--success" : appointment.Status == 3 ? "orizon-badge--danger" : "orizon-badge--info")">@appointment.StatusLabel</span></td>
                             <td>@(appointment.Notes ?? "Sem notas")</td>
                             <td><a asp-action="Details" asp-route-id="@appointment.Id">Detalhes</a></td>
                         </tr>
@@ -62,14 +103,6 @@
             </div>
         }
     </section>
-    <form class="admin-filters" method="get">
-        <input class="orizon-input" name="search" value="@Model.Search" placeholder="Buscar acolhido" />
-        <input class="orizon-input" name="from" value="@Model.From?.ToString("yyyy-MM-dd")" type="date" />
-        <input class="orizon-input" name="to" value="@Model.To?.ToString("yyyy-MM-dd")" type="date" />
-        <select class="orizon-select" name="status"><option value="">Todos os status</option><option value="1" selected="@(Model.Status == 1)">Agendado</option><option value="2" selected="@(Model.Status == 2)">Concluído</option><option value="3" selected="@(Model.Status == 3)">Cancelado</option></select>
-        <select class="orizon-select" name="professionalId"><option value="">Todos os profissionais</option>@foreach (var professional in Model.Professionals) { <option value="@professional.Id" selected="@(Model.ProfessionalId == professional.Id)">@professional.Name</option> }</select>
-        <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="submit">Filtrar</button>
-    </form>
-    @if (Model.TotalPages > 1) { <nav class="rn-pagination"><span>Página @Model.Page de @Model.TotalPages</span>@if (Model.Page > 1) { <a asp-action="Index" asp-route-search="@Model.Search" asp-route-from="@Model.From?.ToString("yyyy-MM-dd")" asp-route-to="@Model.To?.ToString("yyyy-MM-dd")" asp-route-status="@Model.Status" asp-route-professionalId="@Model.ProfessionalId" asp-route-page="@(Model.Page - 1)">Anterior</a> } @if (Model.Page < Model.TotalPages) { <a asp-action="Index" asp-route-search="@Model.Search" asp-route-from="@Model.From?.ToString("yyyy-MM-dd")" asp-route-to="@Model.To?.ToString("yyyy-MM-dd")" asp-route-status="@Model.Status" asp-route-professionalId="@Model.ProfessionalId" asp-route-page="@(Model.Page + 1)">Próxima</a> }</nav> }
+    @if (Model.TotalPages > 1) { <div class="renova-listing-pagination"><nav class="rn-pagination orizon-pagination" aria-label="Paginação"><span>Página @Model.Page de @Model.TotalPages</span>@if (Model.Page > 1) { <a asp-action="Index" asp-route-search="@Model.Search" asp-route-from="@Model.From?.ToString("yyyy-MM-dd")" asp-route-to="@Model.To?.ToString("yyyy-MM-dd")" asp-route-status="@Model.Status" asp-route-professionalId="@Model.ProfessionalId" asp-route-page="@(Model.Page - 1)">Anterior</a> } @if (Model.Page < Model.TotalPages) { <a asp-action="Index" asp-route-search="@Model.Search" asp-route-from="@Model.From?.ToString("yyyy-MM-dd")" asp-route-to="@Model.To?.ToString("yyyy-MM-dd")" asp-route-status="@Model.Status" asp-route-professionalId="@Model.ProfessionalId" asp-route-page="@(Model.Page + 1)">Próxima</a> }</nav></div> }
 </section>
 
