@@ -12,17 +12,14 @@
             <h1>Agenda de atendimentos</h1>
             <p>Atendimentos reais filtrados pelo tenant atual via acolhido vinculado.</p>
         </div>
-        <form class="rn-inline" method="get">
-            <input class="orizon-input" name="date" value="@Model.Date.ToString("yyyy-MM-dd")" type="date" />
-            <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="submit">Ver data</button>
-        </form>
+        <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create">Novo atendimento</a>
     </div>
 
     <div class="crm-metrics-grid">
-        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Total</span><strong>@Model.Total</strong><small>@Model.Date.ToString("dd/MM/yyyy")</small></article>
-        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Agendados</span><strong>@Model.Scheduled</strong><small>Status 1</small></article>
-        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Concluídos</span><strong>@Model.Completed</strong><small>Status 2</small></article>
-        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Cancelados</span><strong>@Model.Cancelled</strong><small>Status 3</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Total</span><strong>@Model.Total</strong><small>Resultado atual</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Agendados</span><strong>@Model.Scheduled</strong><small>Status ativo</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Concluídos</span><strong>@Model.Completed</strong><small>Histórico</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Cancelados</span><strong>@Model.Cancelled</strong><small>Histórico</small></article>
     </div>
 
     <section class="orizon-card orizon-card--padding-none">
@@ -31,19 +28,19 @@
             <div class="crm-empty-state">
                 <div class="crm-empty-icon"></div>
                 <strong>Nenhum atendimento encontrado</strong>
-                <p>Não há atendimentos registrados para a data selecionada.</p>
+                <p>Não há atendimentos para os filtros selecionados.</p>
             </div>
         }
         else
         {
             <div class="orizon-table-container">
                 <table class="orizon-table orizon-table--hoverable">
-                    <thead><tr><th>Horário</th><th>Acolhido</th><th>Profissional</th><th>Status</th><th>Notas</th></tr></thead>
+                    <thead><tr><th>Data e hora</th><th>Acolhido</th><th>Profissional</th><th>Status</th><th>Notas</th><th></th></tr></thead>
                     <tbody>
                     @foreach (var appointment in Model.Appointments)
                     {
                         <tr>
-                            <td>@appointment.ScheduledAt.ToString("HH:mm")</td>
+                            <td>@appointment.ScheduledAt.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>
                                 <a class="renova-person-cell" asp-controller="Students" asp-action="Details" asp-route-id="@appointment.StudentId">
                                     @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
@@ -55,8 +52,9 @@
                                 </a>
                             </td>
                             <td>@(appointment.ProfessionalName ?? "Não definido")</td>
-                            <td><span class="renova-status-badge info">@appointment.Status</span></td>
+                            <td><span class="renova-status-badge info">@appointment.StatusLabel</span></td>
                             <td>@(appointment.Notes ?? "Sem notas")</td>
+                            <td><a asp-action="Details" asp-route-id="@appointment.Id">Detalhes</a></td>
                         </tr>
                     }
                     </tbody>
@@ -64,5 +62,14 @@
             </div>
         }
     </section>
+    <form class="admin-filters" method="get">
+        <input class="orizon-input" name="search" value="@Model.Search" placeholder="Buscar acolhido" />
+        <input class="orizon-input" name="from" value="@Model.From?.ToString("yyyy-MM-dd")" type="date" />
+        <input class="orizon-input" name="to" value="@Model.To?.ToString("yyyy-MM-dd")" type="date" />
+        <select class="orizon-select" name="status"><option value="">Todos os status</option><option value="1" selected="@(Model.Status == 1)">Agendado</option><option value="2" selected="@(Model.Status == 2)">Concluído</option><option value="3" selected="@(Model.Status == 3)">Cancelado</option></select>
+        <select class="orizon-select" name="professionalId"><option value="">Todos os profissionais</option>@foreach (var professional in Model.Professionals) { <option value="@professional.Id" selected="@(Model.ProfessionalId == professional.Id)">@professional.Name</option> }</select>
+        <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="submit">Filtrar</button>
+    </form>
+    @if (Model.TotalPages > 1) { <nav class="rn-pagination"><span>Página @Model.Page de @Model.TotalPages</span>@if (Model.Page > 1) { <a asp-action="Index" asp-route-search="@Model.Search" asp-route-from="@Model.From?.ToString("yyyy-MM-dd")" asp-route-to="@Model.To?.ToString("yyyy-MM-dd")" asp-route-status="@Model.Status" asp-route-professionalId="@Model.ProfessionalId" asp-route-page="@(Model.Page - 1)">Anterior</a> } @if (Model.Page < Model.TotalPages) { <a asp-action="Index" asp-route-search="@Model.Search" asp-route-from="@Model.From?.ToString("yyyy-MM-dd")" asp-route-to="@Model.To?.ToString("yyyy-MM-dd")" asp-route-status="@Model.Status" asp-route-professionalId="@Model.ProfessionalId" asp-route-page="@(Model.Page + 1)">Próxima</a> }</nav> }
 </section>
 

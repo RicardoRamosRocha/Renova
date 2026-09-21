@@ -1,0 +1,4 @@
+@using Renova.Web.Areas.CRM.ViewModels.Appointments
+@model AppointmentFormViewModel
+@{ ViewData["Title"] = "Editar atendimento"; }
+<section class="admin-form-page"><header class="admin-form-header"><div><nav class="admin-form-breadcrumb"><a asp-action="Details" asp-route-id="@Model.Id">Atendimento</a><span>/</span><span>Editar</span></nav><span class="rn-eyebrow">CRM / Agenda</span><h1>Editar atendimento</h1><p>Atualize data, profissional, status e observações.</p></div></header><form asp-action="Edit" asp-route-id="@Model.Id" method="post">@await Html.PartialAsync("_Form", Model)</form></section>

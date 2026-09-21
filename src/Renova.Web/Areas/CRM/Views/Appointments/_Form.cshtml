@@ -1,0 +1,26 @@
+@using Renova.Domain.Entities
+@using Renova.Web.Areas.CRM.ViewModels.Appointments
+@model AppointmentFormViewModel
+
+<input type="hidden" asp-for="Id" />
+<div asp-validation-summary="ModelOnly" class="orizon-alert orizon-alert--danger"></div>
+<div class="admin-form-card">
+    <section class="admin-form-section">
+        <div class="orizon-form-grid">
+            <div class="orizon-field">
+                <label class="orizon-field__label required" asp-for="StudentId">Acolhido</label>
+                <select class="orizon-select" asp-for="StudentId"><option value="">Selecione</option>@foreach (var item in Model.Students) { <option value="@item.Id">@item.Name</option> }</select>
+                <span class="orizon-field__error" asp-validation-for="StudentId"></span>
+            </div>
+            <div class="orizon-field">
+                <label class="orizon-field__label" asp-for="ProfessionalId">Profissional</label>
+                <select class="orizon-select" asp-for="ProfessionalId"><option value="">Não definido</option>@foreach (var item in Model.Professionals) { <option value="@item.Id">@item.Name</option> }</select>
+                <span class="orizon-field__error" asp-validation-for="ProfessionalId"></span>
+            </div>
+            <div class="orizon-field"><label class="orizon-field__label required" asp-for="ScheduledAt">Data e hora</label><input class="orizon-input" asp-for="ScheduledAt" type="datetime-local" step="900" /><span class="orizon-field__error" asp-validation-for="ScheduledAt"></span></div>
+            <div class="orizon-field"><label class="orizon-field__label required" asp-for="Status">Status</label><select class="orizon-select" asp-for="Status" asp-items="Html.GetEnumSelectList<AppointmentStatus>()"></select><span class="orizon-field__error" asp-validation-for="Status"></span></div>
+        </div>
+        <div class="orizon-field"><label class="orizon-field__label" asp-for="Notes">Observações</label><textarea class="orizon-textarea" asp-for="Notes"></textarea><span class="orizon-field__error" asp-validation-for="Notes"></span></div>
+    </section>
+    <div class="orizon-form-actions"><a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Index">Cancelar</a><button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="submit">Salvar atendimento</button></div>
+</div>

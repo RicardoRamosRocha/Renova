@@ -22,7 +22,8 @@ public class AppointmentsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll(Guid studentId)
     {
-        if (!await StudentExists(studentId))
+        var student = await FindStudent(studentId);
+        if (student is null)
         {
             return NotFound();
         }
@@ -52,12 +53,13 @@ public class AppointmentsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(Guid studentId, CreateAppointmentRequest request)
     {
-        if (!await StudentExists(studentId))
+        var student = await FindStudent(studentId);
+        if (student is null)
         {
             return NotFound();
         }
 
-        if (!await ProfessionalCanBeUsed(request.ProfessionalId))
+        if (!await ProfessionalCanBeUsed(request.ProfessionalId, student.TenantId))
         {
             return BadRequest("Professional does not exist or is inactive.");
         }
@@ -89,7 +91,13 @@ public class AppointmentsController : ControllerBase
             return NotFound();
         }
 
-        if (!await ProfessionalCanBeUsed(request.ProfessionalId))
+        var student = await FindStudent(studentId);
+        if (student is null)
+        {
+            return NotFound();
+        }
+
+        if (!await ProfessionalCanBeUsed(request.ProfessionalId, student.TenantId))
         {
             return BadRequest("Professional does not exist or is inactive.");
         }
@@ -122,12 +130,12 @@ public class AppointmentsController : ControllerBase
         return NoContent();
     }
 
-    private async Task<bool> StudentExists(Guid studentId)
+    private async Task<Student?> FindStudent(Guid studentId)
     {
-        return await _dbContext.Students.AnyAsync(student => student.Id == studentId);
+        return await _dbContext.Students.FirstOrDefaultAsync(student => student.Id == studentId);
     }
 
-    private async Task<bool> ProfessionalCanBeUsed(Guid? professionalId)
+    private async Task<bool> ProfessionalCanBeUsed(Guid? professionalId, Guid tenantId)
     {
         if (professionalId is null)
         {
@@ -135,7 +143,7 @@ public class AppointmentsController : ControllerBase
         }
 
         return await _dbContext.Professionals
-            .AnyAsync(professional => professional.Id == professionalId && professional.IsActive);
+            .AnyAsync(professional => professional.Id == professionalId && professional.TenantId == tenantId && professional.IsActive);
     }
 
     private static AppointmentResponse ToResponse(Appointment appointment)
