@@ -686,7 +686,31 @@
                 </table>
             </div>
 
-            @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model.Students)
+            @if (Model.Students.TotalPages > 1)
+            {
+                <nav class="orizon-pagination" aria-label="Paginação">
+                    @if (Model.Students.HasPreviousPage)
+                    {
+                        <a href="@Url.Action("Index", new { page = Model.Students.Page - 1, search = Model.Search, status = Model.Status, admissionFrom = Model.AdmissionFrom, admissionTo = Model.AdmissionTo })">Anterior</a>
+                    }
+                    else
+                    {
+                        <span class="is-disabled">Anterior</span>
+                    }
+                    @for (var item = 1; item <= Model.Students.TotalPages; item++)
+                    {
+                        <a class="@(item == Model.Students.Page ? "is-active" : string.Empty)" href="@Url.Action("Index", new { page = item, search = Model.Search, status = Model.Status, admissionFrom = Model.AdmissionFrom, admissionTo = Model.AdmissionTo })">@item</a>
+                    }
+                    @if (Model.Students.HasNextPage)
+                    {
+                        <a href="@Url.Action("Index", new { page = Model.Students.Page + 1, search = Model.Search, status = Model.Status, admissionFrom = Model.AdmissionFrom, admissionTo = Model.AdmissionTo })">Próxima</a>
+                    }
+                    else
+                    {
+                        <span class="is-disabled">Próxima</span>
+                    }
+                </nav>
+            }
 
             @foreach (var student in Model.Students.Items)
             {
@@ -707,6 +731,7 @@
                                 Cancelar
                             </a>
                             <form asp-action="Delete" asp-route-id="@student.Id" method="post">
+                                @Html.AntiForgeryToken()
                                 <button class="orizon-button orizon-button--solid orizon-button--danger orizon-button--md"
                                         type="submit">
                                     Arquivar

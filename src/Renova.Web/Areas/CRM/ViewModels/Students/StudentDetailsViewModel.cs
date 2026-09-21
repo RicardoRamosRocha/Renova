@@ -8,11 +8,17 @@ public sealed class StudentDetailsViewModel
 
     public string Cpf { get; set; } = string.Empty;
 
+    public string? Rg { get; set; }
+
     public string Phone { get; set; } = string.Empty;
+
+    public string? WhatsApp { get; set; }
 
     public string? Email { get; set; }
 
     public string? Address { get; set; }
+
+    public string? Notes { get; set; }
 
     public string? PhotoUrl { get; set; }
 

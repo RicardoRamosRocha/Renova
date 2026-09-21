@@ -87,6 +87,8 @@ public sealed class StudentsController(
         const int pageSize = 10;
         page = Math.Max(1, page);
         var totalItems = await query.CountAsync();
+        var totalPages = Math.Max(1, (int)Math.Ceiling(totalItems / (double)pageSize));
+        page = Math.Min(page, totalPages);
 
         var students = await query
             .OrderBy(student => student.Person != null ? student.Person.FullName : student.FullName)
@@ -109,6 +111,11 @@ public sealed class StudentsController(
                     .FirstOrDefault()
             })
             .ToListAsync();
+
+        ViewBag.Search = search;
+        ViewBag.Status = status;
+        ViewBag.AdmissionFrom = admissionFrom;
+        ViewBag.AdmissionTo = admissionTo;
 
         return View(new StudentIndexViewModel
         {
@@ -214,6 +221,7 @@ public sealed class StudentsController(
             Phone = model.Phone.Trim(),
             Email = string.IsNullOrWhiteSpace(model.Email) ? null : model.Email.Trim(),
             Address = string.IsNullOrWhiteSpace(model.Address) ? null : model.Address.Trim(),
+            Observation = string.IsNullOrWhiteSpace(model.Notes) ? null : model.Notes.Trim(),
             Status = model.Status,
             AdmissionDate = DateTime.SpecifyKind(model.AdmissionDate.Date, DateTimeKind.Utc),
             PhotoPath = photoPath,
@@ -222,6 +230,9 @@ public sealed class StudentsController(
         };
 
         student.SyncPersonFromLegacyFields(timestamp);
+        student.Person!.Rg = string.IsNullOrWhiteSpace(model.RG) ? null : model.RG.Trim();
+        student.Person.Whatsapp = string.IsNullOrWhiteSpace(model.WhatsApp) ? null : model.WhatsApp.Trim();
+        student.Person.IsActive = model.Status != StudentStatuses.Inactive;
 
         db.Students.Add(student);
 
@@ -312,10 +323,14 @@ public sealed class StudentsController(
         student.Phone = model.Phone.Trim();
         student.Email = string.IsNullOrWhiteSpace(model.Email) ? null : model.Email.Trim();
         student.Address = string.IsNullOrWhiteSpace(model.Address) ? null : model.Address.Trim();
+        student.Observation = string.IsNullOrWhiteSpace(model.Notes) ? null : model.Notes.Trim();
         student.Status = model.Status;
         student.AdmissionDate = DateTime.SpecifyKind(model.AdmissionDate.Date, DateTimeKind.Utc);
         student.UpdatedAt = timestamp;
         student.SyncPersonFromLegacyFields(timestamp, markPersonAsUpdated: true);
+        student.Person!.Rg = string.IsNullOrWhiteSpace(model.RG) ? null : model.RG.Trim();
+        student.Person.Whatsapp = string.IsNullOrWhiteSpace(model.WhatsApp) ? null : model.WhatsApp.Trim();
+        student.Person.IsActive = model.Status != StudentStatuses.Inactive;
 
         if (!await TrySaveAsync(db, "Acolhido atualizado com sucesso."))
         {
@@ -337,7 +352,9 @@ public sealed class StudentsController(
         }
 
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var student = await db.Students.FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
+        var student = await db.Students
+            .Include(item => item.Person)
+            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
 
         if (student is null)
         {
@@ -346,6 +363,10 @@ public sealed class StudentsController(
 
         student.Status = StudentStatuses.Inactive;
         student.UpdatedAt = DateTime.UtcNow;
+        if (student.Person is not null)
+        {
+            student.Person.IsActive = false;
+        }
 
         await TrySaveAsync(db, "Acolhido inativado com sucesso.");
 
@@ -364,7 +385,9 @@ public sealed class StudentsController(
         }
 
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var student = await db.Students.FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
+        var student = await db.Students
+            .Include(item => item.Person)
+            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
 
         if (student is null)
         {
@@ -374,6 +397,10 @@ public sealed class StudentsController(
         student.Status = StudentStatuses.Inactive;
         student.IsDeleted = true;
         student.UpdatedAt = DateTime.UtcNow;
+        if (student.Person is not null)
+        {
+            student.Person.IsActive = false;
+        }
 
         await db.SaveChangesAsync();
 
@@ -408,6 +435,9 @@ public sealed class StudentsController(
             Phone = student.DisplayPhone,
             Email = student.DisplayEmail,
             Address = student.Address,
+            RG = student.Person?.Rg,
+            WhatsApp = student.Person?.Whatsapp,
+            Notes = student.Observation ?? student.Person?.Notes,
             Status = student.Status,
             AdmissionDate = student.AdmissionDate,
             PhotoPath = student.DisplayPhotoUrl
@@ -530,6 +560,9 @@ public sealed class StudentsController(
             Phone = student.DisplayPhone,
             Email = student.DisplayEmail,
             Address = student.Address,
+            Rg = student.Person?.Rg,
+            WhatsApp = student.Person?.Whatsapp,
+            Notes = student.Observation ?? student.Person?.Notes,
             PhotoUrl = student.DisplayPhotoUrl,
             BirthDate = student.DisplayBirthDate,
             AdmissionDate = student.AdmissionDate,

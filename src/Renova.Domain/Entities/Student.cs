@@ -118,6 +118,7 @@ public class Student : BaseTenantEntity
         Person.FullName = FullName;
         Person.BirthDate = BirthDate;
         Person.Cpf = CPF;
+        Person.Notes = Observation;
         Person.Email = Email;
         Person.Phone = Phone;
         Person.PhotoUrl = PhotoPath;
