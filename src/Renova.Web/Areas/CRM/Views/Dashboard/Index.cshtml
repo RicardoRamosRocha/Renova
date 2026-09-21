@@ -1,93 +1,154 @@
+﻿@using Renova.Domain.Entities
 @using Renova.Web.Areas.CRM.ViewModels.Dashboard
-@using Renova.Web.ViewModels
+@using Renova.Web.Areas.CRM.ViewModels.Students
 @model CrmDashboardViewModel
 @{
     ViewData["Title"] = "Dashboard CRM";
+    string AppointmentStatusClass(AppointmentStatus status) => status switch
+    {
+        AppointmentStatus.Scheduled => "crm-status-badge--info",
+        AppointmentStatus.Completed => "crm-status-badge--success",
+        AppointmentStatus.Cancelled => "crm-status-badge--danger",
+        _ => "crm-status-badge--neutral"
+    };
+    string AppointmentStatusLabel(AppointmentStatus status) => status switch
+    {
+        AppointmentStatus.Scheduled => "Agendado",
+        AppointmentStatus.Completed => "Concluído",
+        AppointmentStatus.Cancelled => "Cancelado",
+        _ => "Indefinido"
+    };
+    string AdmissionStatusClass(AdmissionStatus status) => status switch
+    {
+        AdmissionStatus.Active => "crm-status-badge--success",
+        AdmissionStatus.Planned => "crm-status-badge--warning",
+        AdmissionStatus.Discharged or AdmissionStatus.Transferred => "crm-status-badge--info",
+        AdmissionStatus.Cancelled => "crm-status-badge--danger",
+        _ => "crm-status-badge--neutral"
+    };
+    string AdmissionStatusLabel(AdmissionStatus status) => status switch
+    {
+        AdmissionStatus.Active => "Ativa",
+        AdmissionStatus.Planned => "Planejada",
+        AdmissionStatus.Discharged => "Alta",
+        AdmissionStatus.Transferred => "Transferida",
+        AdmissionStatus.Cancelled => "Cancelada",
+        _ => "Indefinida"
+    };
 }
-
-<section class="crm-index-page">
-    <div class="crm-page-header">
-        <div>
+@section Styles {
+    <style>
+        .crm-dashboard-grid { display: grid; gap: 1.25rem; }
+        .crm-dashboard-sections { display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+        .crm-dashboard-card { min-width: 0; overflow: hidden; }
+        .crm-dashboard-card__header { align-items: flex-start; display: flex; gap: 1rem; justify-content: space-between; padding: 1.25rem 1.5rem; }
+        .crm-dashboard-card__header h2 { font-size: 1.1rem; margin: 0 0 .25rem; }
+        .crm-dashboard-card__header p { color: var(--orizon-color-text-secondary); margin: 0; }
+        .crm-dashboard-card__header a { flex: none; }
+        .crm-dashboard-table { overflow-x: auto; }
+        .crm-dashboard-table table { min-width: 36rem; }
+        .crm-dashboard-list { display: grid; gap: 0; }
+        .crm-dashboard-list__item { align-items: center; border-top: 1px solid var(--orizon-color-border); display: flex; gap: 1rem; justify-content: space-between; padding: 1rem 1.5rem; }
+        .crm-dashboard-list__item > div { min-width: 0; }
+        .crm-dashboard-list__item strong, .crm-dashboard-list__item small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .crm-dashboard-list__item small { color: var(--orizon-color-text-secondary); margin-top: .25rem; }
+        .crm-dashboard-empty { color: var(--orizon-color-text-secondary); padding: 2.25rem 1.5rem; text-align: center; }
+        .crm-dashboard-empty strong, .crm-dashboard-empty p { display: block; }
+        .crm-dashboard-empty p { margin: .45rem 0 0; }
+        @@media (max-width: 960px) { .crm-dashboard-sections { grid-template-columns: 1fr; } }
+        @@media (max-width: 560px) {
+            .crm-dashboard-card__header, .crm-dashboard-list__item { align-items: flex-start; flex-direction: column; }
+            .crm-dashboard-card__header a { width: 100%; }
+            .crm-dashboard-list__item .crm-status-badge { align-self: flex-start; }
+        }
+    </style>
+}
+<section class="crm-index-page crm-dashboard-grid">
+    <header class="crm-page-header">
+        <div class="crm-page-header__content">
             <span class="crm-eyebrow">CRM / Operação</span>
             <h1>Dashboard CRM</h1>
-            <p>Indicadores reais de acolhidos, admissões, altas e agenda do tenant atual.</p>
+            <p>Visão operacional dos acolhidos, admissions, famílias e próximos atendimentos.</p>
         </div>
-        <a class="crm-primary-button" asp-controller="Students" asp-action="Create">
-            
-            Novo acolhido
-        </a>
-    </div>
+        <div class="crm-page-header__actions">
+            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-controller="Students" asp-action="Create">Novo acolhido</a>
+        </div>
+    </header>
 
     <div class="crm-metrics-grid">
-        <article class="crm-metric-card"><div class="metric-icon"></div><span>Acolhidos ativos</span><strong>@Model.ActiveStudents</strong><small>Tenant atual</small></article>
-        <article class="crm-metric-card"><div class="metric-icon"></div><span>Admissões no mês</span><strong>@Model.AdmissionsThisMonth</strong><small>Entradas registradas</small></article>
-        <article class="crm-metric-card"><div class="metric-icon"></div><span>Altas previstas</span><strong>@Model.ExpectedDischarges</strong><small>A partir de hoje</small></article>
-        <article class="crm-metric-card"><div class="metric-icon"></div><span>Altas realizadas</span><strong>@Model.CompletedDischarges</strong><small>No mês atual</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Acolhidos ativos</span><strong>@Model.ActiveStudents</strong><small>Status diferente de Inativo</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Admissions ativos</span><strong>@Model.ActiveAdmissions</strong><small>Status Ativa</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Famílias ativas</span><strong>@Model.ActiveFamilies</strong><small>Vínculos não arquivados</small></article>
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Atendimentos próximos</span><strong>@Model.UpcomingAppointments</strong><small>Agendados nos próximos 7 dias</small></article>
     </div>
 
-    <div class="patient-profile-grid">
-        <section class="patient-card">
-            <div class="patient-card-title"><span>01</span><div><h2>Últimos acolhidos</h2><p>Cadastros recentes.</p></div></div>
-            <div class="patient-list">
-                @if (Model.LatestStudents.Count == 0)
+    <div class="crm-dashboard-sections">
+        <section class="orizon-card orizon-card--padding-none crm-dashboard-card">
+            <header class="crm-dashboard-card__header"><div><h2>Próximos atendimentos</h2><p>Agenda operacional dos próximos 7 dias.</p></div><a asp-controller="Appointments" asp-action="Index">Ver agenda</a></header>
+            @if (Model.UpcomingAppointmentItems.Count == 0)
+            {
+                <div class="crm-dashboard-empty"><strong>Nenhum atendimento próximo.</strong><p>Não há appointments agendados na janela atual.</p></div>
+            }
+            else
+            {
+                <div class="crm-dashboard-table"><table class="orizon-table"><thead><tr><th>Data e hora</th><th>Acolhido</th><th>Profissional</th><th>Status</th><th></th></tr></thead><tbody>
+                @foreach (var appointment in Model.UpcomingAppointmentItems)
                 {
-                    <article><strong>Nenhum acolhido cadastrado</strong><span>Crie o primeiro cadastro para movimentar o CRM.</span></article>
+                    <tr><td>@appointment.ScheduledAt.ToString("dd/MM/yyyy HH:mm")</td><td><a asp-controller="Students" asp-action="Details" asp-route-id="@appointment.StudentId">@appointment.StudentName</a></td><td>@(appointment.ProfessionalName ?? "Não definido")</td><td><span class="crm-status-badge @AppointmentStatusClass(appointment.Status)">@AppointmentStatusLabel(appointment.Status)</span></td><td><a asp-controller="Appointments" asp-action="Details" asp-route-id="@appointment.Id">Detalhes</a></td></tr>
                 }
-                else
-                {
-                    @foreach (var student in Model.LatestStudents)
-                    {
-                        <article>
-                            <span class="renova-person-cell">
-                                @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = student.Name, PhotoUrl = student.PhotoUrl })
-                                <span><strong>@student.Name</strong><small>@student.CreatedAt.ToString("dd/MM/yyyy")</small></span>
-                            </span>
-                        </article>
-                    }
-                }
-            </div>
+                </tbody></table></div>
+            }
         </section>
 
-        <section class="patient-card">
-            <div class="patient-card-title"><span>02</span><div><h2>Próximas altas</h2><p>Admissões com previsão registrada.</p></div></div>
-            <div class="patient-list">
-                @if (Model.UpcomingDischarges.Count == 0)
+        <section class="orizon-card orizon-card--padding-none crm-dashboard-card">
+            <header class="crm-dashboard-card__header"><div><h2>Admissions recentes</h2><p>Entradas mais recentes do tenant.</p></div><a asp-controller="Students" asp-action="Index">Acolhidos</a></header>
+            @if (Model.RecentAdmissions.Count == 0)
+            {
+                <div class="crm-dashboard-empty"><strong>Nenhum admission recente.</strong><p>Os admissions registrados aparecerão aqui.</p></div>
+            }
+            else
+            {
+                <div class="crm-dashboard-list">
+                @foreach (var admission in Model.RecentAdmissions)
                 {
-                    <article><strong>Sem altas previstas</strong><span>Nenhuma previsão futura encontrada.</span></article>
+                    <a class="crm-dashboard-list__item" asp-controller="Admissions" asp-action="Details" asp-route-id="@admission.Id"><div><strong>@admission.StudentName</strong><small>@admission.AdmissionDate.ToString("dd/MM/yyyy") @if (admission.DischargeDate.HasValue) { <span>· saída @admission.DischargeDate.Value.ToString("dd/MM/yyyy")</span> }</small></div><span class="crm-status-badge @AdmissionStatusClass(admission.Status)">@AdmissionStatusLabel(admission.Status)</span></a>
                 }
-                else
-                {
-                    @foreach (var admission in Model.UpcomingDischarges)
-                    {
-                        <article><strong>@admission.StudentName</strong><span>@admission.ExpectedDischargeDate.ToString("dd/MM/yyyy") · @(admission.ResponsibleProfessional ?? "Sem responsável")</span></article>
-                    }
-                }
-            </div>
+                </div>
+            }
         </section>
 
-        <section class="patient-card">
-            <div class="patient-card-title"><span>03</span><div><h2>Agenda de hoje</h2><p>Atendimentos encontrados para hoje.</p></div></div>
-            <div class="patient-list">
-                @if (Model.TodayAppointments.Count == 0)
+        <section class="orizon-card orizon-card--padding-none crm-dashboard-card">
+            <header class="crm-dashboard-card__header"><div><h2>Acolhidos recentes</h2><p>Cadastros ativos mais recentes.</p></div><a asp-controller="Students" asp-action="Index">Ver acolhidos</a></header>
+            @if (Model.RecentStudents.Count == 0)
+            {
+                <div class="crm-dashboard-empty"><strong>Nenhum acolhido encontrado.</strong><p>Não há acolhidos ativos cadastrados.</p></div>
+            }
+            else
+            {
+                <div class="crm-dashboard-list">
+                @foreach (var student in Model.RecentStudents)
                 {
-                    <article><strong>Nenhum atendimento hoje</strong><span>A agenda não possui registros para esta data.</span></article>
+                    <a class="crm-dashboard-list__item" asp-controller="Students" asp-action="Details" asp-route-id="@student.Id"><div><strong>@student.Name</strong><small>@StudentStatuses.Label(student.Status) · cadastro @student.CreatedAt.ToString("dd/MM/yyyy")</small></div>@if (student.ActiveAdmissionId.HasValue) { <span class="crm-status-badge crm-status-badge--success">Admission ativa</span> }</a>
                 }
-                else
-                {
-                    @foreach (var appointment in Model.TodayAppointments)
-                    {
-                        <article><strong>@appointment.ScheduledAt.ToString("HH:mm") · @appointment.StudentName</strong><span>@(appointment.ProfessionalName ?? "Profissional não definido")</span></article>
-                    }
-                }
-            </div>
+                </div>
+            }
         </section>
 
-        <section class="patient-card">
-            <div class="patient-card-title"><span>04</span><div><h2>Alertas</h2><p>Sinais operacionais sem números fictícios.</p></div></div>
-            <div class="patient-metric-row">
-                <article><strong>@Model.Transfers</strong><small>Transferências no mês</small></article>
-                <article><strong>@Model.BirthdaysThisMonth</strong><small>Aniversariantes</small></article>
-            </div>
+        <section class="orizon-card orizon-card--padding-none crm-dashboard-card">
+            <header class="crm-dashboard-card__header"><div><h2>Famílias ativas</h2><p>Vínculos familiares atualizados recentemente.</p></div><a asp-controller="Families" asp-action="Index">Ver famílias</a></header>
+            @if (Model.RecentFamilies.Count == 0)
+            {
+                <div class="crm-dashboard-empty"><strong>Nenhuma família cadastrada.</strong><p>Famílias ativas vinculadas a acolhidos aparecerão aqui.</p></div>
+            }
+            else
+            {
+                <div class="crm-dashboard-list">
+                @foreach (var family in Model.RecentFamilies)
+                {
+                    <a class="crm-dashboard-list__item" asp-controller="Families" asp-action="Details" asp-route-id="@family.Id"><div><strong>@family.Name</strong><small>@family.StudentName · atualizado @((family.UpdatedAt ?? family.CreatedAt).ToString("dd/MM/yyyy"))</small></div></a>
+                }
+                </div>
+            }
         </section>
     </div>
 </section>

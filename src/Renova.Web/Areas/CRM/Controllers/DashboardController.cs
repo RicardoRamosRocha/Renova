@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Renova.Domain.Entities;
@@ -16,6 +16,8 @@ public sealed class DashboardController(
     ICurrentTenantService currentTenantService) : Controller
 {
     private const string MissingTenantMessage = "Não foi possível identificar a instituição atual. Entre novamente ou contate o administrador.";
+    private const int DashboardListSize = 5;
+    private const int AppointmentWindowDays = 7;
 
     public async Task<IActionResult> Index()
     {
@@ -27,86 +29,102 @@ public sealed class DashboardController(
         }
 
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        var today = DateTime.Today;
-        var monthStart = DateTime.SpecifyKind(new DateTime(today.Year, today.Month, 1), DateTimeKind.Utc);
-        var nextMonth = monthStart.AddMonths(1);
-        var todayStart = DateTime.SpecifyKind(today, DateTimeKind.Utc);
-        var tomorrow = todayStart.AddDays(1);
+        var tenant = tenantId.Value;
+        var now = DateTime.UtcNow;
+        var appointmentUntil = now.AddDays(AppointmentWindowDays);
 
-        var studentQuery = db.Students
+        var activeStudentsQuery = db.Students
             .AsNoTracking()
-            .Include(item => item.Person)
-            .Where(item => item.TenantId == tenantId.Value);
+            .Where(item => item.TenantId == tenant && item.Status != StudentStatuses.Inactive);
 
-        var admissionQuery = db.Admissions
+        var activeAdmissionsQuery = db.Admissions
             .AsNoTracking()
-            .Include(item => item.Student)
-                .ThenInclude(student => student.Person)
-            .Where(item => item.TenantId == tenantId.Value);
+            .Where(item => item.TenantId == tenant &&
+                           item.Student.TenantId == tenant &&
+                           item.AdmissionStatus == AdmissionStatus.Active);
+
+        var familyQuery = db.FamilyMembers
+            .AsNoTracking()
+            .Where(item => item.TenantId == tenant && item.Student.TenantId == tenant);
+
+        var appointmentsQuery = db.Appointments
+            .AsNoTracking()
+            .Where(item =>
+                item.Student.TenantId == tenant &&
+                (item.Professional == null || item.Professional.TenantId == tenant) &&
+                item.Status == (int)AppointmentStatus.Scheduled &&
+                item.ScheduledAt >= now &&
+                item.ScheduledAt < appointmentUntil);
 
         var model = new CrmDashboardViewModel
         {
-            ActiveStudents = await studentQuery.CountAsync(item => item.Status != StudentStatuses.Inactive),
-            AdmissionsThisMonth = await admissionQuery.CountAsync(item => item.AdmissionDate >= monthStart && item.AdmissionDate < nextMonth),
-            ExpectedDischarges = await admissionQuery.CountAsync(item =>
-                item.ExpectedDischargeDate.HasValue &&
-                item.ExpectedDischargeDate.Value >= todayStart &&
-                item.AdmissionStatus == AdmissionStatus.Active),
-            CompletedDischarges = await admissionQuery.CountAsync(item =>
-                item.DischargeDate.HasValue &&
-                item.DischargeDate.Value >= monthStart &&
-                item.DischargeDate.Value < nextMonth &&
-                item.AdmissionStatus == AdmissionStatus.Discharged),
-            Transfers = await admissionQuery.CountAsync(item =>
-                item.DischargeDate.HasValue &&
-                item.DischargeDate.Value >= monthStart &&
-                item.DischargeDate.Value < nextMonth &&
-                item.AdmissionStatus == AdmissionStatus.Transferred),
-            BirthdaysThisMonth = await studentQuery.CountAsync(item =>
-                item.Person != null && item.Person.BirthDate.HasValue
-                    ? item.Person.BirthDate.Value.Month == today.Month
-                    : item.BirthDate.Month == today.Month),
-            LatestStudents = await studentQuery
+            ActiveStudents = await activeStudentsQuery.CountAsync(),
+            ActiveAdmissions = await activeAdmissionsQuery.CountAsync(),
+            ActiveFamilies = await familyQuery.CountAsync(),
+            UpcomingAppointments = await appointmentsQuery.CountAsync(),
+            UpcomingAppointmentItems = await appointmentsQuery
+                .OrderBy(item => item.ScheduledAt)
+                .ThenBy(item => item.Id)
+                .Take(DashboardListSize)
+                .Select(item => new CrmDashboardAppointmentViewModel
+                {
+                    Id = item.Id,
+                    StudentId = item.StudentId,
+                    StudentName = item.Student.Person != null ? item.Student.Person.FullName : item.Student.FullName,
+                    ScheduledAt = item.ScheduledAt,
+                    ProfessionalName = item.Professional == null
+                        ? null
+                        : item.Professional.Person != null ? item.Professional.Person.FullName : item.Professional.FullName,
+                    Status = (AppointmentStatus)item.Status
+                })
+                .ToListAsync(),
+            RecentAdmissions = await db.Admissions
+                .AsNoTracking()
+                .Where(item => item.TenantId == tenant && item.Student.TenantId == tenant)
+                .OrderByDescending(item => item.AdmissionDate)
+                .ThenByDescending(item => item.Id)
+                .Take(DashboardListSize)
+                .Select(item => new CrmDashboardAdmissionViewModel
+                {
+                    Id = item.Id,
+                    StudentId = item.StudentId,
+                    StudentName = item.Student.Person != null ? item.Student.Person.FullName : item.Student.FullName,
+                    AdmissionDate = item.AdmissionDate,
+                    Status = item.AdmissionStatus,
+                    DischargeDate = item.DischargeDate
+                })
+                .ToListAsync(),
+            RecentStudents = await db.Students
+                .AsNoTracking()
+                .Where(item => item.TenantId == tenant && item.Status != StudentStatuses.Inactive)
                 .OrderByDescending(item => item.CreatedAt)
-                .Take(5)
+                .ThenByDescending(item => item.Id)
+                .Take(DashboardListSize)
                 .Select(item => new CrmDashboardStudentViewModel
                 {
                     Id = item.Id,
                     Name = item.Person != null ? item.Person.FullName : item.FullName,
-                    PhotoUrl = item.Person != null && item.Person.PhotoUrl != null ? item.Person.PhotoUrl : item.PhotoPath,
+                    Status = item.Status,
+                    CreatedAt = item.CreatedAt,
+                    ActiveAdmissionId = item.Admissions
+                        .Where(admission => admission.AdmissionStatus == AdmissionStatus.Active && admission.TenantId == tenant)
+                        .OrderByDescending(admission => admission.AdmissionDate)
+                        .Select(admission => (Guid?)admission.Id)
+                        .FirstOrDefault()
+                })
+                .ToListAsync(),
+            RecentFamilies = await familyQuery
+                .OrderByDescending(item => item.UpdatedAt ?? item.CreatedAt)
+                .ThenBy(item => item.Id)
+                .Take(DashboardListSize)
+                .Select(item => new CrmDashboardFamilyViewModel
+                {
+                    Id = item.Id,
+                    StudentId = item.StudentId,
+                    Name = item.Person != null ? item.Person.FullName : item.FullName,
+                    StudentName = item.Student.Person != null ? item.Student.Person.FullName : item.Student.FullName,
+                    UpdatedAt = item.UpdatedAt,
                     CreatedAt = item.CreatedAt
-                })
-                .ToListAsync(),
-            UpcomingDischarges = await admissionQuery
-                .Where(item => item.ExpectedDischargeDate.HasValue && item.ExpectedDischargeDate.Value >= todayStart)
-                .OrderBy(item => item.ExpectedDischargeDate)
-                .Take(5)
-                .Select(item => new CrmDashboardAdmissionViewModel
-                {
-                    StudentId = item.StudentId,
-                    StudentName = item.Student.Person != null ? item.Student.Person.FullName : item.Student.FullName,
-                    ExpectedDischargeDate = item.ExpectedDischargeDate!.Value,
-                    ResponsibleProfessional = item.ResponsibleProfessional
-                })
-                .ToListAsync(),
-            TodayAppointments = await db.Appointments
-                .AsNoTracking()
-                .Include(item => item.Student)
-                    .ThenInclude(student => student.Person)
-                .Include(item => item.Professional)
-                .Where(item =>
-                    item.Student.TenantId == tenantId.Value &&
-                    (item.Professional == null || item.Professional.TenantId == tenantId.Value) &&
-                    item.ScheduledAt >= todayStart &&
-                    item.ScheduledAt < tomorrow)
-                .OrderBy(item => item.ScheduledAt)
-                .Take(6)
-                .Select(item => new CrmDashboardAppointmentViewModel
-                {
-                    StudentId = item.StudentId,
-                    StudentName = item.Student.Person != null ? item.Student.Person.FullName : item.Student.FullName,
-                    ScheduledAt = item.ScheduledAt,
-                    ProfessionalName = item.Professional != null ? item.Professional.FullName : null
                 })
                 .ToListAsync()
         };
