@@ -263,7 +263,7 @@ public sealed class AdmissionsController(
 
         if (status is AdmissionStatus.Discharged or AdmissionStatus.Transferred)
         {
-            admission.DischargeDate ??= DateTime.UtcNow.Date;
+            admission.DischargeDate ??= DateTime.SpecifyKind(DateTime.UtcNow.Date, DateTimeKind.Utc);
         }
 
         ApplyStudentStatus(admission.Student, status);
