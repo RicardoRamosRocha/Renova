@@ -32,15 +32,20 @@
                     @foreach (var admission in Model)
                     {
                         <tr>
-                            <td>@admission.AdmissionDate.ToString("dd/MM/yyyy")</td>
-                            <td><span class="renova-status-badge info">@admission.AdmissionStatus</span></td>
+                            <td><a asp-action="Details" asp-route-id="@admission.Id">@admission.AdmissionDate.ToString("dd/MM/yyyy")</a></td>
+                            <td><span class="crm-status-badge">@AdmissionStatusLabel(admission.AdmissionStatus)</span></td>
                             <td>@(admission.ResponsibleProfessional ?? "Não informado")</td>
                             <td>@(admission.ExpectedDischargeDate?.ToString("dd/MM/yyyy") ?? "Sem previsão")</td>
                             <td>
                                 <div class="renova-action-buttons">
-                                    <a class="renova-action-btn" asp-action="Edit" asp-route-id="@admission.Id" title="Editar"></a>
-                                    <form asp-action="Discharge" asp-route-id="@admission.Id" method="post"><button class="renova-action-btn" type="submit" title="Alta"></button></form>
-                                    <form asp-action="Transfer" asp-route-id="@admission.Id" method="post"><button class="renova-action-btn" type="submit" title="Transferir"></button></form>
+                                    <a class="renova-action-btn" asp-action="Details" asp-route-id="@admission.Id" title="Ver detalhes">Ver</a>
+                                    <a class="renova-action-btn" asp-action="Edit" asp-route-id="@admission.Id" title="Editar">Editar</a>
+                                    @if (admission.AdmissionStatus is AdmissionStatus.Active or AdmissionStatus.Planned)
+                                    {
+                                        <form asp-action="Discharge" asp-route-id="@admission.Id" method="post" onsubmit="return confirm('Registrar alta desta admissão?');"><button class="renova-action-btn" type="submit" title="Alta">Alta</button></form>
+                                        <form asp-action="Transfer" asp-route-id="@admission.Id" method="post" onsubmit="return confirm('Registrar transferência desta admissão?');"><button class="renova-action-btn" type="submit" title="Transferir">Transferir</button></form>
+                                        <form asp-action="Cancel" asp-route-id="@admission.Id" method="post" onsubmit="return confirm('Cancelar esta admissão?');"><button class="renova-action-btn" type="submit" title="Cancelar">Cancelar</button></form>
+                                    }
                                 </div>
                             </td>
                         </tr>
@@ -51,4 +56,16 @@
         }
     </section>
 </section>
+
+@functions {
+    private static string AdmissionStatusLabel(AdmissionStatus status) => status switch
+    {
+        AdmissionStatus.Active => "Ativa",
+        AdmissionStatus.Planned => "Planejada",
+        AdmissionStatus.Discharged => "Alta",
+        AdmissionStatus.Cancelled => "Cancelada",
+        AdmissionStatus.Transferred => "Transferida",
+        _ => "Admissão"
+    };
+}
 

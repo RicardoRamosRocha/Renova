@@ -51,6 +51,27 @@ public sealed class AdmissionsController(
         return View(admissions);
     }
 
+    public async Task<IActionResult> Details(Guid id)
+    {
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            TempData["Error"] = MissingTenantMessage;
+            return RedirectToAction("Index", "Students");
+        }
+
+        await using var db = await dbContextFactory.CreateDbContextAsync();
+        var admission = await db.Admissions
+            .AsNoTracking()
+            .Include(item => item.Student)
+            .FirstOrDefaultAsync(item =>
+                item.Id == id &&
+                item.TenantId == tenantId.Value &&
+                item.Student.TenantId == tenantId.Value);
+
+        return admission is null ? NotFound() : View(ToDetails(admission));
+    }
+
     public async Task<IActionResult> Create(Guid studentId)
     {
         var model = await CreateFormAsync(studentId);
@@ -81,6 +102,7 @@ public sealed class AdmissionsController(
 
         model.StudentName = student.DisplayName;
 
+        ValidateDates(model);
         if (!ModelState.IsValid)
         {
             return View(model);
@@ -117,7 +139,7 @@ public sealed class AdmissionsController(
         await db.SaveChangesAsync();
 
         TempData["Success"] = "Admissão registrada com sucesso.";
-        return RedirectToAction("Details", "Students", new { id = student.Id });
+        return RedirectToAction(nameof(Details), new { id = admission.Id });
     }
 
     public async Task<IActionResult> Edit(Guid id)
@@ -171,6 +193,18 @@ public sealed class AdmissionsController(
 
         model.StudentName = admission.Student.DisplayName;
 
+        if (!Enum.IsDefined(model.AdmissionStatus))
+        {
+            ModelState.AddModelError(nameof(model.AdmissionStatus), "Selecione um status válido.");
+        }
+
+        if ((admission.AdmissionStatus is AdmissionStatus.Discharged or AdmissionStatus.Transferred or AdmissionStatus.Cancelled) &&
+            model.AdmissionStatus != admission.AdmissionStatus)
+        {
+            ModelState.AddModelError(nameof(model.AdmissionStatus), "Uma admissão encerrada não pode ser reaberta por esta tela.");
+        }
+
+        ValidateDates(model);
         if (!ModelState.IsValid)
         {
             return View(model);
@@ -201,7 +235,7 @@ public sealed class AdmissionsController(
         await db.SaveChangesAsync();
 
         TempData["Success"] = "Admissão atualizada com sucesso.";
-        return RedirectToAction("Details", "Students", new { id = admission.StudentId });
+        return RedirectToAction(nameof(Details), new { id = admission.Id });
     }
 
     [HttpPost]
@@ -272,6 +306,12 @@ public sealed class AdmissionsController(
             return NotFound();
         }
 
+        if (!CanChangeStatus(admission.AdmissionStatus, status))
+        {
+            TempData["Error"] = "Esta admissÃ£o nÃ£o pode receber essa alteraÃ§Ã£o de status.";
+            return RedirectToAction(nameof(Details), new { id = admission.Id });
+        }
+
         admission.AdmissionStatus = status;
         admission.UpdatedAt = DateTime.UtcNow;
 
@@ -284,7 +324,7 @@ public sealed class AdmissionsController(
         await db.SaveChangesAsync();
 
         TempData["Success"] = message;
-        return RedirectToAction("Details", "Students", new { id = admission.StudentId });
+        return RedirectToAction(nameof(Details), new { id = admission.Id });
     }
 
     private static AdmissionFormViewModel ToForm(Admission admission) => new()
@@ -305,6 +345,51 @@ public sealed class AdmissionsController(
         DestinationAfterDischarge = admission.DestinationAfterDischarge,
         Notes = admission.Notes
     };
+
+    private static AdmissionDetailsViewModel ToDetails(Admission admission) => new()
+    {
+        Id = admission.Id,
+        StudentId = admission.StudentId,
+        StudentName = admission.Student.DisplayName,
+        AdmissionDate = admission.AdmissionDate,
+        ExpectedDischargeDate = admission.ExpectedDischargeDate,
+        DischargeDate = admission.DischargeDate,
+        AdmissionReason = admission.AdmissionReason,
+        DischargeReason = admission.DischargeReason,
+        AdmissionStatus = admission.AdmissionStatus,
+        ReferredBy = admission.ReferredBy,
+        ResponsibleProfessional = admission.ResponsibleProfessional,
+        DischargeApprovedBy = admission.DischargeApprovedBy,
+        Origin = admission.Origin,
+        DestinationAfterDischarge = admission.DestinationAfterDischarge,
+        Notes = admission.Notes,
+        CreatedAt = admission.CreatedAt,
+        UpdatedAt = admission.UpdatedAt
+    };
+
+    private void ValidateDates(AdmissionFormViewModel model)
+    {
+        if (model.ExpectedDischargeDate.HasValue && model.ExpectedDischargeDate.Value.Date < model.AdmissionDate.Date)
+        {
+            ModelState.AddModelError(nameof(model.ExpectedDischargeDate), "A previsÃ£o de alta deve ser igual ou posterior Ã  entrada.");
+        }
+
+        if (model.DischargeDate.HasValue && model.DischargeDate.Value.Date < model.AdmissionDate.Date)
+        {
+            ModelState.AddModelError(nameof(model.DischargeDate), "A data de alta deve ser igual ou posterior Ã  entrada.");
+        }
+
+        if (model.AdmissionStatus is AdmissionStatus.Discharged or AdmissionStatus.Transferred && !model.DischargeDate.HasValue)
+        {
+            ModelState.AddModelError(nameof(model.DischargeDate), "Informe a data de alta ou transferÃªncia.");
+        }
+    }
+
+    private static bool CanChangeStatus(AdmissionStatus current, AdmissionStatus next)
+    {
+        return (current is AdmissionStatus.Active or AdmissionStatus.Planned) &&
+               (next is AdmissionStatus.Discharged or AdmissionStatus.Transferred or AdmissionStatus.Cancelled);
+    }
 
     private static async Task<bool> HasActiveAdmissionAsync(
         AppDbContext db,

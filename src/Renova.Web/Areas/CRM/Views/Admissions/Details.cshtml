@@ -1,0 +1,72 @@
+@using Renova.Domain.Entities
+@using Renova.Web.Areas.CRM.ViewModels.Admissions
+@model AdmissionDetailsViewModel
+@{
+    ViewData["Title"] = "Detalhes da Admissão";
+    var badgeClass = Model.AdmissionStatus switch
+    {
+        AdmissionStatus.Active => "crm-status-badge--success",
+        AdmissionStatus.Planned => "crm-status-badge--warning",
+        AdmissionStatus.Discharged or AdmissionStatus.Transferred => "crm-status-badge--info",
+        AdmissionStatus.Cancelled => "crm-status-badge--danger",
+        _ => "crm-status-badge--neutral"
+    };
+    var statusLabel = Model.AdmissionStatus switch
+    {
+        AdmissionStatus.Active => "Ativa",
+        AdmissionStatus.Planned => "Planejada",
+        AdmissionStatus.Discharged => "Alta",
+        AdmissionStatus.Cancelled => "Cancelada",
+        AdmissionStatus.Transferred => "Transferida",
+        _ => "Admissão"
+    };
+}
+
+<section class="admin-page">
+    <header class="admin-form-header">
+        <div>
+            <nav class="admin-form-breadcrumb"><a asp-controller="Students" asp-action="Details" asp-route-id="@Model.StudentId">Acolhido</a><span>/</span><span>Admissão</span></nav>
+            <span class="rn-eyebrow">CRM / Admissões</span>
+            <h1>Admissão de @Model.StudentName</h1>
+            <p><span class="crm-status-badge @badgeClass">@statusLabel</span></p>
+        </div>
+        <div class="crm-page-header__actions">
+            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-controller="Students" asp-action="Details" asp-route-id="@Model.StudentId">Acolhido</a>
+            <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
+        </div>
+    </header>
+
+    <div class="patient-profile-grid">
+        <section class="patient-card">
+            <div class="patient-card-title"><span>01</span><div><h2>Dados da admissão</h2><p>Entrada e acompanhamento do acolhimento.</p></div></div>
+            <dl class="patient-data-list">
+                <div><dt>Acolhido</dt><dd><a asp-controller="Students" asp-action="Details" asp-route-id="@Model.StudentId">@Model.StudentName</a></dd></div>
+                <div><dt>Data de entrada</dt><dd>@Model.AdmissionDate.ToString("dd/MM/yyyy")</dd></div>
+                <div><dt>Previsão de alta</dt><dd>@(Model.ExpectedDischargeDate?.ToString("dd/MM/yyyy") ?? "Não informada")</dd></div>
+                <div><dt>Alta/saída</dt><dd>@(Model.DischargeDate?.ToString("dd/MM/yyyy") ?? "Não registrada")</dd></div>
+                <div><dt>Responsável</dt><dd>@(Model.ResponsibleProfessional ?? "Não informado")</dd></div>
+                <div><dt>Origem</dt><dd>@(Model.Origin ?? "Não informada")</dd></div>
+                <div><dt>Encaminhado por</dt><dd>@(Model.ReferredBy ?? "Não informado")</dd></div>
+            </dl>
+        </section>
+        <section class="patient-card">
+            <div class="patient-card-title"><span>02</span><div><h2>Saída e observações</h2><p>Informações preservadas no histórico.</p></div></div>
+            <dl class="patient-data-list">
+                <div><dt>Motivo da admissão</dt><dd>@(Model.AdmissionReason ?? "Não informado")</dd></div>
+                <div><dt>Motivo da saída</dt><dd>@(Model.DischargeReason ?? "Não informado")</dd></div>
+                <div><dt>Destino após alta</dt><dd>@(Model.DestinationAfterDischarge ?? "Não informado")</dd></div>
+                <div><dt>Alta aprovada por</dt><dd>@(Model.DischargeApprovedBy ?? "Não informado")</dd></div>
+            </dl>
+            <p>@(Model.Notes ?? "Nenhuma observação registrada.")</p>
+        </section>
+    </div>
+
+    @if (Model.AdmissionStatus is AdmissionStatus.Active or AdmissionStatus.Planned)
+    {
+        <div class="orizon-form-actions">
+            <form asp-action="Discharge" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Registrar alta desta admissão?');"><button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="submit">Registrar alta</button></form>
+            <form asp-action="Transfer" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Registrar transferência desta admissão?');"><button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="submit">Registrar transferência</button></form>
+            <form asp-action="Cancel" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Cancelar esta admissão?');"><button class="orizon-button orizon-button--outline orizon-button--danger orizon-button--md" type="submit">Cancelar admissão</button></form>
+        </div>
+    }
+</section>
