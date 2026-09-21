@@ -5,6 +5,7 @@ using Renova.Domain.Entities;
 using Renova.Infrastructure.Data;
 using Renova.Web.Areas.CRM.ViewModels.Families;
 using Renova.Web.Services;
+using Renova.Web.ViewModels;
 
 namespace Renova.Web.Areas.CRM.Controllers;
 
@@ -17,17 +18,17 @@ public sealed class FamiliesController(
 {
     private const string MissingTenantMessage = "Não foi possível identificar a instituição atual. Entre novamente ou contate o administrador.";
 
-    public async Task<IActionResult> Index(Guid? studentId)
+    public async Task<IActionResult> Index(string? search, Guid? studentId, bool includeArchived = false, int page = 1, int pageSize = 10)
     {
         var tenantId = await currentTenantService.GetTenantIdAsync();
         if (!tenantId.HasValue)
         {
             TempData["Error"] = MissingTenantMessage;
-            return View(Array.Empty<FamilyMember>());
+            return View(new FamilyIndexViewModel { Search = search, StudentId = studentId, IncludeArchived = includeArchived });
         }
 
         await using var db = await dbContextFactory.CreateDbContextAsync();
-        IQueryable<FamilyMember> query = db.FamilyMembers
+        IQueryable<FamilyMember> query = (includeArchived ? db.FamilyMembers.IgnoreQueryFilters() : db.FamilyMembers)
             .AsNoTracking()
             .Include(item => item.Person)
             .Include(item => item.Student)
@@ -40,15 +41,72 @@ public sealed class FamiliesController(
                 item.Student.TenantId == tenantId.Value);
         }
 
-        ViewBag.StudentId = studentId;
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim();
+            query = query.Where(item =>
+                item.FullName.Contains(term) ||
+                (item.Person != null && item.Person.FullName.Contains(term)) ||
+                item.Relationship.Contains(term) ||
+                item.Phone.Contains(term) ||
+                (item.Email != null && item.Email.Contains(term)) ||
+                item.Student.FullName.Contains(term) ||
+                (item.Student.Person != null && item.Student.Person.FullName.Contains(term)));
+        }
 
+        pageSize = Math.Clamp(pageSize, 5, 50);
+        page = Math.Max(1, page);
+        var totalItems = await query.CountAsync();
+        page = Math.Min(page, Math.Max(1, (int)Math.Ceiling(totalItems / (double)pageSize)));
         var members = await query
             .OrderBy(item => item.Student.FullName)
             .ThenByDescending(item => item.IsResponsible)
             .ThenBy(item => item.FullName)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
-        return View(members);
+        var activeQuery = db.FamilyMembers.AsNoTracking().Where(item => item.TenantId == tenantId.Value && item.Student.TenantId == tenantId.Value);
+        var active = await activeQuery.CountAsync();
+        var archived = await db.FamilyMembers.IgnoreQueryFilters().AsNoTracking().CountAsync(item => item.TenantId == tenantId.Value && item.Student.TenantId == tenantId.Value && item.IsDeleted);
+        ViewBag.Search = search;
+        ViewBag.StudentId = studentId;
+        ViewBag.IncludeArchived = includeArchived;
+
+        return View(new FamilyIndexViewModel
+        {
+            Search = search,
+            StudentId = studentId,
+            IncludeArchived = includeArchived,
+            Total = active + archived,
+            Active = active,
+            Archived = archived,
+            Families = new PagedResult<FamilyIndexItemViewModel>
+            {
+                Items = members.Select(ToIndexItem).ToList(),
+                Page = page,
+                PageSize = pageSize,
+                TotalItems = totalItems
+            }
+        });
+    }
+
+    public async Task<IActionResult> Details(Guid id)
+    {
+        var tenantId = await currentTenantService.GetTenantIdAsync();
+        if (!tenantId.HasValue)
+        {
+            TempData["Error"] = MissingTenantMessage;
+            return RedirectToAction("Index", "Students");
+        }
+
+        await using var db = await dbContextFactory.CreateDbContextAsync();
+        var member = await db.FamilyMembers.IgnoreQueryFilters().AsNoTracking()
+            .Include(item => item.Person)
+            .Include(item => item.Student).ThenInclude(student => student.Person)
+            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value && item.Student.TenantId == tenantId.Value);
+
+        return member is null ? NotFound() : View(ToDetails(member));
     }
 
     public async Task<IActionResult> Create(Guid studentId)
@@ -236,7 +294,8 @@ public sealed class FamiliesController(
         await using var db = await dbContextFactory.CreateDbContextAsync();
         var member = await db.FamilyMembers
             .Include(item => item.Person)
-            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value);
+            .Include(item => item.Student)
+            .FirstOrDefaultAsync(item => item.Id == id && item.TenantId == tenantId.Value && item.Student.TenantId == tenantId.Value);
 
         if (member is null)
         {
@@ -298,4 +357,37 @@ public sealed class FamiliesController(
     {
         return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
     }
+
+    private static FamilyIndexItemViewModel ToIndexItem(FamilyMember member) => new()
+    {
+        Id = member.Id,
+        StudentId = member.StudentId,
+        Name = member.DisplayName,
+        StudentName = member.Student.DisplayName,
+        Relationship = member.Relationship,
+        Phone = member.DisplayPhone,
+        Email = member.DisplayEmail,
+        PhotoUrl = member.DisplayPhotoUrl,
+        IsResponsible = member.IsResponsible,
+        CanAccessPortal = member.CanAccessPortal,
+        IsArchived = member.IsDeleted
+    };
+
+    private static FamilyDetailsViewModel ToDetails(FamilyMember member) => new()
+    {
+        Id = member.Id,
+        StudentId = member.StudentId,
+        Name = member.DisplayName,
+        Relationship = member.Relationship,
+        RelationshipType = member.RelationshipType,
+        Phone = member.DisplayPhone,
+        Email = member.DisplayEmail,
+        PhotoUrl = member.DisplayPhotoUrl,
+        StudentName = member.Student.DisplayName,
+        IsResponsible = member.IsResponsible,
+        CanAccessPortal = member.CanAccessPortal,
+        IsArchived = member.IsDeleted,
+        CreatedAt = member.CreatedAt,
+        UpdatedAt = member.UpdatedAt
+    };
 }

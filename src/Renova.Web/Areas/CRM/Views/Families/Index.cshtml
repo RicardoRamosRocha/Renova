@@ -1,8 +1,9 @@
-@using Renova.Domain.Entities
+@using Renova.Web.Areas.CRM.ViewModels.Families
 @using Renova.Web.ViewModels
-@model IReadOnlyList<FamilyMember>
+@model FamilyIndexViewModel
 @{
     ViewData["Title"] = "Famílias";
+    var paged = Model.Families;
 }
 
 <section class="admin-page">
@@ -14,6 +15,20 @@
         </div>
     </header>
 
+    <section class="orizon-card">
+        <form method="get" class="orizon-form-grid">
+            <div class="orizon-field">
+                <label class="orizon-field__label" for="search">Buscar</label>
+                <input class="orizon-input" id="search" name="search" value="@Model.Search" placeholder="Nome, acolhido, parentesco ou telefone" />
+            </div>
+            <div class="orizon-field" style="align-self:end">
+                <label class="admin-check"><input type="checkbox" name="includeArchived" value="true" checked="@Model.IncludeArchived" /> <span>Incluir arquivados</span></label>
+            </div>
+            @if (Model.StudentId.HasValue) { <input type="hidden" name="studentId" value="@Model.StudentId" /> }
+            <div class="orizon-form-actions" style="align-self:end"><button class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" type="submit">Buscar</button><a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Index">Limpar</a></div>
+        </form>
+    </section>
+
     @if (TempData["Success"] is string success)
     {
         <div class="crm-alert-success">
@@ -23,7 +38,7 @@
     }
 
     <section class="orizon-card orizon-card--padding-none">
-        @if (Model.Count == 0)
+        @if (paged.Items.Count == 0)
         {
             <div class="crm-empty-state">
                 <div class="crm-empty-icon"></div>
@@ -50,25 +65,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach (var member in Model)
+                    @foreach (var member in paged.Items)
                     {
                         <tr>
                             <td>
                                 <span class="renova-person-cell">
                                     @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
                                     {
-                                        Name = member.DisplayName,
-                                        PhotoUrl = member.DisplayPhotoUrl
+                                        Name = member.Name,
+                                        PhotoUrl = member.PhotoUrl
                                     })
                                     <span>
-                                        <strong class="renova-row-title">@member.DisplayName</strong>
-                                        <small class="renova-row-subtitle">@(member.DisplayEmail ?? "Sem email")</small>
+                                        <strong class="renova-row-title">@member.Name</strong>
+                                        <small class="renova-row-subtitle">@(member.Email ?? "Sem email")</small>
                                     </span>
                                 </span>
                             </td>
-                            <td><a asp-controller="Students" asp-action="Details" asp-route-id="@member.StudentId">@member.Student.DisplayName</a></td>
+                            <td><a asp-controller="Students" asp-action="Details" asp-route-id="@member.StudentId">@member.StudentName</a></td>
                             <td>@member.Relationship</td>
-                            <td>@member.DisplayPhone</td>
+                            <td>@member.Phone</td>
                             <td>
                                 @if (member.IsResponsible)
                                 {
@@ -81,14 +96,18 @@
                             </td>
                             <td>
                                 <div class="renova-action-buttons">
+                                    <a class="renova-action-btn" asp-action="Details" asp-route-id="@member.Id" title="Detalhes">Ver</a>
+                                    @if (!member.IsArchived)
+                                    {
                                     <a class="renova-action-btn" asp-action="Edit" asp-route-id="@member.Id" title="Editar">
                                         
                                     </a>
-                                    <form asp-action="Archive" asp-route-id="@member.Id" method="post">
+                                    <form asp-action="Archive" asp-route-id="@member.Id" method="post" onsubmit="return confirm('Arquivar este vínculo familiar?');">
                                         <button class="renova-action-btn danger" type="submit" title="Arquivar">
                                             
                                         </button>
                                     </form>
+                                    }
                                 </div>
                             </td>
                         </tr>
@@ -97,6 +116,7 @@
                 </table>
             </div>
         }
+        @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", paged)
     </section>
 </section>
 

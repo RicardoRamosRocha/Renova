@@ -1,0 +1,21 @@
+@using Renova.Web.Areas.CRM.ViewModels.Families
+@using Renova.Web.ViewModels
+@model FamilyDetailsViewModel
+@{ ViewData["Title"] = "Detalhes do familiar"; }
+<section class="admin-page patient-profile">
+    <div class="patient-hero">
+        <div class="patient-identity">
+            @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel { Name = Model.Name, PhotoUrl = Model.PhotoUrl, Size = "lg" })
+            <div><span class="rn-eyebrow">CRM / Família</span><h1>@Model.Name</h1><p><span class="orizon-badge orizon-badge--md @(Model.IsArchived ? "orizon-badge--danger" : "orizon-badge--success")">@(Model.IsArchived ? "Arquivado" : "Ativo")</span> @Model.Relationship</p></div>
+        </div>
+        <div class="patient-actions">
+            @if (!Model.IsArchived) { <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Edit" asp-route-id="@Model.Id">Editar</a><form asp-action="Archive" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Arquivar este vínculo familiar?');"><button class="orizon-button orizon-button--outline orizon-button--danger orizon-button--md" type="submit">Arquivar</button></form> }
+            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-controller="Students" asp-action="Details" asp-route-id="@Model.StudentId">Ver acolhido</a>
+            <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-action="Index">Voltar</a>
+        </div>
+    </div>
+    <div class="patient-profile-grid">
+        <section class="patient-card"><div class="patient-card-title"><span>01</span><div><h2>Dados do contato</h2><p>Informações relevantes da rede de apoio.</p></div></div><dl class="patient-data-list"><div><dt>Nome</dt><dd>@Model.Name</dd></div><div><dt>Parentesco</dt><dd>@Model.Relationship</dd></div><div><dt>Telefone</dt><dd>@Model.Phone</dd></div><div><dt>Email</dt><dd>@(Model.Email ?? "Não informado")</dd></div></dl></section>
+        <section class="patient-card"><div class="patient-card-title"><span>02</span><div><h2>Vínculo</h2><p>Relação segura com o acolhido.</p></div></div><dl class="patient-data-list"><div><dt>Acolhido</dt><dd><a asp-controller="Students" asp-action="Details" asp-route-id="@Model.StudentId">@Model.StudentName</a></dd></div><div><dt>Responsável</dt><dd>@(Model.IsResponsible ? "Sim" : "Não")</dd></div><div><dt>Acesso ao portal</dt><dd>@(Model.CanAccessPortal ? "Permitido" : "Não permitido")</dd></div><div><dt>Cadastro</dt><dd>@Model.CreatedAt.ToString("dd/MM/yyyy")</dd></div></dl></section>
+    </div>
+</section>
