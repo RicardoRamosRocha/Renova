@@ -59,15 +59,15 @@
     </style>
 }
 
-<section class="renova-listing-page">
-    <header class="renova-listing-header">
-        <div class="renova-listing-header__content">
-            <span class="orizon-badge orizon-badge--info orizon-badge--sm">CRM / Acolhidos</span>
+<section class="admin-page">
+    <header class="admin-page-header">
+        <div>
+            <span>CRM</span>
             <h1>Gestão de acolhidos</h1>
             <p>Cadastros, admissões, vínculos familiares e acompanhamento da jornada de cuidado em um único lugar.</p>
         </div>
 
-        <div class="renova-listing-header__actions">
+        <div>
             <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md"
                asp-action="Create">
                 <orizon-icon name="plus" size="18" />
@@ -76,37 +76,33 @@
         </div>
     </header>
 
-    <div class="renova-metrics renova-listing-metrics" aria-label="Indicadores dos acolhidos">
-        <article class="renova-metric renova-metric--primary">
-            <span class="renova-metric__icon"><orizon-icon name="users" size="22" /></span>
-            <span class="renova-metric__content">
+    <div class="demo-grid-4" aria-label="Indicadores dos acolhidos">
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md">
+            <span>
                 <span>Total</span>
                 <strong>@Model.Total</strong>
                 <small>Acolhidos cadastrados</small>
             </span>
         </article>
 
-        <article class="renova-metric renova-metric--success">
-            <span class="renova-metric__icon"><orizon-icon name="check-circle" size="22" /></span>
-            <span class="renova-metric__content">
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md">
+            <span>
                 <span>Ativos</span>
                 <strong>@Model.Active</strong>
                 <small>Em acompanhamento</small>
             </span>
         </article>
 
-        <article class="renova-metric renova-metric--info">
-            <span class="renova-metric__icon"><orizon-icon name="activity" size="22" /></span>
-            <span class="renova-metric__content">
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md">
+            <span>
                 <span>Em tratamento</span>
                 <strong>@Model.InTreatment</strong>
                 <small>Planos ativos</small>
             </span>
         </article>
 
-        <article class="renova-metric renova-metric--warning">
-            <span class="renova-metric__icon"><orizon-icon name="calendar" size="22" /></span>
-            <span class="renova-metric__content">
+        <article class="orizon-card orizon-card--elevated orizon-card--padding-md">
+            <span>
                 <span>Altas previstas</span>
                 <strong>@Model.DischargePlanned</strong>
                 <small>Planejadas no CRM</small>
@@ -114,30 +110,27 @@
         </article>
     </div>
 
-    <section class="renova-listing-card" aria-labelledby="students-list-title">
-        <div class="renova-listing-card__header">
+    <section class="orizon-card orizon-card--padding-none" aria-labelledby="students-list-title">
+        <div class="rn-premium-toolbar">
             <div>
                 <h2 id="students-list-title">Cadastros de acolhidos</h2>
                 <p>Consulte perfis, situação atual e responsáveis pelo acompanhamento.</p>
             </div>
-            <span class="orizon-badge orizon-badge--neutral orizon-badge--md renova-result-count">
+            <span class="orizon-badge orizon-badge--neutral orizon-badge--md">
                 @Model.Students.Items.Count nesta página
             </span>
         </div>
 
-        <div class="renova-listing-toolbar renova-listing-toolbar--embedded">
-            <form class="renova-listing-filters" method="get">
-                <div class="orizon-field renova-field--search">
+        <div class="orizon-card orizon-card--padding-md">
+            <form class="demo-filter-row" method="get">
+                <div class="orizon-field">
                     <label for="student-search">Buscar acolhido</label>
-                    <div class="renova-search">
-                        <orizon-icon name="search" size="18" />
-                        <input id="student-search"
-                               class="orizon-input"
-                               name="search"
-                               value="@Model.Search"
-                               type="search"
-                               placeholder="Nome, CPF, telefone ou e-mail" />
-                    </div>
+                    <input id="student-search"
+                           class="orizon-input"
+                           name="search"
+                           value="@Model.Search"
+                           type="search"
+                           placeholder="Nome, CPF, telefone ou e-mail" />
                 </div>
 
                 <div class="orizon-field">
@@ -171,7 +164,7 @@
                            type="date" />
                 </div>
 
-                <div class="renova-filter-actions">
+                <div class="rn-premium-actions">
                     @if (hasFilters)
                     {
                         <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--md"
@@ -191,10 +184,8 @@
 
         @if (Model.Students.Items.Count == 0)
         {
-            <div class="renova-listing-empty">
-                <span class="renova-listing-empty__icon">
-                    <orizon-icon name="users" size="30" />
-                </span>
+            <section class="admin-empty-state">
+                <div class="crm-empty-icon"></div>
                 <strong>Nenhum acolhido encontrado</strong>
                 <p>
                     @(hasFilters
@@ -216,12 +207,12 @@
                         Criar primeiro cadastro
                     </a>
                 }
-            </div>
+            </section>
         }
         else
         {
-            <div class="orizon-table-container renova-listing-table-wrap">
-                <table class="orizon-table orizon-table--hoverable renova-listing-table">
+            <div class="orizon-table-container">
+                <table class="orizon-table orizon-table--hoverable">
                     <thead>
                         <tr>
                             <th>Acolhido</th>
@@ -253,17 +244,17 @@
                                             Name = student.Name,
                                             PhotoUrl = student.PhotoUrl
                                         })
-                                        <span class="renova-person__text">
+                                        <span>
                                             <strong>@student.Name</strong>
                                             <small>@StudentStatuses.Label(student.Status)</small>
                                         </span>
                                     </a>
                                 </td>
-                                <td><span class="renova-cell-muted">@student.Cpf</span></td>
-                                <td><span class="renova-cell-muted">@student.Phone</span></td>
+                                <td><span class="renova-muted">@student.Cpf</span></td>
+                                <td><span class="renova-muted">@student.Phone</span></td>
                                 <td>
-                                    <span class="renova-cell-stack">
-                                        <span class="renova-cell-muted">@student.AdmissionDate.ToString("dd/MM/yyyy")</span>
+                                    <span>
+                                        <span class="renova-muted">@student.AdmissionDate.ToString("dd/MM/yyyy")</span>
                                         @if (!string.IsNullOrWhiteSpace(student.ResponsibleProfessional))
                                         {
                                             <small>Resp. @student.ResponsibleProfessional</small>
@@ -307,28 +298,11 @@
 
             @if (Model.Students.TotalPages > 1)
             {
-                <nav class="orizon-pagination" aria-label="Paginação">
-                    @if (Model.Students.HasPreviousPage)
-                    {
-                        <a href="@Url.Action("Index", new { page = Model.Students.Page - 1, search = Model.Search, status = Model.Status, admissionFrom = Model.AdmissionFrom, admissionTo = Model.AdmissionTo })">Anterior</a>
-                    }
-                    else
-                    {
-                        <span class="is-disabled">Anterior</span>
-                    }
-                    @for (var item = 1; item <= Model.Students.TotalPages; item++)
-                    {
-                        <a class="@(item == Model.Students.Page ? "is-active" : string.Empty)" href="@Url.Action("Index", new { page = item, search = Model.Search, status = Model.Status, admissionFrom = Model.AdmissionFrom, admissionTo = Model.AdmissionTo })">@item</a>
-                    }
-                    @if (Model.Students.HasNextPage)
-                    {
-                        <a href="@Url.Action("Index", new { page = Model.Students.Page + 1, search = Model.Search, status = Model.Status, admissionFrom = Model.AdmissionFrom, admissionTo = Model.AdmissionTo })">Próxima</a>
-                    }
-                    else
-                    {
-                        <span class="is-disabled">Próxima</span>
-                    }
-                </nav>
+                ViewBag.Search = Model.Search;
+                ViewBag.Status = Model.Status;
+                ViewBag.AdmissionFrom = Model.AdmissionFrom;
+                ViewBag.AdmissionTo = Model.AdmissionTo;
+                @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", Model.Students)
             }
 
             @foreach (var student in Model.Students.Items)

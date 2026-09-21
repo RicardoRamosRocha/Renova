@@ -9,12 +9,12 @@
 @if (totalPages > 1)
 {
     <nav class="orizon-pagination" aria-label="Paginação">
-        <a class="@(hasPrevious ? string.Empty : "is-disabled")" href="@Url.Action(null, new { page = page - 1, search = ViewBag.Search, status = ViewBag.Status, active = ViewBag.Active, studentId = ViewBag.StudentId, includeArchived = ViewBag.IncludeArchived })">Anterior</a>
+        <a class="@(hasPrevious ? string.Empty : "is-disabled")" href="@Url.Action(null, new { page = page - 1, search = ViewBag.Search, status = ViewBag.Status, active = ViewBag.Active, studentId = ViewBag.StudentId, includeArchived = ViewBag.IncludeArchived, admissionFrom = ViewBag.AdmissionFrom, admissionTo = ViewBag.AdmissionTo })">Anterior</a>
         @for (var item = 1; item <= totalPages; item++)
         {
-            <a class="@(item == page ? "is-active" : string.Empty)" href="@Url.Action(null, new { page = item, search = ViewBag.Search, status = ViewBag.Status, active = ViewBag.Active, studentId = ViewBag.StudentId, includeArchived = ViewBag.IncludeArchived })">@item</a>
+            <a class="@(item == page ? "is-active" : string.Empty)" href="@Url.Action(null, new { page = item, search = ViewBag.Search, status = ViewBag.Status, active = ViewBag.Active, studentId = ViewBag.StudentId, includeArchived = ViewBag.IncludeArchived, admissionFrom = ViewBag.AdmissionFrom, admissionTo = ViewBag.AdmissionTo })">@item</a>
         }
-        <a class="@(hasNext ? string.Empty : "is-disabled")" href="@Url.Action(null, new { page = page + 1, search = ViewBag.Search, status = ViewBag.Status, active = ViewBag.Active, studentId = ViewBag.StudentId, includeArchived = ViewBag.IncludeArchived })">Próxima</a>
+        <a class="@(hasNext ? string.Empty : "is-disabled")" href="@Url.Action(null, new { page = page + 1, search = ViewBag.Search, status = ViewBag.Status, active = ViewBag.Active, studentId = ViewBag.StudentId, includeArchived = ViewBag.IncludeArchived, admissionFrom = ViewBag.AdmissionFrom, admissionTo = ViewBag.AdmissionTo })">Próxima</a>
     </nav>
 }
 
