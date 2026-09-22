@@ -4,31 +4,30 @@
     ViewData["Title"] = "Admissões";
 }
 
-<section class="admin-page renova-listing-page">
-    <header class="admin-form-header renova-listing-header">
-        <div class="renova-listing-header__content">
-            <nav class="admin-form-breadcrumb"><a asp-controller="Students" asp-action="Details" asp-route-id="@ViewBag.StudentId">Perfil</a><span>/</span><span>Admissões</span></nav>
+<section class="admin-page">
+    <header class="admin-page-header">
+        <div>
             <span class="rn-eyebrow">CRM</span>
             <h1>Admissões de @ViewBag.StudentName</h1>
         </div>
-        <div class="renova-listing-header__actions">
+        <div>
             <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create" asp-route-studentId="@ViewBag.StudentId">Nova admissão</a>
         </div>
     </header>
 
-    <section class="orizon-card orizon-card--padding-none renova-listing-card renova-listing-card--flush">
+    <section class="orizon-card orizon-card--padding-none">
         @if (Model.Count == 0)
         {
-            <div class="renova-listing-empty">
-                <div class="renova-listing-empty__icon"><orizon-icon name="clipboard" size="28" /></div>
+            <section class="admin-empty-state">
+                <div class="crm-empty-icon"></div>
                 <strong>Nenhuma admissão registrada</strong>
                 <p>Crie a primeira admissão para iniciar o histórico do acolhido.</p>
-            </div>
+            </section>
         }
         else
         {
-            <div class="orizon-table-container renova-listing-table-wrap">
-                <table class="orizon-table orizon-table--hoverable renova-listing-table">
+            <div class="orizon-table-container">
+                <table class="orizon-table orizon-table--hoverable">
                     <thead><tr><th>Entrada</th><th>Status</th><th>Responsável</th><th>Previsão</th><th class="text-end">Ações</th></tr></thead>
                     <tbody>
                     @foreach (var admission in Model)
@@ -39,7 +38,7 @@
                             <td>@(admission.ResponsibleProfessional ?? "Não informado")</td>
                             <td>@(admission.ExpectedDischargeDate?.ToString("dd/MM/yyyy") ?? "Sem previsão")</td>
                             <td>
-                                <div class="renova-action-buttons renova-row-actions">
+                                <div class="rn-premium-actions">
                                     <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm" asp-action="Details" asp-route-id="@admission.Id" title="Ver detalhes">Ver</a>
                                     <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm" asp-action="Edit" asp-route-id="@admission.Id" title="Editar">Editar</a>
                                     @if (admission.AdmissionStatus is AdmissionStatus.Active or AdmissionStatus.Planned)

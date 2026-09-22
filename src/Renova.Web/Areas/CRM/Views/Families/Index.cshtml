@@ -6,21 +6,21 @@
     var paged = Model.Families;
 }
 
-<section class="admin-page renova-listing-page">
-    <header class="admin-form-header renova-listing-header">
-        <div class="renova-listing-header__content">
+<section class="admin-page">
+    <header class="admin-page-header">
+        <div>
             <span class="rn-eyebrow">CRM / Famílias</span>
             <h1>Vínculos familiares</h1>
             <p>Contatos familiares vinculados aos acolhidos do tenant atual.</p>
         </div>
     </header>
 
-    <section class="orizon-card renova-listing-toolbar">
-        <div class="renova-listing-toolbar__heading">
+    <section class="orizon-card orizon-card--padding-none">
+        <div class="rn-premium-toolbar">
             <h2>Buscar familiares</h2>
             <p>Use os filtros para localizar vínculos familiares no tenant atual.</p>
         </div>
-        <form method="get" class="renova-listing-filters">
+        <form method="get" class="demo-filter-row">
             <div class="orizon-field">
                 <label class="orizon-field__label" for="search">Buscar</label>
                 <input class="orizon-input" id="search" name="search" value="@Model.Search" placeholder="Nome, acolhido, parentesco ou telefone" />
@@ -42,23 +42,23 @@
         </div>
     }
 
-    <section class="orizon-card orizon-card--padding-none renova-listing-card renova-listing-card--flush">
+    <section class="orizon-card orizon-card--padding-none">
         @if (paged.Items.Count == 0)
         {
-            <div class="renova-listing-empty">
-                <div class="renova-listing-empty__icon"><orizon-icon name="users" size="28" /></div>
+            <section class="admin-empty-state">
+                <div class="crm-empty-icon"></div>
                 <strong>Nenhum familiar encontrado</strong>
                 <p>Cadastre familiares a partir do perfil de um acolhido.</p>
                 <a class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" asp-controller="Students" asp-action="Index">
                     
                     Ver acolhidos
                 </a>
-            </div>
+            </section>
         }
         else
         {
-            <div class="orizon-table-container renova-listing-table-wrap">
-                <table class="orizon-table orizon-table--hoverable renova-listing-table">
+            <div class="orizon-table-container">
+                <table class="orizon-table orizon-table--hoverable">
                     <thead>
                         <tr>
                             <th>Familiar</th>
@@ -74,15 +74,15 @@
                     {
                         <tr>
                             <td>
-                                <span class="renova-person-cell">
+                                <span class="orizon-table-person">
                                     @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
                                     {
                                         Name = member.Name,
                                         PhotoUrl = member.PhotoUrl
                                     })
                                     <span>
-                                        <strong class="renova-row-title">@member.Name</strong>
-                                        <small class="renova-row-subtitle">@(member.Email ?? "Sem email")</small>
+                                        <strong>@member.Name</strong>
+                                        <small>@(member.Email ?? "Sem email")</small>
                                     </span>
                                 </span>
                             </td>
@@ -100,7 +100,7 @@
                                 }
                             </td>
                             <td>
-                                <div class="renova-action-buttons renova-row-actions">
+                                <div class="rn-premium-actions">
                                     <a class="orizon-button orizon-button--ghost orizon-button--neutral orizon-button--sm" asp-action="Details" asp-route-id="@member.Id" title="Detalhes">Ver</a>
                                     @if (!member.IsArchived)
                                     {
@@ -119,9 +119,8 @@
                 </table>
             </div>
         }
-        <div class="renova-listing-pagination">
-            @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", paged)
-        </div>
+        @{ ViewBag.Search = Model.Search; ViewBag.StudentId = Model.StudentId; ViewBag.IncludeArchived = Model.IncludeArchived; }
+        @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", paged)
     </section>
 </section>
 

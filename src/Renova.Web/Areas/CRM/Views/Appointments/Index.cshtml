@@ -5,27 +5,27 @@
     ViewData["Title"] = "Agenda";
 }
 
-<section class="admin-page renova-listing-page">
-    <header class="admin-page-header renova-listing-header">
-        <div class="renova-listing-header__content">
+<section class="admin-page">
+    <header class="admin-page-header">
+        <div>
             <span>Calendário diário</span>
             <h1>Agenda de atendimentos</h1>
             <p>Atendimentos reais filtrados pelo tenant atual via acolhido vinculado.</p>
         </div>
-        <div class="renova-listing-header__actions">
+        <div>
             <a class="orizon-button orizon-button--solid orizon-button--primary orizon-button--md" asp-action="Create">Novo atendimento</a>
         </div>
     </header>
 
-    <div class="renova-listing-metrics">
+    <div class="demo-grid-4">
         <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Total</span><strong>@Model.Total</strong><small>Resultado atual</small></article>
         <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Agendados</span><strong>@Model.Scheduled</strong><small>Status ativo</small></article>
         <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Concluídos</span><strong>@Model.Completed</strong><small>Histórico</small></article>
         <article class="orizon-card orizon-card--elevated orizon-card--padding-md"><span>Cancelados</span><strong>@Model.Cancelled</strong><small>Histórico</small></article>
     </div>
 
-    <div class="renova-listing-toolbar">
-    <form class="renova-listing-filters" method="get" aria-label="Filtros da agenda">
+    <div class="orizon-card orizon-card--padding-md">
+    <form class="demo-filter-row" method="get" aria-label="Filtros da agenda">
         <div class="orizon-field">
             <label class="orizon-field__label" for="appointment-search">Buscar acolhido</label>
             <input id="appointment-search" class="orizon-input" name="search" value="@Model.Search" placeholder="Buscar acolhido" />
@@ -57,25 +57,25 @@
                 }
             </select>
         </div>
-        <div class="renova-filter-submit">
+        <div class="rn-premium-actions">
             <button class="orizon-button orizon-button--outline orizon-button--neutral orizon-button--md" type="submit">Filtrar</button>
         </div>
     </form>
     </div>
 
-    <section class="orizon-card orizon-card--padding-none renova-listing-card renova-listing-card--flush">
+    <section class="orizon-card orizon-card--padding-none">
         @if (Model.Appointments.Count == 0)
         {
-            <div class="renova-listing-empty">
-                <div class="renova-listing-empty__icon"><orizon-icon name="calendar" size="28" /></div>
+            <section class="admin-empty-state">
+                <div class="crm-empty-icon"></div>
                 <strong>Nenhum atendimento encontrado</strong>
                 <p>Não há atendimentos para os filtros selecionados.</p>
-            </div>
+            </section>
         }
         else
         {
-            <div class="orizon-table-container renova-listing-table-wrap">
-                <table class="orizon-table orizon-table--hoverable renova-listing-table">
+            <div class="orizon-table-container">
+                <table class="orizon-table orizon-table--hoverable">
                     <thead><tr><th>Data e hora</th><th>Acolhido</th><th>Profissional</th><th>Status</th><th>Notas</th><th></th></tr></thead>
                     <tbody>
                     @foreach (var appointment in Model.Appointments)
@@ -83,13 +83,13 @@
                         <tr>
                             <td>@appointment.ScheduledAt.ToString("dd/MM/yyyy HH:mm")</td>
                             <td>
-                                <a class="renova-person-cell" asp-controller="Students" asp-action="Details" asp-route-id="@appointment.StudentId">
+                                <a asp-controller="Students" asp-action="Details" asp-route-id="@appointment.StudentId">
                                     @await Html.PartialAsync("~/Views/Shared/_ProfileAvatar.cshtml", new ProfileAvatarViewModel
                                     {
                                         Name = appointment.StudentName,
                                         PhotoUrl = appointment.StudentPhotoUrl
                                     })
-                                    <span><strong class="renova-row-title">@appointment.StudentName</strong></span>
+                                    <span><strong>@appointment.StudentName</strong></span>
                                 </a>
                             </td>
                             <td>@(appointment.ProfessionalName ?? "Não definido")</td>
@@ -103,6 +103,7 @@
             </div>
         }
     </section>
-    @if (Model.TotalPages > 1) { <div class="renova-listing-pagination"><nav class="rn-pagination orizon-pagination" aria-label="Paginação"><span>Página @Model.Page de @Model.TotalPages</span>@if (Model.Page > 1) { <a asp-action="Index" asp-route-search="@Model.Search" asp-route-from="@Model.From?.ToString("yyyy-MM-dd")" asp-route-to="@Model.To?.ToString("yyyy-MM-dd")" asp-route-status="@Model.Status" asp-route-professionalId="@Model.ProfessionalId" asp-route-page="@(Model.Page - 1)">Anterior</a> } @if (Model.Page < Model.TotalPages) { <a asp-action="Index" asp-route-search="@Model.Search" asp-route-from="@Model.From?.ToString("yyyy-MM-dd")" asp-route-to="@Model.To?.ToString("yyyy-MM-dd")" asp-route-status="@Model.Status" asp-route-professionalId="@Model.ProfessionalId" asp-route-page="@(Model.Page + 1)">Próxima</a> }</nav></div> }
+    @{ ViewBag.Search = Model.Search; ViewBag.Status = Model.Status; }
+    @await Html.PartialAsync("~/Views/Shared/_Pagination.cshtml", new { Page = Model.Page, TotalPages = Model.TotalPages, HasPreviousPage = Model.Page > 1, HasNextPage = Model.Page < Model.TotalPages })
 </section>
 
